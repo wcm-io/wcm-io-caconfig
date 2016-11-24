@@ -20,8 +20,8 @@
 package io.wcm.config.editor.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,9 +40,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableMap;
@@ -134,13 +134,13 @@ public class EditorParameterPersistenceTest {
     context.registerService(ParameterResolver.class, parameterResolver);
     context.registerService(ParameterPersistence.class, persistence);
     when(parameterResolver.getAllParameters()).thenReturn(PARAMETERS);
-    when(configurationFinder.find(Matchers.any(Resource.class))).thenReturn(configuration);
+    when(configurationFinder.find(ArgumentMatchers.any(Resource.class))).thenReturn(configuration);
     when(configuration.getConfigurationId()).thenReturn("/content/test");
   }
 
   @Test
   public void testResponseNoConfigurationFound() throws Exception {
-    when(configurationFinder.find(Matchers.any(Resource.class))).thenReturn(null);
+    when(configurationFinder.find(ArgumentMatchers.any(Resource.class))).thenReturn(null);
 
     EditorParameterPersistence underTest = new EditorParameterPersistence();
     context.registerInjectActivateService(underTest);

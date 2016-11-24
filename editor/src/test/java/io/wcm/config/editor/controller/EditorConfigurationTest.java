@@ -21,17 +21,18 @@ package io.wcm.config.editor.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import io.wcm.config.api.Configuration;
-import io.wcm.config.core.management.ParameterPersistence;
 
 import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.config.api.Configuration;
+import io.wcm.config.core.management.ParameterPersistence;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EditorConfigurationTest {

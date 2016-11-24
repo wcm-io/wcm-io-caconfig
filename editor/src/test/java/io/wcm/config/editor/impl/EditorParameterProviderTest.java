@@ -20,9 +20,9 @@
 package io.wcm.config.editor.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
@@ -48,7 +48,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import com.google.common.collect.ImmutableMap;
@@ -118,6 +118,8 @@ public class EditorParameterProviderTest {
   private Configuration configurationSecondLevel;
 
   @Mock
+  private ResourceResolver resourceResolver;
+  @Mock
   private SlingHttpServletRequest request;
   @Mock
   private SlingHttpServletResponse response;
@@ -157,7 +159,6 @@ public class EditorParameterProviderTest {
     when(configurationSecondLevel.get(PARAMETER_BOOLEAN.getName())).thenReturn(true);
     when(configurationSecondLevel.get((PARAMETER_DOUBLE.getName()))).thenReturn(3.3434);
     when(persistence.getData(any(ResourceResolver.class), eq("/content/site"))).then(new Answer<ParameterPersistenceData>() {
-
       @Override
       public ParameterPersistenceData answer(InvocationOnMock invocation) {
         Map<String, Object> values = new HashMap<>();
@@ -180,7 +181,6 @@ public class EditorParameterProviderTest {
     when(configurationFinder.findAll(siteResource)).thenReturn(Iterators.forArray(configurationFirstLevel));
 
     doAnswer(new Answer<Void>() {
-
       @Override
       public Void answer(InvocationOnMock invocation) {
         String jsonString = (String)invocation.getArguments()[0];
@@ -200,6 +200,7 @@ public class EditorParameterProviderTest {
     when(response.getWriter()).thenReturn(printWriter);
 
     when(request.getResource()).thenReturn(regionResource);
+    when(request.getResourceResolver()).thenReturn(resourceResolver);
 
     when(applicationFinder.getAll()).thenReturn(ImmutableSet.<Application>of(new Application(APP_ID, "Test App")));
 
