@@ -1,0 +1,8 @@
+<span class="coral-Select" ng-model="value">
+  <button type="button" class="coral-Select-button coral-MinimalButton">
+    <span class="coral-Select-button-text">{{model.name}}</span>
+  </button>
+  <select class="coral-Select-select" multiple="true">
+    <option ng-repeat="option in model.options" value="{{option.value}}" ng-attr-selected="{{option.selected}}">{{option.label}}</option>
+  </select>
+</span>

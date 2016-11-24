@@ -1,0 +1,13 @@
+<form id="configuration" name="configForm">
+  <table class="coral-Table coral-Table--hover" ng-cloak>
+    <tbody>
+    <tr class="coral-Table-row" ng-repeat="parameter in displayedCollection" ng-cloak>
+      <td class="coral-Table-cell">
+        {{parameter.label}}
+      </td>
+      <td class="coral-Table-cell" parameter-value="parameter" widget-type="{{parameter.widgetType}}">
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</form>

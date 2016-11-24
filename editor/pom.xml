@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  wcm.io
+  %%
+  Copyright (C) 2014 wcm.io
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.wcm</groupId>
+    <artifactId>io.wcm.caconfig.parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../parent/pom.xml</relativePath>
+  </parent>
+
+  <groupId>io.wcm</groupId>
+  <artifactId>io.wcm.caconfig.editor</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+
+  <name>Context-Aware Configuration Editor</name>
+  <description>Context-Aware Configuration Editor Template for AEM.</description>
+
+  <scm>
+    <connection>scm:git:https://github.com/wcm-io/wcm-io-caconfig.git</connection>
+    <developerConnection>scm:git:https://github.com/wcm-io/wcm-io-caconfig.git</developerConnection>
+    <url>https://github.com/wcm-io/wcm-io-caconfig</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <properties>
+    <site.url.module.prefix>caconfig/editor</site.url.module.prefix>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>io.wcm</groupId>
+      <artifactId>io.wcm.config.api</artifactId>
+      <version>0.5.4</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.wcm</groupId>
+      <artifactId>io.wcm.config.core</artifactId>
+      <version>0.6.3-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.wcm</groupId>
+      <artifactId>io.wcm.wcm.commons</artifactId>
+      <version>0.6.0</version>
+      <scope>compile</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <configuration>
+          <addVersionToProjectName>false</addVersionToProjectName>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Sling-Initial-Content>
+              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/caconfig/editor
+            </Sling-Initial-Content>
+            <Sling-Model-Packages>
+              io.wcm.config.editor.controller
+            </Sling-Model-Packages>
+
+            <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
+            <Import-Package>
+              javax.inject;version="[0.0,2)",
+              *
+            </Import-Package>
+
+          </instructions>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-scr-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.sling</groupId>
+        <artifactId>maven-sling-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>validate-bundle</id>
+            <goals>
+              <goal>validate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Nodejs Maven Plugin to run the templates compilation and tests -->
+      <plugin>
+        <groupId>io.wcm.maven.plugins</groupId>
+        <artifactId>nodejs-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals><goal>run</goal></goals>
+          </execution>
+        </executions>
+        <configuration>
+          <tasks>
+            <npmInstallTask>
+              <workingDirectory>${project.basedir}/build</workingDirectory>
+            </npmInstallTask>
+            <nodeJsTask>
+              <workingDirectory>${project.basedir}/build</workingDirectory>
+              <moduleName>grunt-cli</moduleName>
+              <executableName>grunt</executableName>
+              <arguments>
+                <argument>build</argument>
+              </arguments>
+            </nodeJsTask>
+          </tasks>
+        </configuration>
+      </plugin>
+
+
+    </plugins>
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+            <excludePackageNames>*.impl,*.controller</excludePackageNames>
+          </configuration>
+        </plugin>
+
+        <!-- Switch to version 1.0.6 until it is updated in aem-global-parent -->
+        <plugin>
+          <groupId>io.wcm.maven.plugins</groupId>
+          <artifactId>nodejs-maven-plugin</artifactId>
+          <version>2.0.0</version>
+          <configuration>
+            <nodeJsVersion>0.12.7</nodeJsVersion>
+            <npmVersion>2.11.3</npmVersion>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <distributionManagement>
+    <site>
+      <id>${site.deploy.id}</id>
+      <url>${site.deploy.url}${site.url.module.prefix}</url>
+    </site>
+  </distributionManagement>
+
+</project>

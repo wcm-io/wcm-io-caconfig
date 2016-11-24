@@ -1,0 +1,78 @@
+/*
+ * #%L
+ * wcm.io
+ * %%
+ * Copyright (C) 2014 wcm.io
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+.wcm-io-editor-page-border {
+  padding: 15px;
+}
+
+.coral-Table .coral-Textfield {
+  width: 100%;
+}
+
+.coral-Table .coral-Select {
+  width: 100%;
+}
+
+form#configuration.ng-dirty textarea.ng-dirty.ng-invalid,
+form#configuration.ng-dirty input.ng-dirty.ng-invalid {
+  border: 1px solid red;
+}
+
+span.wcm-io-editor-pathbrowser {
+  width: 100% !important;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.wcm-io-editor-multifield {
+  position: relative;
+  padding-right: 103px;
+}
+.wcm-io-editor-multifield .coral-Textfield {
+  width: 98%;
+}
+.wcm-io-editor-multifield .coral-ButtonGroup {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.wcm-io-editor-map {
+  position: relative;
+  padding-right: 103px;
+}
+.wcm-io-editor-map .coral-Textfield {
+  width: 49%;
+}
+.wcm-io-editor-map .coral-ButtonGroup {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.wcm-io-editor.endor-Brand {
+  display: inline-block;
+  background-color: transparent;
+}
+
+span.wcm-io-editor.endor-Brand {
+  cursor: default;
+}

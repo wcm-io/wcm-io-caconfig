@@ -1,0 +1,18 @@
+<div >
+  <div class="wcm-io-editor-multifield" ng-repeat="value in values">
+    <input type="text" class="coral-Textfield"
+           ng-model="value.value"
+           ng-maxlength="{{parameter.maxlength}}"
+           ng-minlength="{{parameter.minlength}}"
+           ng-pattern="{{parameter.pattern}}"
+           ng-required="{{parameter.required}}"/>
+    <div class="coral-ButtonGroup">
+      <button ng-click="addNewValue(value)" class="coral-ButtonGroup-item coral-Button coral-Button--secondary">
+        <i class="coral-Icon coral-Icon--add"></i>
+      </button>
+      <button ng-click="removeValue(value)" class="coral-ButtonGroup-item coral-Button coral-Button--secondary">
+        <i class="coral-Icon coral-Icon--minus"></i>
+      </button>
+    </div>
+  </div>
+</div>

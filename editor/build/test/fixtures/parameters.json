@@ -1,0 +1,67 @@
+{
+  "parameters": [
+    {
+      "label": "Locked String Parameter",
+      "name": "locked-string-parameter",
+      "value": "Test",
+      "group": "Dealer Locator",
+      "application": "/apps/sample",
+      "description":"Das ist ein parameter, für die konfoguration des Dealers",
+      "inherited": true,
+      "locked": true,
+      "widgetType": "textfield",
+      "lockedInherited": true
+    },
+    {
+      "label": "String Parameter",
+      "name":"string-param",
+      "value": "Test",
+      "group": "Dealer Locator",
+      "application": "/apps/sample",
+      "description":"Das ist ein Texfield parameter, für die Konfiguration des Dealers",
+      "inherited": true,
+      "locked": true,
+      "lockedInherited": false,
+      "widgetType": "textfield"
+    },
+    {
+      "label": "Textarea Parameter Only for Digits",
+      "name": "digits",
+      "value": "123",
+      "group": "Link Handling",
+      "application": "/apps/wcm-io/linkhandler",
+      "description": "Das ist Textarea Prameter mit der Pattern-Validierung für maximal 5 numerische Zeichen",
+      "inherited": false,
+      "locked": true,
+      "widgetType": "textarea",
+      "rows": "10",
+      "maxlength": "5",
+      "pattern": "/^[0-9]*$/",
+      "required": true
+    },
+    {
+      "label": "Pathbrowser Parameter",
+      "name": "path-param",
+      "value": "",
+      "group": "Link Handling",
+      "application": "/apps/wcm-io/linkhandler",
+      "description":"Das ist ein parameter, für die Konfiguration eines Pfades",
+      "inherited": false,
+      "locked": false,
+      "widgetType": "pathbrowser",
+      "rootPath": "/content"
+    },
+    {
+      "label": "Checkbox Parameter",
+      "name": "checkbox-param",
+      "value": true,
+      "group": "Link Handling",
+      "application": "/apps/wcm-io/linkhandler",
+      "description":"Das ist ein parameter, für die Konfiguration eines Boolen Wertes",
+      "inherited": false,
+      "locked": false,
+      "widgetType": "checkbox",
+      "required": true
+    }
+  ]
+}

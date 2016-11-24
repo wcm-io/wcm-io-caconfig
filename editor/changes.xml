@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  wcm.io
+  %%
+  Copyright (C) 2014 wcm.io
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/changes/1.0.0"
+    xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
+  <body>
+
+    <release version="0.7.0" date="not released">
+      <action type="fix" dev="sseifert" issue="WCON-19">
+        Make sure special characters in String array and Map data types are handled properly.
+        This also introduces a new widget type "MAP" which has to be used for all parameters of data type "Map", editing map parameters with "TEXT_MULTIFIELD" widget is no longer supported.
+      </action>
+    </release>
+
+    <release version="0.6.4" date="2016-04-29">
+      <action type="update" dev="sseifert">
+        Relax package version dependency for javax.inject to support AEM60, AEM61 and AEM62.
+      </action>
+    </release>
+
+    <release version="0.6.2" date="2016-02-16">
+      <action type="update" dev="sseifert">
+        Set AEM API and OSGi dependencies to provided scope.
+      </action>
+      <action type="fix" dev="sseifert" issue="WCON-16">
+        Correctly display overridden default configuration values.
+      </action>
+      <action type="fix" dev="sseifert">
+        Lock parameter in editor which has a locked override value form an override provider.
+      </action>
+    </release>
+
+    <release version="0.6.0" date="2015-07-06">
+      <action type="add" dev="sseifert">
+        Add support for ":locked" suffix in parameter override scope strings to disallow overriding them in nested configuration scopes.
+      </action>
+    </release>
+
+    <release version="0.5.6" date="2015-03-09">
+      <action type="fix" dev="isechyn" issue="WCMIO-53">
+        Fixed the configuration id shown in the editor
+      </action>
+    </release>
+
+    <release version="0.5.4" date="2015-01-30">
+      <action type="fix" dev="isechyn" issue="WCMIO-51">
+        Fixed the minified version of the editor app caused by "wrong" usage of the angularjs injection mechanism
+      </action>
+    </release>
+
+    <release version="0.5.2" date="2014-12-03">
+      <action type="fix" dev="isechyn" issue="WCMIO-35">
+        Property locked in the higher level configuration should not be editable in the deeper level configurations
+      </action>
+      <action type="fix" dev="isechyn" issue="WCMIO-36">
+        Multiple locked parameter names are not saved as array
+      </action>
+    </release>
+
+    <release version="0.5.0" date="2014-11-05">
+      <action type="add" dev="sseifert">
+        Initial release.
+      </action>
+    </release>
+
+    <release version="0.1.0" date="2014-10-02">
+      <action type="add" dev="sseifert">
+        Preliminary release.
+      </action>
+    </release>
+
+  </body>
+</document>

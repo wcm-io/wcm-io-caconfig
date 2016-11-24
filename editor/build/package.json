@@ -1,0 +1,32 @@
+{
+  "name": "ConfigurationEditor",
+  "version": "0.1.0",
+  "description": "A wcm.io configuration editor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wcm-io/wcm-io.git"
+  },
+  "config": {
+    "jsPath": "../src/main/webapp/app-root/clientlibs/io.wcm.config.editor/js/app/"
+  },
+  "license": "Apache",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-html2js": "~0.1.3",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.1",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-karma": "~0.6.2",
+    "karma": "~0.10.9",
+    "karma-chrome-launcher": "~0.1.0",
+    "karma-coverage": "~0.1.0",
+    "karma-firefox-launcher": "~0.1.0",
+    "karma-jasmine": "~0.1.3",
+    "karma-phantomjs-launcher": "~0.1.2",
+    "karma-script-launcher": "~0.1.0",
+    "karma-junit-reporter": "~0.2.1"
+  }
+}
