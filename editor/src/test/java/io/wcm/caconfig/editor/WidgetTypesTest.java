@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.editor;
+package io.wcm.caconfig.editor;
 
 import static org.junit.Assert.assertEquals;
 

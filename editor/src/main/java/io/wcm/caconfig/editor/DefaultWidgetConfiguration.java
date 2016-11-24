@@ -17,11 +17,11 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.editor;
+package io.wcm.caconfig.editor;
 
-import static io.wcm.config.editor.EditorProperties.ROOT_PATH;
-import static io.wcm.config.editor.EditorProperties.ROWS;
-import static io.wcm.config.editor.EditorProperties.WIDGET_TYPE;
+import static io.wcm.caconfig.editor.EditorProperties.ROOT_PATH;
+import static io.wcm.caconfig.editor.EditorProperties.ROWS;
+import static io.wcm.caconfig.editor.EditorProperties.WIDGET_TYPE;
 
 import java.util.Map;
 

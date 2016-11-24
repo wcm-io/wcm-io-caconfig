@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.editor.impl;
+package io.wcm.caconfig.editor.impl;
 
 /**
  * Internal constants

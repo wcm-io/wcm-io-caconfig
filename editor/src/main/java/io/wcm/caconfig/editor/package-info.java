@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * Controllers used by the configuration editor scripts internally.
+ * API for customizing parameter definitions for the configuration editor.
  */
-@org.osgi.annotation.versioning.Version("1.0.1")
-package io.wcm.config.editor.controller;
+@org.osgi.annotation.versioning.Version("0.6.0")
+package io.wcm.caconfig.editor;

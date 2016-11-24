@@ -35,7 +35,7 @@ Only the template has to be defined, the page component resource type can be ref
 
   "jcr:content": {
     "jcr:primaryType": "cq:PageContent",
-    "sling:resourceType": "/apps/wcm-io/config/editor/components/page/editor"
+    "sling:resourceType": "/apps/wcm-io/caconfig/editor/components/page/editor"
   }
 }
 ```

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.editor.controller;
+package io.wcm.caconfig.editor.controller;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

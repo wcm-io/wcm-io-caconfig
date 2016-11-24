@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.editor.impl;
+package io.wcm.caconfig.editor.impl;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -57,7 +57,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  */
 @SlingServlet(
     resourceTypes = {
-        "/apps/wcm-io/config/editor/components/page/editor"
+        "/apps/wcm-io/caconfig/editor/components/page/editor"
     },
     extensions = FileExtension.JSON,
     selectors = "configProvider",

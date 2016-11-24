@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.editor.impl;
+package io.wcm.caconfig.editor.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,6 +48,7 @@ import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import io.wcm.caconfig.editor.WidgetTypes;
 import io.wcm.config.api.Configuration;
 import io.wcm.config.api.Parameter;
 import io.wcm.config.api.ParameterBuilder;
@@ -55,7 +56,6 @@ import io.wcm.config.core.management.ConfigurationFinder;
 import io.wcm.config.core.management.ParameterPersistence;
 import io.wcm.config.core.management.ParameterPersistenceData;
 import io.wcm.config.core.management.ParameterResolver;
-import io.wcm.config.editor.WidgetTypes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.util.RunMode;
