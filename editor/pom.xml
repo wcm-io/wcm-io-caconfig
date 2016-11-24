@@ -57,6 +57,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.models.api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.config.api</artifactId>
       <version>0.5.4</version>
