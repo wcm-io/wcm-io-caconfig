@@ -19,7 +19,7 @@
  */
 (function (angular) {
   "use strict";
-  angular.module('io.wcm.config.directives', ["io.wcm.config.templateUrlList", "io.wcm.config.utilities", "io.wcm.config.templates"])
+  angular.module('io.wcm.caconfig.directives', ["io.wcm.caconfig.templateUrlList", "io.wcm.caconfig.utilities", "io.wcm.caconfig.templates"])
   /**
    * Directive for displaying the filters on the editor page. Wraps internally the CUI.Select widget.
    * Parent Scope provides the model for the filter:

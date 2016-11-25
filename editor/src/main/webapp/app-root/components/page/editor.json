@@ -1,5 +1,5 @@
 {
   "jcr:primaryType": "cq:Component",
-  "sling:resourceSuperType": "/apps/wcm-io/wcm/commons/components/global/page",
+  "sling:resourceSuperType": "/libs/wcm/foundation/components/page",
   "cq:defaultView": "html"
 }

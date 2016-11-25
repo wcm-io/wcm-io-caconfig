@@ -2,72 +2,72 @@
   "jcr:primaryType": "nt:folder",
   "jcr:language": "de",
   "jcr:mixinTypes": ["mix:language"],
-  "io.wcm.config.editor.title": {
+  "io.wcm.caconfig.editor.title": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Konfiguration Editor",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.config.path": {
+  "io.wcm.caconfig.editor.config.path": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Konfiguration für:",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.save": {
+  "io.wcm.caconfig.editor.save": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Speichern",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.column.name": {
+  "io.wcm.caconfig.editor.column.name": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Parameter",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.column.value": {
+  "io.wcm.caconfig.editor.column.value": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Wert",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.column.inherited": {
+  "io.wcm.caconfig.editor.column.inherited": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Geerbt",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.column.lock": {
+  "io.wcm.caconfig.editor.column.lock": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Gesperrt",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.column.description": {
+  "io.wcm.caconfig.editor.column.description": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Beschreibung",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.column.group": {
+  "io.wcm.caconfig.editor.column.group": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Gruppe",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.modal.success": {
+  "io.wcm.caconfig.editor.modal.success": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Konfiguration wurde erfolgreich gespeichert",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.modal.error": {
+  "io.wcm.caconfig.editor.modal.error": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Es ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Eingaben und probieren Sie noch mal",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.modal.close": {
+  "io.wcm.caconfig.editor.modal.close": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Schließen",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.filter.application": {
+  "io.wcm.caconfig.editor.filter.application": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Filter Applikation",
     "jcr:mixinTypes": ["sling:Message"]
   },
-  "io.wcm.config.editor.filter.group": {
+  "io.wcm.caconfig.editor.filter.group": {
     "jcr:primaryType": "nt:folder",
     "sling:message": "Filter Gruppe",
     "jcr:mixinTypes": ["sling:Message"]

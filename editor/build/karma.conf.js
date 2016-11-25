@@ -13,13 +13,13 @@ module.exports = function(config) {
       'libs/jasmine-jquery.js',
       'libs/jquery-1.11.0.js',
       'libs/underscore.js',
-      '../src/main/webapp/app-root/clientlibs/io.wcm.config.editor/js/app/**/*.js',
+      '../src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor/js/app/**/*.js',
       'test/*.js',
       {pattern: 'test/fixtures/*.json', watched: true, served: true, included: false}
     ],
 
     preprocessors: {
-      "../src/main/webapp/app-root/clientlibs/io.wcm.config.editor/js/app/**/*.js": "coverage"
+      "../src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor/js/app/**/*.js": "coverage"
     },
 
     // list of files / patterns to exclude

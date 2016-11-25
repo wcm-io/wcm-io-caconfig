@@ -22,7 +22,7 @@
   /**
    * Services module
    */
-  angular.module('io.wcm.config.services', ['io.wcm.config.utilities'])
+  angular.module('io.wcm.caconfig.services', ['io.wcm.caconfig.utilities'])
     .provider("parameters", function() {
       var config = {};
 

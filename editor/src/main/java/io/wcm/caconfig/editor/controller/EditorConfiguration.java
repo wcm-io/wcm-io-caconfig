@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ProviderType;
-
-import com.day.cq.wcm.api.Page;
-
-import io.wcm.config.api.Configuration;
-import io.wcm.config.core.management.ParameterPersistence;
-import io.wcm.sling.models.annotations.AemObject;
 
 /**
  * Provides editor configuration options
@@ -43,29 +37,18 @@ import io.wcm.sling.models.annotations.AemObject;
 @ProviderType
 public class EditorConfiguration {
 
-  private final String lockedNamesAttributeName;
   private final String providerUrl;
-  private final String configurationId;
 
   /**
-   * @param currentPage
+   * @param currentResource
    */
   @Inject
-  public EditorConfiguration(@AemObject Page currentPage, @Self(optional = true) Configuration configuration) {
-    lockedNamesAttributeName = ParameterPersistence.PN_LOCKED_PARAMETER_NAMES;
-    providerUrl = currentPage.getContentResource().getPath() + ".configProvider.json";
-    configurationId = configuration != null ? configuration.getConfigurationId() : currentPage.getPath();
-  }
-
-  public String getLockedNamesAttributeName() {
-    return lockedNamesAttributeName;
+  public EditorConfiguration(@SlingObject Resource currentResource) {
+    providerUrl = currentResource.getPath() + ".configProvider.json";
   }
 
   public String getProviderUrl() {
     return providerUrl;
   }
 
-  public String getConfigurationId() {
-    return configurationId;
-  }
 }

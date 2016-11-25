@@ -10,7 +10,7 @@ module.exports = function (grunt) {
       templates: {
         options: {
           base: 'partials',
-          module: 'io.wcm.config.templates'
+          module: 'io.wcm.caconfig.templates'
         },
         src: [ '<%= src.html %>' ],
         dest: '<%= pkg.config.jsPath %>Template.js'
@@ -18,10 +18,10 @@ module.exports = function (grunt) {
       test_templates: {
         options: {
           base: 'test/fixtures',
-          module: 'io.wcm.config.templates'
+          module: 'io.wcm.caconfig.templates'
         },
         base: 'test/fixtures',
-        module: 'io.wcm.config.test.templates',
+        module: 'io.wcm.caconfig.test.templates',
         src: [ 'test/fixtures/*.html' ],
         dest: 'test/test-Template.js'
       }

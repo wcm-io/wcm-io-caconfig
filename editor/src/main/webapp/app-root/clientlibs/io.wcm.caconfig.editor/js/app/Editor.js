@@ -20,7 +20,7 @@
 (function (angular) {
 
   "use strict";
-  angular.module('io.wcm.config.editor', ['io.wcm.config.services', 'io.wcm.config.directives'])
+  angular.module('io.wcm.caconfig.editor', ['io.wcm.caconfig.services', 'io.wcm.caconfig.directives'])
     .run(["$rootScope", "parameters", function($rootScope, Parameters) {
       $rootScope.confirmModal = new CUI.Modal({ element:'#confirmModal', visible: false });
       $rootScope.errorModal = new CUI.Modal({ element:'#errorModal', type: "error", visible: false });

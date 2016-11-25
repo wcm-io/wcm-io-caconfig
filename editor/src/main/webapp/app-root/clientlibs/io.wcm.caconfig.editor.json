@@ -1,7 +1,7 @@
 {
   "jcr:primaryType": "cq:ClientLibraryFolder",
   "categories": [
-    "io.wcm.config.editor"
+    "io.wcm.caconfig.editor"
   ],
   "dependencies": [
     "coralui2",

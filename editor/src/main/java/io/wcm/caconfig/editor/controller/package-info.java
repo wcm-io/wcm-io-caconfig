@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,5 +20,5 @@
 /**
  * Controllers used by the configuration editor scripts internally.
  */
-@org.osgi.annotation.versioning.Version("1.0.1")
+@org.osgi.annotation.versioning.Version("1.0.0")
 package io.wcm.caconfig.editor.controller;

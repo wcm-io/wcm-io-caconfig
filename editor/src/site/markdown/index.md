@@ -2,7 +2,7 @@
 
 Configuration Editor Template for AEM.
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.config.editor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.config.editor)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor)
 
 
 ### Documentation

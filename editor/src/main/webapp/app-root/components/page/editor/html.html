@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html
-    data-sly-use.editorConfig='io.wcm.config.editor.controller.EditorConfiguration'
+    data-sly-use.editorConfig='io.wcm.caconfig.editor.controller.EditorConfiguration'
     data-sly-use.clientLib="/libs/granite/sightly/templates/clientlib.html"
-    ng-app="io.wcm.config.editor">
+    ng-app="io.wcm.caconfig.editor">
   <head>
     <meta charset="UTF-8">
-    <title>${'io.wcm.config.editor.title' @ i18n}</title>
+    <title>${'io.wcm.caconfig.editor.title' @ i18n}</title>
 
     <meta data-sly-resource="${'.' @ resourceType='/apps/wcm-io/wcm/commons/components/global/wcmInit' }" data-sly-unwrap></meta>
-    <meta data-sly-call="${clientLib.css @ categories='io.wcm.config.editor'}" data-sly-unwrap></meta>
+    <meta data-sly-call="${clientLib.css @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
   </head>
   <body class="coral--light" ng-controller="mainCtrl">
     <nav class="coral-Panel-header endor-BlackBar header-main">
       <a href="/" class="wcm-io-editor endor-Brand">
         <i class="wcm-io-editor endor-Brand-icon coral-Icon coral-Icon--adobeMarketingCloud coral-Icon--sizeM"></i>
       </a>
-      <span class="wcm-io-editor endor-Brand" >${'io.wcm.config.editor.title' @ i18n}</span>
+      <span class="wcm-io-editor endor-Brand" >${'io.wcm.caconfig.editor.title' @ i18n}</span>
     </nav>
     <div class="wcm-io-editor-page-border">
 
       <form id="configuration" name="configForm">
         <filter-drop-down-list ng-repeat="filter in filters" model="filter" current-filter="currentFilter"></filter-drop-down-list>
-        <button ng-disabled="!configForm.$valid" class="coral-Button coral-Button--primary" ng-click="save()" >${'io.wcm.config.editor.save' @ i18n}</button>
+        <button ng-disabled="!configForm.$valid" class="coral-Button coral-Button--primary" ng-click="save()" >${'io.wcm.caconfig.editor.save' @ i18n}</button>
 
-        <p>${'io.wcm.config.editor.config.path' @ i18n} <code>${editorConfig.configurationId}</code></p>
+        <p>${'io.wcm.caconfig.editor.config.path' @ i18n} <code>${editorConfig.configurationId}</code></p>
         <table class="coral-Table coral-Table--hover" ng-cloak>
           <thead>
           <tr class="coral-Table-row">
-            <th class="coral-Table-headerCell">${'io.wcm.config.editor.column.name' @ i18n}</th>
-            <th class="coral-Table-headerCell">${'io.wcm.config.editor.column.value' @ i18n}</th>
-            <th class="coral-Table-headerCell">${'io.wcm.config.editor.column.inherited' @ i18n}</th>
-            <th class="coral-Table-headerCell">${'io.wcm.config.editor.column.lock' @ i18n}</th>
-            <th class="coral-Table-headerCell">${'io.wcm.config.editor.column.description' @ i18n}</th>
-            <th class="coral-Table-headerCell">${'io.wcm.config.editor.column.group' @ i18n}</th>
+            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.name' @ i18n}</th>
+            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.value' @ i18n}</th>
+            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.inherited' @ i18n}</th>
+            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.lock' @ i18n}</th>
+            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.description' @ i18n}</th>
+            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.group' @ i18n}</th>
           </tr>
           </thead>
           <tbody>
@@ -71,40 +71,40 @@
       <div id="confirmModal" class="coral-Modal">
         <div class="coral-Modal-header">
           <i class="coral-Modal-typeIcon coral-Icon coral-Icon--sizeS"></i>
-          <h2 class="coral-Modal-title coral-Heading coral-Heading--2">${'io.wcm.config.editor.title' @ i18n}</h2>
-          <button type="button" class="coral-MinimalButton coral-Modal-closeButton" title="${'io.wcm.config.editor.modal.close' @ i18n}" data-dismiss="modal">
+          <h2 class="coral-Modal-title coral-Heading coral-Heading--2">${'io.wcm.caconfig.editor.title' @ i18n}</h2>
+          <button type="button" class="coral-MinimalButton coral-Modal-closeButton" title="${'io.wcm.caconfig.editor.modal.close' @ i18n}" data-dismiss="modal">
             <i class="coral-Icon coral-Icon--sizeXS coral-Icon--close coral-MinimalButton-icon "></i>
           </button>
         </div>
         <div class="coral-Modal-body">
-          <p>${'io.wcm.config.editor.modal.success' @ i18n}</p>
+          <p>${'io.wcm.caconfig.editor.modal.success' @ i18n}</p>
         </div>
         <div class="coral-Modal-footer">
-          <button type="button" class="coral-Button" data-dismiss="modal">${'io.wcm.config.editor.modal.close' @ i18n}</button>
+          <button type="button" class="coral-Button" data-dismiss="modal">${'io.wcm.caconfig.editor.modal.close' @ i18n}</button>
         </div>
       </div>
       <div id="errorModal" class="coral-Modal">
         <div class="coral-Modal-header">
           <i class="coral-Modal-typeIcon coral-Icon coral-Icon--sizeS"></i>
-          <h2 class="coral-Modal-title coral-Heading coral-Heading--2">${'io.wcm.config.editor.title' @ i18n}</h2>
-          <button type="button" class="coral-MinimalButton coral-Modal-closeButton" title="${'io.wcm.config.editor.modal.close' @ i18n}" data-dismiss="modal">
+          <h2 class="coral-Modal-title coral-Heading coral-Heading--2">${'io.wcm.caconfig.editor.title' @ i18n}</h2>
+          <button type="button" class="coral-MinimalButton coral-Modal-closeButton" title="${'io.wcm.caconfig.editor.modal.close' @ i18n}" data-dismiss="modal">
             <i class="coral-Icon coral-Icon--sizeXS coral-Icon--close coral-MinimalButton-icon "></i>
           </button>
         </div>
         <div class="coral-Modal-body">
-          <p>${'io.wcm.config.editor.modal.error' @ i18n}</p>
+          <p>${'io.wcm.caconfig.editor.modal.error' @ i18n}</p>
         </div>
         <div class="coral-Modal-footer">
-          <button type="button" class="coral-Button" data-dismiss="modal">${'io.wcm.config.editor.modal.close' @ i18n}</button>
+          <button type="button" class="coral-Button" data-dismiss="modal">${'io.wcm.caconfig.editor.modal.close' @ i18n}</button>
         </div>
       </div>
-      <meta data-sly-call="${clientLib.js @ categories='io.wcm.config.editor'}" data-sly-unwrap></meta>
+      <meta data-sly-call="${clientLib.js @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
       <script type="text/javascript">
-        angular.module("io.wcm.config.services").config(["parametersProvider", function(parametersProvider){
+        angular.module("io.wcm.caconfig.services").config(["parametersProvider", function(parametersProvider){
           var path = "${editorConfig.providerUrl @ context='uri'}";
           var i18n = {};
-          i18n.applicationFilter = "${'io.wcm.config.editor.filter.application' @ i18n, context='text'}";
-          i18n.groupFilter = "${'io.wcm.config.editor.filter.group' @ i18n, context='text'}";
+          i18n.applicationFilter = "${'io.wcm.caconfig.editor.filter.application' @ i18n, context='text'}";
+          i18n.groupFilter = "${'io.wcm.caconfig.editor.filter.group' @ i18n, context='text'}";
           parametersProvider.setConfig({i18n: i18n, url: path, lockedParameterName: "${editorConfig.lockedNamesAttributeName @ context='scriptString'}"});
         }]);
       </script>

@@ -51,22 +51,21 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.scr.annotations</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.models.api</artifactId>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
-      <groupId>io.wcm</groupId>
-      <artifactId>io.wcm.wcm.commons</artifactId>
-      <version>0.6.0</version>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
       <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>

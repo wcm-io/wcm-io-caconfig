@@ -25,7 +25,7 @@
    * Utilities module.
    * TODO: write unit tests
    */
-  angular.module('io.wcm.config.utilities', [])
+  angular.module('io.wcm.caconfig.utilities', [])
 
     .factory('EditorUtilities', function () {
 
