@@ -23,7 +23,7 @@
         <filter-drop-down-list ng-repeat="filter in filters" model="filter" current-filter="currentFilter"></filter-drop-down-list>
         <button ng-disabled="!configForm.$valid" class="coral-Button coral-Button--primary" ng-click="save()" >${'io.wcm.caconfig.editor.save' @ i18n}</button>
 
-        <p>${'io.wcm.caconfig.editor.config.path' @ i18n} <code>${editorConfig.contextPath}</code></p>
+        <p>${'io.wcm.caconfig.editor.contextPath' @ i18n} <code>${editorConfig.contextPath}</code></p>
         <table class="coral-Table coral-Table--hover" ng-cloak>
           <thead>
           <tr class="coral-Table-row">
