@@ -123,19 +123,6 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.sling</groupId>
-        <artifactId>maven-sling-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>validate-bundle</id>
-            <goals>
-              <goal>validate</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
       <!-- Nodejs Maven Plugin to run the templates compilation and tests -->
       <plugin>
         <groupId>io.wcm.maven.plugins</groupId>
