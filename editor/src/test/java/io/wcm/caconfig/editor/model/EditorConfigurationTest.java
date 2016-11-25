@@ -23,11 +23,15 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import io.wcm.caconfig.editor.impl.ConfigDataServlet;
+import io.wcm.caconfig.editor.impl.ConfigNamesServlet;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EditorConfigurationTest {
@@ -36,18 +40,23 @@ public class EditorConfigurationTest {
 
   @Mock
   private Resource contentResource;
+  @Mock
+  private ConfigurationResourceResolver configResourceResolver;
 
   private EditorConfiguration underTest;
 
   @Before
   public void setUp() {
     when(contentResource.getPath()).thenReturn(SAMPLE_PATH);
-    underTest = new EditorConfiguration(contentResource);
+    when(configResourceResolver.getContextPath(contentResource)).thenReturn(SAMPLE_PATH);
+    underTest = new EditorConfiguration(contentResource, configResourceResolver);
   }
 
   @Test
   public void testProperties() {
-    assertEquals(SAMPLE_PATH + ".configProvider.json", underTest.getProviderUrl());
+    assertEquals(SAMPLE_PATH + "." + ConfigDataServlet.SELECTOR + ".json", underTest.getConfigDataUrl());
+    assertEquals(SAMPLE_PATH + "." + ConfigNamesServlet.SELECTOR + ".json", underTest.getConfigNamesUrl());
+    assertEquals(SAMPLE_PATH, underTest.getContextPath());
   }
 
 }

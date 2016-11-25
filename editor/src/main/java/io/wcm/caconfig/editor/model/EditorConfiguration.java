@@ -23,9 +23,14 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.caconfig.editor.impl.ConfigDataServlet;
+import io.wcm.caconfig.editor.impl.ConfigNamesServlet;
 
 /**
  * Provides editor configuration options
@@ -37,18 +42,31 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public class EditorConfiguration {
 
-  private final String providerUrl;
+  private final String configDataUrl;
+  private final String configNamesUrl;
+  private final String contextPath;
 
   /**
    * @param currentResource Current resource
    */
   @Inject
-  public EditorConfiguration(@SlingObject Resource currentResource) {
-    providerUrl = currentResource.getPath() + ".configProvider.json";
+  public EditorConfiguration(@SlingObject Resource currentResource,
+      @OSGiService ConfigurationResourceResolver configResourceResolver) {
+    configDataUrl = currentResource.getPath() + "." + ConfigDataServlet.SELECTOR + ".json";
+    configNamesUrl = currentResource.getPath() + "." + ConfigNamesServlet.SELECTOR + ".json";
+    contextPath = configResourceResolver.getContextPath(currentResource);
   }
 
-  public String getProviderUrl() {
-    return providerUrl;
+  public String getConfigDataUrl() {
+    return configDataUrl;
+  }
+
+  public String getConfigNamesUrl() {
+    return configNamesUrl;
+  }
+
+  public String getContextPath() {
+    return this.contextPath;
   }
 
 }

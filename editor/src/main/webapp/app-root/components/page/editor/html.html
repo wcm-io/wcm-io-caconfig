@@ -23,7 +23,7 @@
         <filter-drop-down-list ng-repeat="filter in filters" model="filter" current-filter="currentFilter"></filter-drop-down-list>
         <button ng-disabled="!configForm.$valid" class="coral-Button coral-Button--primary" ng-click="save()" >${'io.wcm.caconfig.editor.save' @ i18n}</button>
 
-        <p>${'io.wcm.caconfig.editor.config.path' @ i18n} <code>${editorConfig.configurationId}</code></p>
+        <p>${'io.wcm.caconfig.editor.config.path' @ i18n} <code>${editorConfig.contextPath}</code></p>
         <table class="coral-Table coral-Table--hover" ng-cloak>
           <thead>
           <tr class="coral-Table-row">
@@ -101,11 +101,12 @@
       <meta data-sly-call="${clientLib.js @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
       <script type="text/javascript">
         angular.module("io.wcm.caconfig.services").config(["parametersProvider", function(parametersProvider){
-          var path = "${editorConfig.providerUrl @ context='uri'}";
+          var configDataUrl = "${editorConfig.configDataUrl @ context='uri'}";
+          var configNamesUrl = "${editorConfig.configNamesUrl @ context='uri'}";
           var i18n = {};
           i18n.applicationFilter = "${'io.wcm.caconfig.editor.filter.application' @ i18n, context='text'}";
           i18n.groupFilter = "${'io.wcm.caconfig.editor.filter.group' @ i18n, context='text'}";
-          parametersProvider.setConfig({i18n: i18n, url: path, lockedParameterName: "${editorConfig.lockedNamesAttributeName @ context='scriptString'}"});
+          parametersProvider.setConfig({i18n: i18n, url: configNamesUrl});
         }]);
       </script>
     </div>
