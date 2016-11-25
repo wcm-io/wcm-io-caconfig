@@ -55,6 +55,7 @@ public class ConfigNamesServletTest {
     metadata1.setLabel("label1");
     metadata1.setDescription("desc1");
     ConfigurationMetadata metadata2 = new ConfigurationMetadata("name2");
+    metadata2.setCollection(true);
 
     when(configManager.getConfigurationNames()).thenReturn(ImmutableSortedSet.of("name1", "name2"));
     when(configManager.getConfigurationMetadata("name1")).thenReturn(metadata1);
@@ -72,7 +73,7 @@ public class ConfigNamesServletTest {
 
     String expectedJson = "["
         + "{configName:'name1',label:'label1',description:'desc1'},"
-        + "{configName:'name2'}"
+        + "{configName:'name2',collection=true}"
         + "]";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }

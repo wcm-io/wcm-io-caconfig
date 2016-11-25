@@ -24,12 +24,17 @@
         <table class="coral-Table coral-Table--hover" ng-cloak>
           <thead>
             <tr class="coral-Table-row">
+              <th class="coral-Table-headerCell" style="width:1%"></th>
               <th class="coral-Table-headerCell">Configuration Name</th>
               <th class="coral-Table-headerCell">Description</th>
             </tr>
           </thead>
           <tbody>
             <tr class="coral-Table-row" ng-repeat="item in configNamesCollection" ng-cloak>
+              <td class="coral-Table-cell">
+                <i class="coral-Icon coral-Icon--sizeS"
+                    ng-class="{'coral-Icon--page': !item.collection, 'coral-Icon--pages': item.collection}"></i>
+              </td>
               <td class="coral-Table-cell">
                 {{item.label || item.configName}}
               </td>
@@ -41,6 +46,7 @@
         </table>
       </div>
 
+<!--/* 
       <form id="configuration" name="configForm">
         <filter-drop-down-list ng-repeat="filter in filters" model="filter" current-filter="currentFilter"></filter-drop-down-list>
         <button ng-disabled="!configForm.$valid" class="coral-Button coral-Button--primary" ng-click="save()" >${'io.wcm.caconfig.editor.save' @ i18n}</button>
@@ -90,6 +96,7 @@
           </tbody>
         </table>
       </form>
+*/-->
 
       <div id="confirmModal" class="coral-Modal">
         <div class="coral-Modal-header">

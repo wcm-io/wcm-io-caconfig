@@ -78,6 +78,9 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
         item.putOpt("configName", configName);
         item.putOpt("label", metadata.getLabel());
         item.putOpt("description", metadata.getDescription());
+        if (metadata.isCollection()) {
+          item.put("collection", true);
+        }
         output.put(item);
       }
     }
