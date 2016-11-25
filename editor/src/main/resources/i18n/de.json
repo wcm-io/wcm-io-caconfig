@@ -9,16 +9,16 @@
       "inherited": "Geerbt",
       "lock": "Gesperrt",
       "description": "Beschreibung",
-      "group": "Gruppe",
-      "modal": {
-        "success": "Konfiguration wurde erfolgreich gespeichert.",
-        "error": "Es ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Eingaben und probieren Sie noch mal.",
-        "close": "Schließen"
-      },
-      "filter": {
-        "application": "Filter Applikation",
-        "group": "Filter Gruppe"
-      }
+      "group": "Gruppe"
+    },
+    "modal": {
+      "success": "Konfiguration wurde erfolgreich gespeichert.",
+      "error": "Es ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Eingaben und probieren Sie noch mal.",
+      "close": "Schließen"
+    },
+    "filter": {
+      "application": "Filter Applikation",
+      "group": "Filter Gruppe"
     }
   }
 }

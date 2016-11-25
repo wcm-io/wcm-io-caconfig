@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,20 @@
     .run(["$rootScope", "parameters", function($rootScope, Parameters) {
       $rootScope.confirmModal = new CUI.Modal({ element:'#confirmModal', visible: false });
       $rootScope.errorModal = new CUI.Modal({ element:'#errorModal', type: "error", visible: false });
+      
       /**
-       * Use the parameters service to load and parse data from backend
+       * Use the parameters service to load configuration names
        */
+      Parameters.loadConfigNames().then(
+        function success(result) {
+          $rootScope.configNamesCollection = result.data;
+        },
+        function error() {
+          $rootScope.errorModal.show();
+        }
+      );
+      
+      /*
       Parameters.loadParameters().then(
         function success(result){
           var parsedData = Parameters.parseData(result.data);
@@ -39,6 +50,7 @@
           $rootScope.errorModal.show();
         }
       );
+      */
 
     }])
     .controller("mainCtrl", ['$scope', "$filter", "parameters", function($scope, $filter, Parameters) {

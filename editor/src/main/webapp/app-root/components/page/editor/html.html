@@ -19,6 +19,28 @@
     </nav>
     <div class="wcm-io-editor-page-border">
 
+      <div id="configNames">
+        <p>${'io.wcm.caconfig.editor.contextPath' @ i18n} <code>${editorConfig.contextPath}</code></p>
+        <table class="coral-Table coral-Table--hover" ng-cloak>
+          <thead>
+            <tr class="coral-Table-row">
+              <th class="coral-Table-headerCell">Configuration Name</th>
+              <th class="coral-Table-headerCell">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="coral-Table-row" ng-repeat="item in configNamesCollection" ng-cloak>
+              <td class="coral-Table-cell">
+                {{item.label || item.configName}}
+              </td>
+              <td class="coral-Table-cell">
+                {{item.description}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <form id="configuration" name="configForm">
         <filter-drop-down-list ng-repeat="filter in filters" model="filter" current-filter="currentFilter"></filter-drop-down-list>
         <button ng-disabled="!configForm.$valid" class="coral-Button coral-Button--primary" ng-click="save()" >${'io.wcm.caconfig.editor.save' @ i18n}</button>
@@ -68,6 +90,7 @@
           </tbody>
         </table>
       </form>
+
       <div id="confirmModal" class="coral-Modal">
         <div class="coral-Modal-header">
           <i class="coral-Modal-typeIcon coral-Icon coral-Icon--sizeS"></i>
@@ -83,6 +106,7 @@
           <button type="button" class="coral-Button" data-dismiss="modal">${'io.wcm.caconfig.editor.modal.close' @ i18n}</button>
         </div>
       </div>
+
       <div id="errorModal" class="coral-Modal">
         <div class="coral-Modal-header">
           <i class="coral-Modal-typeIcon coral-Icon coral-Icon--sizeS"></i>
@@ -98,17 +122,21 @@
           <button type="button" class="coral-Button" data-dismiss="modal">${'io.wcm.caconfig.editor.modal.close' @ i18n}</button>
         </div>
       </div>
+
       <meta data-sly-call="${clientLib.js @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
       <script type="text/javascript">
-        angular.module("io.wcm.caconfig.services").config(["parametersProvider", function(parametersProvider){
-          var configDataUrl = "${editorConfig.configDataUrl @ context='uri'}";
-          var configNamesUrl = "${editorConfig.configNamesUrl @ context='uri'}";
-          var i18n = {};
-          i18n.applicationFilter = "${'io.wcm.caconfig.editor.filter.application' @ i18n, context='text'}";
-          i18n.groupFilter = "${'io.wcm.caconfig.editor.filter.group' @ i18n, context='text'}";
-          parametersProvider.setConfig({i18n: i18n, url: configNamesUrl});
-        }]);
+        angular.module("io.wcm.caconfig.services")
+          .config(["parametersProvider", function(parametersProvider) {
+            var configDataUrl = "${editorConfig.configDataUrl @ context='uri'}";
+            var configNamesUrl = "${editorConfig.configNamesUrl @ context='uri'}";
+            var i18n = {
+              applicationFilter: "${'io.wcm.caconfig.editor.filter.application' @ i18n, context='text'}",
+              groupFilter: "${'io.wcm.caconfig.editor.filter.group' @ i18n, context='text'}"
+            };
+            parametersProvider.setConfig({i18n: i18n, configNamesUrl: configNamesUrl, configDataUrl: configDataUrl});
+          }]);
       </script>
+
     </div>
   </body>
 </html>

@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,13 @@
       var config = {};
 
       function Parameter($http, $q, config, utils) {
+
+        /**
+         * Load configuration names.
+         */
+        this.loadConfigNames = function () {
+          return $http.get(config.configNamesUrl);
+        };
 
         /**
          * Extracts the filter options for the specific filter
@@ -67,7 +74,7 @@
         }
 
         this.loadParameters = function () {
-          return $http.get(config.url);
+          return $http.get(config.configDataUrl);
         };
 
         this.parseData = function(data) {
@@ -165,4 +172,5 @@
         return new Parameter($http, $q, config, utils);
       }];
     });
+
 })(angular);

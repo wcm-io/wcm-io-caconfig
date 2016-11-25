@@ -9,16 +9,16 @@
       "inherited": "Inherited",
       "lock": "Locked",
       "description": "Description",
-      "group": "Group",
-      "modal": {
-        "success": "Configuration was successfully saved.",
-        "error": "An internal error occurred. Please try again.",
-        "close": "Close"
-      },
-      "filter": {
-        "application": "Filter Application",
-        "group": "Filter Group"
-      }
+      "group": "Group"
+    },
+    "modal": {
+      "success": "Configuration was successfully saved.",
+      "error": "An internal error occurred. Please try again.",
+      "close": "Close"
+    },
+    "filter": {
+      "application": "Filter Application",
+      "group": "Filter Group"
     }
   }
 }
