@@ -103,7 +103,7 @@ public enum WidgetTypes {
   }
 
   /**
-   * @param defaultOverrides
+   * @param defaultOverrides Default overrides
    * @return configuration properties of the widget with overridden default values
    */
   public Map<String, Object> getWidgetConfiguration(Map<String, Object> defaultOverrides) {

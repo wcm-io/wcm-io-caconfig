@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caconfig.editor.controller;
+package io.wcm.caconfig.editor.model;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +40,7 @@ public class EditorConfiguration {
   private final String providerUrl;
 
   /**
-   * @param currentResource
+   * @param currentResource Current resource
    */
   @Inject
   public EditorConfiguration(@SlingObject Resource currentResource) {

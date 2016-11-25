@@ -109,7 +109,7 @@
               SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/caconfig/editor
             </Sling-Initial-Content>
             <Sling-Model-Packages>
-              io.wcm.caconfig.editor.controller
+              io.wcm.caconfig.editor.model
             </Sling-Model-Packages>
 
             <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
