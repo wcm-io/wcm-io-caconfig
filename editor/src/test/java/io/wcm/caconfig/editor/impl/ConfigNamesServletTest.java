@@ -19,7 +19,10 @@
  */
 package io.wcm.caconfig.editor.impl;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
@@ -62,8 +65,10 @@ public class ConfigNamesServletTest {
   }
 
   @Test
-  public void testDoGet() throws Exception {
+  public void testResponse() throws Exception {
     underTest.doGet(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
     String expectedJson = "["
         + "{configName:'name1',label:'label1',description:'desc1'},"

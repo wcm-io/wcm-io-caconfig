@@ -90,7 +90,6 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
     // output configuration
     Collection<ConfigurationData> config = getConfiguration(request.getResource(), configName, collection);
-
     try {
       response.setContentType("application/json;charset=" + CharEncoding.UTF_8);
       response.getWriter().write(toJson(config).toString());
