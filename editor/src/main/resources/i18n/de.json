@@ -2,6 +2,7 @@
   "io.wcm.caconfig.editor": {
     "title": "Konfiguration bearbeiten",
     "contextPath": "Konfiguration für:",
+    "add": "Hinzufügen",
     "save": "Speichern",
     "column": {
       "name": "Parameter",
@@ -12,6 +13,7 @@
       "group": "Gruppe"
     },
     "modal": {
+      "addTitle": "Konfiguration hinzufügen",
       "success": "Konfiguration wurde erfolgreich gespeichert.",
       "error": "Es ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Eingaben und probieren Sie noch mal.",
       "close": "Schließen"

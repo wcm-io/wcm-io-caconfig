@@ -2,6 +2,7 @@
   "io.wcm.caconfig.editor": {
     "title": "Configuration Editor",
     "contextPath": "Configuration for:",
+    "add": "Add",
     "save": "Save",
     "column": {
       "name": "Parameter",
@@ -12,6 +13,7 @@
       "group": "Group"
     },
     "modal": {
+      "addTitle": "Add Configuration",
       "success": "Configuration was successfully saved.",
       "error": "An internal error occurred. Please try again.",
       "close": "Close"

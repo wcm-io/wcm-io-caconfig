@@ -22,6 +22,7 @@
   "use strict";
   angular.module('io.wcm.caconfig.editor', ['io.wcm.caconfig.services', 'io.wcm.caconfig.directives'])
     .run(["$rootScope", "parameters", function($rootScope, Parameters) {
+      $rootScope.addModal = new CUI.Modal({ element:'#addModal', visible: false });
       $rootScope.confirmModal = new CUI.Modal({ element:'#confirmModal', visible: false });
       $rootScope.errorModal = new CUI.Modal({ element:'#errorModal', type: "error", visible: false });
       
@@ -56,6 +57,22 @@
     .controller("mainCtrl", ['$scope', "$filter", "parameters", function($scope, $filter, Parameters) {
       $scope.currentFilter = {};
       $scope.displayedCollection = [];
+
+      $scope.hasNonExistingConfig = function() {
+        if (!$scope.configNamesCollection) {
+          return false;
+        }
+        for (var configName in $scope.configNamesCollection) {
+          if (!configName.exists) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      $scope.addConfig = function() {
+        $scope.addModal.show();
+      };
 
       $scope.save = function() {
         Parameters.saveParameters($scope.parameterCollection).then(

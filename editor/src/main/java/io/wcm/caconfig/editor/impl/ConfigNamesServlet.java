@@ -20,6 +20,7 @@
 package io.wcm.caconfig.editor.impl;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.SortedSet;
 
 import javax.servlet.Servlet;
@@ -28,7 +29,9 @@ import javax.servlet.ServletException;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.commons.json.JSONArray;
@@ -60,14 +63,14 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
   protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
     try {
       response.setContentType("application/json;charset=" + CharEncoding.UTF_8);
-      response.getWriter().write(getConfigNames().toString());
+      response.getWriter().write(getConfigNames(request.getResource()).toString());
     }
     catch (JSONException ex) {
       throw new ServletException("Unable to generate JSON.", ex);
     }
   }
 
-  private JSONArray getConfigNames() throws JSONException {
+  private JSONArray getConfigNames(Resource contextResource) throws JSONException {
     JSONArray output = new JSONArray();
 
     SortedSet<String> configNames = configManager.getConfigurationNames();
@@ -75,17 +78,27 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
       ConfigurationMetadata metadata = configManager.getConfigurationMetadata(configName);
       if (metadata != null) {
         JSONObject item = new JSONObject();
-        item.putOpt("configName", configName);
+        item.put("configName", configName);
         item.putOpt("label", metadata.getLabel());
         item.putOpt("description", metadata.getDescription());
-        if (metadata.isCollection()) {
-          item.put("collection", true);
-        }
+        item.put("collection", metadata.isCollection());
+        item.put("exists", hasConfig(contextResource, configName, metadata.isCollection()));
         output.put(item);
       }
     }
 
     return output;
+  }
+
+  private boolean hasConfig(Resource contextResource, String configName, boolean collection) {
+    if (collection) {
+      Collection<ConfigurationData> configs = configManager.getCollection(contextResource, configName);
+      return !configs.isEmpty();
+    }
+    else {
+      ConfigurationData config = configManager.get(contextResource, configName);
+      return config != null && config.getResourcePath() != null;
+    }
   }
 
 }

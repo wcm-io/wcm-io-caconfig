@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.junit.Before;
@@ -34,6 +35,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 
 import io.wcm.testing.mock.aem.junit.AemContext;
@@ -46,6 +48,8 @@ public class ConfigNamesServletTest {
 
   @Mock
   private ConfigurationManager configManager;
+  @Mock
+  private ConfigurationData configData;
 
   private ConfigNamesServlet underTest;
 
@@ -56,10 +60,17 @@ public class ConfigNamesServletTest {
     metadata1.setDescription("desc1");
     ConfigurationMetadata metadata2 = new ConfigurationMetadata("name2");
     metadata2.setCollection(true);
+    ConfigurationMetadata metadata3 = new ConfigurationMetadata("name3");
 
-    when(configManager.getConfigurationNames()).thenReturn(ImmutableSortedSet.of("name1", "name2"));
+    when(configManager.getConfigurationNames()).thenReturn(ImmutableSortedSet.of("name1", "name2", "name3"));
     when(configManager.getConfigurationMetadata("name1")).thenReturn(metadata1);
     when(configManager.getConfigurationMetadata("name2")).thenReturn(metadata2);
+    when(configManager.getConfigurationMetadata("name3")).thenReturn(metadata3);
+
+    when(configData.getResourcePath()).thenReturn("/path");
+
+    when(configManager.get(context.currentResource(), "name1")).thenReturn(configData);
+    when(configManager.getCollection(context.currentResource(), "name2")).thenReturn(ImmutableList.of(configData));
 
     context.registerService(ConfigurationManager.class, configManager);
     underTest = context.registerInjectActivateService(new ConfigNamesServlet());
@@ -72,8 +83,9 @@ public class ConfigNamesServletTest {
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
     String expectedJson = "["
-        + "{configName:'name1',label:'label1',description:'desc1'},"
-        + "{configName:'name2',collection=true}"
+        + "{configName:'name1',label:'label1',description:'desc1',collection:false,exists:true},"
+        + "{configName:'name2',collection=true,exists:true},"
+        + "{configName:'name3',collection:false,exists:false}"
         + "]";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
