@@ -1,0 +1,26 @@
+{
+  "io.wcm.caconfig.editor": {
+    "title": "Configuration Editor",
+    "contextPath": "Configuration for:",
+    "add": "Add",
+    "save": "Save",
+    "column": {
+      "name": "Parameter",
+      "value": "Value",
+      "inherited": "Inherited",
+      "lock": "Locked",
+      "description": "Description",
+      "group": "Group"
+    },
+    "modal": {
+      "addTitle": "Add Configuration",
+      "success": "Configuration was successfully saved.",
+      "error": "An internal error occurred. Please try again.",
+      "close": "Close"
+    },
+    "filter": {
+      "application": "Filter Application",
+      "group": "Filter Group"
+    }
+  }
+}

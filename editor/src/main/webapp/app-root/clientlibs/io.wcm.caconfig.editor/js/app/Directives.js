@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  */
 (function (angular) {
   "use strict";
-  angular.module('io.wcm.config.directives', ["io.wcm.config.templateUrlList", "io.wcm.config.utilities", "io.wcm.config.templates"])
+  angular.module('io.wcm.caconfig.directives', ["io.wcm.caconfig.templateUrlList", "io.wcm.caconfig.utilities", "io.wcm.caconfig.templates"])
   /**
    * Directive for displaying the filters on the editor page. Wraps internally the CUI.Select widget.
    * Parent Scope provides the model for the filter:

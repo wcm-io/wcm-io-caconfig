@@ -1,0 +1,26 @@
+{
+  "io.wcm.caconfig.editor": {
+    "title": "Konfiguration bearbeiten",
+    "contextPath": "Konfiguration für:",
+    "add": "Hinzufügen",
+    "save": "Speichern",
+    "column": {
+      "name": "Parameter",
+      "value": "Wert",
+      "inherited": "Geerbt",
+      "lock": "Gesperrt",
+      "description": "Beschreibung",
+      "group": "Gruppe"
+    },
+    "modal": {
+      "addTitle": "Konfiguration hinzufügen",
+      "success": "Konfiguration wurde erfolgreich gespeichert.",
+      "error": "Es ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Eingaben und probieren Sie noch mal.",
+      "close": "Schließen"
+    },
+    "filter": {
+      "application": "Filter Applikation",
+      "group": "Filter Gruppe"
+    }
+  }
+}

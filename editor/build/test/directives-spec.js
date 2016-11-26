@@ -7,7 +7,7 @@ describe("Directives", function() {
         show: function() {}
       }
     };
-    module("io.wcm.config.directives", "io.wcm.config.test.templates");
+    module("io.wcm.caconfig.directives", "io.wcm.caconfig.test.templates");
   });
 
   describe("parameterValue", function() {

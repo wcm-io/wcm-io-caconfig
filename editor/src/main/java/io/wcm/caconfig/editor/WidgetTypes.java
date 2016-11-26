@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ public enum WidgetTypes {
   }
 
   /**
-   * @param defaultOverrides
+   * @param defaultOverrides Default overrides
    * @return configuration properties of the widget with overridden default values
    */
   public Map<String, Object> getWidgetConfiguration(Map<String, Object> defaultOverrides) {

@@ -2,7 +2,7 @@ describe("parameters service", function() {
   var parameters, httpBackend, utils;
 
   beforeEach(function() {
-    module("io.wcm.config.services", "io.wcm.config.utilities", "testApp");
+    module("io.wcm.caconfig.services", "io.wcm.caconfig.utilities", "testApp");
 
     angular.module("testApp", function() { }).config(function(parametersProvider){
       var i18n = {};

@@ -3,7 +3,7 @@
   #%L
   wcm.io
   %%
-  Copyright (C) 2014 wcm.io
+  Copyright (C) 2016 wcm.io
   %%
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -51,34 +51,47 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.scr.annotations</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.models.api</artifactId>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
-      <groupId>io.wcm</groupId>
-      <artifactId>io.wcm.config.api</artifactId>
-      <version>0.5.4</version>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.caconfig.api</artifactId>
+      <version>1.0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>io.wcm</groupId>
-      <artifactId>io.wcm.config.core</artifactId>
-      <version>0.6.3-SNAPSHOT</version>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.caconfig.spi</artifactId>
+      <version>1.1.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>io.wcm</groupId>
-      <artifactId>io.wcm.wcm.commons</artifactId>
-      <version>0.6.0</version>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.caconfig.impl</artifactId>
+      <version>1.1.1-SNAPSHOT</version>
       <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.skyscreamer</groupId>
+      <artifactId>jsonassert</artifactId>
+      <version>1.4.0</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
@@ -103,7 +116,7 @@
               SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/caconfig/editor
             </Sling-Initial-Content>
             <Sling-Model-Packages>
-              io.wcm.caconfig.editor.controller
+              io.wcm.caconfig.editor.model
             </Sling-Model-Packages>
 
             <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
@@ -127,8 +140,8 @@
           </execution>
         </executions>
         <configuration>
-          <nodeJsVersion>0.12.7</nodeJsVersion>
-          <npmVersion>2.11.3</npmVersion>
+          <nodeJsVersion>4.4.7</nodeJsVersion>
+          <npmVersion>2.15.8</npmVersion>
           <tasks>
             <npmInstallTask>
               <workingDirectory>${project.basedir}/build</workingDirectory>
@@ -145,6 +158,17 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>io.wcm.maven.plugins</groupId>
+        <artifactId>i18n-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
     </plugins>
     <pluginManagement>
@@ -154,7 +178,7 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <configuration>
-            <excludePackageNames>*.impl,*.controller</excludePackageNames>
+            <excludePackageNames>*.impl,*.model</excludePackageNames>
           </configuration>
         </plugin>
 

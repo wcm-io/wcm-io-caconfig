@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import static io.wcm.caconfig.editor.EditorProperties.WIDGET_TYPE;
 
 import java.util.Map;
 
-import io.wcm.sling.commons.resource.ImmutableValueMap;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Provides constants for the widget configuration property names
@@ -36,28 +36,28 @@ final class DefaultWidgetConfiguration {
     // only constants
   }
 
-  static final Map<String, Object> TEXTFIELD = ImmutableValueMap.builder()
+  static final Map<String, Object> TEXTFIELD = ImmutableMap.<String, Object>builder()
       .put(WIDGET_TYPE, "textfield")
       .build();
 
-  static final Map<String, Object> MULTIFIELD = ImmutableValueMap.builder()
+  static final Map<String, Object> MULTIFIELD = ImmutableMap.<String, Object>builder()
       .put(WIDGET_TYPE, "textMultivalue")
       .build();
 
-  static final Map<String, Object> MAP = ImmutableValueMap.builder()
+  static final Map<String, Object> MAP = ImmutableMap.<String, Object>builder()
       .put(WIDGET_TYPE, "map")
       .build();
 
-  static final Map<String, Object> TEXTAREA = ImmutableValueMap.builder()
+  static final Map<String, Object> TEXTAREA = ImmutableMap.<String, Object>builder()
       .put(WIDGET_TYPE, "textarea")
       .put(ROWS, "10")
       .build();
 
-  static final Map<String, Object> CHECKBOX = ImmutableValueMap.builder()
+  static final Map<String, Object> CHECKBOX = ImmutableMap.<String, Object>builder()
       .put(WIDGET_TYPE, "checkbox")
       .build();
 
-  static final Map<String, Object> PATHBROWSER = ImmutableValueMap.builder()
+  static final Map<String, Object> PATHBROWSER = ImmutableMap.<String, Object>builder()
       .put(WIDGET_TYPE, "pathbrowser")
       .put(ROOT_PATH, "/content/")
       .build();

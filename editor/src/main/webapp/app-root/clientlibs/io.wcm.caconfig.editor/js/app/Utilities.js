@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
    * Utilities module.
    * TODO: write unit tests
    */
-  angular.module('io.wcm.config.utilities', [])
+  angular.module('io.wcm.caconfig.utilities', [])
 
     .factory('EditorUtilities', function () {
 

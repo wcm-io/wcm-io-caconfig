@@ -3,7 +3,7 @@
   #%L
   wcm.io
   %%
-  Copyright (C) 2014 wcm.io
+  Copyright (C) 2016 wcm.io
   %%
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -71,6 +71,12 @@
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.aem-mock</artifactId>
       <version>1.8.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.testing.osgi-mock</artifactId>
+      <version>2.1.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

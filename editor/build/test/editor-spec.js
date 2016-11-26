@@ -8,7 +8,7 @@ describe("Editor", function() {
         show: function() {}
       }
     };
-    module("io.wcm.config.editor", "io.wcm.config.utilities", "testApp");
+    module("io.wcm.caconfig.editor", "io.wcm.caconfig.utilities", "testApp");
 
     angular.module("testApp", function() { }).config(function(parametersProvider){
       var i18n = {};

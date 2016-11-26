@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,21 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caconfig.editor.controller;
+package io.wcm.caconfig.editor.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.day.cq.wcm.api.Page;
-
-import io.wcm.config.api.Configuration;
-import io.wcm.config.core.management.ParameterPersistence;
+import io.wcm.caconfig.editor.impl.ConfigDataServlet;
+import io.wcm.caconfig.editor.impl.ConfigNamesServlet;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EditorConfigurationTest {
@@ -40,27 +39,24 @@ public class EditorConfigurationTest {
   private static final String SAMPLE_PATH = "/sample/path";
 
   @Mock
-  private Page currentPage;
-  @Mock
   private Resource contentResource;
   @Mock
-  private Configuration configuration;
+  private ConfigurationResourceResolver configResourceResolver;
 
   private EditorConfiguration underTest;
 
   @Before
   public void setUp() {
-    when(currentPage.getContentResource()).thenReturn(contentResource);
     when(contentResource.getPath()).thenReturn(SAMPLE_PATH);
-    when(configuration.getConfigurationId()).thenReturn("Test Configuration");
-    underTest = new EditorConfiguration(currentPage, configuration);
+    when(configResourceResolver.getContextPath(contentResource)).thenReturn(SAMPLE_PATH);
+    underTest = new EditorConfiguration(contentResource, configResourceResolver);
   }
 
   @Test
   public void testProperties() {
-    assertEquals(SAMPLE_PATH + ".configProvider.json", underTest.getProviderUrl());
-    assertEquals(ParameterPersistence.PN_LOCKED_PARAMETER_NAMES, underTest.getLockedNamesAttributeName());
-    assertEquals("Test Configuration", underTest.getConfigurationId());
+    assertEquals(SAMPLE_PATH + "." + ConfigDataServlet.SELECTOR + ".json", underTest.getConfigDataUrl());
+    assertEquals(SAMPLE_PATH + "." + ConfigNamesServlet.SELECTOR + ".json", underTest.getConfigNamesUrl());
+    assertEquals(SAMPLE_PATH, underTest.getContextPath());
   }
 
 }

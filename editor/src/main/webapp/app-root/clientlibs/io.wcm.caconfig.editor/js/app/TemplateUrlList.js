@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
   /**
    * Provides the list of available templates, used in directives
    */
-  angular.module('io.wcm.config.templateUrlList', [])
+  angular.module('io.wcm.caconfig.templateUrlList', [])
     .constant('templateUrlList', {
       filterDropDownList: 'filterDropDownList.html',
       parameterValue: 'parameterValue.html',
