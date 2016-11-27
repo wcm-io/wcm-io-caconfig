@@ -19,7 +19,9 @@
     </nav>
     <div class="wcm-io-editor-page-border">
 
-      <div id="configNames">
+      <ng-view></ng-view>
+      
+      <script type="text/ng-template" id="configNames.html">
         <button ng-disabled="!hasNonExistingConfig()" class="coral-Button coral-Button--primary" ng-click="addConfig()" >${'io.wcm.caconfig.editor.add' @ i18n}</button>
         <p>${'io.wcm.caconfig.editor.contextPath' @ i18n} <code>${editorConfig.contextPath}</code></p>
         <table class="coral-Table coral-Table--hover" ng-cloak>
@@ -31,7 +33,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="coral-Table-row" ng-repeat="item in configNamesCollection | filter:{exists:true}" ng-cloak>
+            <tr class="coral-Table-row" ng-repeat="item in configNamesCollection | filter:{exists:true}" ng-cloak
+                ng-click="editConfig(item.configName)">
               <td class="coral-Table-cell">
                 <i class="coral-Icon coral-Icon--sizeS"
                     ng-class="{'coral-Icon--page': !item.collection, 'coral-Icon--pages': item.collection}"></i>
@@ -45,59 +48,59 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </script>
 
-<!--/* 
-      <form id="configuration" name="configForm">
-        <filter-drop-down-list ng-repeat="filter in filters" model="filter" current-filter="currentFilter"></filter-drop-down-list>
-        <button ng-disabled="!configForm.$valid" class="coral-Button coral-Button--primary" ng-click="save()" >${'io.wcm.caconfig.editor.save' @ i18n}</button>
-
-        <p>${'io.wcm.caconfig.editor.contextPath' @ i18n} <code>${editorConfig.contextPath}</code></p>
-        <table class="coral-Table coral-Table--hover" ng-cloak>
-          <thead>
-          <tr class="coral-Table-row">
-            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.name' @ i18n}</th>
-            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.value' @ i18n}</th>
-            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.inherited' @ i18n}</th>
-            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.lock' @ i18n}</th>
-            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.description' @ i18n}</th>
-            <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.group' @ i18n}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr class="coral-Table-row" ng-repeat="parameter in displayedCollection" ng-cloak>
-            <td class="coral-Table-cell">
-              {{parameter.label}}
-            </td>
-            <td class="coral-Table-cell" parameter-value="parameter" widget-type="{{parameter.widgetType}}">
-            </td>
-            <td class="coral-Table-cell">
-              <label class="coral-Checkbox">
-                <input class="coral-Checkbox-input" type="checkbox" ng-model="parameter.inherited" ng-disabled="parameter.lockedInherited">
-                <span class="coral-Checkbox-checkmark"></span>
-              </label>
-            </td>
-            <td class="coral-Table-cell">
-              <label class="coral-Checkbox">
-                <input class="coral-Checkbox-input" type="checkbox" ng-model="parameter.locked" ng-disabled="parameter.lockedInherited || !configForm.$valid">
-                <span class="coral-Checkbox-checkmark"></span>
-              </label>
-            </td>
-            <td class="coral-Table-cell">
-              <description-popup>
-                <popup-content>
-                  {{parameter.description}}
-                </popup-content>
-              </description-popup>
-            </td>
-            <td class="coral-Table-cell">
-              {{parameter.group}}
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </form>
-*/-->
+      <script type="text/ng-template" id="configEdit.html">
+        <form id="configuration" name="configForm">
+          <filter-drop-down-list ng-repeat="filter in filters" model="filter" current-filter="currentFilter"></filter-drop-down-list>
+          <button ng-disabled="!configForm.$valid" class="coral-Button coral-Button--primary" ng-click="save()" >${'io.wcm.caconfig.editor.save' @ i18n}</button>
+  
+          <p>${'io.wcm.caconfig.editor.contextPath' @ i18n} <code>${editorConfig.contextPath}</code></p>
+          <table class="coral-Table coral-Table--hover" ng-cloak>
+            <thead>
+            <tr class="coral-Table-row">
+              <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.name' @ i18n}</th>
+              <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.value' @ i18n}</th>
+              <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.inherited' @ i18n}</th>
+              <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.lock' @ i18n}</th>
+              <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.description' @ i18n}</th>
+              <th class="coral-Table-headerCell">${'io.wcm.caconfig.editor.column.group' @ i18n}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="coral-Table-row" ng-repeat="parameter in displayedCollection" ng-cloak>
+              <td class="coral-Table-cell">
+                {{parameter.label}}
+              </td>
+              <td class="coral-Table-cell" parameter-value="parameter" widget-type="{{parameter.widgetType}}">
+              </td>
+              <td class="coral-Table-cell">
+                <label class="coral-Checkbox">
+                  <input class="coral-Checkbox-input" type="checkbox" ng-model="parameter.inherited" ng-disabled="parameter.lockedInherited">
+                  <span class="coral-Checkbox-checkmark"></span>
+                </label>
+              </td>
+              <td class="coral-Table-cell">
+                <label class="coral-Checkbox">
+                  <input class="coral-Checkbox-input" type="checkbox" ng-model="parameter.locked" ng-disabled="parameter.lockedInherited || !configForm.$valid">
+                  <span class="coral-Checkbox-checkmark"></span>
+                </label>
+              </td>
+              <td class="coral-Table-cell">
+                <description-popup>
+                  <popup-content>
+                    {{parameter.description}}
+                  </popup-content>
+                </description-popup>
+              </td>
+              <td class="coral-Table-cell">
+                {{parameter.group}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      </script>
 
       <div id="addModal" class="coral-Modal">
         <div class="coral-Modal-header">
