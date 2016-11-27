@@ -1,4 +1,4 @@
-#base=js/app
+#base=js
 
 Utilities.js
 Services.js
