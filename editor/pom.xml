@@ -97,6 +97,24 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <!-- those resources are processed by the i18n-maven-plugin -->
+          <exclude>i18n/**</exclude>
+          <!-- processed by grund html2js -->
+          <exclude>angularjs-partials/**</exclude>
+        </excludes>
+      </resource>
+      <!-- copy webapp resources to SLING-INF/app-root -->
+      <resource>
+        <directory>src/main/webapp</directory>
+        <targetPath>SLING-INF</targetPath>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
     <plugins>
 
       <plugin>
@@ -144,10 +162,10 @@
           <npmVersion>2.15.8</npmVersion>
           <tasks>
             <npmInstallTask>
-              <workingDirectory>${project.basedir}/build</workingDirectory>
+              <workingDirectory>${project.basedir}</workingDirectory>
             </npmInstallTask>
             <nodeJsTask>
-              <workingDirectory>${project.basedir}/build</workingDirectory>
+              <workingDirectory>${project.basedir}</workingDirectory>
               <moduleName>grunt-cli</moduleName>
               <executableName>grunt</executableName>
               <arguments>
