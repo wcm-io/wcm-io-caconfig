@@ -21,7 +21,7 @@
 
   "use strict";
   angular.module('io.wcm.caconfig.editor', ['io.wcm.caconfig.services', 'io.wcm.caconfig.directives', 'ngRoute'])
-    .config(function ($routeProvider) {
+    .config(["$routeProvider", function ($routeProvider) {
       $routeProvider
         .when("/:configName", {
           templateUrl: "configEdit.html"/*,
@@ -29,9 +29,7 @@
           resolve: {
             controllingData: function($route, $http) {
               return $http({ method: "GET", url: "/api/controlling", params: {
-                "projektNr": $route.current.params.projektNr,
-                "zeitraumVon": $route.current.params.zeitraumVon,
-                "zeitraumBis": $route.current.params.zeitraumBis
+                "projectNr": $route.current.params.projektNr
               } })
               .success(function(data, status, headers, config) { return data; });
             }
@@ -40,7 +38,7 @@
         .otherwise({
           templateUrl: "configNames.html"
         });
-    })
+    }])
     .run(["$rootScope", "parameters", function($rootScope, Parameters) {
       $rootScope.addModal = new CUI.Modal({ element:'#addModal', visible: false });
       $rootScope.confirmModal = new CUI.Modal({ element:'#confirmModal', visible: false });
