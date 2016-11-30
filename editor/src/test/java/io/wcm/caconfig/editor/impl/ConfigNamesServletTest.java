@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.sling.caconfig.management.ConfigurationCollectionData;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.junit.Before;
 import org.junit.Rule;
@@ -50,6 +51,8 @@ public class ConfigNamesServletTest {
 
   @Mock
   private ConfigurationManager configManager;
+  @Mock
+  private ConfigurationResourceResolver configurationResourceResolver;
   @Mock
   private ConfigurationData configData;
 
@@ -76,7 +79,10 @@ public class ConfigNamesServletTest {
     when(configCollectionData.getItems()).thenReturn(ImmutableList.of(configData));
     when(configManager.getConfigurationCollection(context.currentResource(), "name2")).thenReturn(configCollectionData);
 
+    when(configurationResourceResolver.getContextPath(context.currentResource())).thenReturn("/context/path");
+
     context.registerService(ConfigurationManager.class, configManager);
+    context.registerService(ConfigurationResourceResolver.class, configurationResourceResolver);
     underTest = context.registerInjectActivateService(new ConfigNamesServlet());
   }
 
@@ -86,11 +92,11 @@ public class ConfigNamesServletTest {
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
-    String expectedJson = "["
+    String expectedJson = "{contextPath:'/context/path',configNames:["
         + "{configName:'name1',label:'label1',description:'desc1',collection:false,exists:true},"
         + "{configName:'name2',collection=true,exists:true},"
         + "{configName:'name3',collection:false,exists:false}"
-        + "]";
+        + "]}";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 

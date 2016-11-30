@@ -33,6 +33,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
@@ -58,16 +59,27 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
 
   @Reference
   private ConfigurationManager configManager;
+  @Reference
+  private ConfigurationResourceResolver configurationResourceResolver;
 
   @Override
   protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+    Resource contextResource = request.getResource();
     try {
+      JSONObject result = new JSONObject();
+      result.putOpt("contextPath", getContextPath(contextResource));
+      result.put("configNames", getConfigNames(contextResource));
+
       response.setContentType("application/json;charset=" + CharEncoding.UTF_8);
-      response.getWriter().write(getConfigNames(request.getResource()).toString());
+      response.getWriter().write(result.toString());
     }
     catch (JSONException ex) {
       throw new ServletException("Unable to generate JSON.", ex);
     }
+  }
+
+  private String getContextPath(Resource contextResource) {
+    return configurationResourceResolver.getContextPath(contextResource);
   }
 
   private JSONArray getConfigNames(Resource contextResource) throws JSONException {

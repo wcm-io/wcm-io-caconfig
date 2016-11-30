@@ -49,7 +49,8 @@
        */
       Parameters.loadConfigNames().then(
         function success(result) {
-          $rootScope.configNamesCollection = result.data;
+          $rootScope.contextPath = result.data.contextPath;
+          $rootScope.configNamesCollection = result.data.configNames;
         },
         function error() {
           $rootScope.errorModal.show();

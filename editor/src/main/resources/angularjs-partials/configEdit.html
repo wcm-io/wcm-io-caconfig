@@ -2,7 +2,7 @@
   <filter-drop-down-list ng-repeat="filter in filters" model="filter" current-filter="currentFilter"></filter-drop-down-list>
   <button ng-disabled="!configForm.$valid" class="coral-Button coral-Button--primary" ng-click="save()" >Save</button>
 
-  <p>Context path: <code>/x/y/z</code></p>
+  <p>Context path: <code>{{contextPath}}</code></p>
 
   <table class="coral-Table coral-Table--hover" ng-cloak>
     <thead>
