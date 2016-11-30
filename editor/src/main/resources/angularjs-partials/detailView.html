@@ -1,0 +1,64 @@
+<form class="caconfig-detail" id="caconfig-configuration" name="configForm">
+
+  <button id="caconfig-persist" class="coral-Button coral-Button--{{toBeDeleted.length ? 'warning' : 'primary'}}"
+    ng-click="persist()"
+    ng-disabled="!configForm.$valid">{{i18n.button.save}}</button>
+  <button class="coral-Button coral-Button--secondary" ng-click="go()" >{{i18n.button.cancel}}</button>
+
+  <p>{{i18n.contextPath}}: <code>{{contextPath}}</code></p>
+
+  <div ng-repeat="config in configs" class="caconfig-configurationDetails" ng-hide="config.isCollectionRoot && (!config.properties || !config.properties.length)"  ng-cloak>
+    <h3 class="config-caption">
+      {{!isCollection || config.isCollectionRoot ? config.configName : (config.configName + ': ' + config.collectionItemName) }}
+    </h3>
+    <table class="coral-Table coral-Table--hover" ng-cloak>
+      <thead>
+      <tr class="coral-Table-row">
+        <th class="coral-Table-headerCell">{{i18n.config.property}}</th>
+        <th class="coral-Table-headerCell">{{i18n.config.value}}</th>
+        <th class="coral-Table-headerCell">{{i18n.config.description}}</th>
+        <th class="coral-Table-headerCell">{{i18n.config.inherited}}</th>
+        <th class="coral-Table-headerCell">{{i18n.config.overridden}}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="coral-Table-row" ng-repeat="property in config.properties" ng-cloak>
+        <td class="coral-Table-cell">
+          {{property.metadata.label || property.name}}
+        </td>
+        <td class="coral-Table-cell" caconfig-parameter-value="property" >
+        </td>
+        <td class="coral-Table-cell">
+          <caconfig-description-popup ng-show="property.metadata.description">
+            <caconfig-popup-content>
+              {{property.metadata.description}}
+            </caconfig-popup-content>
+          </caconfig-description-popup>
+        </td>
+        <td class="coral-Table-cell">
+          <label class="coral-Checkbox">
+            <input class="coral-Checkbox-input" type="checkbox"
+              ng-model="property.inherited" ng-disabled="true">
+            <span class="coral-Checkbox-checkmark"></span>
+          </label>
+        </td>
+        <td class="coral-Table-cell">
+          <label class="coral-Checkbox">
+            <input class="coral-Checkbox-input" type="checkbox"
+              ng-model="property.overridden" ng-disabled="true">
+            <span class="coral-Checkbox-checkmark"></span>
+          </label>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <p><button class="coral-Button coral-Button--warning"
+      ng-hide="!isCollection || config.isCollectionRoot" ng-click="remove(config, isCollection)" >{{i18n.button.delete}}</button></p>
+
+  </div>
+
+  <p><button ng-hide="!isCollection || !configs.length" ng-click="addCollectionItem()" class="coral-Button coral-Button--primary">{{i18n.button.add}}</button></p>
+  <p><button ng-hide="!configs.length" class="coral-Button coral-Button--warning" ng-click="remove(configs[0])" >{{i18n.button.delete}}</button></p>
+
+</form>

@@ -19,18 +19,22 @@
  */
 (function (angular) {
   "use strict";
-  /**
-   * Provides the list of available templates, used in directives
-   */
-  angular.module('io.wcm.caconfig.templateUrlList', [])
-    .constant('templateUrlList', {
-      filterDropDownList: 'filterDropDownList.html',
-      parameterValue: 'parameterValue.html',
-      pathBrowser: 'pathBrowser.html',
-      textMultifield: 'textMultifield.html',
-      map: 'map.html',
-      popupContainer: 'popupContainer.html',
-      popupContent: 'popupContent.html'
-    });
-})(angular);
 
+  angular.module("io.wcm.caconfig.editor")
+    .config(configureRoutes);
+
+  configureRoutes.$inject = ["$routeProvider"];
+
+  function configureRoutes($routeProvider) {
+    $routeProvider
+    .when("/:configName/:isCollection?", {
+      templateUrl: "detailView.html",
+      controller: "DetailController"
+    })
+    .otherwise({
+      templateUrl: "overviewView.html",
+      controller: "OverviewController"
+    });
+  }
+
+})(angular);

@@ -1,9 +1,30 @@
 {
   "io.wcm.caconfig.editor": {
     "title": "Configuration Editor",
-    "filter": {
-      "application": "Filter Application",
-      "group": "Filter Group"
+    "contextPath": "Context Path",
+    "button": {
+      "add": "Add",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "ok": "OK",
+      "save": "Save"
+    },
+    "config": {
+      "name": "Configuration Name",
+      "property": "Property",
+      "value": "Value",
+      "inherited": "Inherited",
+      "overridden": "Overridden",
+      "description": "Description",
+      "group": "Group"
+    },
+    "modal": {
+      "addTitle": "Add Configuration",
+      "close": "Close",
+      "deleteTitle": "Delete Configuration(s)",
+      "delete": "The following configuration(s) will be deleted:",
+      "success": "Update successful.",
+      "error": "An internal error occurred. Please try again."
     }
   }
 }

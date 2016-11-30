@@ -1,33 +1,20 @@
 <div ng-switch on="type">
 
-  <input ng-switch-when="textfield"
+  <input ng-switch-when="text"
+         type="text" class="coral-Textfield"
+         ng-model="parameter.value"/>
+
+  <div ng-switch-when="multivalue">
+    <caconfig-multifield  parameter="parameter" />
+  </div>
+
+  <input ng-switch-when="number"
          type="text" class="coral-Textfield"
          ng-model="parameter.value"
-         ng-maxlength="{{parameter.maxlength}}"
-         ng-minlength="{{parameter.minlength}}"
-         ng-pattern="{{parameter.pattern}}"
-         ng-required="{{parameter.required}}"/>
+         ng-pattern="pattern" />
 
-  <div ng-switch-when="textMultivalue">
-    <multifield  parameter="parameter" />
-  </div>
-
-  <div ng-switch-when="textarea">
-    <textarea  class="coral-Textfield coral-Textfield--multiline" name="parameter"
-              ng-model="parameter.value"
-              ng-maxlength="{{parameter.maxlength}}"
-              ng-minlength="{{parameter.minlength}}"
-              ng-pattern="{{parameter.pattern}}"
-              ng-required="{{parameter.required}}"
-              ng-attr-rows="{{parameter.rows}}"></textarea>
-  </div>
-
-  <div ng-switch-when="map">
-    <map  parameter="parameter" />
-  </div>
-
-  <div ng-switch-when="pathbrowser">
-    <path-browser  parameter="parameter" root-path="{{parameter.rootPath}}"></path-browser>
+  <div ng-switch-when="IntegerMultivalue">
+    <caconfig-multifield  parameter="parameter" />
   </div>
 
   <div ng-switch-when="checkbox" >
@@ -37,12 +24,16 @@
     </label>
   </div>
 
-  <div ng-switch-when="disabledCheckbox" >
-    <i ng-class="{'coral-Icon--check': parameter.value}" class="coral-Icon coral-Icon--sizeS"></i>
+  <div ng-switch-when="map">
+    <caconfig-map  parameter="parameter" />
+  </div>
+
+  <div ng-switch-when="pathbrowser">
+    <caconfig-path-browser  parameter="parameter" root-path="{{parameter.rootPath}}"></path-browser>
   </div>
 
   <div ng-switch-default>
-    <span>{{parameter.value}}</span>
+    <span>{{parameter.value || parameter.effectiveValue}}</span>
   </div>
 
 </div>

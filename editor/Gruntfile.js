@@ -13,7 +13,7 @@ module.exports = function (grunt) {
           module: 'io.wcm.caconfig.templates'
         },
         src: [ '<%= src.html %>' ],
-        dest: '<%= pkg.config.jsPath %>Template.js'
+        dest: '<%= pkg.config.jsPath %>templates.module.js'
       }
     },
     watch: {

@@ -1,8 +1,21 @@
 #base=js
 
-Utilities.js
-Services.js
-Directives.js
-Template.js
-TemplateUrlList.js
-Editor.js
+app.module.js
+templates.module.js
+utilities.module.js
+
+editor/editor.module.js
+editor/editor.routes.js
+editor/data.service.js
+editor/detail.controller.js
+editor/overview.controller.js
+
+widgets/widgets.module.js
+widgets/widgets.constants.js
+widgets/description-popup.directive.js
+widgets/filter-drop-down-list.directive.js
+widgets/map.directive.js
+widgets/multifield.directive.js
+widgets/parameter-value.directive.js
+widgets/path-browser.directive.js
+widgets/popup-content.directive.js

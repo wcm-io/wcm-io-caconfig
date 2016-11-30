@@ -29,8 +29,8 @@
   width: 100%;
 }
 
-form#configuration.ng-dirty textarea.ng-dirty.ng-invalid,
-form#configuration.ng-dirty input.ng-dirty.ng-invalid {
+form#caconfig-configuration.ng-dirty textarea.ng-dirty.ng-invalid,
+form#caconfig-configuration.ng-dirty input.ng-dirty.ng-invalid {
   border: 1px solid red;
 }
 
