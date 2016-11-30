@@ -92,11 +92,11 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
 
   private boolean hasConfig(Resource contextResource, String configName, boolean collection) {
     if (collection) {
-      Collection<ConfigurationData> configs = configManager.getCollection(contextResource, configName);
+      Collection<ConfigurationData> configs = configManager.getConfigurationCollection(contextResource, configName).getItems();
       return !configs.isEmpty();
     }
     else {
-      ConfigurationData config = configManager.get(contextResource, configName);
+      ConfigurationData config = configManager.getConfiguration(contextResource, configName);
       return config != null && config.getResourcePath() != null;
     }
   }

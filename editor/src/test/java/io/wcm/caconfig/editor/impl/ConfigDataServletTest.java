@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.sling.caconfig.management.ConfigurationCollectionData;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.management.ValueInfo;
@@ -69,7 +70,7 @@ public class ConfigDataServletTest {
   @Test
   public void testSingle() throws Exception {
     ConfigurationData configData = buildConfigData("name1", 0);
-    when(configManager.get(context.currentResource(), "name1")).thenReturn(configData);
+    when(configManager.getConfiguration(context.currentResource(), "name1")).thenReturn(configData);
 
     context.request().setQueryString("configName=" + configData.getConfigName());
     underTest.doGet(context.request(), context.response());
@@ -86,7 +87,9 @@ public class ConfigDataServletTest {
   public void testCollection() throws Exception {
     ConfigurationData configData1 = buildConfigData("name1", 1);
     ConfigurationData configData2 = buildConfigData("name1", 2);
-    when(configManager.getCollection(context.currentResource(), "name1")).thenReturn(ImmutableList.of(configData1, configData2));
+    ConfigurationCollectionData configCollectionData = mock(ConfigurationCollectionData.class);
+    when(configCollectionData.getItems()).thenReturn(ImmutableList.of(configData1, configData2));
+    when(configManager.getConfigurationCollection(context.currentResource(), "name1")).thenReturn(configCollectionData);
 
     context.request().setQueryString("configName=name1&collection=true");
     underTest.doGet(context.request(), context.response());

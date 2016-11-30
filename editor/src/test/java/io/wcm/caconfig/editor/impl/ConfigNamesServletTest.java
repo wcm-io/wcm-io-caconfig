@@ -20,10 +20,12 @@
 package io.wcm.caconfig.editor.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.sling.caconfig.management.ConfigurationCollectionData;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
@@ -69,8 +71,10 @@ public class ConfigNamesServletTest {
 
     when(configData.getResourcePath()).thenReturn("/path");
 
-    when(configManager.get(context.currentResource(), "name1")).thenReturn(configData);
-    when(configManager.getCollection(context.currentResource(), "name2")).thenReturn(ImmutableList.of(configData));
+    when(configManager.getConfiguration(context.currentResource(), "name1")).thenReturn(configData);
+    ConfigurationCollectionData configCollectionData = mock(ConfigurationCollectionData.class);
+    when(configCollectionData.getItems()).thenReturn(ImmutableList.of(configData));
+    when(configManager.getConfigurationCollection(context.currentResource(), "name2")).thenReturn(configCollectionData);
 
     context.registerService(ConfigurationManager.class, configManager);
     underTest = context.registerInjectActivateService(new ConfigNamesServlet());

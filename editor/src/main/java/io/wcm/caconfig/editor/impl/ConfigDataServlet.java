@@ -102,10 +102,10 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private Collection<ConfigurationData> getConfiguration(Resource contextResource, String configName, boolean collection) {
     List<ConfigurationData> result = new ArrayList<>();
     if (collection) {
-      result.addAll(configManager.getCollection(contextResource, configName));
+      result.addAll(configManager.getConfigurationCollection(contextResource, configName).getItems());
     }
     else {
-      ConfigurationData configData = configManager.get(contextResource, configName);
+      ConfigurationData configData = configManager.getConfiguration(contextResource, configName);
       if (configData != null) {
         result.add(configData);
       }
