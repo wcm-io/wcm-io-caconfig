@@ -42,7 +42,6 @@ import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.management.ValueInfo;
-import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
@@ -138,11 +137,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
       JSONObject prop = new JSONObject();
       prop.putOpt("name", item.getName());
 
-      if (itemMetadata != null
-          && (itemMetadata.getType().equals(ConfigurationMetadata.class)
-              || itemMetadata.getType().equals(ConfigurationMetadata[].class))
-          && itemMetadata.getConfigurationMetadata() != null) {
-
+      if (itemMetadata != null && itemMetadata.isNestedConfiguration()) {
         JSONObject metadata = new JSONObject();
         metadata.putOpt("label", itemMetadata.getLabel());
         metadata.putOpt("description", itemMetadata.getDescription());
@@ -152,7 +147,11 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         if (itemMetadata.getType().isArray()) {
           ConfigurationData[] configData = (ConfigurationData[])item.getValue();
           if (configData != null) {
-            prop.put("nestedConfig", toJson(Arrays.asList(configData)));
+            JSONObject nestedConfigCollection = new JSONObject();
+            // TODO: this does not respect config persistence-modified resource path
+            nestedConfigCollection.put("configName", config.getConfigName() + "/" + itemMetadata.getConfigurationMetadata().getName());
+            nestedConfigCollection.put("items", toJson(Arrays.asList(configData)));
+            prop.put("nestedConfigCollection", nestedConfigCollection);
           }
         }
         else {
