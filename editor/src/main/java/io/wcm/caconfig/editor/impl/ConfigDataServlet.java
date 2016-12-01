@@ -22,6 +22,7 @@ package io.wcm.caconfig.editor.impl;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -131,33 +132,63 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     JSONArray props = new JSONArray();
     for (String propertyName : config.getPropertyNames()) {
       ValueInfo<?> item = config.getValueInfo(propertyName);
+      PropertyMetadata<?> itemMetadata = item.getPropertyMetadata();
+
       JSONObject prop = new JSONObject();
       prop.putOpt("name", item.getName());
-      prop.putOpt("value", toJsonValue(item.getValue()));
-      prop.putOpt("effectiveValue", toJsonValue(item.getEffectiveValue()));
-      prop.putOpt("configSourcePath", item.getConfigSourcePath());
-      prop.putOpt("default", item.isDefault());
-      prop.putOpt("inherited", item.isInherited());
-      prop.putOpt("overridden", item.isOverridden());
-      props.put(prop);
 
-      PropertyMetadata itemMetadata = item.getPropertyMetadata();
-      if (itemMetadata != null) {
+      // special handling for nested configs and nested config collections
+      if (itemMetadata != null && itemMetadata.isNestedConfiguration()) {
         JSONObject metadata = new JSONObject();
-        if (itemMetadata.getType().isArray()) {
-          metadata.put("type", ClassUtils.primitiveToWrapper(itemMetadata.getType().getComponentType()).getSimpleName());
-          metadata.put("multivalue", true);
-        }
-        else {
-          metadata.put("type", ClassUtils.primitiveToWrapper(itemMetadata.getType()).getSimpleName());
-        }
-        metadata.putOpt("defaultValue", toJsonValue(itemMetadata.getDefaultValue()));
         metadata.putOpt("label", itemMetadata.getLabel());
         metadata.putOpt("description", itemMetadata.getDescription());
         metadata.putOpt("properties", toJson(itemMetadata.getProperties()));
-
         prop.put("metadata", metadata);
+
+        if (itemMetadata.getType().isArray()) {
+          ConfigurationData[] configData = (ConfigurationData[])item.getValue();
+          if (configData != null) {
+            JSONObject nestedConfigCollection = new JSONObject();
+            String collectionConfigName = configManager.getPersistenceResourcePath(config.getConfigName()) + "/" + itemMetadata.getConfigurationMetadata().getName();
+            nestedConfigCollection.put("configName", collectionConfigName);
+            nestedConfigCollection.put("items", toJson(Arrays.asList(configData)));
+            prop.put("nestedConfigCollection", nestedConfigCollection);
+          }
+        }
+        else {
+          ConfigurationData configData = (ConfigurationData)item.getValue();
+          if (configData != null) {
+            prop.put("nestedConfig", toJson(configData));
+          }
+        }
       }
+
+      // property data and metadata
+      else {
+        prop.putOpt("value", toJsonValue(item.getValue()));
+        prop.putOpt("effectiveValue", toJsonValue(item.getEffectiveValue()));
+        prop.putOpt("configSourcePath", item.getConfigSourcePath());
+        prop.putOpt("default", item.isDefault());
+        prop.putOpt("inherited", item.isInherited());
+        prop.putOpt("overridden", item.isOverridden());
+
+        if (itemMetadata != null) {
+          JSONObject metadata = new JSONObject();
+          if (itemMetadata.getType().isArray()) {
+            metadata.put("type", ClassUtils.primitiveToWrapper(itemMetadata.getType().getComponentType()).getSimpleName());
+            metadata.put("multivalue", true);
+          }
+          else {
+            metadata.put("type", ClassUtils.primitiveToWrapper(itemMetadata.getType()).getSimpleName());
+          }
+          metadata.putOpt("defaultValue", toJsonValue(itemMetadata.getDefaultValue()));
+          metadata.putOpt("label", itemMetadata.getLabel());
+          metadata.putOpt("description", itemMetadata.getDescription());
+          metadata.putOpt("properties", toJson(itemMetadata.getProperties()));
+          prop.put("metadata", metadata);
+        }
+      }
+      props.put(prop);
     }
     result.put("properties", props);
 
