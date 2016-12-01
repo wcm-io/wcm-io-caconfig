@@ -19,6 +19,8 @@
  */
 package io.wcm.caconfig.editor.impl;
 
+import static io.wcm.caconfig.editor.impl.NameConstants.RP_COLLECTION;
+import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -83,7 +85,7 @@ public class ConfigDataServletTest {
     ConfigurationData configData = buildConfigData("name1", 0);
     when(configManager.getConfiguration(context.currentResource(), "name1")).thenReturn(configData);
 
-    context.request().setQueryString("configName=" + configData.getConfigName());
+    context.request().setQueryString(RP_CONFIGNAME + "=" + configData.getConfigName());
     underTest.doGet(context.request(), context.response());
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
@@ -102,7 +104,7 @@ public class ConfigDataServletTest {
     when(configCollectionData.getItems()).thenReturn(ImmutableList.of(configData1, configData2));
     when(configManager.getConfigurationCollection(context.currentResource(), "name1")).thenReturn(configCollectionData);
 
-    context.request().setQueryString("configName=name1&collection=true");
+    context.request().setQueryString(RP_CONFIGNAME + "=name1&" + RP_COLLECTION + "=true");
     underTest.doGet(context.request(), context.response());
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
@@ -152,7 +154,7 @@ public class ConfigDataServletTest {
 
     when(configManager.getConfiguration(context.currentResource(), "nestedConfig")).thenReturn(configData);
 
-    context.request().setQueryString("configName=" + configData.getConfigName());
+    context.request().setQueryString(RP_CONFIGNAME + "=" + configData.getConfigName());
     underTest.doGet(context.request(), context.response());
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());

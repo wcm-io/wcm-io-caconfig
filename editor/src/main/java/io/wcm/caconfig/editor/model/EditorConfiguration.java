@@ -31,6 +31,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.caconfig.editor.impl.ConfigDataServlet;
 import io.wcm.caconfig.editor.impl.ConfigNamesServlet;
+import io.wcm.caconfig.editor.impl.ConfigPersistServlet;
 
 /**
  * Provides editor configuration options
@@ -42,8 +43,9 @@ import io.wcm.caconfig.editor.impl.ConfigNamesServlet;
 @ProviderType
 public class EditorConfiguration {
 
-  private final String configDataUrl;
   private final String configNamesUrl;
+  private final String configDataUrl;
+  private final String configPersistUrl;
   private final String contextPath;
 
   /**
@@ -52,17 +54,22 @@ public class EditorConfiguration {
   @Inject
   public EditorConfiguration(@SlingObject Resource currentResource,
       @OSGiService ConfigurationResourceResolver configResourceResolver) {
-    configDataUrl = currentResource.getPath() + "." + ConfigDataServlet.SELECTOR + ".json";
     configNamesUrl = currentResource.getPath() + "." + ConfigNamesServlet.SELECTOR + ".json";
+    configDataUrl = currentResource.getPath() + "." + ConfigDataServlet.SELECTOR + ".json";
+    configPersistUrl = currentResource.getPath() + "." + ConfigPersistServlet.SELECTOR + ".json";
     contextPath = configResourceResolver.getContextPath(currentResource);
+  }
+
+  public String getConfigNamesUrl() {
+    return configNamesUrl;
   }
 
   public String getConfigDataUrl() {
     return configDataUrl;
   }
 
-  public String getConfigNamesUrl() {
-    return configNamesUrl;
+  public String getConfigPersistUrl() {
+    return configPersistUrl;
   }
 
   public String getContextPath() {

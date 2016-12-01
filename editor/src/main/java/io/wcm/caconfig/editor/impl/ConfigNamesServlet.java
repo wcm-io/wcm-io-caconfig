@@ -47,7 +47,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(service = Servlet.class, immediate = true, property = {
     "sling.servlet.resourceTypes=/apps/wcm-io/caconfig/editor/components/page/editor",
     "sling.servlet.extensions=json",
-    "sling.servlet.selectors=" + ConfigNamesServlet.SELECTOR
+    "sling.servlet.selectors=" + ConfigNamesServlet.SELECTOR,
+    "sling.servlet.methods=GET"
 })
 public class ConfigNamesServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;

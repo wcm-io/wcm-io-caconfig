@@ -32,6 +32,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import io.wcm.caconfig.editor.impl.ConfigDataServlet;
 import io.wcm.caconfig.editor.impl.ConfigNamesServlet;
+import io.wcm.caconfig.editor.impl.ConfigPersistServlet;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EditorConfigurationTest {
@@ -54,8 +55,9 @@ public class EditorConfigurationTest {
 
   @Test
   public void testProperties() {
-    assertEquals(SAMPLE_PATH + "." + ConfigDataServlet.SELECTOR + ".json", underTest.getConfigDataUrl());
     assertEquals(SAMPLE_PATH + "." + ConfigNamesServlet.SELECTOR + ".json", underTest.getConfigNamesUrl());
+    assertEquals(SAMPLE_PATH + "." + ConfigDataServlet.SELECTOR + ".json", underTest.getConfigDataUrl());
+    assertEquals(SAMPLE_PATH + "." + ConfigPersistServlet.SELECTOR + ".json", underTest.getConfigPersistUrl());
     assertEquals(SAMPLE_PATH, underTest.getContextPath());
   }
 

@@ -87,13 +87,17 @@
       <script type="text/javascript">
         angular.module("io.wcm.caconfig.services")
           .config(["parametersProvider", function(parametersProvider) {
-            var configDataUrl = "${editorConfig.configDataUrl @ context='uri'}";
             var configNamesUrl = "${editorConfig.configNamesUrl @ context='uri'}";
+            var configDataUrl = "${editorConfig.configDataUrl @ context='uri'}";
+            var configPersistUrl = "${editorConfig.configPersistUrl @ context='uri'}";
             var i18n = {
               applicationFilter: "${'io.wcm.caconfig.editor.filter.application' @ i18n, context='text'}",
               groupFilter: "${'io.wcm.caconfig.editor.filter.group' @ i18n, context='text'}"
             };
-            parametersProvider.setConfig({i18n: i18n, configNamesUrl: configNamesUrl, configDataUrl: configDataUrl});
+            parametersProvider.setConfig({i18n: i18n,
+                configNamesUrl: configNamesUrl,
+                configDataUrl: configDataUrl,
+                configPersistUrl: configPersistUrl});
           }]);
       </script>
 

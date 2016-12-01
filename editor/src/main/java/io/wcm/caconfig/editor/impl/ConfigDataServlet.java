@@ -19,6 +19,9 @@
  */
 package io.wcm.caconfig.editor.impl;
 
+import static io.wcm.caconfig.editor.impl.NameConstants.RP_COLLECTION;
+import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -50,12 +53,13 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * Read and write configuration data.
+ * Read configuration data.
  */
 @Component(service = Servlet.class, immediate = true, property = {
     "sling.servlet.resourceTypes=/apps/wcm-io/caconfig/editor/components/page/editor",
     "sling.servlet.extensions=json",
-    "sling.servlet.selectors=" + ConfigDataServlet.SELECTOR
+    "sling.servlet.selectors=" + ConfigDataServlet.SELECTOR,
+    "sling.servlet.methods=GET"
 })
 public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
@@ -64,16 +68,6 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
    * Selector
    */
   public static final String SELECTOR = "configData";
-
-  /**
-   * Request parameter: config name
-   */
-  public static final String RP_CONFIGNAME = "configName";
-
-  /**
-   * Request parameter: collection
-   */
-  public static final String RP_COLLECTION = "collection";
 
   @Reference
   private ConfigurationManager configManager;
