@@ -139,11 +139,10 @@ public class ConfigDataServletTest {
     when(valueInfo.isInherited()).thenReturn(true);
     when(valueInfo.isOverridden()).thenReturn(false);
     if (defaultValue != null) {
-      PropertyMetadata metadata = new PropertyMetadata(name, defaultValue.getClass());
-      metadata.setDefaultValue(defaultValue);
-      metadata.setLabel(name + "-label");
-      metadata.setDescription(name + "-desc");
-      metadata.setProperties(ImmutableMap.of("custom", name + "-custom"));
+      PropertyMetadata<T> metadata = new PropertyMetadata<>(name, defaultValue)
+          .label(name + "-label")
+          .description(name + "-desc")
+          .properties(ImmutableMap.of("custom", name + "-custom"));
       when(valueInfo.getPropertyMetadata()).thenReturn(metadata);
     }
     return valueInfo;

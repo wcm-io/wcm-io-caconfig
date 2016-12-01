@@ -30,6 +30,7 @@ import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
+import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -60,12 +61,11 @@ public class ConfigNamesServletTest {
 
   @Before
   public void setUp() {
-    ConfigurationMetadata metadata1 = new ConfigurationMetadata("name1");
-    metadata1.setLabel("label1");
-    metadata1.setDescription("desc1");
-    ConfigurationMetadata metadata2 = new ConfigurationMetadata("name2");
-    metadata2.setCollection(true);
-    ConfigurationMetadata metadata3 = new ConfigurationMetadata("name3");
+    ConfigurationMetadata metadata1 = new ConfigurationMetadata("name1", ImmutableList.<PropertyMetadata<?>>of(), false)
+        .label("label1")
+        .description("desc1");
+    ConfigurationMetadata metadata2 = new ConfigurationMetadata("name2", ImmutableList.<PropertyMetadata<?>>of(), true);
+    ConfigurationMetadata metadata3 = new ConfigurationMetadata("name3", ImmutableList.<PropertyMetadata<?>>of(), false);
 
     when(configManager.getConfigurationNames()).thenReturn(ImmutableSortedSet.of("name1", "name2", "name3"));
     when(configManager.getConfigurationMetadata("name1")).thenReturn(metadata1);

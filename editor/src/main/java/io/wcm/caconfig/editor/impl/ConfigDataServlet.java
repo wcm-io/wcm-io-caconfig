@@ -133,7 +133,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     JSONArray props = new JSONArray();
     for (String propertyName : config.getPropertyNames()) {
       ValueInfo<?> item = config.getValueInfo(propertyName);
-      PropertyMetadata itemMetadata = item.getPropertyMetadata();
+      PropertyMetadata<?> itemMetadata = item.getPropertyMetadata();
 
       JSONObject prop = new JSONObject();
       prop.putOpt("name", item.getName());
