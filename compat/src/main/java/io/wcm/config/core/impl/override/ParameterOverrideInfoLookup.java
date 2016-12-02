@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.management.impl.override;
+package io.wcm.config.core.impl.override;
 
 import java.util.HashMap;
 import java.util.HashSet;

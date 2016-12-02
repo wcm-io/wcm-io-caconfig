@@ -17,11 +17,11 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.management.util;
+package io.wcm.config.core.impl.util;
 
-import static io.wcm.config.core.management.util.ConversionStringUtils.decodeString;
-import static io.wcm.config.core.management.util.ConversionStringUtils.encodeString;
-import static io.wcm.config.core.management.util.ConversionStringUtils.splitPreserveAllTokens;
+import static io.wcm.config.core.impl.util.ConversionStringUtils.decodeString;
+import static io.wcm.config.core.impl.util.ConversionStringUtils.encodeString;
+import static io.wcm.config.core.impl.util.ConversionStringUtils.splitPreserveAllTokens;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

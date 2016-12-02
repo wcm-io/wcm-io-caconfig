@@ -25,13 +25,11 @@ import static org.apache.sling.api.adapter.AdapterFactory.ADAPTER_CLASSES;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 
 import io.wcm.config.api.Configuration;
-import io.wcm.config.core.management.ConfigurationFinder;
 
 /**
  * AdapterFactory that adapts resources to effective configurations and applications.
@@ -44,22 +42,18 @@ import io.wcm.config.core.management.ConfigurationFinder;
       "org.apache.sling.api.resource.Resource"
   }),
   @Property(name = ADAPTER_CLASSES, value = {
-        "io.wcm.config.api.Configuration"
+      "io.wcm.config.api.Configuration"
   }),
   @Property(name = "adapter.condition", value = "If a configuration can be found for the current/given resource or it's parents.")
 })
 public final class ConfigurationAdapterFactory implements AdapterFactory {
 
-  @Reference
-  private ConfigurationFinder configurationFinder;
-
-  @SuppressWarnings("unchecked")
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
     if (type == Configuration.class) {
       Resource resource = AdaptableUtil.getResource(adaptable);
       if (resource != null) {
-        return (AdapterType)configurationFinder.find(resource);
+        // TODO: get configuration
       }
     }
     return null;

@@ -19,49 +19,11 @@
  */
 package io.wcm.config.core.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.jackrabbit.util.Text;
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
-
-import io.wcm.caconfig.application.impl.ApplicationAdapterFactory;
-import io.wcm.caconfig.application.impl.ApplicationFinderImpl;
-import io.wcm.caconfig.application.impl.ApplicationImplementationPicker;
-import io.wcm.config.api.Configuration;
-import io.wcm.config.api.Parameter;
-import io.wcm.config.api.ParameterBuilder;
-import io.wcm.config.core.management.ParameterPersistence;
-import io.wcm.config.core.management.ParameterPersistenceData;
-import io.wcm.config.core.management.impl.ConfigurationFinderImpl;
-import io.wcm.config.core.management.impl.ParameterOverrideImpl;
-import io.wcm.config.core.management.impl.ParameterPersistenceImpl;
-import io.wcm.config.core.management.impl.ParameterResolverImpl;
-import io.wcm.config.core.override.impl.SystemPropertyOverrideProvider;
-import io.wcm.config.core.persistence.impl.ToolsConfigPagePersistenceProvider;
-import io.wcm.config.spi.ConfigurationFinderStrategy;
-import io.wcm.config.spi.ParameterProvider;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
-
 /**
  * Test all configuration services in combination.
+ * TODO: delete test or enable it again?
  */
+/*
 public class CombinedTest {
 
   private static final String APP_ID = "/apps/app1";
@@ -189,3 +151,4 @@ public class CombinedTest {
   }
 
 }
+ */

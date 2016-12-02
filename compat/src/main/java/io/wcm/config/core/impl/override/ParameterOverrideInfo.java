@@ -17,10 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.management.impl.override;
-
-import static io.wcm.config.core.management.ParameterOverride.DEFAULT_SCOPE;
-import static io.wcm.config.core.management.ParameterOverride.LOCKED_SUFFIX;
+package io.wcm.config.core.impl.override;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +28,17 @@ import org.apache.commons.lang3.StringUtils;
  * Contains information about a parameter override from parameter override providers.
  */
 class ParameterOverrideInfo {
+
+  /**
+   * Scope for system default value
+   */
+  public static final String DEFAULT_SCOPE = "default";
+
+  /**
+   * Suffix to mark a parameter override as locked, the parameter value cannot be overridden in nested configuration
+   * scopes.
+   */
+  public static final String LOCKED_SUFFIX = ":locked";
 
   private static final Pattern OVERRIDE_STRING_PATTERN = Pattern.compile("^(\\[([^\\[\\]:]+)(" + LOCKED_SUFFIX + ")?\\])?([^\\[\\]]+)$");
 

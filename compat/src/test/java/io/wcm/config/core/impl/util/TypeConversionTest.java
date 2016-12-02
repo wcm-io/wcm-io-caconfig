@@ -17,10 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.management.util;
+package io.wcm.config.core.impl.util;
 
-import static io.wcm.config.core.management.util.TypeConversion.objectToString;
-import static io.wcm.config.core.management.util.TypeConversion.stringToObject;
+import static io.wcm.config.core.impl.util.TypeConversion.objectToString;
+import static io.wcm.config.core.impl.util.TypeConversion.stringToObject;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

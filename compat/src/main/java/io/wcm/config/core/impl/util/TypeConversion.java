@@ -17,13 +17,13 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.management.util;
+package io.wcm.config.core.impl.util;
 
-import static io.wcm.config.core.management.util.ConversionStringUtils.ARRAY_DELIMITER_CHAR;
-import static io.wcm.config.core.management.util.ConversionStringUtils.KEY_VALUE_DELIMITER_CHAR;
-import static io.wcm.config.core.management.util.ConversionStringUtils.decodeString;
-import static io.wcm.config.core.management.util.ConversionStringUtils.encodeString;
-import static io.wcm.config.core.management.util.ConversionStringUtils.splitPreserveAllTokens;
+import static io.wcm.config.core.impl.util.ConversionStringUtils.ARRAY_DELIMITER_CHAR;
+import static io.wcm.config.core.impl.util.ConversionStringUtils.KEY_VALUE_DELIMITER_CHAR;
+import static io.wcm.config.core.impl.util.ConversionStringUtils.decodeString;
+import static io.wcm.config.core.impl.util.ConversionStringUtils.encodeString;
+import static io.wcm.config.core.impl.util.ConversionStringUtils.splitPreserveAllTokens;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
