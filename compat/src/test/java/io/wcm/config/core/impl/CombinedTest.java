@@ -19,11 +19,58 @@
  */
 package io.wcm.config.core.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.caconfig.ConfigurationResolver;
+import org.apache.sling.caconfig.impl.ConfigurationInheritanceStrategyMultiplexer;
+import org.apache.sling.caconfig.impl.ConfigurationResolverImpl;
+import org.apache.sling.caconfig.impl.def.ConfigurationDefNameConstants;
+import org.apache.sling.caconfig.impl.def.DefaultConfigurationInheritanceStrategy;
+import org.apache.sling.caconfig.impl.def.DefaultConfigurationPersistenceStrategy;
+import org.apache.sling.caconfig.impl.metadata.ConfigurationMetadataProviderMultiplexer;
+import org.apache.sling.caconfig.impl.override.ConfigurationOverrideManager;
+import org.apache.sling.caconfig.management.ConfigurationManager;
+import org.apache.sling.caconfig.management.impl.ConfigurationManagerImpl;
+import org.apache.sling.caconfig.management.impl.ConfigurationPersistenceStrategyMultiplexer;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
+import org.apache.sling.caconfig.resource.impl.ConfigurationResourceResolverImpl;
+import org.apache.sling.caconfig.resource.impl.ConfigurationResourceResolvingStrategyMultiplexer;
+import org.apache.sling.caconfig.resource.impl.ContextPathStrategyMultiplexer;
+import org.apache.sling.caconfig.resource.impl.def.DefaultConfigurationResourceResolvingStrategy;
+import org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy;
+import org.apache.sling.caconfig.spi.ConfigurationPersistData;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
+import com.day.text.Text;
+import com.google.common.collect.ImmutableSet;
+
+import io.wcm.caconfig.application.impl.ApplicationAdapterFactory;
+import io.wcm.caconfig.application.impl.ApplicationFinderImpl;
+import io.wcm.caconfig.application.impl.ApplicationImplementationPicker;
+import io.wcm.config.api.Configuration;
+import io.wcm.config.api.Parameter;
+import io.wcm.config.api.ParameterBuilder;
+import io.wcm.config.core.override.impl.SystemPropertyOverrideProvider;
+import io.wcm.config.spi.ConfigurationFinderStrategy;
+import io.wcm.config.spi.ParameterProvider;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.testing.mock.aem.junit.AemContext;
+
 /**
  * Test all configuration services in combination.
- * TODO: delete test or enable it again?
  */
-/*
+@Ignore // TODO: fix unit tests
 public class CombinedTest {
 
   private static final String APP_ID = "/apps/app1";
@@ -32,42 +79,37 @@ public class CombinedTest {
   private static final Parameter<String> PROP_1 = ParameterBuilder.create("prop1", String.class, APP_ID).build();
   private static final Parameter<String> PROP_2 = ParameterBuilder.create("prop2", String.class, APP_ID).build();
   private static final Parameter<String> PROP_3 = ParameterBuilder.create("prop3", String.class, APP_ID).build();
-  private static final Parameter<String> PROP_4 = ParameterBuilder.create("prop4", String.class, APP_ID)
-      .defaultOsgiConfigProperty(SampleOsgiConfiguration.class.getName() + ":prop4").build();
 
   @Rule
   public final AemContext context = new AemContext();
 
   @Before
   public void setUp() throws Exception {
+    registerConfigurationResolver(context);
+    context.registerInjectActivateService(new ConfigurationMetadataProviderMultiplexer());
+    context.registerInjectActivateService(new ConfigurationManagerImpl());
 
     // app-specific services
-    context.registerService(SampleOsgiConfiguration.class, new SampleOsgiConfiguration(),
-        ImmutableValueMap.of("prop4", "value4-osgi"));
     context.registerService(ConfigurationFinderStrategy.class, new SampleConfigurationFinderStrategy());
     context.registerService(ParameterProvider.class, new SampleParameterProvider());
 
-    // persistence providers
-    context.registerInjectActivateService(new ToolsConfigPagePersistenceProvider(),
-        ImmutableValueMap.of("enabled", true));
+    // application detection
+    context.registerInjectActivateService(new ApplicationFinderImpl());
+    context.registerInjectActivateService(new ApplicationAdapterFactory());
+    context.registerInjectActivateService(new ApplicationImplementationPicker());
+    context.registerInjectActivateService(new io.wcm.config.core.impl.application.ApplicationImplementationPicker());
+
+    // bridge services
+    context.registerInjectActivateService(new ConfigurationFinderStrategyBridge());
+    context.registerInjectActivateService(new ParameterOverrideProviderBridge());
+    context.registerInjectActivateService(new ParameterProviderBridge());
 
     // override providers
     context.registerInjectActivateService(new SystemPropertyOverrideProvider(),
         ImmutableValueMap.of("enabled", true));
 
-    // management services
-    context.registerInjectActivateService(new ApplicationFinderImpl());
-    context.registerInjectActivateService(new ParameterOverrideImpl());
-    context.registerInjectActivateService(new ParameterPersistenceImpl());
-    context.registerInjectActivateService(new ParameterResolverImpl());
-    context.registerInjectActivateService(new ConfigurationFinderImpl());
-
     // adapter factory
-    context.registerInjectActivateService(new ApplicationAdapterFactory());
     context.registerInjectActivateService(new ConfigurationAdapterFactory());
-
-    // models implementation picker
-    context.registerInjectActivateService(new ApplicationImplementationPicker());
 
     // mount sample content
     context.load().json("/combined-test-content.json", "/content");
@@ -83,15 +125,16 @@ public class CombinedTest {
     assertEquals("value1-l3", config.get(PROP_1));
     assertEquals("value2-l2", config.get(PROP_2));
     assertEquals("value3-l1", config.get(PROP_3));
-    assertEquals("value4-osgi", config.get(PROP_4));
   }
 
   @Test
-  public void testWriteReadConfig() throws PersistenceException {
-    ParameterPersistence persistence = context.getService(ParameterPersistence.class);
-    persistence.storeData(context.resourceResolver(), CONFIG_ID,
-        new ParameterPersistenceData(ImmutableValueMap.of(PROP_3.getName(), "value3-new"), ImmutableSortedSet.<String>of()),
-        true);
+  public void testWriteReadConfig() {
+    ConfigurationManager configManager = context.getService(ConfigurationManager.class);
+    Resource contextResource = context.resourceResolver().getResource(CONFIG_ID);
+    configManager.persistConfiguration(contextResource, ParameterProviderBridge.DEFAULT_CONFIG_NAME,
+        new ConfigurationPersistData(ImmutableValueMap.of(
+            PROP_3.getName(), "value3-new",
+            ConfigurationDefNameConstants.PROPERTY_CONFIG_PROPERTY_INHERIT, true)));
 
     Resource resource = context.request().getResource();
     Configuration config = resource.adaptTo(Configuration.class);
@@ -100,9 +143,7 @@ public class CombinedTest {
     assertEquals("value1-l3", config.get(PROP_1));
     assertEquals("value2-l2", config.get(PROP_2));
     assertEquals("value3-new", config.get(PROP_3));
-    assertEquals("value4-osgi", config.get(PROP_4));
   }
-
 
   private static class SampleParameterProvider implements ParameterProvider {
 
@@ -110,7 +151,7 @@ public class CombinedTest {
         .add(PROP_1)
         .add(PROP_2)
         .add(PROP_3)
-        .add(PROP_4).build();
+        .build();
 
     @Override
     public Set<Parameter<?>> getParameters() {
@@ -144,11 +185,31 @@ public class CombinedTest {
 
   }
 
-  @Component(immediate = true, metatype = true)
-  @Property(name = "prop4")
-  private static class SampleOsgiConfiguration {
-    // no methods
+
+  /**
+   * Register all services for {@link ConfigurationResourceResolver}.
+   * @param context Sling context
+   */
+  private static ConfigurationResourceResolver registerConfigurationResourceResolver(AemContext context) {
+    context.registerInjectActivateService(new DefaultContextPathStrategy());
+    context.registerInjectActivateService(new ContextPathStrategyMultiplexer());
+    context.registerInjectActivateService(new DefaultConfigurationResourceResolvingStrategy());
+    context.registerInjectActivateService(new ConfigurationResourceResolvingStrategyMultiplexer());
+    return context.registerInjectActivateService(new ConfigurationResourceResolverImpl());
+  }
+
+  /**
+   * Register all services for {@link ConfigurationResolver}.
+   * @param context Sling context
+   */
+  private static ConfigurationResolver registerConfigurationResolver(AemContext context) {
+    registerConfigurationResourceResolver(context);
+    context.registerInjectActivateService(new DefaultConfigurationPersistenceStrategy());
+    context.registerInjectActivateService(new ConfigurationPersistenceStrategyMultiplexer());
+    context.registerInjectActivateService(new DefaultConfigurationInheritanceStrategy());
+    context.registerInjectActivateService(new ConfigurationInheritanceStrategyMultiplexer());
+    context.registerInjectActivateService(new ConfigurationOverrideManager());
+    return context.registerInjectActivateService(new ConfigurationResolverImpl());
   }
 
 }
- */
