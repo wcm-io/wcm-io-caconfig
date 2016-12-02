@@ -25,18 +25,22 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.scripting.SlingBindings;
 import org.apache.sling.scripting.api.BindingsValuesProvider;
 import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import io.wcm.config.api.Configuration;
 
 /**
  * Binds a script variable "config" to the current configuration value map to be used in Sightly.
- * TODO: add "enabled" configuration?
  */
 @Component(immediate = true, service = BindingsValuesProvider.class, property = {
     "javax.script.name=sightly",
     Constants.SERVICE_RANKING + "=100"
 })
+@Designate(ocd = ConfigBindingsValueProvider.Config.class)
 public class ConfigBindingsValueProvider implements BindingsValuesProvider {
 
   /**
@@ -44,9 +48,25 @@ public class ConfigBindingsValueProvider implements BindingsValuesProvider {
    */
   public static final String BINDING_VARIABLE = "config";
 
+  /**
+   * Prefix for override request header
+   */
+  public static final String REQUEST_HEADER_PREFIX = "config.override.";
+
+  @ObjectClassDefinition(name = "wcm.io Configuration Bindings Value Provider",
+      description = "Binds a script variable \"config\" to the current configuration value map to be used in Sightly.")
+  static @interface Config {
+
+    @AttributeDefinition(name = "Enabled", description = "Enable provider.")
+    boolean enabled() default false;
+
+  }
+
+  private boolean enabled;
+
   @Override
   public void addBindings(Bindings bindings) {
-    if (!bindings.containsKey(SlingBindings.REQUEST)) {
+    if (!enabled || !bindings.containsKey(SlingBindings.REQUEST)) {
       return;
     }
     SlingHttpServletRequest request = (SlingHttpServletRequest)bindings.get(SlingBindings.REQUEST);
@@ -55,5 +75,11 @@ public class ConfigBindingsValueProvider implements BindingsValuesProvider {
       bindings.put(BINDING_VARIABLE, config);
     }
   }
+
+  @Activate
+  void activate(Config config) {
+    this.enabled = config.enabled();
+  }
+
 
 }

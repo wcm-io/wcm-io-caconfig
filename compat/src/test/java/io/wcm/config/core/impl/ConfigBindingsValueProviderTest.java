@@ -56,27 +56,37 @@ public class ConfigBindingsValueProviderTest {
 
   @Before
   public void setUp() {
-    underTest = context.registerInjectActivateService(new ConfigBindingsValueProvider());
     when(bindings.containsKey(SlingBindings.REQUEST)).thenReturn(true);
     when(bindings.get(SlingBindings.REQUEST)).thenReturn(request);
+    when(request.adaptTo(Configuration.class)).thenReturn(config);
   }
 
   @Test
   public void testWithConfig() {
-    when(request.adaptTo(Configuration.class)).thenReturn(config);
+    underTest = context.registerInjectActivateService(new ConfigBindingsValueProvider(), "enabled", true);
     underTest.addBindings(bindings);
     verify(bindings).put(ConfigBindingsValueProvider.BINDING_VARIABLE, config);
   }
 
   @Test
   public void testWithoutConfig() {
+    when(request.adaptTo(Configuration.class)).thenReturn(null);
+    underTest = context.registerInjectActivateService(new ConfigBindingsValueProvider(), "enabled", true);
     underTest.addBindings(bindings);
     verify(bindings, never()).put(anyString(), any(Object.class));
   }
 
   @Test
   public void testNoRequest() {
+    underTest = context.registerInjectActivateService(new ConfigBindingsValueProvider(), "enabled", true);
     when(bindings.containsKey(SlingBindings.REQUEST)).thenReturn(false);
+    underTest.addBindings(bindings);
+    verify(bindings, never()).put(anyString(), any(Object.class));
+  }
+
+  @Test
+  public void testDisabled() {
+    underTest = context.registerInjectActivateService(new ConfigBindingsValueProvider(), "enabled", false);
     underTest.addBindings(bindings);
     verify(bindings, never()).put(anyString(), any(Object.class));
   }
