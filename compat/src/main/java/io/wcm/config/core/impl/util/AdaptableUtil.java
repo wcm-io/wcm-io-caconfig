@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.impl;
+package io.wcm.config.core.impl.util;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -25,7 +25,7 @@ import org.apache.sling.api.resource.Resource;
 /**
  * Helper methods for handling adaptables.
  */
-final class AdaptableUtil {
+public final class AdaptableUtil {
 
   private AdaptableUtil() {
     // static methods only

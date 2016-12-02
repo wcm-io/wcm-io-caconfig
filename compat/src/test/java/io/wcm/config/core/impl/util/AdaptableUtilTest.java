@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.impl;
+package io.wcm.config.core.impl.util;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;

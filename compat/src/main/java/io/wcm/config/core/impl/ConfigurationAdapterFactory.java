@@ -31,6 +31,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import io.wcm.config.api.Configuration;
+import io.wcm.config.core.impl.util.AdaptableUtil;
 
 /**
  * AdapterFactory that adapts resources to effective configurations and applications.
