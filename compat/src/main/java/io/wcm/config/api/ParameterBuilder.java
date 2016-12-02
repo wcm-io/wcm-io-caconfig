@@ -28,7 +28,6 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import com.google.common.collect.ImmutableSet;
 
-import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 /**
@@ -38,6 +37,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 @ProviderType
 public final class ParameterBuilder<T> {
 
+  private static final Pattern APPLICATION_ID_PATTERN = Pattern.compile("^(/[a-zA-Z0-9\\-\\_]+)+$");
   private static final Pattern PARAMETER_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9\\-\\_\\.]+$");
   private static final Pattern OSGI_CONFIG_PROPERTY_PATTERN =
       Pattern.compile("^[a-zA-Z0-9\\-\\_\\.\\$]+\\:[a-zA-Z0-9\\-\\_\\.]+$");
@@ -140,7 +140,7 @@ public final class ParameterBuilder<T> {
    * @return this
    */
   public ParameterBuilder<T> applicationId(String value) {
-    if (value == null || !ApplicationProvider.APPLICATION_ID_PATTERN.matcher(value).matches()) {
+    if (value == null || !APPLICATION_ID_PATTERN.matcher(value).matches()) {
       throw new IllegalArgumentException("Invalid applicaiton id: " + value);
     }
     this.applicationId = value;
