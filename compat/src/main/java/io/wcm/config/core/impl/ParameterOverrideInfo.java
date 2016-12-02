@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.impl.override;
+package io.wcm.config.core.impl;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -26,9 +26,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
 import org.junit.Before;
@@ -39,8 +36,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.google.common.collect.ImmutableSet;
 
-import io.wcm.config.api.Parameter;
-import io.wcm.config.api.ParameterBuilder;
 import io.wcm.config.spi.ParameterProvider;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
@@ -59,23 +54,7 @@ public class ParameterProviderBridgeTest {
 
   @Test
   public void testWithParameters() {
-    context.registerService(ParameterProvider.class, new ParameterProvider() {
-      @Override
-      public Set<Parameter<?>> getParameters() {
-        return ImmutableSet.<Parameter<?>>of(
-            ParameterBuilder.create("stringParam", String.class).defaultValue("defValue")
-            .property(EditorProperties.LABEL, "label-stringParam")
-            .property(EditorProperties.DESCRIPTION, "desc-stringParam").build(),
-            ParameterBuilder.create("stringArrayParam", String[].class).defaultValue(new String[] {
-                "value1", "value2"
-            }).build(),
-            ParameterBuilder.create("intParam", Integer.class).build(),
-            ParameterBuilder.create("longParam", Long.class).build(),
-            ParameterBuilder.create("doubleParam", Double.class).build(),
-            ParameterBuilder.create("boolParam", Boolean.class).defaultValue(true).build(),
-            ParameterBuilder.create("mapParam", Map.class).build());
-      }
-    });
+    context.registerService(ParameterProvider.class, new DummyParameterProvider());
 
     assertEquals(ImmutableSet.of(DEFAULT_CONFIG_NAME), underTest.getConfigurationNames());
     ConfigurationMetadata metadata = underTest.getConfigurationMetadata(DEFAULT_CONFIG_NAME);
