@@ -209,9 +209,6 @@ public final class ParameterBuilder<T> {
     if (this.type == null) {
       throw new IllegalArgumentException("Type is missing.");
     }
-    if (this.applicationId == null) {
-      throw new IllegalArgumentException("Application id is missing.");
-    }
     return new Parameter<T>(
         this.name,
         this.type,
