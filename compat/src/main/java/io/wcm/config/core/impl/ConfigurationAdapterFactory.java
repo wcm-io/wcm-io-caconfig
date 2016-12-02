@@ -24,7 +24,11 @@ import static org.apache.sling.api.adapter.AdapterFactory.ADAPTER_CLASSES;
 
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.caconfig.management.ConfigurationData;
+import org.apache.sling.caconfig.management.ConfigurationManager;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import io.wcm.config.api.Configuration;
 
@@ -39,15 +43,31 @@ import io.wcm.config.api.Configuration;
 })
 public final class ConfigurationAdapterFactory implements AdapterFactory {
 
+  @Reference
+  private ConfigurationManager configManager;
+  @Reference
+  private ConfigurationResourceResolver configResourceResolver;
+
+  @SuppressWarnings("unchecked")
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
     if (type == Configuration.class) {
       Resource resource = AdaptableUtil.getResource(adaptable);
       if (resource != null) {
-        // TODO: get configuration
+        return (AdapterType)getConfiguration(resource);
       }
     }
     return null;
+  }
+
+  private Configuration getConfiguration(Resource resource) {
+    // get config via ConfigurationManager because ConfigurationResolver currently does not support default values for ValueMaps
+    ConfigurationData configData = configManager.getConfiguration(resource, ParameterProviderBridge.DEFAULT_CONFIG_NAME);
+    if (configData == null) {
+      return null;
+    }
+    String contextPath = configResourceResolver.getContextPath(resource);
+    return new ConfigurationImpl(contextPath, configData.getEffectiveValues());
   }
 
 }
