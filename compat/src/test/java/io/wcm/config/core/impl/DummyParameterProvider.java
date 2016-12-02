@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableSet;
 
 import io.wcm.config.api.Parameter;
 import io.wcm.config.api.ParameterBuilder;
+import io.wcm.config.editor.EditorProperties;
 import io.wcm.config.spi.ParameterProvider;
 
 final class DummyParameterProvider implements ParameterProvider {

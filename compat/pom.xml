@@ -34,8 +34,8 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>Configuration Implementation</name>
-  <description>Context-specific configuration management implementation.</description>
+  <name>Context-Aware Configuration Compatibility Layer</name>
+  <description>Context-aware configuration compatibility Layer for wcm.io Configuration.</description>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io/wcm-io-caconfig.git</connection>
@@ -108,7 +108,13 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Sling-Namespaces>wcmio=http://wcm.io/ns</Sling-Namespaces>
+
+            <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
+            <Import-Package>
+              javax.inject;version="[0.0,2)",
+              *
+            </Import-Package>
+
           </instructions>
         </configuration>
       </plugin>

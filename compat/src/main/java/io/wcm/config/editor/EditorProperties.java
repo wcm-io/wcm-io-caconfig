@@ -17,12 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.impl;
+package io.wcm.config.editor;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Properties to define the edit capabilities of configuration parameters.
  */
-final class EditorProperties {
+@ProviderType
+public final class EditorProperties {
 
   private EditorProperties() {
     // only constants

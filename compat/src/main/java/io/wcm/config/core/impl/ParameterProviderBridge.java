@@ -36,6 +36,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import com.google.common.collect.ImmutableSortedSet;
 
 import io.wcm.config.api.Parameter;
+import io.wcm.config.editor.EditorProperties;
 import io.wcm.config.spi.ParameterProvider;
 import io.wcm.sling.commons.osgi.RankedServices;
 import io.wcm.sling.commons.osgi.RankedServices.ChangeListener;

@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2016 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import javax.inject.Qualifier;
 public @interface Application {
 
   /**
-   * Application Id. The application is is usually the application path at /apps/ or /libs/.
+   * @return Application Id. The application is is usually the application path at /apps/ or /libs/.
    */
   String value();
 
