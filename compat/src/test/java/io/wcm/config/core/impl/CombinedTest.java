@@ -32,7 +32,6 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.ConfigurationResolver;
 import org.apache.sling.caconfig.impl.ConfigurationInheritanceStrategyMultiplexer;
 import org.apache.sling.caconfig.impl.ConfigurationResolverImpl;
-import org.apache.sling.caconfig.impl.def.ConfigurationDefNameConstants;
 import org.apache.sling.caconfig.impl.def.DefaultConfigurationInheritanceStrategy;
 import org.apache.sling.caconfig.impl.def.DefaultConfigurationPersistenceStrategy;
 import org.apache.sling.caconfig.impl.metadata.ConfigurationMetadataProviderMultiplexer;
@@ -40,15 +39,14 @@ import org.apache.sling.caconfig.impl.override.ConfigurationOverrideManager;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.management.impl.ConfigurationManagerImpl;
 import org.apache.sling.caconfig.management.impl.ConfigurationPersistenceStrategyMultiplexer;
+import org.apache.sling.caconfig.management.impl.ContextPathStrategyMultiplexerImpl;
 import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.apache.sling.caconfig.resource.impl.ConfigurationResourceResolverImpl;
 import org.apache.sling.caconfig.resource.impl.ConfigurationResourceResolvingStrategyMultiplexer;
-import org.apache.sling.caconfig.resource.impl.ContextPathStrategyMultiplexer;
 import org.apache.sling.caconfig.resource.impl.def.DefaultConfigurationResourceResolvingStrategy;
 import org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -62,6 +60,7 @@ import io.wcm.config.api.Configuration;
 import io.wcm.config.api.Parameter;
 import io.wcm.config.api.ParameterBuilder;
 import io.wcm.config.core.override.impl.SystemPropertyOverrideProvider;
+import io.wcm.config.core.persistence.impl.ToolsConfigPagePersistenceProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
@@ -70,7 +69,6 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 /**
  * Test all configuration services in combination.
  */
-@Ignore // TODO: fix unit tests
 public class CombinedTest {
 
   private static final String APP_ID = "/apps/app1";
@@ -103,10 +101,12 @@ public class CombinedTest {
     context.registerInjectActivateService(new ConfigurationFinderStrategyBridge());
     context.registerInjectActivateService(new ParameterOverrideProviderBridge());
     context.registerInjectActivateService(new ParameterProviderBridge());
+    context.registerInjectActivateService(new ToolsConfigPagePersistenceProvider(),
+        "enabled", true);
 
     // override providers
     context.registerInjectActivateService(new SystemPropertyOverrideProvider(),
-        ImmutableValueMap.of("enabled", true));
+        "enabled", true);
 
     // adapter factory
     context.registerInjectActivateService(new ConfigurationAdapterFactory());
@@ -133,14 +133,13 @@ public class CombinedTest {
     Resource contextResource = context.resourceResolver().getResource(CONFIG_ID);
     configManager.persistConfiguration(contextResource, ParameterProviderBridge.DEFAULT_CONFIG_NAME,
         new ConfigurationPersistData(ImmutableValueMap.of(
-            PROP_3.getName(), "value3-new",
-            ConfigurationDefNameConstants.PROPERTY_CONFIG_PROPERTY_INHERIT, true)));
+            PROP_3.getName(), "value3-new")));
 
     Resource resource = context.request().getResource();
     Configuration config = resource.adaptTo(Configuration.class);
 
     assertNotNull(config);
-    assertEquals("value1-l3", config.get(PROP_1));
+    assertEquals("value1-l2", config.get(PROP_1));
     assertEquals("value2-l2", config.get(PROP_2));
     assertEquals("value3-new", config.get(PROP_3));
   }
@@ -192,7 +191,7 @@ public class CombinedTest {
    */
   private static ConfigurationResourceResolver registerConfigurationResourceResolver(AemContext context) {
     context.registerInjectActivateService(new DefaultContextPathStrategy());
-    context.registerInjectActivateService(new ContextPathStrategyMultiplexer());
+    context.registerInjectActivateService(new ContextPathStrategyMultiplexerImpl());
     context.registerInjectActivateService(new DefaultConfigurationResourceResolvingStrategy());
     context.registerInjectActivateService(new ConfigurationResourceResolvingStrategyMultiplexer());
     return context.registerInjectActivateService(new ConfigurationResourceResolverImpl());
