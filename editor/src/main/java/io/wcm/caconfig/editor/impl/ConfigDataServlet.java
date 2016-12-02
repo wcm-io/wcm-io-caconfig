@@ -24,10 +24,6 @@ import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Servlet;
@@ -42,6 +38,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.apache.sling.caconfig.management.ConfigurationCollectionData;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.management.ValueInfo;
@@ -84,35 +81,56 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     boolean collection = BooleanUtils.toBoolean(request.getParameter(RP_COLLECTION));
 
     // output configuration
-    Collection<ConfigurationData> config = getConfiguration(request.getResource(), configName, collection);
     try {
-      response.setContentType("application/json;charset=" + CharEncoding.UTF_8);
-      response.getWriter().write(toJson(config).toString());
+      JSONObject result = getConfiguration(request.getResource(), configName, collection);
+      if (result == null) {
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      }
+      else {
+        response.setContentType("application/json;charset=" + CharEncoding.UTF_8);
+        response.getWriter().write(result.toString());
+      }
     }
     catch (JSONException ex) {
       throw new ServletException("Unable to generate JSON.", ex);
     }
   }
 
-  private Collection<ConfigurationData> getConfiguration(Resource contextResource, String configName, boolean collection) {
-    List<ConfigurationData> result = new ArrayList<>();
+  private JSONObject getConfiguration(Resource contextResource, String configName, boolean collection) throws JSONException {
+    JSONObject result;
     if (collection) {
-      result.addAll(configManager.getConfigurationCollection(contextResource, configName).getItems());
+      result = toJson(configManager.getConfigurationCollection(contextResource, configName));
     }
     else {
       ConfigurationData configData = configManager.getConfiguration(contextResource, configName);
       if (configData != null) {
-        result.add(configData);
+        result = toJson(configData);
+      }
+      else {
+        result = null;
       }
     }
     return result;
   }
 
-  private JSONArray toJson(Collection<ConfigurationData> items) throws JSONException {
-    JSONArray result = new JSONArray();
-    for (ConfigurationData item : items) {
-      result.put(toJson(item));
+  private JSONObject toJson(ConfigurationCollectionData configCollection) throws JSONException {
+    JSONObject result = new JSONObject();
+    result.putOpt("configName", configCollection.getConfigName());
+
+    if (!configCollection.getProperties().isEmpty()) {
+      JSONObject properties = new JSONObject();
+      for (Map.Entry<String, Object> entry : configCollection.getProperties().entrySet()) {
+        properties.putOpt(entry.getKey(), entry.getValue());
+      }
+      result.put("properties", properties);
     }
+
+    JSONArray items = new JSONArray();
+    for (ConfigurationData configData : configCollection.getItems()) {
+      items.put(toJson(configData));
+    }
+    result.put("items", items);
+
     return result;
   }
 
@@ -121,7 +139,6 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
     result.putOpt("configName", config.getConfigName());
     result.putOpt("collectionItemName", config.getCollectionItemName());
-    result.putOpt("resourcePath", config.getResourcePath());
 
     JSONArray props = new JSONArray();
     for (String propertyName : config.getPropertyNames()) {
@@ -140,12 +157,16 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         prop.put("metadata", metadata);
 
         if (itemMetadata.getType().isArray()) {
-          ConfigurationData[] configData = (ConfigurationData[])item.getValue();
-          if (configData != null) {
+          ConfigurationData[] configDatas = (ConfigurationData[])item.getValue();
+          if (configDatas != null) {
             JSONObject nestedConfigCollection = new JSONObject();
             String collectionConfigName = configManager.getPersistenceResourcePath(config.getConfigName()) + "/" + itemMetadata.getConfigurationMetadata().getName();
             nestedConfigCollection.put("configName", collectionConfigName);
-            nestedConfigCollection.put("items", toJson(Arrays.asList(configData)));
+            JSONArray items = new JSONArray();
+            for (ConfigurationData configData : configDatas) {
+              items.put(toJson(configData));
+            }
+            nestedConfigCollection.put("items", items);
             prop.put("nestedConfigCollection", nestedConfigCollection);
           }
         }

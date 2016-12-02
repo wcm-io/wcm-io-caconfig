@@ -91,29 +91,30 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
     }
 
     // parse JSON parameter data
-    List<ConfigurationPersistData> persistData;
+    ConfigurationPersistData persistData = null;
+    ConfigurationCollectionPersistData collectionPersistData = null;
     try {
       String jsonDataString = IOUtils.toString(request.getInputStream(), CharEncoding.UTF_8);
-      JSONArray jsonData = new JSONArray(jsonDataString);
-      persistData = parseJson(jsonData, configMetadata);
+      JSONObject jsonData = new JSONObject(jsonDataString);
+      if (collection) {
+        collectionPersistData = parseCollectionConfigData(jsonData, configMetadata);
+      }
+      else {
+        persistData = parseConfigData(jsonData, configMetadata);
+      }
     }
     catch (JSONException ex) {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JSON data: " + ex.getMessage());
-      return;
-    }
-    if (!collection && persistData.size() != 1) {
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Exactly 1 JSON object expected.");
       return;
     }
 
     // persist data
     try {
       if (collection) {
-        configManager.persistConfigurationCollection(request.getResource(), configName,
-            new ConfigurationCollectionPersistData(persistData));
+        configManager.persistConfigurationCollection(request.getResource(), configName, collectionPersistData);
       }
       else {
-        configManager.persistConfiguration(request.getResource(), configName, persistData.get(0));
+        configManager.persistConfiguration(request.getResource(), configName, persistData);
       }
     }
     catch (ConfigurationPersistenceException ex) {
@@ -121,16 +122,30 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
     }
   }
 
-  private List<ConfigurationPersistData> parseJson(JSONArray jsonData, ConfigurationMetadata configMetadata) throws JSONException {
-    List<ConfigurationPersistData> persistData = new ArrayList<>();
-    for (int i = 0; i < jsonData.length(); i++) {
-      JSONObject item = jsonData.getJSONObject(i);
-      persistData.add(parseJson(item, configMetadata));
+  private ConfigurationCollectionPersistData parseCollectionConfigData(JSONObject jsonData, ConfigurationMetadata configMetadata) throws JSONException {
+    List<ConfigurationPersistData> items = new ArrayList<>();
+    JSONArray itemsObject = jsonData.getJSONArray("items");
+    for (int i = 0; i < itemsObject.length(); i++) {
+      JSONObject item = itemsObject.getJSONObject(i);
+      items.add(parseConfigData(item, configMetadata));
     }
-    return persistData;
+
+    Map<String, Object> properties = null;
+    JSONObject propertiesObject = jsonData.optJSONObject("properties");
+    if (propertiesObject != null) {
+      properties = new HashMap<>();
+      Iterator<String> propertyNames = propertiesObject.keys();
+      while (propertyNames.hasNext()) {
+        String propertyName = propertyNames.next();
+        properties.put(propertyName, propertiesObject.get(propertyName));
+      }
+    }
+
+    return new ConfigurationCollectionPersistData(items)
+        .properties(properties);
   }
 
-  private ConfigurationPersistData parseJson(JSONObject item, ConfigurationMetadata configMetadata) throws JSONException {
+  private ConfigurationPersistData parseConfigData(JSONObject item, ConfigurationMetadata configMetadata) throws JSONException {
     Map<String, Object> props = new HashMap<>();
     JSONObject properties = item.getJSONObject("properties");
     Iterator<String> propertyNames = properties.keys();

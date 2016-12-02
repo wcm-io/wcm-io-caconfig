@@ -99,7 +99,7 @@ public class ConfigPersistServletTest {
   @SuppressWarnings("unchecked")
   @Test
   public void testPersist() throws Exception {
-    String jsonData = "[{properties:{"
+    String jsonData = "{properties:{"
         + "stringProp:'value1',"
         + "intProp:5,"
         + "longProp:10,"
@@ -108,7 +108,7 @@ public class ConfigPersistServletTest {
         + "nestedConfig:'invalid',"
         + "otherString:'otherValue1',"
         + "otherInt:20"
-        + "}}]";
+        + "}}";
     assertEquals(HttpServletResponse.SC_OK, post(CONFIG_NAME, false, jsonData));
 
     ArgumentCaptor<ConfigurationPersistData> persistData = ArgumentCaptor.forClass(ConfigurationPersistData.class);
@@ -127,7 +127,7 @@ public class ConfigPersistServletTest {
 
   @Test
   public void testPersistCollection_None() throws Exception {
-    String jsonData = "[]";
+    String jsonData = "{items:[]}";
     assertEquals(HttpServletResponse.SC_OK, post(CONFIG_COL_NAME, true, jsonData));
 
     ArgumentCaptor<ConfigurationCollectionPersistData> persistData = ArgumentCaptor.forClass(ConfigurationCollectionPersistData.class);
@@ -139,7 +139,7 @@ public class ConfigPersistServletTest {
   @SuppressWarnings("unchecked")
   @Test
   public void testPersistCollection_One() throws Exception {
-    String jsonData = "[{collectionItemName:'item1',properties:{"
+    String jsonData = "{properties:{colProp:'value1'},items:[{collectionItemName:'item1',properties:{"
         + "stringProp:['value1','value2'],"
         + "intProp:[5],"
         + "longProp:[10,15],"
@@ -148,7 +148,7 @@ public class ConfigPersistServletTest {
         + "nestedConfig:['invalid'],"
         + "otherString:['otherValue1'],"
         + "otherInt:[5]"
-        + "}}]";
+        + "}}]}";
     assertEquals(HttpServletResponse.SC_OK, post(CONFIG_COL_NAME, true, jsonData));
 
     ArgumentCaptor<ConfigurationCollectionPersistData> persistData = ArgumentCaptor.forClass(ConfigurationCollectionPersistData.class);
@@ -180,12 +180,13 @@ public class ConfigPersistServletTest {
             5
         }),
         not(hasKey("nestedConfig"))));
+    assertThat(persistData.getValue().getProperties(), hasEntry("colProp", (Object)"value1"));
   }
 
   @Test
   public void testPersistCollection_Two() throws Exception {
-    String jsonData = "[{collectionItemName:'item1',properties:{stringProp:['value1','value2']}},"
-        + "{collectionItemName:'item2',properties:{stringProp:['value3']}}]";
+    String jsonData = "{items:[{collectionItemName:'item1',properties:{stringProp:['value1','value2']}},"
+        + "{collectionItemName:'item2',properties:{stringProp:['value3']}}]}";
     assertEquals(HttpServletResponse.SC_OK, post(CONFIG_COL_NAME, true, jsonData));
 
     ArgumentCaptor<ConfigurationCollectionPersistData> persistData = ArgumentCaptor.forClass(ConfigurationCollectionPersistData.class);

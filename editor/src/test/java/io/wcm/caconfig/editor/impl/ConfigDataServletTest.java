@@ -90,9 +90,7 @@ public class ConfigDataServletTest {
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
-    String expectedJson = "["
-        + buildConfigDataJson("name1", 0)
-        + "]";
+    String expectedJson = buildConfigDataJson("name1", 0);
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
@@ -101,7 +99,9 @@ public class ConfigDataServletTest {
     ConfigurationData configData1 = buildConfigData("name1", 1);
     ConfigurationData configData2 = buildConfigData("name1", 2);
     ConfigurationCollectionData configCollectionData = mock(ConfigurationCollectionData.class);
+    when(configCollectionData.getConfigName()).thenReturn("name1");
     when(configCollectionData.getItems()).thenReturn(ImmutableList.of(configData1, configData2));
+    when(configCollectionData.getProperties()).thenReturn(ImmutableMap.<String, Object>of("colProp1", true));
     when(configManager.getConfigurationCollection(context.currentResource(), "name1")).thenReturn(configCollectionData);
 
     context.request().setQueryString(RP_CONFIGNAME + "=name1&" + RP_COLLECTION + "=true");
@@ -109,10 +109,10 @@ public class ConfigDataServletTest {
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
-    String expectedJson = "["
+    String expectedJson = "{configName:'name1',properties:{colProp1:true},items:["
         + buildConfigDataJson("name1", 1) + ","
         + buildConfigDataJson("name1", 2)
-        + "]";
+        + "]}";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
@@ -121,7 +121,6 @@ public class ConfigDataServletTest {
   public void testNested() throws Exception {
     ConfigurationData configData = mock(ConfigurationData.class);
     when(configData.getConfigName()).thenReturn("nestedConfig");
-    when(configData.getResourcePath()).thenReturn("/path");
     when(configData.getPropertyNames()).thenReturn(ImmutableSet.of("param1", "subConfig", "subConfigList"));
 
     ValueInfo param1 = mock(ValueInfo.class);
@@ -159,7 +158,7 @@ public class ConfigDataServletTest {
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
-    String expectedJson = "[{configName:'nestedConfig',resourcePath:'/path',properties:["
+    String expectedJson = "{configName:'nestedConfig',properties:["
         + "{name:'param1',default:false,inherited:false,overridden:false},"
         + "{name:'subConfig',metadata:{label:'subConfig-label',description:'subConfig-desc'},nestedConfig:" + buildConfigDataJson("nestedConfig/subConfig", 0)
         + "},"
@@ -167,7 +166,7 @@ public class ConfigDataServletTest {
         + buildConfigDataJson("nestedConfig/subConfigList", 1) + ","
         + buildConfigDataJson("nestedConfig/subConfigList", 2)
         + "]}}"
-        + "]}]";
+        + "]}";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
@@ -175,7 +174,6 @@ public class ConfigDataServletTest {
   private ConfigurationData buildConfigData(String configName, int index) {
     ConfigurationData configData = mock(ConfigurationData.class);
     when(configData.getConfigName()).thenReturn(configName);
-    when(configData.getResourcePath()).thenReturn("/path");
     if (index > 0) {
       when(configData.getCollectionItemName()).thenReturn("item" + index);
     }
@@ -216,7 +214,7 @@ public class ConfigDataServletTest {
   }
 
   private String buildConfigDataJson(String configName, int index) {
-    return "{configName:'" + configName + "',resourcePath:'/path',"
+    return "{configName:'" + configName + "',"
         + (index > 0 ? "collectionItemName:'item" + index + "'," : "")
         + "properties:["
         + "{name:'param1',value:['v1'],effectiveValue:['v1','v2'],default:false,inherited:true,overridden:false,"
