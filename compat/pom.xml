@@ -108,6 +108,9 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
+            <Sling-Initial-Content>
+              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/config/editor
+            </Sling-Initial-Content>
 
             <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
             <Import-Package>
