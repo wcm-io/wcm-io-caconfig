@@ -30,15 +30,20 @@ import javax.script.Bindings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.scripting.SlingBindings;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.wcm.config.api.Configuration;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConfigBindingsValueProviderTest {
+
+  @Rule
+  public AemContext context = new AemContext();
 
   @Mock
   private SlingHttpServletRequest request;
@@ -51,7 +56,7 @@ public class ConfigBindingsValueProviderTest {
 
   @Before
   public void setUp() {
-    underTest = new ConfigBindingsValueProvider();
+    underTest = context.registerInjectActivateService(new ConfigBindingsValueProvider());
     when(bindings.containsKey(SlingBindings.REQUEST)).thenReturn(true);
     when(bindings.get(SlingBindings.REQUEST)).thenReturn(request);
   }

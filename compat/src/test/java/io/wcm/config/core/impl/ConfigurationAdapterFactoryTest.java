@@ -37,7 +37,7 @@ import io.wcm.config.api.Configuration;
 
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore // TODO: fix unit test
+@Ignore // TODO: fix unit test and switch to AemContext
 public class ConfigurationAdapterFactoryTest {
 
   @Mock

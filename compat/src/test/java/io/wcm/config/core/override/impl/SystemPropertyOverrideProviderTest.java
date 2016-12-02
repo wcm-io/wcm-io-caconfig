@@ -21,30 +21,26 @@ package io.wcm.config.core.override.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
-import java.util.Dictionary;
 import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.osgi.service.component.ComponentContext;
+
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SystemPropertyOverrideProviderTest {
 
-  @Mock
-  private ComponentContext componentContext;
-  @Mock
-  private Dictionary<String, Object> config;
+  @Rule
+  public AemContext context = new AemContext();
 
   @Before
   public void setUp() {
-    when(componentContext.getProperties()).thenReturn(config);
     System.setProperty(SystemPropertyOverrideProvider.SYSTEM_PROPERTY_PREFIX + "[default]param1", "value1");
     System.setProperty(SystemPropertyOverrideProvider.SYSTEM_PROPERTY_PREFIX + "[/config1]param2", "value2");
   }
@@ -57,9 +53,8 @@ public class SystemPropertyOverrideProviderTest {
 
   @Test
   public void testEnabled() {
-    SystemPropertyOverrideProvider provider = new SystemPropertyOverrideProvider();
-    when(config.get(SystemPropertyOverrideProvider.PROPERTY_ENABLED)).thenReturn(true);
-    provider.activate(componentContext);
+    SystemPropertyOverrideProvider provider = context.registerInjectActivateService(new SystemPropertyOverrideProvider(),
+        SystemPropertyOverrideProvider.PROPERTY_ENABLED, true);
 
     Map<String,String> overrideMap = provider.getOverrideMap();
     assertEquals("value1", overrideMap.get("[default]param1"));
@@ -68,9 +63,8 @@ public class SystemPropertyOverrideProviderTest {
 
   @Test
   public void testDisabled() {
-    SystemPropertyOverrideProvider provider = new SystemPropertyOverrideProvider();
-    when(config.get(SystemPropertyOverrideProvider.PROPERTY_ENABLED)).thenReturn(false);
-    provider.activate(componentContext);
+    SystemPropertyOverrideProvider provider = context.registerInjectActivateService(new SystemPropertyOverrideProvider(),
+        SystemPropertyOverrideProvider.PROPERTY_ENABLED, false);
 
     Map<String, String> overrideMap = provider.getOverrideMap();
     assertTrue(overrideMap.isEmpty());
