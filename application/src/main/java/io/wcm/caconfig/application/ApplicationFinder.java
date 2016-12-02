@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.management;
+package io.wcm.caconfig.application;
 
 import java.util.Set;
 
@@ -32,17 +32,17 @@ public interface ApplicationFinder {
 
   /**
    * Find application that is associated with this resource.
-   * All implementors of {@link io.wcm.config.spi.ApplicationProvider} are enquired in order of service ranking,
+   * All implementors of {@link io.wcm.caconfig.application.spi.ApplicationProvider} are enquired in order of service ranking,
    * the first that accepts the resource as matching wins.
    * @param resource Resource
    * @return Application instance if a match was found, otherwise null
    */
-  Application find(Resource resource);
+  ApplicationInfo find(Resource resource);
 
   /**
    * Get all applications that are registered in the system.
    * @return Set of application instances
    */
-  Set<Application> getAll();
+  Set<ApplicationInfo> getAll();
 
 }

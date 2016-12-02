@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * API for applications and editors managing configuration (read/write).
+ * API for applications accessing configuration.
  */
 @org.osgi.annotation.versioning.Version("1.0.0")
-package io.wcm.config.core.management;
+package io.wcm.config.api;

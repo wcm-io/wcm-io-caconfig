@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.management;
+package io.wcm.caconfig.application;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -25,7 +25,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * Application meta data.
  */
 @ProviderType
-public final class Application implements Comparable<Application> {
+public final class ApplicationInfo implements Comparable<ApplicationInfo> {
 
   private final String applicationId;
   private final String label;
@@ -34,7 +34,7 @@ public final class Application implements Comparable<Application> {
    * @param applicationId Application id
    * @param label Label
    */
-  public Application(String applicationId, String label) {
+  public ApplicationInfo(String applicationId, String label) {
     this.applicationId = applicationId;
     this.label = label;
   }
@@ -60,14 +60,14 @@ public final class Application implements Comparable<Application> {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof Application)) {
+    if (!(obj instanceof ApplicationInfo)) {
       return false;
     }
-    return this.applicationId.equals(((Application)obj).getApplicationId());
+    return this.applicationId.equals(((ApplicationInfo)obj).getApplicationId());
   }
 
   @Override
-  public int compareTo(Application o) {
+  public int compareTo(ApplicationInfo o) {
     return this.applicationId.compareTo(o.getApplicationId());
   }
 

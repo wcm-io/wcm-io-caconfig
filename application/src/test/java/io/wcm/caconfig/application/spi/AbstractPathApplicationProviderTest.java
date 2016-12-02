@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.spi.helpers;
+package io.wcm.caconfig.application.spi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -30,8 +30,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import io.wcm.config.spi.ApplicationProvider;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractPathApplicationProviderTest {

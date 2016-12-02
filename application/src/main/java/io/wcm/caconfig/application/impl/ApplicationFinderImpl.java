@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.management.impl;
+package io.wcm.caconfig.application.impl;
 
 import java.util.Map;
 import java.util.Set;
@@ -37,9 +37,9 @@ import org.apache.sling.api.resource.Resource;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import io.wcm.config.core.management.Application;
-import io.wcm.config.core.management.ApplicationFinder;
-import io.wcm.config.spi.ApplicationProvider;
+import io.wcm.caconfig.application.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationInfo;
+import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.sling.commons.osgi.RankedServices;
 
 /**
@@ -49,27 +49,27 @@ import io.wcm.sling.commons.osgi.RankedServices;
 @Service(ApplicationFinder.class)
 public final class ApplicationFinderImpl implements ApplicationFinder {
 
-  private static final Application APPLICATION_NOT_FOUND = new Application("APPLICATION_NOT_FOUND", null);
+  private static final ApplicationInfo APPLICATION_NOT_FOUND = new ApplicationInfo("APPLICATION_NOT_FOUND", null);
 
   @Reference(name = "applicationProvider", referenceInterface = ApplicationProvider.class,
       cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)
   private final RankedServices<ApplicationProvider> applicationProviders = new RankedServices<>();
 
   // apply a simple cache mechanism for looking up application per resource path
-  private final Cache<String, Application> applicationFindCache = CacheBuilder.newBuilder()
+  private final Cache<String, ApplicationInfo> applicationFindCache = CacheBuilder.newBuilder()
       .maximumSize(10000)
       .expireAfterWrite(10, TimeUnit.SECONDS)
       .build();
 
   @Override
-  public Application find(final Resource resource) {
+  public ApplicationInfo find(final Resource resource) {
     try {
-      Application result = applicationFindCache.get(resource.getPath(), new Callable<Application>() {
+      ApplicationInfo result = applicationFindCache.get(resource.getPath(), new Callable<ApplicationInfo>() {
         @Override
-        public Application call() {
+        public ApplicationInfo call() {
           for (ApplicationProvider provider : applicationProviders) {
             if (provider.matches(resource)) {
-              return new Application(provider.getApplicationId(), provider.getLabel());
+              return new ApplicationInfo(provider.getApplicationId(), provider.getLabel());
             }
           }
           return APPLICATION_NOT_FOUND;
@@ -88,10 +88,10 @@ public final class ApplicationFinderImpl implements ApplicationFinder {
   }
 
   @Override
-  public Set<Application> getAll() {
-    SortedSet<Application> allApps = new TreeSet<>();
+  public Set<ApplicationInfo> getAll() {
+    SortedSet<ApplicationInfo> allApps = new TreeSet<>();
     for (ApplicationProvider provider : applicationProviders) {
-      allApps.add(new Application(provider.getApplicationId(), provider.getLabel()));
+      allApps.add(new ApplicationInfo(provider.getApplicationId(), provider.getLabel()));
     }
     return allApps;
   }

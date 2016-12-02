@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * API for applications accessing configuration.
+ * Detect applications.
  */
-@org.osgi.annotation.versioning.Version("0.5.0")
-package io.wcm.config.api;
+@org.osgi.annotation.versioning.Version("1.0.0")
+package io.wcm.caconfig.application;

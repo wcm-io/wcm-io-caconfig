@@ -51,9 +51,9 @@ import org.osgi.service.component.ComponentContext;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import io.wcm.caconfig.application.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.config.api.Configuration;
-import io.wcm.config.core.management.Application;
-import io.wcm.config.core.management.ApplicationFinder;
 import io.wcm.config.core.management.ParameterResolver;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
@@ -155,7 +155,7 @@ public class ConfigurationFinderImplTest {
 
   @Test
   public void testFindResourceDetectionByApplicationFinder() {
-    when(applicationFinder.find(resource)).thenReturn(new Application(APPLICATION_ID_1, null));
+    when(applicationFinder.find(resource)).thenReturn(new ApplicationInfo(APPLICATION_ID_1, null));
     Configuration conf = underTest.find(resource);
     assertNotNull(conf);
     assertEquals("/content/region1/region11/site", conf.getConfigurationId());

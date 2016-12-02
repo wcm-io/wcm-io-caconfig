@@ -17,28 +17,8 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.spi.annotations;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import javax.inject.Qualifier;
-
 /**
- * Qualifier to mark a Sling Models interface application to be associated with a certain application.
+ * SPI for applications hooking into the configuration infrastructure for parameterizing and customizing.
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Qualifier
-public @interface Application {
-
-  /**
-   * Application Id. The application is is usually the application path at /apps/ or /libs/.
-   */
-  String value();
-
-}
+@org.osgi.annotation.versioning.Version("1.0.0")
+package io.wcm.config.spi;

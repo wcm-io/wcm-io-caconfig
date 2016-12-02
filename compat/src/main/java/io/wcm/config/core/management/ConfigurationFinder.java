@@ -34,7 +34,8 @@ public interface ConfigurationFinder {
 
   /**
    * Tries to find the closed matching configuration for the given path.
-   * Tries to detect the application for the resource using {@link ApplicationFinder} to use the
+   * Tries to detect the application for the resource using {@link io.wcm.caconfig.application.ApplicationFinder} to use
+   * the
    * configuration finder strategy of this application.
    * If no application is found, or it does not provide such a strategy, all configuration finder strategies are
    * enquired, iterated in order of service ranking.
@@ -54,7 +55,8 @@ public interface ConfigurationFinder {
 
   /**
    * Tries to find all enclosing configurations for the given path.
-   * Tries to detect the application for the resource using {@link ApplicationFinder} to use the
+   * Tries to detect the application for the resource using {@link io.wcm.caconfig.application.ApplicationFinder} to use
+   * the
    * configuration finder strategy of this application.
    * If no application is found, or it does not provide such a strategy, all configuration finder strategies are
    * enquired, iterated in order of service ranking.

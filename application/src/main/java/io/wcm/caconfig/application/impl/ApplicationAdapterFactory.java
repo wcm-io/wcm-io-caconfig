@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.impl;
+package io.wcm.caconfig.application.impl;
 
 import static org.apache.sling.api.adapter.AdapterFactory.ADAPTABLE_CLASSES;
 import static org.apache.sling.api.adapter.AdapterFactory.ADAPTER_CLASSES;
@@ -30,11 +30,11 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 
-import io.wcm.config.api.Configuration;
-import io.wcm.config.core.management.ConfigurationFinder;
+import io.wcm.caconfig.application.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationInfo;
 
 /**
- * AdapterFactory that adapts resources to effective configurations and applications.
+ * AdapterFactory that adapts application info objects
  */
 @Component(immediate = true, metatype = false)
 @Service(AdapterFactory.class)
@@ -44,22 +44,22 @@ import io.wcm.config.core.management.ConfigurationFinder;
       "org.apache.sling.api.resource.Resource"
   }),
   @Property(name = ADAPTER_CLASSES, value = {
-        "io.wcm.config.api.Configuration"
+      "io.wcm.caconfig.application.ApplicationInfo"
   }),
   @Property(name = "adapter.condition", value = "If a configuration can be found for the current/given resource or it's parents.")
 })
-public final class ConfigurationAdapterFactory implements AdapterFactory {
+public final class ApplicationAdapterFactory implements AdapterFactory {
 
   @Reference
-  private ConfigurationFinder configurationFinder;
+  private ApplicationFinder applicationFinder;
 
   @SuppressWarnings("unchecked")
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
-    if (type == Configuration.class) {
+    if (type == ApplicationInfo.class) {
       Resource resource = AdaptableUtil.getResource(adaptable);
       if (resource != null) {
-        return (AdapterType)configurationFinder.find(resource);
+        return (AdapterType)applicationFinder.find(resource);
       }
     }
     return null;

@@ -20,5 +20,5 @@
 /**
  * Helper classes for configuration management.
  */
-@org.osgi.annotation.versioning.Version("0.6.0")
+@org.osgi.annotation.versioning.Version("1.0.0")
 package io.wcm.config.core.management.util;

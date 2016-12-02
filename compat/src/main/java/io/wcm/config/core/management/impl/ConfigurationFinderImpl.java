@@ -49,10 +49,10 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
+import io.wcm.caconfig.application.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.config.api.Configuration;
 import io.wcm.config.core.impl.ConfigurationImpl;
-import io.wcm.config.core.management.Application;
-import io.wcm.config.core.management.ApplicationFinder;
 import io.wcm.config.core.management.ConfigurationFinder;
 import io.wcm.config.core.management.ParameterResolver;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
@@ -71,15 +71,15 @@ public final class ConfigurationFinderImpl implements ConfigurationFinder {
       description = "List of regular expression patterns for paths which should never be accepted as valie configuration Ids.",
       cardinality = Integer.MAX_VALUE,
       value = {
-      "^.*/jcr:content(/.*)?$",
-      "^.*/tools$",
-      "^.*/tools/config$"
+          "^.*/jcr:content(/.*)?$",
+          "^.*/tools$",
+          "^.*/tools/config$"
   })
   static final String PROPERTY_EXCLUDE_PATH_PATTERNS = "excludePathPatterns";
   private static final String[] DEFAULT_EXCLUDE_PATH_PATTERNS = new String[] {
-    "^.*/jcr:content(/.*)?$",
-    "^.*/tools$",
-    "^.*/tools/config$"
+      "^.*/jcr:content(/.*)?$",
+      "^.*/tools$",
+      "^.*/tools/config$"
   };
 
   /**
@@ -144,7 +144,7 @@ public final class ConfigurationFinderImpl implements ConfigurationFinder {
   }
 
   private String findApplicationId(Resource resource) {
-    Application application = applicationFinder.find(resource);
+    ApplicationInfo application = applicationFinder.find(resource);
     if (application != null) {
       return application.getApplicationId();
     }

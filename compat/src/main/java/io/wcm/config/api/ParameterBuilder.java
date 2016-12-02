@@ -28,7 +28,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import com.google.common.collect.ImmutableSet;
 
-import io.wcm.config.spi.ApplicationProvider;
+import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 /**

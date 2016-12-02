@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.impl;
+package io.wcm.caconfig.application.impl;
 
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.when;
@@ -31,16 +31,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.wcm.config.core.management.Application;
-import io.wcm.config.core.management.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationInfo;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationImplementationPickerTest {
 
   private static final String APP_ID_1 = "app1";
   private static final String APP_ID_2 = "app2";
-  private static final Application APP_1 = new Application(APP_ID_1, null);
-  private static final Application APP_2 = new Application(APP_ID_2, null);
+  private static final ApplicationInfo APP_1 = new ApplicationInfo(APP_ID_1, null);
+  private static final ApplicationInfo APP_2 = new ApplicationInfo(APP_ID_2, null);
   private static final Class<?>[] IMPL_ARRAY = new Class<?>[] {
     Impl0.class,
     Impl1.class,
@@ -90,7 +90,7 @@ public class ApplicationImplementationPickerTest {
   }
 
   @Model(adaptables = Resource.class, adapters = Comparable.class)
-  @io.wcm.config.spi.annotations.Application(APP_ID_1)
+  @io.wcm.caconfig.application.spi.annotations.Application(APP_ID_1)
   private static class Impl1 implements Comparable {
     @Override
     public int compareTo(Object o) {
@@ -99,7 +99,7 @@ public class ApplicationImplementationPickerTest {
   }
 
   @Model(adaptables = Resource.class, adapters = Comparable.class)
-  @io.wcm.config.spi.annotations.Application(APP_ID_2)
+  @io.wcm.caconfig.application.spi.annotations.Application(APP_ID_2)
   private static class Impl2 implements Comparable {
     @Override
     public int compareTo(Object o) {

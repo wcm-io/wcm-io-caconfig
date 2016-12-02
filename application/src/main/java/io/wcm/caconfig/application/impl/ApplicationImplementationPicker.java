@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.impl;
+package io.wcm.caconfig.application.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Component;
@@ -28,8 +28,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.spi.ImplementationPicker;
 import org.osgi.framework.Constants;
 
-import io.wcm.config.core.management.Application;
-import io.wcm.config.core.management.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationInfo;
 
 /**
  * Sling Models {@link ImplementationPicker} implementation that checks if an application is associated
@@ -60,8 +60,8 @@ public class ApplicationImplementationPicker implements ImplementationPicker {
     String applicationId = getApplicationId(adaptable);
     if (applicationId != null) {
       for (Class<?> clazz : implementationsTypes) {
-        io.wcm.config.spi.annotations.Application applicationAnnotation =
-            clazz.getAnnotation(io.wcm.config.spi.annotations.Application.class);
+        io.wcm.caconfig.application.spi.annotations.Application applicationAnnotation =
+            clazz.getAnnotation(io.wcm.caconfig.application.spi.annotations.Application.class);
         if (applicationAnnotation != null
             && StringUtils.equals(applicationId, applicationAnnotation.value())) {
           return clazz;
@@ -74,7 +74,7 @@ public class ApplicationImplementationPicker implements ImplementationPicker {
   private String getApplicationId(Object adaptable) {
     Resource resource = AdaptableUtil.getResource(adaptable);
     if (resource != null) {
-      Application application = applicationFinder.find(resource);
+      ApplicationInfo application = applicationFinder.find(resource);
       if (application != null) {
         return application.getApplicationId();
       }
@@ -84,7 +84,7 @@ public class ApplicationImplementationPicker implements ImplementationPicker {
 
   private Class<?> pickFirstWithoutApplication(Class<?>[] implementationsTypes) {
     for (Class<?> clazz : implementationsTypes) {
-      if (!clazz.isAnnotationPresent(io.wcm.config.spi.annotations.Application.class)) {
+      if (!clazz.isAnnotationPresent(io.wcm.caconfig.application.spi.annotations.Application.class)) {
         return clazz;
       }
     }

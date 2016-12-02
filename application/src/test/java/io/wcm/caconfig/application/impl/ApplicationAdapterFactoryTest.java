@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.impl;
+package io.wcm.caconfig.application.impl;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -32,48 +32,49 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.wcm.config.api.Configuration;
-import io.wcm.config.core.management.ConfigurationFinder;
+import io.wcm.caconfig.application.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationInfo;
+import io.wcm.caconfig.application.spi.annotations.Application;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ConfigurationAdapterFactoryTest {
+public class ApplicationAdapterFactoryTest {
 
+  private ApplicationInfo application;
   @Mock
   private Resource resource;
   @Mock
   private SlingHttpServletRequest request;
   @Mock
-  private Configuration configuration;
-  @Mock
-  private ConfigurationFinder configurationFinder;
+  private ApplicationFinder applicationFinder;
 
   @InjectMocks
-  private ConfigurationAdapterFactory underTest;
+  private ApplicationAdapterFactory underTest;
 
   @Before
   public void setUp() {
+    application = new ApplicationInfo("app1", null);
     when(request.getResource()).thenReturn(resource);
-    when(configurationFinder.find(resource)).thenReturn(configuration);
+    when(applicationFinder.find(resource)).thenReturn(application);
   }
 
   @Test
-  public void testConfigurationResource() {
-    assertSame(configuration, underTest.getAdapter(resource, Configuration.class));
-    assertNull(underTest.getAdapter(resource, ConfigurationFinder.class));
-    assertNull(underTest.getAdapter(this, Configuration.class));
+  public void testApplicationResource() {
+    assertSame(application, underTest.getAdapter(resource, ApplicationInfo.class));
+    assertNull(underTest.getAdapter(resource, ApplicationFinder.class));
+    assertNull(underTest.getAdapter(this, Application.class));
   }
 
   @Test
-  public void testConfigurationRequest() {
-    assertSame(configuration, underTest.getAdapter(request, Configuration.class));
+  public void testApplicationRequest() {
+    assertSame(application, underTest.getAdapter(request, ApplicationInfo.class));
 
     when(request.getResource()).thenReturn(null);
-    assertNull(underTest.getAdapter(request, Configuration.class));
+    assertNull(underTest.getAdapter(request, ApplicationInfo.class));
   }
 
   @Test
-  public void testConfigurationInvalid() {
-    assertNull(underTest.getAdapter(this, Configuration.class));
+  public void testApplicationInvalid() {
+    assertNull(underTest.getAdapter(this, ApplicationInfo.class));
   }
 
 }

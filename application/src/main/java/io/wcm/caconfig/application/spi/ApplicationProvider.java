@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.spi;
+package io.wcm.caconfig.application.spi;
 
 import java.util.regex.Pattern;
 
