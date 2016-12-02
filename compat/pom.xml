@@ -49,6 +49,13 @@
   </properties>
 
   <dependencies>
+  
+    <dependency>
+      <groupId>io.wcm</groupId>
+      <artifactId>io.wcm.caconfig.application</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.sling</groupId>

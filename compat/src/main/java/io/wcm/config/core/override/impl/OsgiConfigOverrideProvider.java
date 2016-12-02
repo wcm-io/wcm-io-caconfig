@@ -42,8 +42,8 @@ property = "webconsole.configurationFactory.nameHint={description}, enabled={ena
 @Designate(ocd = OsgiConfigOverrideProvider.Config.class, factory = true)
 public final class OsgiConfigOverrideProvider implements ParameterOverrideProvider {
 
-  @ObjectClassDefinition(name = "wcm.io Configuration Property Override Provider: OSGi configuration", description = "Allows to define "
-      + "configuration property default values or overrides from OSGi configuration.")
+  @ObjectClassDefinition(name = "wcm.io Configuration Property Override Provider: OSGi configuration",
+      description = "Allows to define configuration property default values or overrides from OSGi configuration.")
   static @interface Config {
 
     @AttributeDefinition(name = "Enabled", description = "Enable parameter override provider.")
@@ -52,13 +52,14 @@ public final class OsgiConfigOverrideProvider implements ParameterOverrideProvid
     @AttributeDefinition(name = "Service Ranking", description = "Priority of parameter override providers (lower = higher priority).")
     int service_ranking() default 3000;
 
-    @AttributeDefinition(name = "Overrides", description = "Key/Value pairs defining parameter overrides.\n"
-        + "Syntax: [{scope}]{parameterName}={value}\n"
-        + "Examples:\n"
-        + "[default]param1 - Override default value for parameter 'param1'\n"
-        + "param1 - Override value for parameter 'param1' for all configurations\n"
-        + "[/content/region1/site1]param1 - Override value for parameter 'param1' for the "
-        + "configurations at /content/region1/site1. This has higher precedence than the other variants.", cardinality = Integer.MAX_VALUE)
+    @AttributeDefinition(name = "Overrides",
+        description = "Key/Value pairs defining parameter overrides.\n"
+            + "Syntax: [{scope}]{parameterName}={value}\n"
+            + "Examples:\n"
+            + "[default]param1 - Override default value for parameter 'param1'\n"
+            + "param1 - Override value for parameter 'param1' for all configurations\n"
+            + "[/content/region1/site1]param1 - Override value for parameter 'param1' for the "
+            + "configurations at /content/region1/site1. This has higher precedence than the other variants.", cardinality = Integer.MAX_VALUE)
     String[] overrides();
 
     @AttributeDefinition(name = "Description", description = "This description is used for display in the web console.")

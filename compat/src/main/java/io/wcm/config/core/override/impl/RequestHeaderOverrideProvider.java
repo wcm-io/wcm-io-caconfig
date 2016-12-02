@@ -51,8 +51,8 @@ public final class RequestHeaderOverrideProvider implements ParameterOverridePro
    */
   public static final String REQUEST_HEADER_PREFIX = "config.override.";
 
-  @ObjectClassDefinition(name = "wcm.io Configuration Property Override Provider: Request Header", description = "Allows to define "
-      + "configuration property default values or overrides from inconming request headers.")
+  @ObjectClassDefinition(name = "wcm.io Configuration Property Override Provider: Request Header",
+      description = "Allows to define configuration property default values or overrides from inconming request headers.")
   static @interface Config {
 
     @AttributeDefinition(name = "Enabled", description = "Enable parameter override provider.")

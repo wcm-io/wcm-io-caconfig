@@ -47,8 +47,8 @@ public final class SystemPropertyOverrideProvider implements ParameterOverridePr
    */
   public static final String SYSTEM_PROPERTY_PREFIX = "config.override.";
 
-  @ObjectClassDefinition(name = "wcm.io Configuration Property Override Provider: System Properties", description = "Allows to define "
-      + "configuration property default values or overrides from system environment properties.")
+  @ObjectClassDefinition(name = "wcm.io Configuration Property Override Provider: System Properties",
+      description = "Allows to define configuration property default values or overrides from system environment properties.")
   static @interface Config {
 
     @AttributeDefinition(name = "Enabled", description = "Enable parameter override provider.")

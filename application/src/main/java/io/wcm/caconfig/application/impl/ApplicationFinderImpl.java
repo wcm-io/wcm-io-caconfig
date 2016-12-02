@@ -49,8 +49,8 @@ public final class ApplicationFinderImpl implements ApplicationFinder {
 
   private static final ApplicationInfo APPLICATION_NOT_FOUND = new ApplicationInfo("APPLICATION_NOT_FOUND", null);
 
-  @Reference(name = "applicationProvider", service = ApplicationProvider.class,
-      cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, bind = "bindApplicationProvider", unbind = "unbindApplicationProvider")
+  @Reference(service = ApplicationProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+      bind = "bindApplicationProvider", unbind = "unbindApplicationProvider")
   private final RankedServices<ApplicationProvider> applicationProviders = new RankedServices<>();
 
   // apply a simple cache mechanism for looking up application per resource path
