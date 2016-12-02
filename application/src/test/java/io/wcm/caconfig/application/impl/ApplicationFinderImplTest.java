@@ -29,11 +29,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.osgi.framework.Constants;
@@ -41,11 +40,14 @@ import org.osgi.framework.Constants;
 import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationFinderImplTest {
 
-  @Mock
+  @Rule
+  public AemContext context = new AemContext();
+
   private Resource resource;
 
   @Mock
@@ -64,13 +66,14 @@ public class ApplicationFinderImplTest {
   private static final String APPLICATION_ID_2 = "app2";
   private static final String APPLICATION_LABEL_2 = "Application #2";
 
-  @InjectMocks
   private ApplicationFinderImpl underTest;
 
   @Before
   public void setUp() {
-    underTest.bindApplicationProvider(applicationProvider1, SERVICE_PROPS_1);
-    underTest.bindApplicationProvider(applicationProvider2, SERVICE_PROPS_2);
+    resource = context.create().resource("/any/path");
+
+    context.registerService(ApplicationProvider.class, applicationProvider1, SERVICE_PROPS_1);
+    context.registerService(ApplicationProvider.class, applicationProvider2, SERVICE_PROPS_2);
 
     when(applicationProvider1.getApplicationId()).thenReturn(APPLICATION_ID_1);
     when(applicationProvider1.getLabel()).thenReturn(APPLICATION_LABEL_1);
@@ -79,17 +82,12 @@ public class ApplicationFinderImplTest {
     when(applicationProvider2.getApplicationId()).thenReturn(APPLICATION_ID_2);
     when(applicationProvider2.getLabel()).thenReturn(APPLICATION_LABEL_2);
     when(applicationProvider2.matches(resource)).thenReturn(false);
-  }
 
-  @After
-  public void tearDown() {
-    underTest.unbindApplicationProvider(applicationProvider1, SERVICE_PROPS_1);
-    underTest.unbindApplicationProvider(applicationProvider2, SERVICE_PROPS_2);
+    underTest = context.registerInjectActivateService(new ApplicationFinderImpl());
   }
 
   @Test
   public void testFind() {
-    when(resource.getPath()).thenReturn("/any/path");
     ApplicationInfo app = underTest.find(resource);
     assertNotNull(app);
     assertEquals(APPLICATION_ID_1, app.getApplicationId());

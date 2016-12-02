@@ -25,17 +25,21 @@ import static org.mockito.Mockito.when;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.wcm.caconfig.application.ApplicationFinder;
 import io.wcm.caconfig.application.ApplicationInfo;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationImplementationPickerTest {
+
+  @Rule
+  public AemContext context = new AemContext();
 
   private static final String APP_ID_1 = "app1";
   private static final String APP_ID_2 = "app2";
@@ -56,13 +60,15 @@ public class ApplicationImplementationPickerTest {
   @Mock
   private Resource resourceOther;
 
-  @InjectMocks
   private ApplicationImplementationPicker underTest;
 
   @Before
   public void setUp() throws Exception {
     when(applicationFinder.find(resourceApp1)).thenReturn(APP_1);
     when(applicationFinder.find(resourceApp2)).thenReturn(APP_2);
+
+    context.registerService(ApplicationFinder.class, applicationFinder);
+    underTest = context.registerInjectActivateService(new ApplicationImplementationPicker());
   }
 
   @Test

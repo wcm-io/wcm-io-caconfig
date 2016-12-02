@@ -27,12 +27,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.Resource;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -45,14 +44,13 @@ import io.wcm.sling.commons.osgi.RankedServices;
 /**
  * Default implementation of {@link ApplicationFinder}.
  */
-@Component(immediate = true, metatype = false)
-@Service(ApplicationFinder.class)
+@Component(immediate = true, service = ApplicationFinder.class)
 public final class ApplicationFinderImpl implements ApplicationFinder {
 
   private static final ApplicationInfo APPLICATION_NOT_FOUND = new ApplicationInfo("APPLICATION_NOT_FOUND", null);
 
-  @Reference(name = "applicationProvider", referenceInterface = ApplicationProvider.class,
-      cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+  @Reference(name = "applicationProvider", service = ApplicationProvider.class,
+      cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, bind = "bindApplicationProvider", unbind = "unbindApplicationProvider")
   private final RankedServices<ApplicationProvider> applicationProviders = new RankedServices<>();
 
   // apply a simple cache mechanism for looking up application per resource path

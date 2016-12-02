@@ -37,7 +37,7 @@ import javax.inject.Qualifier;
 public @interface Application {
 
   /**
-   * Application Id. The application is is usually the application path at /apps/ or /libs/.
+   * @return Application Id. The application is is usually the application path at /apps/ or /libs/.
    */
   String value();
 

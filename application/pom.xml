@@ -51,12 +51,6 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.scr.annotations</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.sling.commons</artifactId>
       <version>0.6.4</version>

@@ -20,13 +20,11 @@
 package io.wcm.caconfig.application.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.spi.ImplementationPicker;
 import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import io.wcm.caconfig.application.ApplicationFinder;
 import io.wcm.caconfig.application.ApplicationInfo;
@@ -39,9 +37,9 @@ import io.wcm.caconfig.application.ApplicationInfo;
  * first implementation without @Application annotation is used.
  * </p>
  */
-@Component(immediate = true)
-@Service(ImplementationPicker.class)
-@Property(name = Constants.SERVICE_RANKING, intValue = 1000)
+@Component(immediate = true, service = ImplementationPicker.class, property = {
+    Constants.SERVICE_RANKING + "=1000"
+})
 public class ApplicationImplementationPicker implements ImplementationPicker {
 
   @Reference

@@ -40,6 +40,7 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 
+import io.wcm.caconfig.application.impl.ApplicationAdapterFactory;
 import io.wcm.caconfig.application.impl.ApplicationFinderImpl;
 import io.wcm.caconfig.application.impl.ApplicationImplementationPicker;
 import io.wcm.config.api.Configuration;
@@ -100,6 +101,7 @@ public class CombinedTest {
     context.registerInjectActivateService(new ConfigurationFinderImpl());
 
     // adapter factory
+    context.registerInjectActivateService(new ApplicationAdapterFactory());
     context.registerInjectActivateService(new ConfigurationAdapterFactory());
 
     // models implementation picker

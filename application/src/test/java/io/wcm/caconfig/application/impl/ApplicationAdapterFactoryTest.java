@@ -23,38 +23,42 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.when;
 
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.wcm.caconfig.application.ApplicationFinder;
 import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.caconfig.application.spi.annotations.Application;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationAdapterFactoryTest {
 
-  private ApplicationInfo application;
-  @Mock
-  private Resource resource;
-  @Mock
-  private SlingHttpServletRequest request;
+  @Rule
+  public AemContext context = new AemContext();
+
   @Mock
   private ApplicationFinder applicationFinder;
+  private ApplicationInfo application;
+  private Resource resource;
 
-  @InjectMocks
   private ApplicationAdapterFactory underTest;
 
   @Before
   public void setUp() {
+    resource = context.create().resource("/content/test");
+    context.currentResource(resource);
+
     application = new ApplicationInfo("app1", null);
-    when(request.getResource()).thenReturn(resource);
     when(applicationFinder.find(resource)).thenReturn(application);
+
+    context.registerService(ApplicationFinder.class, applicationFinder);
+    underTest = context.registerInjectActivateService(new ApplicationAdapterFactory());
   }
 
   @Test
@@ -66,10 +70,10 @@ public class ApplicationAdapterFactoryTest {
 
   @Test
   public void testApplicationRequest() {
-    assertSame(application, underTest.getAdapter(request, ApplicationInfo.class));
+    assertSame(application, underTest.getAdapter(context.request(), ApplicationInfo.class));
 
-    when(request.getResource()).thenReturn(null);
-    assertNull(underTest.getAdapter(request, ApplicationInfo.class));
+    context.currentResource((Resource)null);
+    assertNull(underTest.getAdapter(context.request(), ApplicationInfo.class));
   }
 
   @Test
