@@ -21,25 +21,21 @@ package io.wcm.config.core.impl;
 
 import javax.script.Bindings;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.scripting.SlingBindings;
 import org.apache.sling.scripting.api.BindingsValuesProvider;
 import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Component;
 
 import io.wcm.config.api.Configuration;
 
 /**
  * Binds a script variable "config" to the current configuration value map to be used in Sightly.
+ * TODO: add "enabled" configuration?
  */
-@Component(immediate = true)
-@Service(BindingsValuesProvider.class)
-@Properties({
-  @Property(name = "javax.script.name", value = "sightly"),
-  @Property(name = Constants.SERVICE_RANKING, intValue = 100)
+@Component(immediate = true, service = BindingsValuesProvider.class, property = {
+    "javax.script.name=sightly",
+    Constants.SERVICE_RANKING + "=100"
 })
 public class ConfigBindingsValueProvider implements BindingsValuesProvider {
 

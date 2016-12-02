@@ -22,29 +22,20 @@ package io.wcm.config.core.impl;
 import static org.apache.sling.api.adapter.AdapterFactory.ADAPTABLE_CLASSES;
 import static org.apache.sling.api.adapter.AdapterFactory.ADAPTER_CLASSES;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
+import org.osgi.service.component.annotations.Component;
 
 import io.wcm.config.api.Configuration;
 
 /**
  * AdapterFactory that adapts resources to effective configurations and applications.
  */
-@Component(immediate = true, metatype = false)
-@Service(AdapterFactory.class)
-@Properties({
-  @Property(name = ADAPTABLE_CLASSES, value = {
-      "org.apache.sling.api.SlingHttpServletRequest",
-      "org.apache.sling.api.resource.Resource"
-  }),
-  @Property(name = ADAPTER_CLASSES, value = {
-      "io.wcm.config.api.Configuration"
-  }),
-  @Property(name = "adapter.condition", value = "If a configuration can be found for the current/given resource or it's parents.")
+@Component(immediate = true, service = AdapterFactory.class, property = {
+    ADAPTABLE_CLASSES + "=org.apache.sling.api.SlingHttpServletRequest",
+    ADAPTABLE_CLASSES + "=org.apache.sling.api.resource.Resource",
+    ADAPTER_CLASSES + "=io.wcm.config.api.Configuration",
+    "adapter.condition=If a configuration can be found for the current/given resource or it's parents."
 })
 public final class ConfigurationAdapterFactory implements AdapterFactory {
 

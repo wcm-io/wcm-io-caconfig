@@ -19,17 +19,16 @@
  */
 package io.wcm.config.core.override.impl;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Service;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.sling.commons.osgi.PropertiesUtil;
-import org.osgi.framework.Constants;
-import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -38,38 +37,34 @@ import io.wcm.config.spi.ParameterOverrideProvider;
 /**
  * Provides parameter override map from OSGi factory configuration.
  */
-@Component(immediate = true, metatype = true, configurationFactory = true,
-label = "wcm.io Configuration Property Override Provider: OSGi configuration",
-description = "Allows to define configuration property default values or overrides from OSGi configuration.")
-@Service(ParameterOverrideProvider.class)
-@Property(name = "webconsole.configurationFactory.nameHint", value = "{description}, enabled={enabled}")
+@Component(immediate = true, service = ParameterOverrideProvider.class,
+property = "webconsole.configurationFactory.nameHint={description}, enabled={enabled}")
+@Designate(ocd = OsgiConfigOverrideProvider.Config.class, factory = true)
 public final class OsgiConfigOverrideProvider implements ParameterOverrideProvider {
 
-  @Property(label = "Enabled", boolValue = OsgiConfigOverrideProvider.DEFAULT_ENABLED,
-      description = "Enable parameter override provider")
-  static final String PROPERTY_ENABLED = "enabled";
-  static final boolean DEFAULT_ENABLED = false;
+  @ObjectClassDefinition(name = "wcm.io Configuration Property Override Provider: OSGi configuration", description = "Allows to define "
+      + "configuration property default values or overrides from OSGi configuration.")
+  static @interface Config {
 
-  @Property(label = "Service Ranking", intValue = OsgiConfigOverrideProvider.DEFAULT_RANKING,
-      description = "Priority of parameter override providers (lower = higher priority)",
-      propertyPrivate = false)
-  static final String PROPERTY_RANKING = Constants.SERVICE_RANKING;
-  static final int DEFAULT_RANKING = 3000;
+    @AttributeDefinition(name = "Enabled", description = "Enable parameter override provider.")
+    boolean enabled() default false;
 
-  @Property(label = "Overrides", cardinality = Integer.MAX_VALUE,
-      description = "Key/Value pairs defining parameter overrides.\n"
-          + "Syntax: [{scope}]{parameterName}={value}\n"
-          + "Examples:\n"
-          + "[default]param1 - Override default value for parameter 'param1'\n"
-          + "param1 - Override value for parameter 'param1' for all configurations\n"
-          + "[/content/region1/site1]param1 - Override value for parameter 'param1' for the "
-          + "configurations at /content/region1/site1. This has higher precedence than the other variants.")
-  static final String PROPERTY_OVERRIDES = "overrides";
-  static final String[] DEFAULT_OVERRIDES = new String[0];
+    @AttributeDefinition(name = "Service Ranking", description = "Priority of parameter override providers (lower = higher priority).")
+    int service_ranking() default 3000;
 
-  @Property(label = "Description",
-      description = "This description is used for display in the web console.")
-  static final String PROPERTY_DESCRIPTION = "description";
+    @AttributeDefinition(name = "Overrides", description = "Key/Value pairs defining parameter overrides.\n"
+        + "Syntax: [{scope}]{parameterName}={value}\n"
+        + "Examples:\n"
+        + "[default]param1 - Override default value for parameter 'param1'\n"
+        + "param1 - Override value for parameter 'param1' for all configurations\n"
+        + "[/content/region1/site1]param1 - Override value for parameter 'param1' for the "
+        + "configurations at /content/region1/site1. This has higher precedence than the other variants.", cardinality = Integer.MAX_VALUE)
+    String[] overrides();
+
+    @AttributeDefinition(name = "Description", description = "This description is used for display in the web console.")
+    String description();
+
+  }
 
   private Map<String, String> overrideMap;
 
@@ -79,13 +74,12 @@ public final class OsgiConfigOverrideProvider implements ParameterOverrideProvid
   }
 
   @Activate
-  void activate(final ComponentContext ctx) {
-    Dictionary config = ctx.getProperties();
-    final boolean enabled = PropertiesUtil.toBoolean(config.get(PROPERTY_ENABLED), DEFAULT_ENABLED);
+  void activate(Config config) {
+    final boolean enabled = config.enabled();
 
     Map<String, String> map = new HashMap<>();
     if (enabled) {
-      Map<String, String> overrides = PropertiesUtil.toMap(config.get(PROPERTY_OVERRIDES), DEFAULT_OVERRIDES);
+      Map<String, String> overrides = PropertiesUtil.toMap(config.overrides(), ArrayUtils.EMPTY_STRING_ARRAY);
       if (overrides != null) {
         map.putAll(overrides);
       }

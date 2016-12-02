@@ -37,7 +37,7 @@ import io.wcm.caconfig.application.ApplicationInfo;
     ADAPTABLE_CLASSES + "=org.apache.sling.api.SlingHttpServletRequest",
     ADAPTABLE_CLASSES + "=org.apache.sling.api.resource.Resource",
     ADAPTER_CLASSES + "=io.wcm.caconfig.application.ApplicationInfo",
-    "adapter.condition=If a configuration can be found for the current/given resource or it's parents."
+    "adapter.condition=If a application mapping can be found for the current/given resource or it's parents."
 })
 public final class ApplicationAdapterFactory implements AdapterFactory {
 

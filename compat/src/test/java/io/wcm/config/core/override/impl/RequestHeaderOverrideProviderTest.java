@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.wcmio.sling.MockSlingExtensions;
 
@@ -49,7 +48,7 @@ public class RequestHeaderOverrideProviderTest {
   @Test
   public void testEnabled() {
     RequestHeaderOverrideProvider provider = context.registerInjectActivateService(new RequestHeaderOverrideProvider(),
-        ImmutableValueMap.of(RequestHeaderOverrideProvider.PROPERTY_ENABLED, true));
+        "enabled", true);
 
     Map<String, String> overrideMap = provider.getOverrideMap();
     assertEquals("value1", overrideMap.get("[default]param1"));
@@ -59,7 +58,7 @@ public class RequestHeaderOverrideProviderTest {
   @Test
   public void testDisabled() {
     RequestHeaderOverrideProvider provider = context.registerInjectActivateService(new RequestHeaderOverrideProvider(),
-        ImmutableValueMap.of(RequestHeaderOverrideProvider.PROPERTY_ENABLED, false));
+        "enabled", false);
 
     Map<String, String> overrideMap = provider.getOverrideMap();
     assertTrue(overrideMap.isEmpty());

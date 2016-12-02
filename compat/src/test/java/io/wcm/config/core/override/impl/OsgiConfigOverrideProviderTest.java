@@ -45,8 +45,8 @@ public class OsgiConfigOverrideProviderTest {
   @Test
   public void testEnabled() {
     OsgiConfigOverrideProvider provider = context.registerInjectActivateService(new OsgiConfigOverrideProvider(),
-        OsgiConfigOverrideProvider.PROPERTY_OVERRIDES, OVERRIDES,
-        OsgiConfigOverrideProvider.PROPERTY_ENABLED, true);
+        "overrides", OVERRIDES,
+        "enabled", true);
 
     Map<String,String> overrideMap = provider.getOverrideMap();
     assertEquals("value1", overrideMap.get("[default]param1"));
@@ -56,8 +56,8 @@ public class OsgiConfigOverrideProviderTest {
   @Test
   public void testDisabled() {
     OsgiConfigOverrideProvider provider = context.registerInjectActivateService(new OsgiConfigOverrideProvider(),
-        OsgiConfigOverrideProvider.PROPERTY_OVERRIDES, OVERRIDES,
-        OsgiConfigOverrideProvider.PROPERTY_ENABLED, false);
+        "overrides", OVERRIDES,
+        "enabled", false);
 
     Map<String, String> overrideMap = provider.getOverrideMap();
     assertTrue(overrideMap.isEmpty());

@@ -54,7 +54,7 @@ public class SystemPropertyOverrideProviderTest {
   @Test
   public void testEnabled() {
     SystemPropertyOverrideProvider provider = context.registerInjectActivateService(new SystemPropertyOverrideProvider(),
-        SystemPropertyOverrideProvider.PROPERTY_ENABLED, true);
+        "enabled", true);
 
     Map<String,String> overrideMap = provider.getOverrideMap();
     assertEquals("value1", overrideMap.get("[default]param1"));
@@ -64,7 +64,7 @@ public class SystemPropertyOverrideProviderTest {
   @Test
   public void testDisabled() {
     SystemPropertyOverrideProvider provider = context.registerInjectActivateService(new SystemPropertyOverrideProvider(),
-        SystemPropertyOverrideProvider.PROPERTY_ENABLED, false);
+        "enabled", false);
 
     Map<String, String> overrideMap = provider.getOverrideMap();
     assertTrue(overrideMap.isEmpty());
