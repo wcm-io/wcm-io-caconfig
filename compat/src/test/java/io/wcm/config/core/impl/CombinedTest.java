@@ -19,6 +19,7 @@
  */
 package io.wcm.config.core.impl;
 
+import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -29,22 +30,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.caconfig.ConfigurationResolver;
-import org.apache.sling.caconfig.impl.ConfigurationInheritanceStrategyMultiplexer;
-import org.apache.sling.caconfig.impl.ConfigurationResolverImpl;
-import org.apache.sling.caconfig.impl.def.DefaultConfigurationInheritanceStrategy;
-import org.apache.sling.caconfig.impl.def.DefaultConfigurationPersistenceStrategy;
-import org.apache.sling.caconfig.impl.metadata.ConfigurationMetadataProviderMultiplexer;
-import org.apache.sling.caconfig.impl.override.ConfigurationOverrideManager;
 import org.apache.sling.caconfig.management.ConfigurationManager;
-import org.apache.sling.caconfig.management.impl.ConfigurationManagerImpl;
-import org.apache.sling.caconfig.management.impl.ConfigurationPersistenceStrategyMultiplexer;
-import org.apache.sling.caconfig.management.impl.ContextPathStrategyMultiplexerImpl;
-import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
-import org.apache.sling.caconfig.resource.impl.ConfigurationResourceResolverImpl;
-import org.apache.sling.caconfig.resource.impl.ConfigurationResourceResolvingStrategyMultiplexer;
-import org.apache.sling.caconfig.resource.impl.def.DefaultConfigurationResourceResolvingStrategy;
-import org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.junit.Before;
 import org.junit.Rule;
@@ -65,6 +51,7 @@ import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 
 /**
  * Test all configuration services in combination.
@@ -79,13 +66,10 @@ public class CombinedTest {
   private static final Parameter<String> PROP_3 = ParameterBuilder.create("prop3", String.class, APP_ID).build();
 
   @Rule
-  public final AemContext context = new AemContext();
+  public final AemContext context = new AemContextBuilder().plugin(CACONFIG).build();
 
   @Before
   public void setUp() throws Exception {
-    registerConfigurationResolver(context);
-    context.registerInjectActivateService(new ConfigurationMetadataProviderMultiplexer());
-    context.registerInjectActivateService(new ConfigurationManagerImpl());
 
     // app-specific services
     context.registerService(ConfigurationFinderStrategy.class, new SampleConfigurationFinderStrategy());
@@ -182,33 +166,6 @@ public class CombinedTest {
       }
     }
 
-  }
-
-
-  /**
-   * Register all services for {@link ConfigurationResourceResolver}.
-   * @param context Sling context
-   */
-  private static ConfigurationResourceResolver registerConfigurationResourceResolver(AemContext context) {
-    context.registerInjectActivateService(new DefaultContextPathStrategy());
-    context.registerInjectActivateService(new ContextPathStrategyMultiplexerImpl());
-    context.registerInjectActivateService(new DefaultConfigurationResourceResolvingStrategy());
-    context.registerInjectActivateService(new ConfigurationResourceResolvingStrategyMultiplexer());
-    return context.registerInjectActivateService(new ConfigurationResourceResolverImpl());
-  }
-
-  /**
-   * Register all services for {@link ConfigurationResolver}.
-   * @param context Sling context
-   */
-  private static ConfigurationResolver registerConfigurationResolver(AemContext context) {
-    registerConfigurationResourceResolver(context);
-    context.registerInjectActivateService(new DefaultConfigurationPersistenceStrategy());
-    context.registerInjectActivateService(new ConfigurationPersistenceStrategyMultiplexer());
-    context.registerInjectActivateService(new DefaultConfigurationInheritanceStrategy());
-    context.registerInjectActivateService(new ConfigurationInheritanceStrategyMultiplexer());
-    context.registerInjectActivateService(new ConfigurationOverrideManager());
-    return context.registerInjectActivateService(new ConfigurationResolverImpl());
   }
 
 }
