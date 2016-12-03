@@ -37,14 +37,14 @@ final class DummyParameterProvider implements ParameterProvider {
   @Override
   public Set<Parameter<?>> getParameters() {
     return ImmutableSet.<Parameter<?>>of(
-        ParameterBuilder.create("stringParam", String.class).defaultValue("defValue")
-        .property(LABEL, "label-stringParam")
-        .property(DESCRIPTION, "desc-stringParam")
-        .property(GROUP, "group1").build(),
-        ParameterBuilder.create("stringArrayParam", String[].class).defaultValue(new String[] {
-            "value1", "value2"
-        })
-        .property(GROUP, "group1").build(),
+        ParameterBuilder.create("stringParam", String.class)
+            .defaultValue("defValue")
+            .property(LABEL, "label-stringParam")
+            .property(DESCRIPTION, "desc-stringParam")
+            .property(GROUP, "group1").build(),
+        ParameterBuilder.create("stringArrayParam", String[].class)
+            .defaultValue(new String[] { "value1", "value2" })
+            .property(GROUP, "group1").build(),
         ParameterBuilder.create("intParam", Integer.class).build(),
         ParameterBuilder.create("longParam", Long.class).build(),
         ParameterBuilder.create("doubleParam", Double.class).build(),
