@@ -20,9 +20,11 @@
 package io.wcm.config.core.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.caconfig.spi.ConfigurationMetadataProvider;
@@ -105,7 +107,14 @@ public class ParameterProviderBridge implements ConfigurationMetadataProvider, C
 
   @SuppressWarnings("unchecked")
   private ConfigurationMetadata toConfigMetadata(List<Parameter<?>> parameters) {
-    List<PropertyMetadata<?>> properties = new ArrayList<>();
+    SortedSet<PropertyMetadata<?>> properties = new TreeSet<>(new Comparator<PropertyMetadata<?>>() {
+      @Override
+      public int compare(PropertyMetadata<?> o1, PropertyMetadata<?> o2) {
+        String sort1 = StringUtils.defaultString(o1.getLabel(), o1.getName());
+        String sort2 = StringUtils.defaultString(o2.getLabel(), o2.getName());
+        return sort1.compareTo(sort2);
+      }
+    });
 
     for (Parameter<?> parameter : parameters) {
       PropertyMetadata<?> property;
@@ -115,9 +124,13 @@ public class ParameterProviderBridge implements ConfigurationMetadataProvider, C
       else {
         property = toProperty(parameter);
       }
-      property.label((String)parameter.getProperties().get(EditorProperties.LABEL))
-      .description((String)parameter.getProperties().get(EditorProperties.DESCRIPTION));
-      properties.add(property);
+      String label = (String)parameter.getProperties().get(EditorProperties.LABEL);
+      String description = (String)parameter.getProperties().get(EditorProperties.DESCRIPTION);
+      String group = (String)parameter.getProperties().get(EditorProperties.GROUP);
+      if (group != null) {
+        label = group + ": " + StringUtils.defaultString(label, parameter.getName());
+      }
+      properties.add(property.label(label).description(description));
     }
 
     return new ConfigurationMetadata(DEFAULT_CONFIG_NAME, properties, false)

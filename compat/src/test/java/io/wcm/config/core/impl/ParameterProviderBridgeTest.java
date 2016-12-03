@@ -66,13 +66,14 @@ public class ParameterProviderBridgeTest {
     PropertyMetadata<?> stringParam = metadata.getPropertyMetadata().get("stringParam");
     assertEquals("stringParam", stringParam.getName());
     assertEquals(String.class, stringParam.getType());
-    assertEquals("label-stringParam", stringParam.getLabel());
+    assertEquals("group1: label-stringParam", stringParam.getLabel());
     assertEquals("desc-stringParam", stringParam.getDescription());
     assertEquals("defValue", stringParam.getDefaultValue());
 
     PropertyMetadata<?> stringArrayParam = metadata.getPropertyMetadata().get("stringArrayParam");
     assertEquals("stringArrayParam", stringArrayParam.getName());
     assertEquals(String[].class, stringArrayParam.getType());
+    assertEquals("group1: stringArrayParam", stringArrayParam.getLabel());
     assertArrayEquals(new String[] {
         "value1", "value2"
     }, (String[])stringArrayParam.getDefaultValue());

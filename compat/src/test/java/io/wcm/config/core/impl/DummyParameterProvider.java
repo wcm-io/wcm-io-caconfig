@@ -19,6 +19,10 @@
  */
 package io.wcm.config.core.impl;
 
+import static io.wcm.config.editor.EditorProperties.DESCRIPTION;
+import static io.wcm.config.editor.EditorProperties.GROUP;
+import static io.wcm.config.editor.EditorProperties.LABEL;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -26,7 +30,6 @@ import com.google.common.collect.ImmutableSet;
 
 import io.wcm.config.api.Parameter;
 import io.wcm.config.api.ParameterBuilder;
-import io.wcm.config.editor.EditorProperties;
 import io.wcm.config.spi.ParameterProvider;
 
 final class DummyParameterProvider implements ParameterProvider {
@@ -35,11 +38,13 @@ final class DummyParameterProvider implements ParameterProvider {
   public Set<Parameter<?>> getParameters() {
     return ImmutableSet.<Parameter<?>>of(
         ParameterBuilder.create("stringParam", String.class).defaultValue("defValue")
-        .property(EditorProperties.LABEL, "label-stringParam")
-        .property(EditorProperties.DESCRIPTION, "desc-stringParam").build(),
+        .property(LABEL, "label-stringParam")
+        .property(DESCRIPTION, "desc-stringParam")
+        .property(GROUP, "group1").build(),
         ParameterBuilder.create("stringArrayParam", String[].class).defaultValue(new String[] {
             "value1", "value2"
-        }).build(),
+        })
+        .property(GROUP, "group1").build(),
         ParameterBuilder.create("intParam", Integer.class).build(),
         ParameterBuilder.create("longParam", Long.class).build(),
         ParameterBuilder.create("doubleParam", Double.class).build(),
