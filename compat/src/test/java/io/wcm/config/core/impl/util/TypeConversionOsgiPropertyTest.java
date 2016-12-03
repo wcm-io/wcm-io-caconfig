@@ -19,8 +19,8 @@
  */
 package io.wcm.config.core.impl.util;
 
-import static io.wcm.config.core.impl.util.TypeConversion.KEY_VALUE_DELIMITER;
-import static io.wcm.config.core.impl.util.TypeConversion.osgiPropertyToObject;
+import static io.wcm.config.core.management.util.TypeConversion.KEY_VALUE_DELIMITER;
+import static io.wcm.config.core.management.util.TypeConversion.osgiPropertyToObject;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.junit.Test;
+
+import io.wcm.config.core.management.util.ConversionStringUtils;
 
 public class TypeConversionOsgiPropertyTest {
 

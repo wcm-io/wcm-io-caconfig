@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * SPI for applications hooking into the configuration infrastructure for parameterizing and customizing.
+ * Helper classes for configuration management.
  */
-@org.osgi.annotation.versioning.Version("0.5.0")
-package io.wcm.config.spi;
+@org.osgi.annotation.versioning.Version("0.6.0")
+package io.wcm.config.core.management.util;
