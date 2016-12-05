@@ -60,7 +60,8 @@ import org.osgi.service.component.annotations.Reference;
     "sling.servlet.resourceTypes=/apps/wcm-io/caconfig/editor/components/page/editor",
     "sling.servlet.extensions=json",
     "sling.servlet.selectors=" + ConfigPersistServlet.SELECTOR,
-    "sling.servlet.methods=POST"
+    "sling.servlet.methods=POST",
+    "sling.servlet.methods=DELETE"
 })
 public class ConfigPersistServlet extends SlingAllMethodsServlet {
   private static final long serialVersionUID = 1L;
@@ -276,6 +277,25 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
     }
     else {
       throw new IllegalArgumentException("Unexpected type: " + propertyType.getName());
+    }
+  }
+
+  @Override
+  protected void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+
+    // get parameters
+    String configName = request.getParameter(RP_CONFIGNAME);
+    if (StringUtils.isBlank(configName)) {
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
+
+    // delete data
+    try {
+      configManager.deleteConfiguration(request.getResource(), configName);
+    }
+    catch (ConfigurationPersistenceException ex) {
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to delete data: " + ex.getMessage());
     }
   }
 

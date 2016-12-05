@@ -210,12 +210,27 @@ public class ConfigPersistServletTest {
         }));
   }
 
+  @Test
+  public void testDelete() throws Exception {
+    assertEquals(HttpServletResponse.SC_OK, delete(CONFIG_NAME));
+
+    verify(configManager, times(1)).deleteConfiguration(same(context.request().getResource()), eq(CONFIG_NAME));
+  }
+
   private int post(String configName, boolean collection, String jsonData) throws Exception {
     context.request().setQueryString(RP_CONFIGNAME + "=" + configName
         + (collection ? "&collection=true" : ""));
     context.request().setContentType("application/json");
     context.request().setContent(jsonData.getBytes(CharEncoding.UTF_8));
     context.request().setMethod("POST");
+
+    underTest.service(context.request(), context.response());
+    return context.response().getStatus();
+  }
+
+  private int delete(String configName) throws Exception {
+    context.request().setQueryString(RP_CONFIGNAME + "=" + configName);
+    context.request().setMethod("DELETE");
 
     underTest.service(context.request(), context.response());
     return context.response().getStatus();
