@@ -1,7 +1,7 @@
 # #%L
 # wcm.io
 # %%
-# Copyright (C) 2014 wcm.io
+# Copyright (C) 2016 wcm.io
 # %%
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@
 
 language: java
 
+# Build only with Java 8 because the sample-app does no support Java 7
 jdk:
-  - oraclejdk7
   - oraclejdk8
 
 # Make sure travis can use container-based infrastructure
