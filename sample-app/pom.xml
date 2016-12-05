@@ -23,26 +23,27 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.wcm</groupId>
-    <artifactId>io.wcm.parent_toplevel</artifactId>
-    <version>1.0.11-SNAPSHOT</version>
+    <groupId>io.wcm.maven</groupId>
+    <artifactId>io.wcm.maven.aem-global-parent</artifactId>
+    <version>1.1.3-SNAPSHOT</version>
     <relativePath/>
   </parent>
 
   <groupId>io.wcm</groupId>
-  <artifactId>io.wcm.caconfig</artifactId>
+  <artifactId>io.wcm.caconfig.sample-app</artifactId>
   <version>1</version>
   <packaging>pom</packaging>
 
-  <name>Context-Aware Configuration Root</name>
-  <description>Context-Aware Configuration for AEM applications.</description>
+  <properties>
+    <site.url.module.prefix>samples</site.url.module.prefix>
+  </properties>
 
   <modules>
     <module>parent</module>
-    <module>editor</module>
-    <module>application</module>
-    <module>compat</module>
-    <module>sample-app</module>
+    <module>bundles/base</module>
+    <module>config-definition</module>
+    <module>complete</module>
+    <module>sample-content</module>
   </modules>
 
   <build>
@@ -54,15 +55,6 @@
         <artifactId>maven-deploy-plugin</artifactId>
         <configuration>
           <skip>true</skip>
-        </configuration>
-      </plugin>
-
-      <!-- do not generate site for this project -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <skipDeploy>true</skipDeploy>
         </configuration>
       </plugin>
 

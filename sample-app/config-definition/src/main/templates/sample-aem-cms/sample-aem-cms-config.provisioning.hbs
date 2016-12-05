@@ -1,0 +1,51 @@
+[feature name=sample-aem-cms-config]
+
+
+[configurations]
+
+  # Enalbe GZIP and Minification for Clientlibs
+  com.adobe.granite.ui.clientlibs.impl.HtmlLibraryManagerImpl
+    htmllibmanager.debug=B"false"
+    htmllibmanager.timing=B"false"
+    htmllibmanager.minify=B"true"
+    htmllibmanager.gzip=B"true"
+
+  # Default LogManager configuration
+  org.apache.sling.commons.log.LogManager
+    org.apache.sling.commons.log.pattern="{0,date,dd.MM.yyyy\ HH:mm:ss.SSS}\ *{4}*\ [{2}]\ {3}\ {5}"
+    org.apache.sling.commons.log.file="logs/error.log"
+    org.apache.sling.commons.log.level="warn"
+    org.apache.sling.commons.log.file.size="'.'yyyy-MM-dd"
+    org.apache.sling.commons.log.file.number=I"15"
+
+  # Configure Sling Context-Aware Configuration for AEM - add lookup in jcr:content subnodes
+  org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy
+    configRefResourceNames=["jcr:content"]
+
+  org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-sling-caconfig
+    user.mapping=["org.apache.sling.caconfig.impl\=sling-caconfig"]
+
+
+[configurations runModes=author]
+
+  # Show "Sites" view in TouchUI after login
+  com.day.cq.commons.servlets.RootMappingServlet
+    rootmapping.target="/sites.html"
+
+  # Set TouchUI as primary authoring UI
+  com.day.cq.wcm.core.impl.AuthoringUIModeServiceImpl
+    authoringUIModeService.default="TOUCH"
+  
+
+[configurations runModes=publish]
+  
+  # Disable built-in JSON and XML access features for resources
+  org.apache.sling.servlets.get.DefaultGetServlet
+    enable.html=B"false"
+    enable.json=B"false"
+    enable.txt=B"false"
+    enable.xml=B"false"
+    index=B"false"
+    index.files="[index,index.html]"
+    aliases="xml:pdf"
+    json.maximumresults=I"1000"

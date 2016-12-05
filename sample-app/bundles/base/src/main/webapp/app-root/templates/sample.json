@@ -1,0 +1,11 @@
+{
+  "jcr:primaryType": "cq:Template",
+  "jcr:title": "Context-Aware Configuration Sample",
+
+  "allowedPaths": "^/content/contextaware-config-sample(/.+)?$",
+
+  "jcr:content": {
+    "jcr:primaryType": "cq:PageContent",
+    "sling:resourceType": "/apps/contextaware-config-sample/components/page/sample"
+  }
+}

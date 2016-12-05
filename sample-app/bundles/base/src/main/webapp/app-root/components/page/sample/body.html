@@ -1,0 +1,35 @@
+<h1>${currentPage.pageTitle || currentPage.title}</h1>
+
+<div data-sly-use.configObject="io.wcm.caconfig.sample.model.ConfigSampleModel">
+
+  <h3>Config name: io.wcm.caconfig.sample.config.ConfigSample</h3>
+
+  <dl>
+    <dt>stringParam:</dt>
+    <dd>${configObject.config.stringParam}</dd>
+    <dt>intParam:</dt>
+    <dd>${configObject.config.intParam}</dd>
+    <dt>boolParam:</dt>
+    <dd>${configObject.config.boolParam}</dd>
+    <dt>stringArrayParam:</dt>
+    <dd>${configObject.config.stringArrayParam}</dd>
+  </dl>
+
+  <h3>Config name: io.wcm.caconfig.sample.config.ConfigSample2</h3>
+
+  <dl>
+    <dt>stringParam:</dt>
+    <dd>${configObject.config2.stringParam}</dd>
+    <dt>doubleParam:</dt>
+    <dd>${configObject.config2.doubleParam}</dd>
+    <dt>intArrayParam:</dt>
+    <dd>${configObject.config2.intArrayParam}</dd>
+  </dl>
+
+  <h3>Config collection name: io.wcm.caconfig.sample.config.ConfigSampleList</h3>
+
+  <ul data-sly-list.item="${configObject.configList}">
+    <li>stringParam: ${item.stringParam}</li>
+  </ul>
+
+</div>
