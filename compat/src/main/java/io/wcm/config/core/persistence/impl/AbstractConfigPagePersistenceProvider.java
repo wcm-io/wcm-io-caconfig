@@ -210,20 +210,30 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
   }
 
   @Override
-  public boolean persist(ResourceResolver resourceResolver, String configResourcePath, ConfigurationPersistData data) {
+  public boolean persistConfiguration(ResourceResolver resourceResolver, String configResourcePath, ConfigurationPersistData data) {
     if (!isConfigPagePath(configResourcePath)) {
       return false;
     }
-    // TODO: implement peristence
+    // TODO: implement persistence
     return false;
   }
 
   @Override
-  public boolean persistCollection(ResourceResolver resourceResolver, String configResourceCollectionParentPath, ConfigurationCollectionPersistData data) {
+  public boolean persistConfigurationCollection(ResourceResolver resourceResolver, String configResourceCollectionParentPath,
+      ConfigurationCollectionPersistData data) {
     if (!isConfigPagePath(configResourceCollectionParentPath)) {
       return false;
     }
-    // TODO: implement peristence
+    // TODO: implement persistence
+    return false;
+  }
+
+  @Override
+  public boolean deleteConfiguration(ResourceResolver resourceResolver, String configResourcePath) {
+    if (!isConfigPagePath(configResourcePath)) {
+      return false;
+    }
+    // TODO: implement persistence
     return false;
   }
 
