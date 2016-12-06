@@ -27,8 +27,12 @@ import static io.wcm.config.core.impl.combined.SampleParameterProvider.PROP_3;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Calendar;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.junit.Before;
@@ -93,6 +97,8 @@ public class CombinedTest {
 
   @Test
   public void testWriteReadConfig() {
+    long currentTime = Calendar.getInstance().getTimeInMillis();
+
     context.registerInjectActivateService(new ToolsConfigPagePersistenceProvider(),
         "enabled", true,
         "configPageTemplate", CONFIG_PAGE_TEMPLATE,
@@ -111,10 +117,18 @@ public class CombinedTest {
     assertEquals("value1-l2", config.get(PROP_1));
     assertEquals("value2-l2", config.get(PROP_2));
     assertEquals("value3-new", config.get(PROP_3));
+
+    // check last modified
+    Page configPage = context.pageManager().getPage(CONTEXT_RESOURCE_PATH + "/tools/config");
+    ValueMap pageProps = configPage.getProperties();
+    Calendar lastModified = pageProps.get(NameConstants.PN_LAST_MOD, Calendar.class);
+    assertTrue(lastModified.getTimeInMillis() >= currentTime);
   }
 
   @Test
   public void testWriteReadConfig_NewPath() {
+    long currentTime = Calendar.getInstance().getTimeInMillis();
+
     context.registerInjectActivateService(new ToolsConfigPagePersistenceProvider(),
         "enabled", true,
         "configPageTemplate", CONFIG_PAGE_TEMPLATE,
@@ -139,6 +153,11 @@ public class CombinedTest {
 
     Page configPage = context.pageManager().getPage("/content/region1/site2/en/tools/config");
     assertEquals(CONFIG_PAGE_TEMPLATE, configPage.getProperties().get(NameConstants.PN_TEMPLATE));
+
+    // check last modified
+    ValueMap pageProps = configPage.getProperties();
+    Calendar lastModified = pageProps.get(NameConstants.PN_LAST_MOD, Calendar.class);
+    assertTrue(lastModified.getTimeInMillis() >= currentTime);
   }
 
 }

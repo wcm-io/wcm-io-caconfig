@@ -19,6 +19,7 @@
  */
 package io.wcm.config.core.persistence.impl;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.caconfig.management.ContextPathStrategyMultiplexer;
@@ -54,6 +56,7 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
+import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMException;
 
@@ -105,6 +108,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
   void activate(Config cfg) {
     this.config = cfg;
   }
+
 
   // ---------- ConfigurationResourceResolvingStrategy ----------
 
@@ -284,6 +288,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
 
     // store config data
     getOrCreateResource(resourceResolver, configResourcePath, data.getProperties());
+    updatePageLastMod(resourceResolver, configPagePath);
     commit(resourceResolver);
     return false;
   }
@@ -301,6 +306,11 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
       return false;
     }
 
+    String configPagePath = getConfigPagePathFromConfigResourcePath(configResourcePath);
+    if (configPagePath == null) {
+      return false;
+    }
+
     Resource resource = resourceResolver.getResource(configResourcePath);
     if (resource != null) {
       try {
@@ -310,6 +320,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
         throw new ConfigurationPersistenceException("Unable to delete configuration at " + configResourcePath, ex);
       }
     }
+    updatePageLastMod(resourceResolver, configPagePath);
     commit(resourceResolver);
     return true;
   }
@@ -362,6 +373,15 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
       modValueMap.remove(propertyName);
     }
     modValueMap.putAll(properties);
+  }
+
+  private void updatePageLastMod(ResourceResolver resourceResolver, String configPagePath) {
+    Resource contentResource = resourceResolver.getResource(configPagePath + "/jcr:content");
+    if (contentResource != null) {
+      ModifiableValueMap contentProps = contentResource.adaptTo(ModifiableValueMap.class);
+      contentProps.put(NameConstants.PN_LAST_MOD, Calendar.getInstance());
+      contentProps.put(NameConstants.PN_LAST_MOD_BY, resourceResolver.getAttribute(ResourceResolverFactory.USER));
+    }
   }
 
   private void commit(ResourceResolver resourceResolver) {
