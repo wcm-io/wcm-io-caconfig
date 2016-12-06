@@ -60,6 +60,7 @@ public final class TypeConversion {
 
   /**
    * Converts a string value to an object with the given parameter type.
+   * @param <T> Target type
    * @param value String value
    * @param type Parameter type
    * @return Converted value
@@ -149,6 +150,7 @@ public final class TypeConversion {
 
   /**
    * Converts a OSGi configuration property value to an object with the given parameter type.
+   * @param <T> Target type
    * @param value String value (not null)
    * @param type Parameter type
    * @param defaultValue Default value is used if not OSGi configuration value is set
