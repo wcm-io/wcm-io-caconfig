@@ -54,7 +54,6 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
-import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMException;
 
@@ -323,15 +322,18 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     return StringUtils.substring(configResourcePath, 0, index);
   }
 
-  private Page ensurePage(ResourceResolver resourceResolver, String pagePath, String template) {
-    PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
-    Page page = pageManager.getPage(pagePath);
-    if (page != null) {
-      return page;
+  private void ensurePage(ResourceResolver resourceResolver, String pagePath, String template) {
+    if (pagePath == null) {
+      return;
+    }
+    Resource resource = resourceResolver.getResource(pagePath);
+    if (resource != null) {
+      return;
     }
     ensurePage(resourceResolver, ResourceUtil.getParent(pagePath), config.structurePageTemplate());
     try {
-      return pageManager.create(ResourceUtil.getParent(pagePath), ResourceUtil.getName(pagePath),
+      PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
+      pageManager.create(ResourceUtil.getParent(pagePath), ResourceUtil.getName(pagePath),
           template, ResourceUtil.getName(pagePath), false);
     }
     catch (WCMException ex) {
