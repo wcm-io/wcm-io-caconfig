@@ -25,18 +25,12 @@ import static io.wcm.config.core.impl.combined.SampleParameterProvider.PROP_3;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.List;
-
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.caconfig.ConfigurationBuilder;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.config.api.Configuration;
 import io.wcm.config.core.impl.ParameterProviderBridge;
@@ -69,13 +63,6 @@ public class CombinedTest {
     assertEquals("value1-l3", config.get(PROP_1));
     assertEquals("value2-l2", config.get(PROP_2));
     assertEquals("value3-l1", config.get(PROP_3));
-  }
-
-  @Test
-  public void testConfigCollectionWithInheritance() {
-    Resource resource = context.request().getResource();
-    List<ValueMap> col = ImmutableList.copyOf(resource.adaptTo(ConfigurationBuilder.class).name("configCol").asValueMapCollection());
-    assertEquals(3, col.size());
   }
 
   @Test
