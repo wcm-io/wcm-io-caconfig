@@ -19,6 +19,7 @@
  */
 package io.wcm.config.core.impl.application;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.when;
 
@@ -85,7 +86,7 @@ public class ApplicationImplementationPickerTest {
 
   @Test
   public void testResourceOther() {
-    assertSame(Impl0.class, underTest.pick(Comparable.class, IMPL_ARRAY, resourceOther));
+    assertNull(underTest.pick(Comparable.class, IMPL_ARRAY, resourceOther));
   }
 
 

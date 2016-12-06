@@ -50,7 +50,7 @@ public class ApplicationImplementationPicker implements ImplementationPicker {
     if (classMatchingApplication != null) {
       return classMatchingApplication;
     }
-    return pickFirstWithoutApplication(implementationsTypes);
+    return null;
   }
 
   private Class<?> pickMatchingApplication(Class<?>[] implementationsTypes, Object adaptable) {
@@ -73,15 +73,6 @@ public class ApplicationImplementationPicker implements ImplementationPicker {
       ApplicationInfo application = applicationFinder.find(resource);
       if (application != null) {
         return application.getApplicationId();
-      }
-    }
-    return null;
-  }
-
-  private Class<?> pickFirstWithoutApplication(Class<?>[] implementationsTypes) {
-    for (Class<?> clazz : implementationsTypes) {
-      if (!clazz.isAnnotationPresent(io.wcm.caconfig.application.spi.annotations.Application.class)) {
-        return clazz;
       }
     }
     return null;
