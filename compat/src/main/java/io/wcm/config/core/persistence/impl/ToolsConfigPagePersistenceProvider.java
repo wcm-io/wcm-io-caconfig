@@ -19,11 +19,33 @@
  */
 package io.wcm.config.core.persistence.impl;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.PredicateUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.collections.iterators.TransformIterator;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceUtil;
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.caconfig.management.ContextPathStrategyMultiplexer;
 import org.apache.sling.caconfig.resource.spi.ConfigurationResourceResolvingStrategy;
+import org.apache.sling.caconfig.resource.spi.ContextResource;
+import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationInheritanceStrategy;
+import org.apache.sling.caconfig.spi.ConfigurationPersistData;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -32,23 +54,36 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
+import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.WCMException;
+
+import io.wcm.config.core.impl.ParameterProviderBridge;
+
 /**
- * Persistence provider that stores configuration values in pages in a path tools/config relative to the config id.
+ * Persistence provider to provide compatibility to old wcm.io Configuration storage concept:
+ * - Automatically detects configuration references in /tools/config pages below context resources
+ * - Implements automatic property inheritance between those
+ * - Reads and stores singleton configuration data with a fixed config name "config" from this page
+ * - No other config names and no config resource collections are supported
  */
 @Component(immediate = true, service = {
     ConfigurationResourceResolvingStrategy.class, ConfigurationInheritanceStrategy.class, ConfigurationPersistenceStrategy.class
 })
 @Designate(ocd = ToolsConfigPagePersistenceProvider.Config.class)
-public final class ToolsConfigPagePersistenceProvider extends AbstractConfigPagePersistenceProvider {
+public final class ToolsConfigPagePersistenceProvider implements ConfigurationResourceResolvingStrategy,
+    ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
 
-  static final String RELATIVE_CONFIG_PATH = "/tools/config";
+  private static final String RELATIVE_CONFIG_PATH = "/tools/config";
   private static final Pattern CONFIG_PATH_PATTERN = Pattern.compile("^.*" + RELATIVE_CONFIG_PATH + "(/.*)?$");
+  private static final String CONFIG_BUCKET_NAME = "sling:configs";
+  private static final String JCR_CONTENT = "jcr:content";
 
-  @ObjectClassDefinition(name = "wcm.io Configuration Persistence Provider: /tools/config Pages",
-      description = "Allows to read and store configurations in /tools/config pages.")
+  @ObjectClassDefinition(name = "wcm.io Configuration Compatibility: Persistence Provider /tools/config Pages",
+      description = "Bridge implementation to support wcm.io-style Configuration in /tools/config pages as compatibility mode.")
   static @interface Config {
 
-    @AttributeDefinition(name = "Enabled", description = "Enable parameter persistence provider.")
+    @AttributeDefinition(name = "Enabled", description = "Enable compatibility mode for /tools/config Pages.")
     boolean enabled() default false;
 
     @AttributeDefinition(name = "Service Ranking", description = "Priority of parameter persistence providers (higher = higher priority).")
@@ -67,39 +102,284 @@ public final class ToolsConfigPagePersistenceProvider extends AbstractConfigPage
 
   private volatile Config config;
 
-  @Override
-  protected boolean isEnabled() {
-    return config.enabled();
-  }
-
-  @Override
-  protected String getConfigPagePath(String contextPath) {
-    return contextPath + RELATIVE_CONFIG_PATH;
-  }
-
-  @Override
-  protected boolean isConfigPagePath(String configPath) {
-    return CONFIG_PATH_PATTERN.matcher(configPath).matches();
-  }
-
-  @Override
-  protected String getConfigPageTemplate() {
-    return config.configPageTemplate();
-  }
-
-  @Override
-  protected String getStructurePageTemplate() {
-    return config.structurePageTemplate();
-  }
-
-  @Override
-  protected ContextPathStrategyMultiplexer getContextPathStrategy() {
-    return contextPathStrategy;
-  }
-
   @Activate
   void activate(Config cfg) {
     this.config = cfg;
+  }
+
+  // ---------- ConfigurationResourceResolvingStrategy ----------
+
+  @Override
+  public Resource getResource(Resource resource, String bucketName, String configName) {
+    Iterator<Resource> resources = getResourceInheritanceChain(resource, bucketName, configName);
+    if (resources != null && resources.hasNext()) {
+      return resources.next();
+    }
+    return null;
+  }
+
+  @Override
+  public Collection<Resource> getResourceCollection(Resource resource, String bucketName, String configName) {
+    // not supported for compat mode
+    return null;
+  }
+
+  @Override
+  public Iterator<Resource> getResourceInheritanceChain(Resource resource, String bucketName, final String configName) {
+    if (!isEnabledAndParamsValid(resource, bucketName, configName)) {
+      return null;
+    }
+
+    // find all matching items among all configured paths
+    final ResourceResolver resourceResolver = resource.getResourceResolver();
+    Iterator<String> paths = findConfigRefs(resource, bucketName);
+    return getResourceInheritanceChainInternal(bucketName, configName, paths, resourceResolver);
+  }
+
+  @SuppressWarnings("unchecked")
+  private Iterator<Resource> getResourceInheritanceChainInternal(final String bucketName, final String configName,
+      final Iterator<String> paths, final ResourceResolver resourceResolver) {
+
+    // find all matching items among all configured paths
+    Iterator<Resource> matchingResources = IteratorUtils.transformedIterator(paths, new Transformer() {
+
+      @Override
+      public Object transform(Object input) {
+        String path = (String)input;
+        return resourceResolver.getResource(buildResourcePath(path, configName));
+      }
+    });
+    return IteratorUtils.filteredIterator(matchingResources, PredicateUtils.notNullPredicate());
+  }
+
+  @Override
+  public Collection<Iterator<Resource>> getResourceCollectionInheritanceChain(final Resource resource, final String bucketName, final String configName) {
+    // not supported for compat mode
+    return null;
+  }
+
+  @Override
+  public String getResourcePath(Resource resource, String bucketName, String configName) {
+    if (!isEnabledAndParamsValid(resource, bucketName, configName)) {
+      return null;
+    }
+    Iterator<String> configRefs = findConfigRefs(resource, bucketName);
+    if (configRefs.hasNext()) {
+      return buildResourcePath(configRefs.next(), configName);
+    }
+    else {
+      return null;
+    }
+  }
+
+  @Override
+  public String getResourceCollectionParentPath(Resource resource, String bucketName, String configName) {
+    return getResourcePath(resource, bucketName, configName);
+  }
+
+  private boolean isEnabledAndParamsValid(final Resource contentResource, final String bucketName, final String configName) {
+    return config.enabled()
+        && contentResource != null
+        // support only configuration buckets
+        && StringUtils.equals(bucketName, CONFIG_BUCKET_NAME)
+        // support only the one config name that is used for mapping wcm.io config parameters
+        && StringUtils.equals(configName, ParameterProviderBridge.DEFAULT_CONFIG_NAME);
+  }
+
+  private String buildResourcePath(String path, String name) {
+    return ResourceUtil.normalize(path + "/" + JCR_CONTENT + "/" + name);
+  }
+
+  @SuppressWarnings("unchecked")
+  private Iterator<String> findConfigRefs(Resource startResource, final String bucketName) {
+    // collect all context path resources without config ref, and expand to config page path
+    Iterator<ContextResource> contextResources = contextPathStrategy.findContextResources(startResource);
+    return new FilterIterator(new TransformIterator(contextResources, new Transformer() {
+
+      @Override
+      public Object transform(Object input) {
+        ContextResource contextResource = (ContextResource)input;
+        if (contextResource.getConfigRef() == null) {
+          return getConfigPagePath(contextResource.getResource().getPath());
+        }
+        return null;
+      }
+    }), PredicateUtils.notNullPredicate());
+  }
+
+
+  // ---------- ConfigurationInheritanceStrategy ----------
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Resource getResource(Iterator<Resource> configResources) {
+    if (!config.enabled() || !configResources.hasNext()) {
+      return null;
+    }
+
+    Iterator<Resource> configPageResources = new FilterIterator(configResources, new Predicate() {
+
+      @Override
+      public boolean evaluate(Object object) {
+        Resource resource = (Resource)object;
+        return isConfigPagePath(resource.getPath());
+      }
+    });
+
+    return getInheritedResourceInternal(configPageResources);
+  }
+
+  private Resource getInheritedResourceInternal(Iterator<Resource> configResources) {
+    if (!configResources.hasNext()) {
+      return null;
+    }
+    Resource primary = configResources.next();
+    if (!configResources.hasNext()) {
+      return primary;
+    }
+    Map<String, Object> mergedProps = getInheritedProperties(primary.getValueMap(), configResources);
+    return new ConfigurationResourceWrapper(primary, new ValueMapDecorator(mergedProps));
+  }
+
+  private Map<String, Object> getInheritedProperties(Map<String, Object> parentProps, Iterator<Resource> inheritanceChain) {
+    if (!inheritanceChain.hasNext()) {
+      return parentProps;
+    }
+    Resource next = inheritanceChain.next();
+    Map<String, Object> merged = new HashMap<>(next.getValueMap());
+    merged.putAll(parentProps);
+    return getInheritedProperties(merged, inheritanceChain);
+  }
+
+
+  // ---------- ConfigurationPersistenceStrategy ----------
+
+  @Override
+  public Resource getResource(Resource resource) {
+    if (!config.enabled() || !isConfigPagePath(resource.getPath())) {
+      return null;
+    }
+    return resource;
+  }
+
+  @Override
+  public String getResourcePath(String resourcePath) {
+    if (!config.enabled() || !isConfigPagePath(resourcePath)) {
+      return null;
+    }
+    return resourcePath;
+  }
+
+  @Override
+  public boolean persistConfiguration(ResourceResolver resourceResolver, String configResourcePath, ConfigurationPersistData data) {
+    if (!config.enabled() || !isConfigPagePath(configResourcePath)) {
+      return false;
+    }
+
+    // check of config page exists - and create it otherwise
+    String configPagePath = getConfigPagePathFromConfigResourcePath(configResourcePath);
+    if (configPagePath == null) {
+      return false;
+    }
+    ensurePage(resourceResolver, configPagePath, config.configPageTemplate());
+
+    // store config data
+    getOrCreateResource(resourceResolver, configResourcePath, data.getProperties());
+    commit(resourceResolver);
+    return false;
+  }
+
+  @Override
+  public boolean persistConfigurationCollection(ResourceResolver resourceResolver, String configResourceCollectionParentPath,
+      ConfigurationCollectionPersistData data) {
+    // not supported for compat mode
+    return false;
+  }
+
+  @Override
+  public boolean deleteConfiguration(ResourceResolver resourceResolver, String configResourcePath) {
+    if (!config.enabled() || !isConfigPagePath(configResourcePath)) {
+      return false;
+    }
+
+    Resource resource = resourceResolver.getResource(configResourcePath);
+    if (resource != null) {
+      try {
+        resourceResolver.delete(resource);
+      }
+      catch (PersistenceException ex) {
+        throw new ConfigurationPersistenceException("Unable to delete configuration at " + configResourcePath, ex);
+      }
+    }
+    commit(resourceResolver);
+    return true;
+  }
+
+  private String getConfigPagePathFromConfigResourcePath(String configResourcePath) {
+    int index = StringUtils.indexOf(configResourcePath, "/jcr:content/");
+    if (index <= 0) {
+      return null;
+    }
+    return StringUtils.substring(configResourcePath, 0, index);
+  }
+
+  private Page ensurePage(ResourceResolver resourceResolver, String pagePath, String template) {
+    PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
+    Page page = pageManager.getPage(pagePath);
+    if (page != null) {
+      return page;
+    }
+    ensurePage(resourceResolver, ResourceUtil.getParent(pagePath), config.structurePageTemplate());
+    try {
+      return pageManager.create(ResourceUtil.getParent(pagePath), ResourceUtil.getName(pagePath),
+          template, ResourceUtil.getName(pagePath), false);
+    }
+    catch (WCMException ex) {
+      throw new ConfigurationPersistenceException("Unable to create config page at " + pagePath, ex);
+    }
+  }
+
+  private Resource getOrCreateResource(ResourceResolver resourceResolver, String path, Map<String, Object> properties) {
+    try {
+      Resource resource = ResourceUtil.getOrCreateResource(resourceResolver, path, (String)null, (String)null, false);
+      replaceProperties(resource, properties);
+      return resource;
+    }
+    catch (PersistenceException ex) {
+      throw new ConfigurationPersistenceException("Unable to persist configuration to " + path, ex);
+    }
+  }
+
+  private void replaceProperties(Resource resource, Map<String, Object> properties) {
+    ModifiableValueMap modValueMap = resource.adaptTo(ModifiableValueMap.class);
+    // remove all existing properties that do not have jcr: namespace
+    for (String propertyName : new HashSet<>(modValueMap.keySet())) {
+      if (StringUtils.startsWith(propertyName, "jcr:")) {
+        continue;
+      }
+      modValueMap.remove(propertyName);
+    }
+    modValueMap.putAll(properties);
+  }
+
+  private void commit(ResourceResolver resourceResolver) {
+    try {
+      resourceResolver.commit();
+    }
+    catch (PersistenceException ex) {
+      throw new ConfigurationPersistenceException("Unable to save configuration: " + ex.getMessage(), ex);
+    }
+  }
+
+
+  // ---------- Internal ----------
+
+  private String getConfigPagePath(String contextPath) {
+    return contextPath + RELATIVE_CONFIG_PATH;
+  }
+
+  private boolean isConfigPagePath(String configPath) {
+    return CONFIG_PATH_PATTERN.matcher(configPath).matches();
   }
 
 }

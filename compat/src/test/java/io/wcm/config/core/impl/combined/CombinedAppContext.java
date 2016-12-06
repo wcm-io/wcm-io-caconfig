@@ -29,7 +29,6 @@ import io.wcm.config.core.impl.ConfigurationFinderStrategyBridge;
 import io.wcm.config.core.impl.ParameterOverrideProviderBridge;
 import io.wcm.config.core.impl.ParameterProviderBridge;
 import io.wcm.config.core.override.impl.SystemPropertyOverrideProvider;
-import io.wcm.config.core.persistence.impl.ToolsConfigPagePersistenceProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
 import io.wcm.testing.mock.aem.junit.AemContext;
@@ -74,10 +73,6 @@ public final class CombinedAppContext {
       context.registerInjectActivateService(new ConfigurationFinderStrategyBridge());
       context.registerInjectActivateService(new ParameterOverrideProviderBridge());
       context.registerInjectActivateService(new ParameterProviderBridge());
-      context.registerInjectActivateService(new ToolsConfigPagePersistenceProvider(),
-          "enabled", true,
-          "configPageTemplate", CONFIG_PAGE_TEMPLATE,
-          "structurePageTemplate", STRUCTURE_PAGE_TEMPLATE);
 
       // override providers
       context.registerInjectActivateService(new SystemPropertyOverrideProvider(),
