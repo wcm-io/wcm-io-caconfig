@@ -1,9 +1,30 @@
 {
   "io.wcm.caconfig.editor": {
     "title": "Konfiguration bearbeiten",
-    "filter": {
-      "application": "Filter Applikation",
-      "group": "Filter Gruppe"
+    "contextPath": "Kontext Pfad",
+    "button": {
+      "add": "Hinzufügen",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "ok": "OK",
+      "save": "Speichern"
+    },
+    "config": {
+      "name": "Konfigurations-Name",
+      "property": "Eigenschaft",
+      "value": "Wert",
+      "inherited": "Vererbt",
+      "overridden": "Überschrieben",
+      "description": "Beschreibung",
+      "group": "Gruppe"
+    },
+    "modal": {
+      "addTitle": "Konfiguration hinzufügen",
+      "close": "Schließen",
+      "deleteTitle": "Konfiguration(en) löschen",
+      "delete": "Die folgende Konfiguration(en) werden gelöscht:",
+      "success": "Speichern erfolgreich.",
+      "error": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren."
     }
   }
 }
