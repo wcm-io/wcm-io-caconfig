@@ -42,7 +42,7 @@ property = "webconsole.configurationFactory.nameHint={description}, enabled={ena
 @Designate(ocd = OsgiConfigOverrideProvider.Config.class, factory = true)
 public final class OsgiConfigOverrideProvider implements ParameterOverrideProvider {
 
-  @ObjectClassDefinition(name = "wcm.io Configuration Property Override Provider: OSGi configuration",
+  @ObjectClassDefinition(name = "wcm.io Configuration Compatibility: Property Override Provider - OSGi configuration",
       description = "Allows to define configuration property default values or overrides from OSGi configuration.")
   static @interface Config {
 
