@@ -22,6 +22,8 @@ package io.wcm.config.core.persistence.impl;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.IteratorUtils;
@@ -34,6 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
+import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.caconfig.management.ContextPathStrategyMultiplexer;
 import org.apache.sling.caconfig.resource.spi.ConfigurationResourceResolvingStrategy;
@@ -53,6 +56,12 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
   static final String CONFIG_BUCKET_NAME = "sling:configs";
   static final String JCR_CONTENT = "jcr:content";
 
+  /**
+   * Boolean property that controls whether config resource collections should be merged on inheritance or not.
+   * Merging means merging the lists, not the list items (properties of the resources) itself.
+   */
+  static final String PROPERTY_CONFIG_COLLECTION_INHERIT = "sling:configCollectionInherit";
+
 
   // ---------- ConfigurationResourceResolvingStrategy ----------
 
@@ -67,11 +76,14 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
 
   @Override
   public Collection<Resource> getResourceCollection(Resource resource, String bucketName, String configName) {
-    // TODO: implement resource collection handling
-    return null;
+    if (!isEnabledAndParamsValid(resource, bucketName, configName)) {
+      return null;
+    }
+
+    Iterator<String> paths = findConfigRefs(resource, bucketName);
+    return getResourceCollectionInternal(bucketName, configName, paths, resource.getResourceResolver());
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public Iterator<Resource> getResourceInheritanceChain(Resource resource, String bucketName, final String configName) {
     if (!isEnabledAndParamsValid(resource, bucketName, configName)) {
@@ -81,6 +93,14 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
     // find all matching items among all configured paths
     final ResourceResolver resourceResolver = resource.getResourceResolver();
     Iterator<String> paths = findConfigRefs(resource, bucketName);
+    return getResourceInheritanceChainInternal(bucketName, configName, paths, resourceResolver);
+  }
+
+  @SuppressWarnings("unchecked")
+  private Iterator<Resource> getResourceInheritanceChainInternal(final String bucketName, final String configName,
+      final Iterator<String> paths, final ResourceResolver resourceResolver) {
+
+    // find all matching items among all configured paths
     Iterator<Resource> matchingResources = IteratorUtils.transformedIterator(paths, new Transformer() {
       @Override
       public Object transform(Object input) {
@@ -91,13 +111,65 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
     return IteratorUtils.filteredIterator(matchingResources, PredicateUtils.notNullPredicate());
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public Collection<Iterator<Resource>> getResourceCollectionInheritanceChain(Resource resource, String bucketName, String configName) {
+  public Collection<Iterator<Resource>> getResourceCollectionInheritanceChain(final Resource resource, final String bucketName, final String configName) {
     if (!isEnabledAndParamsValid(resource, bucketName, configName)) {
       return null;
     }
-    // TODO: implement resource collection handling
-    return null;
+
+    final ResourceResolver resourceResolver = resource.getResourceResolver();
+    final List<String> paths = IteratorUtils.toList(findConfigRefs(resource, bucketName));
+
+    // get resource collection with respect to collection inheritance
+    Collection<Resource> resourceCollection = getResourceCollectionInternal(bucketName, configName, paths.iterator(), resourceResolver);
+
+    // get inheritance chain for each item found
+    // yes, this resolves the closest item twice, but is the easiest solution to combine both logic aspects
+    Iterator<Iterator<Resource>> result = IteratorUtils.transformedIterator(resourceCollection.iterator(), new Transformer() {
+      @Override
+      public Object transform(Object input) {
+        Resource item = (Resource)input;
+        return getResourceInheritanceChainInternal(bucketName, configName + "/" + item.getName(), paths.iterator(),
+            resourceResolver);
+      }
+    });
+    return IteratorUtils.toList(result);
+  }
+
+  private Collection<Resource> getResourceCollectionInternal(final String bucketName, final String configName,
+      Iterator<String> paths, ResourceResolver resourceResolver) {
+    String name = bucketName + "/" + configName;
+
+    final Map<String, Resource> result = new LinkedHashMap<>();
+
+    boolean inherit = false;
+    while (paths.hasNext()) {
+      final String path = paths.next();
+      Resource item = resourceResolver.getResource(buildResourcePath(path, name));
+      if (item != null) {
+
+        for (Resource child : item.getChildren()) {
+          if (isValidResourceCollectionItem(child) && !result.containsKey(child.getName())) {
+            result.put(child.getName(), child);
+          }
+        }
+
+        // check collection inheritance mode on current level - should we check on next-highest level as well?
+        final ValueMap valueMap = item.getValueMap();
+        inherit = valueMap.get(PROPERTY_CONFIG_COLLECTION_INHERIT, false);
+        if (!inherit) {
+          break;
+        }
+      }
+    }
+
+    return result.values();
+  }
+
+  private boolean isValidResourceCollectionItem(Resource resource) {
+    // do not include jcr:content nodes in resource collection list
+    return !StringUtils.equals(resource.getName(), "jcr:content");
   }
 
   @Override
@@ -153,7 +225,7 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
   @Override
   @SuppressWarnings("unchecked")
   public Resource getResource(Iterator<Resource> configResources) {
-    if (!configResources.hasNext()) {
+    if (!isEnabled() || !configResources.hasNext()) {
       return null;
     }
 
@@ -195,7 +267,7 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
 
   @Override
   public Resource getResource(Resource resource) {
-    if (!isConfigPagePath(resource.getPath())) {
+    if (!isEnabled() || !isConfigPagePath(resource.getPath())) {
       return null;
     }
     return resource;
@@ -203,7 +275,7 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
 
   @Override
   public String getResourcePath(String resourcePath) {
-    if (!isConfigPagePath(resourcePath)) {
+    if (!isEnabled() || !isConfigPagePath(resourcePath)) {
       return null;
     }
     return resourcePath;
@@ -211,7 +283,7 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
 
   @Override
   public boolean persistConfiguration(ResourceResolver resourceResolver, String configResourcePath, ConfigurationPersistData data) {
-    if (!isConfigPagePath(configResourcePath)) {
+    if (!isEnabled() || !isConfigPagePath(configResourcePath)) {
       return false;
     }
     // TODO: implement persistence
@@ -221,7 +293,7 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
   @Override
   public boolean persistConfigurationCollection(ResourceResolver resourceResolver, String configResourceCollectionParentPath,
       ConfigurationCollectionPersistData data) {
-    if (!isConfigPagePath(configResourceCollectionParentPath)) {
+    if (!isEnabled() || !isConfigPagePath(configResourceCollectionParentPath)) {
       return false;
     }
     // TODO: implement persistence
@@ -230,7 +302,7 @@ ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
 
   @Override
   public boolean deleteConfiguration(ResourceResolver resourceResolver, String configResourcePath) {
-    if (!isConfigPagePath(configResourcePath)) {
+    if (!isEnabled() || !isConfigPagePath(configResourcePath)) {
       return false;
     }
     // TODO: implement persistence
