@@ -19,29 +19,43 @@
  */
 package io.wcm.config.core.persistence.impl;
 
-/*  TODO: fix unit test
+import static io.wcm.config.core.impl.combined.CombinedAppContext.STRUCTURE_PAGE_TEMPLATE;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import io.wcm.config.core.impl.combined.CombinedAppContext;
+import io.wcm.testing.mock.aem.junit.AemContext;
+
 @RunWith(MockitoJUnitRunner.class)
 public class ToolsConfigPagePersistenceProviderTest {
 
-  private static final String CONFIG_ID = "/content/site1";
-  private static final String CONFIG_PAGE_TEMPLATE = "/apps/dummy/templates/config";
-  private static final String STRUCTURE_PAGE_TEMPLATE = "/apps/dummy/templates/tools";
-
   @Rule
-  public final AemContext context = new AemContext();
+  public final AemContext context = CombinedAppContext.newAemContext();
 
-  private ParameterPersistenceProvider underTest;
+  private ToolsConfigPagePersistenceProvider underTest;
 
   @Before
   public void setUp() {
+
     context.create().page("/content", STRUCTURE_PAGE_TEMPLATE);
     context.create().page("/content/site1", STRUCTURE_PAGE_TEMPLATE);
+    context.create().page("/content/site1/en", STRUCTURE_PAGE_TEMPLATE);
+    context.create().page("/content/site1/fr", STRUCTURE_PAGE_TEMPLATE);
 
-    underTest = context.registerInjectActivateService(new ToolsConfigPagePersistenceProvider(),
-        "enabled", true,
-        "configPageTemplate", CONFIG_PAGE_TEMPLATE,
-        "structurePageTemplate", STRUCTURE_PAGE_TEMPLATE);
   }
+
+  @Test
+  public void testConfigResource() {
+    // TODO: implement persistence & special tests
+
+  }
+
+
+  /*  TODO: check remaning unit tests
 
   @Test
   public void testGetNoPage() {
@@ -126,6 +140,6 @@ public class ToolsConfigPagePersistenceProviderTest {
     assertNull(underTest.get(context.resourceResolver(), CONFIG_ID));
     assertFalse(underTest.store(context.resourceResolver(), CONFIG_ID, props));
   }
+  */
 
 }
- */

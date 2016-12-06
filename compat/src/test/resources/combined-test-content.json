@@ -26,6 +26,18 @@
             "prop1": "value1-l1",
             "prop2": "value2-l1",
             "prop3": "value3-l1"
+          },
+          "configCol": {
+            "item1": {
+              "prop1": "item1-value1-l1",
+              "prop2": "item1-value2-l1",
+              "prop3": "item1-value3-l1"
+            },
+            "item4": {
+              "prop1": "item4-value1-l1",
+              "prop2": "item4-value2-l1",
+              "prop3": "item4-value3-l1"
+            }
           }
         }
       }
@@ -51,6 +63,16 @@
             "config": {
               "prop1": "value1-l2",
               "prop2": "value2-l2"
+            },
+            "configCol": {
+              "item1": {
+                "prop1": "item1-value1-l2",
+                "prop2": "item1-value2-l2"
+              },
+              "item3": {
+                "prop1": "item3-value1-l2",
+                "prop2": "item3-value2-l2"
+              }
             }
           }
         }
@@ -75,6 +97,15 @@
               "jcr:title":"config",
               "config": {
                 "prop1": "value1-l3"
+              },
+              "configCol": {
+                "item1": {
+                  "prop1": "item1-value1-l3"
+                },
+                "item2": {
+                  "prop1": "item2-value1-l3"
+                },
+                "sling:configCollectionInherit": true
               }
             }
           }
