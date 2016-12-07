@@ -81,7 +81,10 @@
        */
       this.deleteConfig =  function (configName) {
         var url = config.configPersistUrl + "?configName=" + configName;
-        return $http.delete(url);
+        return $http({
+          method: "DELETE",
+          url: url
+        });
       }
     }
 

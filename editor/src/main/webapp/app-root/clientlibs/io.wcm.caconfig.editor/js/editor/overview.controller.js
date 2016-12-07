@@ -67,15 +67,22 @@
         config.exists = true;
 
         dataService.getConfigData(configName, config.collection)
-          .then(function save(result){
-            return dataService.saveConfigData(configName, config.collection, result.data);
-          })
-          .then(function success() {
-            // $rootScope.successModal.show();
-          })
-          .catch(function error() {
-            $rootScope.errorModal.show();
-          });
+          .then(
+            function save(result){
+              return dataService.saveConfigData(configName, config.collection, result.data);
+            },
+            function error() {
+              $rootScope.errorModal.show();
+            }
+          )
+          .then(
+            function success() {
+              // $rootScope.successModal.show();
+            },
+            function error() {
+              $rootScope.errorModal.show();
+            }
+          );
       }
     };
   }
