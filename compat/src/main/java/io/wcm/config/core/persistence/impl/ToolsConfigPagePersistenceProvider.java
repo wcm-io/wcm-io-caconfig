@@ -21,6 +21,7 @@ package io.wcm.config.core.persistence.impl;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -113,8 +114,8 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
   // ---------- ConfigurationResourceResolvingStrategy ----------
 
   @Override
-  public Resource getResource(Resource resource, String bucketName, String configName) {
-    Iterator<Resource> resources = getResourceInheritanceChain(resource, bucketName, configName);
+  public Resource getResource(Resource resource, Collection<String> bucketNames, String configName) {
+    Iterator<Resource> resources = getResourceInheritanceChain(resource, bucketNames, configName);
     if (resources != null && resources.hasNext()) {
       return resources.next();
     }
@@ -122,25 +123,25 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
   }
 
   @Override
-  public Collection<Resource> getResourceCollection(Resource resource, String bucketName, String configName) {
+  public Collection<Resource> getResourceCollection(Resource resource, Collection<String> bucketNames, String configName) {
     // not supported for compat mode
     return null;
   }
 
   @Override
-  public Iterator<Resource> getResourceInheritanceChain(Resource resource, String bucketName, final String configName) {
-    if (!isEnabledAndParamsValid(resource, bucketName, configName)) {
+  public Iterator<Resource> getResourceInheritanceChain(Resource resource, Collection<String> bucketNames, final String configName) {
+    if (!isEnabledAndParamsValid(resource, bucketNames, configName)) {
       return null;
     }
 
     // find all matching items among all configured paths
     final ResourceResolver resourceResolver = resource.getResourceResolver();
-    Iterator<String> paths = findConfigRefs(resource, bucketName);
-    return getResourceInheritanceChainInternal(bucketName, configName, paths, resourceResolver);
+    Iterator<String> paths = findConfigRefs(resource);
+    return getResourceInheritanceChainInternal(configName, paths, resourceResolver);
   }
 
   @SuppressWarnings("unchecked")
-  private Iterator<Resource> getResourceInheritanceChainInternal(final String bucketName, final String configName,
+  private Iterator<Resource> getResourceInheritanceChainInternal(final String configName,
       final Iterator<String> paths, final ResourceResolver resourceResolver) {
 
     // find all matching items among all configured paths
@@ -156,17 +157,18 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
   }
 
   @Override
-  public Collection<Iterator<Resource>> getResourceCollectionInheritanceChain(final Resource resource, final String bucketName, final String configName) {
+  public Collection<Iterator<Resource>> getResourceCollectionInheritanceChain(final Resource resource, final Collection<String> bucketNames,
+      final String configName) {
     // not supported for compat mode
     return null;
   }
 
   @Override
-  public String getResourcePath(Resource resource, String bucketName, String configName) {
-    if (!isEnabledAndParamsValid(resource, bucketName, configName)) {
+  public String getResourcePath(Resource resource, String bucketNames, String configName) {
+    if (!isEnabledAndParamsValid(resource, Collections.singleton(bucketNames), configName)) {
       return null;
     }
-    Iterator<String> configRefs = findConfigRefs(resource, bucketName);
+    Iterator<String> configRefs = findConfigRefs(resource);
     if (configRefs.hasNext()) {
       return buildResourcePath(configRefs.next(), configName);
     }
@@ -180,11 +182,11 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     return getResourcePath(resource, bucketName, configName);
   }
 
-  private boolean isEnabledAndParamsValid(final Resource contentResource, final String bucketName, final String configName) {
+  private boolean isEnabledAndParamsValid(final Resource contentResource, final Collection<String> bucketNames, final String configName) {
     return config.enabled()
         && contentResource != null
         // support only configuration buckets
-        && StringUtils.equals(bucketName, CONFIG_BUCKET_NAME)
+        && bucketNames.contains(CONFIG_BUCKET_NAME)
         // support only the one config name that is used for mapping wcm.io config parameters
         && StringUtils.equals(configName, ParameterProviderBridge.DEFAULT_CONFIG_NAME);
   }
@@ -194,7 +196,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
   }
 
   @SuppressWarnings("unchecked")
-  private Iterator<String> findConfigRefs(Resource startResource, final String bucketName) {
+  private Iterator<String> findConfigRefs(Resource startResource) {
     // collect all context path resources without config ref, and expand to config page path
     Iterator<ContextResource> contextResources = contextPathStrategy.findContextResources(startResource);
     return new FilterIterator(new TransformIterator(contextResources, new Transformer() {
