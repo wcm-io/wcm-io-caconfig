@@ -31,25 +31,25 @@ public @interface ConfigSample {
   /**
    * @return String parameter
    */
-  @Property(label = "String Param", description = "This is a string parameter in the singleton configuration.")
+  @Property(label = "String Param", description = "This is a string parameter in the singleton configuration.", order = 1)
   String stringParam();
 
   /**
    * @return Integer parameter
    */
-  @Property(label = "Integer Param")
+  @Property(label = "Integer Param", order = 2)
   int intParam();
 
   /**
    * @return Boolean parameter
    */
-  @Property(label = "Boolean Param")
+  @Property(label = "Boolean Param", order = 3)
   boolean boolParam();
 
   /**
    * @return String array parameter with default value
    */
-  @Property(label = "String Array Param")
+  @Property(label = "String Array Param", order = 4)
   String[] stringArrayParam() default {
     "value1", "value2"
   };
