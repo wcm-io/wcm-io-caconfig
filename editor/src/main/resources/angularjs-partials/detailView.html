@@ -1,7 +1,7 @@
-<form class="caconfig-detail" id="caconfig-configuration" name="configForm">
+<form class="caconfig-detail" id="caconfig-configuration" name="configForm" novalidate>
 
-  <button id="caconfig-persist" class="coral-Button coral-Button--{{toBeDeleted.length ? 'warning' : 'primary'}}"
-    ng-click="persist()"
+  <button id="caconfig-save" class="coral-Button coral-Button--primary"
+    ng-click="save()"
     ng-disabled="!configForm.$valid">{{i18n.button.save}}</button>
   <button class="coral-Button coral-Button--secondary" ng-click="go()" >{{i18n.button.cancel}}</button>
 
@@ -9,7 +9,7 @@
 
   <div ng-repeat="config in configs" class="caconfig-configurationDetails" ng-hide="config.isCollectionRoot && (!config.properties || !config.properties.length)"  ng-cloak>
     <h3 class="config-caption">
-      {{!isCollection || config.isCollectionRoot ? config.configName : (config.configName + ': ' + config.collectionItemName) }}
+      {{!isCollection || config.isCollectionRoot ? configLabel : (configLabel + ': ' + config.collectionItemName) }}
     </h3>
     <table class="coral-Table coral-Table--hover" ng-cloak>
       <thead>
@@ -54,11 +54,11 @@
     </table>
 
     <p><button class="coral-Button coral-Button--warning"
-      ng-hide="!isCollection || config.isCollectionRoot" ng-click="remove(config, isCollection)" >{{i18n.button.delete}}</button></p>
+      ng-hide="!isCollection || config.isCollectionRoot" ng-click="removeCollectionItem($index)" >{{i18n.button.delete}}</button></p>
 
   </div>
 
   <p><button ng-hide="!isCollection || !configs.length" ng-click="addCollectionItem()" class="coral-Button coral-Button--primary">{{i18n.button.add}}</button></p>
-  <p><button ng-hide="!configs.length" class="coral-Button coral-Button--warning" ng-click="remove(configs[0])" >{{i18n.button.delete}}</button></p>
+  <p><button ng-hide="!configs.length" class="coral-Button coral-Button--warning" ng-click="removeConfig()" >{{i18n.button.delete}}</button></p>
 
 </form>

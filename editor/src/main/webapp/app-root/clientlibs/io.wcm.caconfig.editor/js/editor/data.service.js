@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, _) {
   "use strict";
   /**
    * Services module
@@ -36,6 +36,16 @@
        */
       this.getConfigNames = function () {
         return $http.get(config.configNamesUrl);
+      };
+
+      this.getConfigLabel = function(configName, configNamesCollection) {
+        var configLabel = configName;
+        var config = _.find(configNamesCollection, {configName: configName});
+
+        if (!angular.isUndefined(config) && config.label) {
+          configLabel = config.label;
+        }
+        return configLabel;
       };
 
       /**
@@ -79,7 +89,7 @@
        * @param {String} configName
        * @returns {Promise}
        */
-      this.deleteConfig =  function (configName) {
+      this.deleteConfigData =  function (configName) {
         var url = config.configPersistUrl + "?configName=" + configName;
         return $http({
           method: "DELETE",
@@ -218,4 +228,4 @@
     return properties;
   }
 
-})(angular);
+})(angular, _);

@@ -26,6 +26,7 @@
   OverviewController.$inject = ["$rootScope", "$scope", "$filter", "dataService"];
 
   function OverviewController($rootScope, $scope, $filter, dataService) {
+    $rootScope.getConfigNames();
     $rootScope.title = $rootScope.i18n.title;
 
     $scope.hasNonExistingConfig = function() {
@@ -59,31 +60,8 @@
     };
 
     $rootScope.addConfig = function() {
-      var configs = [];
-      var configName = $rootScope.configurationSelect.getValue();
-      var config = $filter("filter")($rootScope.configNamesCollection, { configName: configName })[0];
-
-      if (config) {
-        config.exists = true;
-
-        dataService.getConfigData(configName, config.collection)
-          .then(
-            function save(result){
-              return dataService.saveConfigData(configName, config.collection, result.data);
-            },
-            function error() {
-              $rootScope.errorModal.show();
-            }
-          )
-          .then(
-            function success() {
-              // $rootScope.successModal.show();
-            },
-            function error() {
-              $rootScope.errorModal.show();
-            }
-          );
-      }
+      var configUrl = $rootScope.configurationSelect.getValue();
+      $rootScope.go(configUrl);
     };
   }
 })(angular);

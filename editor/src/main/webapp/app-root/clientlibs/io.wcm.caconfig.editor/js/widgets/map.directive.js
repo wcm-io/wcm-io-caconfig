@@ -25,14 +25,12 @@
 
   map.$inject = ["templateUrlList"];
 
-  function map(templateList, utilities) {
+  function map(templateList) {
 
     function link(scope, element, attr) {
       scope.values = [];
       if (scope.parameter.value && scope.parameter.value.length > 0) {
         scope.values = scope.parameter.value;
-      } else {
-        scope.values.push({key:"", value: ""});
       }
       scope.$watch("values", function() {
         scope.parameter.value = scope.values;
@@ -51,21 +49,16 @@
     };
   }
 
-  MapController.$inject = ["$scope", "utilities"];
+  MapController.$inject = ["$scope"];
 
-  function MapController($scope, utilities) {
-    $scope.addNewValue = function(value) {
+  function MapController($scope) {
+    $scope.addNewValue = function(index) {
       $scope.$evalAsync(function() {
-        var indexOf = utilities.indexOfValueObject($scope.values, value);
-        $scope.values.splice(indexOf+1, 0, {key:"", value: ""});
+        $scope.values.splice(index + 1, 0, { key: "", value: "" });
       });
     };
-    $scope.removeValue = function(value) {
-      var indexOf = utilities.indexOfValueObject($scope.values, value);
-      $scope.values.splice(indexOf, 1);
-      if ($scope.values.length === 0) {
-        $scope.values.push({key: "", value: ""});
-      }
+    $scope.removeValue = function(index) {
+      $scope.values.splice(index, 1);
     };
   }
 })(angular);

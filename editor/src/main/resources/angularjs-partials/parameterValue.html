@@ -11,7 +11,8 @@
   <input ng-switch-when="number"
          type="text" class="coral-Textfield"
          ng-model="parameter.value"
-         ng-pattern="pattern" />
+         ng-pattern="pattern"
+         ng-required="required" />
 
   <div ng-switch-when="IntegerMultivalue">
     <caconfig-multifield  parameter="parameter" />

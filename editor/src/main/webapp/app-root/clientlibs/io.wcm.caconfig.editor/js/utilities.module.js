@@ -32,10 +32,7 @@
 
     var utilities = {
       nextUid: nextUid,
-      loadAutocompleteOptions: loadAutocompleteOptions,
-      contains: contains,
-      indexOfMatchingObject: indexOfMatchingObject,
-      indexOfValueObject: indexOfValueObject
+      loadAutocompleteOptions: loadAutocompleteOptions
     };
     return utilities;
 
@@ -84,55 +81,6 @@
           if (callback) callback(result);
         }, "json");
       return false;
-    }
-
-    /**
-     *
-     * @param array containing objects
-     * @param object
-     * @returns index of an object in array with the same value for "key" property as "object",
-     * -1 if no such object was found
-     */
-    function indexOfMatchingObject(array, object, key) {
-      var index = -1;
-      if (array) {
-        for(var i = 0; i < array.length; i++) {
-          if (array[i][key] === object[key]) {
-            index = i;
-            break;
-          }
-        }
-      }
-      return index;
-    }
-
-    /**
-     *
-     * @param array containing objects with "value" property
-     * @param object containing "value" property
-     * @returns index of an object in array with the same value property as "object", -1 if no such object was found
-     */
-    function indexOfValueObject(array, object) {
-      return indexOfMatchingObject(array, object, "value");
-    }
-
-    /**
-     *
-     * @param array
-     * @param object
-     * @returns index of an object in array, -1 if the object does not exist in array
-     */
-    function contains(array, object) {
-      var contains = false;
-      if (array) {
-        for(var i = 0; i < array.length; i++) {
-          if (array[i] === object) {
-            contains = true;
-            break;
-          }
-        }
-      }
-      return contains;
     }
   }
 })(angular);
