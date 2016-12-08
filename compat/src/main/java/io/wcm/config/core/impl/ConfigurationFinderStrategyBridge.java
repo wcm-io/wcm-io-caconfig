@@ -33,6 +33,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.wcm.caconfig.application.ApplicationFinder;
 import io.wcm.caconfig.application.ApplicationInfo;
@@ -52,6 +54,8 @@ public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
   @Reference
   private ApplicationFinder applicationFinder;
 
+  private static final Logger log = LoggerFactory.getLogger(ConfigurationFinderStrategyBridge.class);
+
   @Override
   public Iterator<ContextResource> findContextResources(Resource resource) {
     String applicationId = findApplicationId(resource);
@@ -65,6 +69,7 @@ public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
           String contextResourcePath = contextResourcePaths.next();
           Resource contextResource = resourceResolver.getResource(contextResourcePath);
           if (contextResource != null) {
+            log.trace("Found context path {}, configRef {}", resource.getPath(), null);
             result.add(new ContextResource(contextResource, null));
           }
         }
