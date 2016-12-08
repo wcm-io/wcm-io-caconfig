@@ -4,8 +4,11 @@
     "contextPath": "Context Path",
     "button": {
       "add": "Add",
+      "addItem": "Add Item",
       "cancel": "Cancel",
       "delete": "Delete",
+      "deleteCollection": "Delete Collection",
+      "deleteItem": "Delete Item",
       "ok": "OK",
       "save": "Save"
     },
@@ -21,8 +24,8 @@
     "modal": {
       "addTitle": "Add Configuration",
       "close": "Close",
-      "deleteTitle": "Delete Configuration(s)",
-      "delete": "The following configuration(s) will be deleted:",
+      "deleteTitle": "Delete Configuration",
+      "delete": "This configuration will be deleted:",
       "success": "Update successful.",
       "error": "An internal error occurred. Please try again."
     }

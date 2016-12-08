@@ -26,7 +26,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.registerTask('build', function() {
-    grunt.task.run('html2js:templates');
-  });
+  grunt.registerTask('build', ['html2js:templates']);
+  grunt.registerTask('default', ['build']);
 };

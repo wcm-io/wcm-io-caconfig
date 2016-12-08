@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, _) {
   "use strict";
   /**
    * Services module
@@ -26,16 +26,26 @@
     .provider("dataService", dataServiceProvider);
 
   function dataServiceProvider() {
-    var config = {};
+    var restUrls = {};
 
-    function DataService($http, $q, config) {
+    function DataService($http, restUrls) {
 
       /**
        * Get configuration names.
        * @returns {Promise}
        */
       this.getConfigNames = function () {
-        return $http.get(config.configNamesUrl);
+        return $http.get(restUrls.configNamesUrl);
+      };
+
+      this.getConfigLabel = function(configName, configNamesCollection) {
+        var configLabel = configName;
+        var config = _.find(configNamesCollection, {configName: configName});
+
+        if (!angular.isUndefined(config) && config.label) {
+          configLabel = config.label;
+        }
+        return configLabel;
       };
 
       /**
@@ -45,7 +55,7 @@
        * @returns {Promise}
        */
       this.getConfigData = function (configName, isCollection) {
-        var url = config.configDataUrl;
+        var url = restUrls.configDataUrl;
 
         if (angular.isString(configName)) {
           url += "?configName=" + configName;
@@ -67,7 +77,7 @@
        */
       this.saveConfigData = function (configName, isCollection, configs) {
         var configData = buildConfigData(configs, isCollection);
-        var url = config.configPersistUrl + "?configName=" + configName;
+        var url = restUrls.configPersistUrl + "?configName=" + configName;
 
         if (isCollection) {
           url += "&collection=true";
@@ -79,18 +89,21 @@
        * @param {String} configName
        * @returns {Promise}
        */
-      this.deleteConfig =  function (configName) {
-        var url = config.configPersistUrl + "?configName=" + configName;
-        return $http.delete(url);
+      this.deleteConfigData =  function (configName) {
+        var url = restUrls.configPersistUrl + "?configName=" + configName;
+        return $http({
+          method: "DELETE",
+          url: url
+        });
       }
     }
 
-    this.setConfig = function (configData) {
-      config = configData;
+    this.setRestUrls = function (restUrlsConfig) {
+      restUrls = restUrlsConfig;
     };
 
-    this.$get = ["$http", "$q", function($http, $q) {
-      return new DataService($http, $q, config);
+    this.$get = ["$http", function($http) {
+      return new DataService($http, restUrls);
     }];
   }
 
@@ -209,10 +222,19 @@
     var properties = {};
     angular.forEach(config.properties, function(property) {
       if (!property.skip) {
-        properties[property.name] = property.value;
+        if (property.value === "" && property.metadata.type !== "String") {
+          properties[property.name] = null;
+        }
+        else if (angular.isArray(property.value) && property.metadata.type !== "String") {
+          properties[property.name] = _.reject(property.value, angular.isUndefined);
+        }
+        else {
+          properties[property.name] = property.value;
+        }
+
       }
     });
     return properties;
   }
 
-})(angular);
+})(angular, _);

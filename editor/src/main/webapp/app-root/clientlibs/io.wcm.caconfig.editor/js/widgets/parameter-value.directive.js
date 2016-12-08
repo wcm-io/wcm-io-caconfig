@@ -44,6 +44,7 @@
         input = inputMap[scope.parameter.metadata.type];
         scope.type = input.type || scope.parameter.metadata.type;
         scope.pattern = input.pattern || /^.*$/;
+        scope.required = input.required;
       }
     }
 

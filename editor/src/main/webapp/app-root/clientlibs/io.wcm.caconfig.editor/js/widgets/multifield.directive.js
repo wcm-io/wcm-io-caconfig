@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, _) {
   "use strict";
   angular.module("io.wcm.caconfig.widgets")
       .directive("caconfigMultifield", multifield);
@@ -30,6 +30,7 @@
       var input = inputMap[scope.parameter.metadata.type];
       scope.type = input.type;
       scope.pattern = input.pattern;
+      scope.required = input.required;
       scope.values = [];
       if (scope.parameter.value && scope.parameter.value.length > 0) {
         var values = scope.parameter.value;
@@ -37,11 +38,8 @@
           scope.values.push({value: values[i]});
         }
       }
-      else {
-        scope.values.push({value: scope.type === "text" ? "" : null});
-      }
       scope.$watch("values", function() {
-        var values = _.pluck(scope.values, "value");
+        var values = _.map(scope.values, "value");
         scope.parameter.value = values;
       }, true);
     }
@@ -58,27 +56,16 @@
     }
   }
 
-  MultifieldController.$inject = ["$scope", "utilities"];
+  MultifieldController.$inject = ["$scope"];
 
-  function MultifieldController($scope, utilities) {
-    $scope.addNewValue = function(value) {
+  function MultifieldController($scope) {
+    $scope.addNewValue = function(index) {
       $scope.$evalAsync(function() {
-        var indexOf = utilities.indexOfValueObject($scope.values, value);
-        $scope.values.splice(indexOf + 1, 0, {value: getDefaultValue()});
+        $scope.values.splice(index + 1, 0, { value: $scope.type === "text" ? "" : undefined });
       });
     };
-
-    $scope.removeValue = function(value) {
-      var indexOf = utilities.indexOfValueObject($scope.values, value);
-      $scope.values.splice(indexOf, 1);
-      if ($scope.values.length === 0) {
-        $scope.values.push({value: getDefaultValue()});
-      }
+    $scope.removeValue = function(index) {
+      $scope.values.splice(index, 1);
     };
-
-    function getDefaultValue() {
-      return $scope.type === "text" ? "" : null;
-    }
   }
-
-})(angular);
+})(angular, _);

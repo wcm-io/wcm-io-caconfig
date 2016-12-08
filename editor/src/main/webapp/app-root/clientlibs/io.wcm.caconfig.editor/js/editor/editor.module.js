@@ -21,7 +21,6 @@
   "use strict";
 
   angular.module("io.wcm.caconfig.editor", [
-      "io.wcm.caconfig.utilities",
       "ngRoute"
     ])
     .run(initRun);
@@ -45,12 +44,6 @@
       visible: false
     });
 
-    $rootScope.successModal = new CUI.Modal({
-      element: "#caconfig-successModal",
-      type: "success",
-      visible: false
-    });
-
     $rootScope.errorModal = new CUI.Modal({
       element: "#caconfig-errorModal",
       type: "error",
@@ -65,15 +58,17 @@
       $location.path(path);
     };
 
-    dataService.getConfigNames().then(
-      function success(result) {
-        $rootScope.contextPath = result.data.contextPath;
-        $rootScope.configNamesCollection = result.data.configNames;
-      },
-      function error() {
-        $rootScope.errorModal.show();
-      }
-    );
+    $rootScope.getConfigNames = function() {
+      return dataService.getConfigNames().then(
+        function success(result) {
+          $rootScope.contextPath = result.data.contextPath;
+          $rootScope.configNamesCollection = result.data.configNames;
+        },
+        function error() {
+          $rootScope.errorModal.show();
+        }
+      );
+    };
   }
 
 })(angular);

@@ -22,7 +22,7 @@
 
   /**
    * Directive to render the "i" button with a popover for the decription of the parameter.
-   * Wraps a coral UI Button and CUI.Popover widget.
+   * Wraps a Coral UI Button and CUI.Popover widget.
    * This directive transcludes the popup content elements.
    *
    * @example

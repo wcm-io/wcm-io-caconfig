@@ -23,103 +23,100 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("DetailController", DetailController);
 
-  DetailController.$inject = ["$rootScope", "$scope", "$route", "dataService", "utilities"];
+  DetailController.$inject = ["$rootScope", "$scope", "$route", "dataService"];
 
-  function DetailController($rootScope, $scope, $route, dataService, utilities) {
-      $rootScope.toBeDeleted = [];
-      $scope.configs = [];
-      $scope.configName = $route.current.params.configName;
-      $scope.isCollection = angular.isString($route.current.params.isCollection) &&
-        ($route.current.params.isCollection !== "");
+  function DetailController($rootScope, $scope, $route, dataService) {
+    $scope.configs = [];
+    $scope.configName = $route.current.params.configName;
+    $scope.isCollection = angular.isString($route.current.params.isCollection) &&
+      ($route.current.params.isCollection !== "");
 
-      if ($scope.configName && $scope.configName.length) {
-        $rootScope.title = $rootScope.i18n.title + ": " + $scope.configName;
+    // If detail view is loaded directly via deeplink, bypassing overview
+    if (!$rootScope.contextPath || !$rootScope.configNamesCollection.length) {
+      $rootScope.getConfigNames()
+        .then(function success() {
+          updateTitle();
+        });
+    }
+    else {
+      updateTitle();
+    }
+
+    // Load Configuration Details
+    dataService.getConfigData($scope.configName, $scope.isCollection).then(
+      function success(result){
+        $scope.configs = result.data;
+      },
+      function error() {
+        $rootScope.errorModal.show();
       }
+    );
 
-      // Load Configuration Details
-      dataService.getConfigData($scope.configName, $scope.isCollection).then(
+    // Storage for collection property "schemas"
+    if (!$rootScope.collectionProperties) {
+      $rootScope.collectionProperties = {};
+    }
+
+    if ($scope.isCollection && !$rootScope.collectionProperties[$scope.configName]) {
+      dataService.getConfigData($scope.configName).then(
         function success(result){
-          $scope.configs = result.data;
+          $rootScope.collectionProperties[$scope.configName] = result.data[0].properties;
         },
         function error() {
           $rootScope.errorModal.show();
         }
       );
+    }
 
-      $scope.persist = function() {
-        if ($scope.toBeDeleted.length) {
-          $scope.deleteModal.show();
-        }
-        else {
-          save();
-        }
-      };
-
-      $scope.addCollectionItem = function() {
-        $scope.addCollectionItemModal.show();
-      }
-
-      $rootScope.addItem = function() {
-        $scope.configs.push({
-          collectionItemName: $("#caconfig-collectionItemName").val(),
-          configName: $scope.configName
-        });
-        $scope.persist();
-      }
-
-      $rootScope.persistWithDeletion = function(toBeDeleted) {
-        if (toBeDeleted.length && !$scope.configs.length) {
-          dataService.deleteConfig($scope.configName).then(
-            function success()  {
-              removeConfigName(toBeDeleted[0]);
-              $rootScope.toBeDeleted = [];
-              $rootScope.go();
-            },
-            function error() {
-              $scope.errorModal.show();
-            }
-          );
-        }
-        else {
-          save();
-        }
-      };
-
-      $scope.remove = function(config, isCollection) {
-        if (isCollection) {
-          var indexOfItem = utilities.indexOfMatchingObject($scope.configs, config, "collectionItemName");
-          if (indexOfItem !== -1) {
-            $scope.configs.splice(indexOfItem, 1);
-            $rootScope.toBeDeleted.push(config);
-          }
-          else {
+    $scope.save = function() {
+      dataService.saveConfigData($scope.configName, $scope.isCollection, $scope.configs)
+        .then(
+          function success() {
+            $rootScope.go();
+          },
+          function error() {
             $scope.errorModal.show();
           }
-        }
-        else {
-          $scope.configs = [];
-          $rootScope.toBeDeleted = [ config ];
-        }
-      }
-
-      function save() {
-        dataService.saveConfigData($scope.configName, $scope.isCollection, $scope.configs)
-          .then(
-            function success()  {
-              $rootScope.toBeDeleted = [];
-              $scope.successModal.show();
-            },
-            function error() {
-              $scope.errorModal.show();
-            }
-          );
-      }
-
-      function removeConfigName(config) {
-        var indexOfConfig = utilities.indexOfMatchingObject($rootScope.configNamesCollection, config, "configName");
-        if (indexOfConfig !== -1) {
-          $rootScope.configNamesCollection[indexOfConfig].exists = false;
-        }
-      }
+        );
     };
+
+    $scope.addCollectionItem = function() {
+      $scope.addCollectionItemModal.show();
+    }
+
+    $rootScope.addItem = function() {
+      var configName = $scope.configName;
+      $scope.configs.push({
+        collectionItemName: $("#caconfig-collectionItemName").val(),
+        configName: configName,
+        properties: angular.copy($rootScope.collectionProperties[configName])
+      });
+      $("#caconfig-collectionItemName").val("");
+    }
+
+    $scope.removeConfig = function() {
+      $rootScope.deleteModal.show();
+    }
+
+    $scope.removeCollectionItem = function(index) {
+      $scope.configs.splice(index, 1);
+    }
+
+    $rootScope.deleteConfig = function() {
+      var configName = $scope.configName;
+      dataService.deleteConfigData(configName).then(
+        function success()  {
+          $rootScope.go();
+        },
+        function error() {
+          $scope.errorModal.show();
+        }
+      );
+    };
+
+    function updateTitle() {
+      $scope.configLabel = dataService.getConfigLabel($scope.configName, $rootScope.configNamesCollection);
+      $rootScope.title = $rootScope.i18n.title + ": " + $scope.configLabel;
+    }
+  };
 })(angular);
