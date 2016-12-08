@@ -25,7 +25,8 @@ import org.apache.sling.caconfig.annotation.Property;
 /**
  * Another config annotation class example
  */
-@Configuration(label = "Sample Configuration 2", description = "This is another sample configuration.")
+@Configuration(label = "Sample Configuration 2", description = "This is another sample configuration.",
+    name = "sample/configuration/2")
 public @interface ConfigSample2 {
 
   /**
