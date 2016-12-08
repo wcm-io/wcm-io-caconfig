@@ -222,7 +222,16 @@
     var properties = {};
     angular.forEach(config.properties, function(property) {
       if (!property.skip) {
-        properties[property.name] = property.value;
+        if (property.value === "" && property.metadata.type !== "String") {
+          properties[property.name] = null;
+        }
+        else if (angular.isArray(property.value) && property.metadata.type !== "String") {
+          properties[property.name] = _.reject(property.value, angular.isUndefined);
+        }
+        else {
+          properties[property.name] = property.value;
+        }
+
       }
     });
     return properties;
