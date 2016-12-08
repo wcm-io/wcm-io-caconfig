@@ -116,8 +116,11 @@
               contextPath: "${'io.wcm.caconfig.editor.contextPath' @ i18n, context='text'}",
               button: {
                 add: "${'io.wcm.caconfig.editor.button.add' @ i18n, context='text'}",
+                addItem: "${'io.wcm.caconfig.editor.button.addItem' @ i18n, context='text'}",
                 cancel: "${'io.wcm.caconfig.editor.button.cancel' @ i18n, context='text'}",
                 delete: "${'io.wcm.caconfig.editor.button.delete' @ i18n, context='text'}",
+                deleteCollection: "${'io.wcm.caconfig.editor.button.deleteCollection' @ i18n, context='text'}",
+                deleteItem: "${'io.wcm.caconfig.editor.button.deleteItem' @ i18n, context='text'}",
                 ok: "${'io.wcm.caconfig.editor.button.ok' @ i18n, context='text'}",
                 save: "${'io.wcm.caconfig.editor.button.save' @ i18n, context='text'}"
               },
@@ -146,7 +149,7 @@
             var configNamesUrl = "${editorConfig.configNamesUrl @ context='uri'}";
             var configDataUrl = "${editorConfig.configDataUrl @ context='uri'}";
             var configPersistUrl = "${editorConfig.configPersistUrl @ context='uri'}";
-            dataServiceProvider.setConfig({
+            dataServiceProvider.setRestUrls({
               configNamesUrl: configNamesUrl,
               configDataUrl: configDataUrl,
               configPersistUrl: configPersistUrl

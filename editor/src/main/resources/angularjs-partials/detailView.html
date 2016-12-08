@@ -54,11 +54,11 @@
     </table>
 
     <p><button class="coral-Button coral-Button--warning"
-      ng-hide="!isCollection || config.isCollectionRoot" ng-click="removeCollectionItem($index)" >{{i18n.button.delete}}</button></p>
+      ng-hide="!isCollection || config.isCollectionRoot" ng-click="removeCollectionItem($index)" >{{i18n.button.deleteItem}}</button></p>
 
   </div>
 
-  <p><button ng-hide="!isCollection || !configs.length" ng-click="addCollectionItem()" class="coral-Button coral-Button--primary">{{i18n.button.add}}</button></p>
-  <p><button ng-hide="!configs.length" class="coral-Button coral-Button--warning" ng-click="removeConfig()" >{{i18n.button.delete}}</button></p>
+  <p><button ng-hide="!isCollection || !configs.length" ng-click="addCollectionItem()" class="coral-Button coral-Button--primary">{{i18n.button.addItem}}</button></p>
+  <p><button ng-hide="!configs.length" class="coral-Button coral-Button--warning" ng-click="removeConfig()" >{{isCollection ? i18n.button.deleteCollection : i18n.button.delete}}</button></p>
 
 </form>

@@ -4,8 +4,11 @@
     "contextPath": "Kontext Pfad",
     "button": {
       "add": "Hinzufügen",
+      "addItem": "Element Hinzufügen",
       "cancel": "Abbrechen",
       "delete": "Löschen",
+      "deleteCollection": "Sammlung Löschen",
+      "deleteItem": "Element Löschen",
       "ok": "OK",
       "save": "Speichern"
     },
@@ -21,8 +24,8 @@
     "modal": {
       "addTitle": "Konfiguration hinzufügen",
       "close": "Schließen",
-      "deleteTitle": "Konfiguration(en) löschen",
-      "delete": "Die folgende Konfiguration(en) werden gelöscht:",
+      "deleteTitle": "Konfiguration löschen",
+      "delete": "Diese Konfiguration wird gelöscht:",
       "success": "Speichern erfolgreich.",
       "error": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren."
     }

@@ -26,16 +26,16 @@
     .provider("dataService", dataServiceProvider);
 
   function dataServiceProvider() {
-    var config = {};
+    var restUrls = {};
 
-    function DataService($http, $q, config) {
+    function DataService($http, restUrls) {
 
       /**
        * Get configuration names.
        * @returns {Promise}
        */
       this.getConfigNames = function () {
-        return $http.get(config.configNamesUrl);
+        return $http.get(restUrls.configNamesUrl);
       };
 
       this.getConfigLabel = function(configName, configNamesCollection) {
@@ -55,7 +55,7 @@
        * @returns {Promise}
        */
       this.getConfigData = function (configName, isCollection) {
-        var url = config.configDataUrl;
+        var url = restUrls.configDataUrl;
 
         if (angular.isString(configName)) {
           url += "?configName=" + configName;
@@ -77,7 +77,7 @@
        */
       this.saveConfigData = function (configName, isCollection, configs) {
         var configData = buildConfigData(configs, isCollection);
-        var url = config.configPersistUrl + "?configName=" + configName;
+        var url = restUrls.configPersistUrl + "?configName=" + configName;
 
         if (isCollection) {
           url += "&collection=true";
@@ -90,7 +90,7 @@
        * @returns {Promise}
        */
       this.deleteConfigData =  function (configName) {
-        var url = config.configPersistUrl + "?configName=" + configName;
+        var url = restUrls.configPersistUrl + "?configName=" + configName;
         return $http({
           method: "DELETE",
           url: url
@@ -98,12 +98,12 @@
       }
     }
 
-    this.setConfig = function (configData) {
-      config = configData;
+    this.setRestUrls = function (restUrlsConfig) {
+      restUrls = restUrlsConfig;
     };
 
-    this.$get = ["$http", "$q", function($http, $q) {
-      return new DataService($http, $q, config);
+    this.$get = ["$http", function($http) {
+      return new DataService($http, restUrls);
     }];
   }
 

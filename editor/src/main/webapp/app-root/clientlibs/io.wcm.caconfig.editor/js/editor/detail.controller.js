@@ -31,16 +31,15 @@
     $scope.isCollection = angular.isString($route.current.params.isCollection) &&
       ($route.current.params.isCollection !== "");
 
+    // If detail view is loaded directly via deeplink, bypassing overview
     if (!$rootScope.contextPath || !$rootScope.configNamesCollection.length) {
       $rootScope.getConfigNames()
         .then(function success() {
-          $scope.configLabel = dataService.getConfigLabel($scope.configName, $rootScope.configNamesCollection);
-          $rootScope.title = $rootScope.i18n.title + ": " + $scope.configLabel;
+          updateTitle();
         });
     }
     else {
-      $scope.configLabel = dataService.getConfigLabel($scope.configName, $rootScope.configNamesCollection);
-      $rootScope.title = $rootScope.i18n.title + ": " + $scope.configLabel;
+      updateTitle();
     }
 
     // Load Configuration Details
@@ -52,6 +51,22 @@
         $rootScope.errorModal.show();
       }
     );
+
+    // Storage for collection property "schemas"
+    if (!$rootScope.collectionProperties) {
+      $rootScope.collectionProperties = {};
+    }
+
+    if ($scope.isCollection && !$rootScope.collectionProperties[$scope.configName]) {
+      dataService.getConfigData($scope.configName).then(
+        function success(result){
+          $rootScope.collectionProperties[$scope.configName] = result.data[0].properties;
+        },
+        function error() {
+          $rootScope.errorModal.show();
+        }
+      );
+    }
 
     $scope.save = function() {
       dataService.saveConfigData($scope.configName, $scope.isCollection, $scope.configs)
@@ -70,10 +85,13 @@
     }
 
     $rootScope.addItem = function() {
+      var configName = $scope.configName;
       $scope.configs.push({
         collectionItemName: $("#caconfig-collectionItemName").val(),
-        configName: $scope.configName
+        configName: configName,
+        properties: angular.copy($rootScope.collectionProperties[configName])
       });
+      $("#caconfig-collectionItemName").val("");
     }
 
     $scope.removeConfig = function() {
@@ -95,5 +113,10 @@
         }
       );
     };
+
+    function updateTitle() {
+      $scope.configLabel = dataService.getConfigLabel($scope.configName, $rootScope.configNamesCollection);
+      $rootScope.title = $rootScope.i18n.title + ": " + $scope.configLabel;
+    }
   };
 })(angular);
