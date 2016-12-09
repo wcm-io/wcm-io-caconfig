@@ -48,11 +48,6 @@ public class ConfigBindingsValueProvider implements BindingsValuesProvider {
    */
   public static final String BINDING_VARIABLE = "config";
 
-  /**
-   * Prefix for override request header
-   */
-  public static final String REQUEST_HEADER_PREFIX = "config.override.";
-
   @ObjectClassDefinition(name = "wcm.io Configuration Compatibility: Bindings Value Provider",
       description = "Binds a script variable \"config\" to the current configuration value map to be used in Sightly.")
   static @interface Config {
