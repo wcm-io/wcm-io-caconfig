@@ -81,7 +81,6 @@
       <artifactId>io.wcm.sling.commons</artifactId>
       <version>0.6.4</version>
       <scope>compile</scope>
-      <optional>true</optional>
     </dependency>
 
     <dependency>
