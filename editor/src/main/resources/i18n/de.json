@@ -26,7 +26,11 @@
       "close": "Schließen",
       "deleteTitle": "Konfiguration löschen",
       "delete": "Diese Konfiguration wird gelöscht.",
-      "error": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren."
+      "error": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren.",
+      "tooltip": {
+        "allowed": "Erlaubte Zeichen: A-Z a-z 0-9 - _",
+        "unique": "Dieser Name ist bereits in Verwendung."
+      }
     }
   }
 }
