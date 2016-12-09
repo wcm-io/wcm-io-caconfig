@@ -64,23 +64,28 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
   static @interface Config {
 
     @AttributeDefinition(name = "Templates",
-        description = "List of template paths allowed for context root pages.")
-    String[] templatePaths() default {};
+        description = "List of template paths allowed for context root pages.",
+        required = true)
+    String[] templatePaths();
 
     @AttributeDefinition(name = "Min. Level",
-        description = "Minimum allowed absolute parent level. Example: Absolute parent level 1 of '/foo/bar/test' is '/foo/bar'.")
+        description = "Minimum allowed absolute parent level. Example: Absolute parent level 1 of '/foo/bar/test' is '/foo/bar'.",
+        required = true)
     int minLevel() default 1;
 
     @AttributeDefinition(name = "Max. Level",
-        description = "Maximum allowed absolute parent level. Example: Absolute parent level 1 of '/foo/bar/test' is '/foo/bar'.")
+        description = "Maximum allowed absolute parent level. Example: Absolute parent level 1 of '/foo/bar/test' is '/foo/bar'.",
+        required = true)
     int maxLevel() default 5;
 
     @AttributeDefinition(name = "Context path expression",
-        description = "Expression to match context paths. Only context paths matching this expression are allowed.")
+        description = "Expression to match context paths. Only context paths matching this expression are allowed.",
+        required = true)
     String contextPathRegex() default "^(/content/.+)$";
 
     @AttributeDefinition(name = "Config path pattern",
-        description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.")
+        description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.",
+        required = true)
     String configPathPattern() default "/conf$1";
 
     @AttributeDefinition(name = "Application ID",
@@ -90,6 +95,8 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     @AttributeDefinition(name = "Service Ranking",
         description = "Priority of configuration override providers (higher = higher priority).")
     int service_ranking() default 0;
+
+    String webconsole_configurationFactory_nameHint() default "{applicationId} templates={templatePaths}";
 
   }
 

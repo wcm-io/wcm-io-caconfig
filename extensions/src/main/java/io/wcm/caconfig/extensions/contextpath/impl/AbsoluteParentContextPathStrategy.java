@@ -58,15 +58,18 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
   static @interface Config {
 
     @AttributeDefinition(name = "Absolute Levels",
-        description = "List of absolute parent levels. Example: Absolute parent level 1 of '/foo/bar/test' is '/foo/bar'.")
-    int[] levels() default {};
+        description = "List of absolute parent levels. Example: Absolute parent level 1 of '/foo/bar/test' is '/foo/bar'.",
+        required = true)
+    int[] levels();
 
     @AttributeDefinition(name = "Context path expression",
-        description = "Expression to match context paths. Only context paths matching this expression are allowed.")
+        description = "Expression to match context paths. Only context paths matching this expression are allowed.",
+        required = true)
     String contextPathRegex() default "^(/content/.+)$";
 
     @AttributeDefinition(name = "Config path pattern",
-        description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.")
+        description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.",
+        required = true)
     String configPathPattern() default "/conf$1";
 
     @AttributeDefinition(name = "Application ID",
@@ -76,6 +79,8 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     @AttributeDefinition(name = "Service Ranking",
         description = "Priority of configuration override providers (higher = higher priority).")
     int service_ranking() default 0;
+
+    String webconsole_configurationFactory_nameHint() default "{applicationId} levels={levels}";
 
   }
 
