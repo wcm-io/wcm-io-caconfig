@@ -32,6 +32,13 @@ public final class ApplicationInfo implements Comparable<ApplicationInfo> {
 
   /**
    * @param applicationId Application id
+   */
+  public ApplicationInfo(String applicationId) {
+    this(applicationId, applicationId);
+  }
+
+  /**
+   * @param applicationId Application id
    * @param label Label
    */
   public ApplicationInfo(String applicationId, String label) {

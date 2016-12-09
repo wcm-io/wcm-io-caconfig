@@ -28,6 +28,7 @@ import org.osgi.annotation.versioning.ConsumerType;
  * Abstract implementation of {@link ApplicationProvider} that supports detecting an application based
  * on one or multiple fixed paths subtrees.
  */
+// TODO: replace this abstract class with configurable service?
 @ConsumerType
 public abstract class AbstractPathApplicationProvider implements ApplicationProvider {
 
