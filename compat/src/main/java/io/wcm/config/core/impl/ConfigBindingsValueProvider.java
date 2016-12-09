@@ -38,7 +38,7 @@ import io.wcm.config.api.Configuration;
  */
 @Component(immediate = true, service = BindingsValuesProvider.class, property = {
     "javax.script.name=sightly",
-    Constants.SERVICE_RANKING + "=100"
+    Constants.SERVICE_RANKING + ":Integer=100"
 })
 @Designate(ocd = ConfigBindingsValueProvider.Config.class)
 public class ConfigBindingsValueProvider implements BindingsValuesProvider {

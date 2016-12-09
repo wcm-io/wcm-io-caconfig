@@ -37,8 +37,7 @@ import io.wcm.config.spi.ParameterOverrideProvider;
 /**
  * Provides parameter override map from OSGi factory configuration.
  */
-@Component(immediate = true, service = ParameterOverrideProvider.class,
-property = "webconsole.configurationFactory.nameHint={description}, enabled={enabled}")
+@Component(immediate = true, service = ParameterOverrideProvider.class)
 @Designate(ocd = OsgiConfigOverrideProvider.Config.class, factory = true)
 public final class OsgiConfigOverrideProvider implements ParameterOverrideProvider {
 
@@ -64,6 +63,8 @@ public final class OsgiConfigOverrideProvider implements ParameterOverrideProvid
 
     @AttributeDefinition(name = "Description", description = "This description is used for display in the web console.")
     String description();
+
+    String webconsole_configurationFactory_nameHint() default "{description}, enabled={enabled}";
 
   }
 

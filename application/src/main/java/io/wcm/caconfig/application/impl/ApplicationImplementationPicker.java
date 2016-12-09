@@ -38,7 +38,7 @@ import io.wcm.caconfig.application.ApplicationInfo;
  * </p>
  */
 @Component(immediate = true, service = ImplementationPicker.class, property = {
-    Constants.SERVICE_RANKING + "=1000"
+    Constants.SERVICE_RANKING + ":Integer=1000"
 })
 public class ApplicationImplementationPicker implements ImplementationPicker {
 
