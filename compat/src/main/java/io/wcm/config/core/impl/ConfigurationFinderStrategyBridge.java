@@ -69,7 +69,7 @@ public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
           String contextResourcePath = contextResourcePaths.next();
           Resource contextResource = resourceResolver.getResource(contextResourcePath);
           if (contextResource != null) {
-            log.trace("Found context path {}, configRef {}", resource.getPath(), null);
+            log.trace("+ Found context path {}, configRef {}", resource.getPath(), null);
             result.add(new ContextResource(contextResource, null));
           }
         }

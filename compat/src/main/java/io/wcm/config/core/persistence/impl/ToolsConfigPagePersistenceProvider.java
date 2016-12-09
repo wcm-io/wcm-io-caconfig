@@ -153,15 +153,24 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     Iterator<Resource> matchingResources = IteratorUtils.transformedIterator(paths, new Transformer() {
       @Override
       public Object transform(Object input) {
-        String path = (String)input;
-        Resource resource = resourceResolver.getResource(buildResourcePath(path, configName));
+        String configPath = buildResourcePath((String)input, configName);
+        Resource resource = resourceResolver.getResource(configPath);
         if (resource != null) {
-          log.trace("Matching config resource for inheritance chain: {}", resource.getPath());
+          log.trace("+ Found matching config resource for inheritance chain: {}", configPath);
+        }
+        else {
+          log.trace("- No matching config resource for inheritance chain: {}", configPath);
         }
         return resource;
       }
     });
-    return IteratorUtils.filteredIterator(matchingResources, PredicateUtils.notNullPredicate());
+    Iterator<Resource> result = IteratorUtils.filteredIterator(matchingResources, PredicateUtils.notNullPredicate());
+    if (result.hasNext()) {
+      return result;
+    }
+    else {
+      return null;
+    }
   }
 
   @Override
@@ -179,11 +188,11 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     Iterator<String> configRefs = findConfigRefs(resource);
     if (configRefs.hasNext()) {
       String configPath = buildResourcePath(configRefs.next(), configName);
-      log.trace("Building configuration path {} for resource {}: {}", configName, resource.getPath(), configPath);
+      log.trace("+ Building configuration path for name '{}' for resource {}: {}", configName, resource.getPath(), configPath);
       return configPath;
     }
     else {
-      log.trace("No configuration path {} found for resource {}.", configName, resource.getPath());
+      log.trace("- No configuration path for name '{}' found for resource {}", configName, resource.getPath());
       return null;
     }
   }
@@ -216,7 +225,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
         ContextResource contextResource = (ContextResource)input;
         if (contextResource.getConfigRef() == null) {
           String configPath = getConfigPagePath(contextResource.getResource().getPath());
-          log.trace("Found reference for context path {}: {}", contextResource.getResource().getPath(), configPath);
+          log.trace("+ Found reference for context path {}: {}", contextResource.getResource().getPath(), configPath);
           return configPath;
         }
         return null;
@@ -262,7 +271,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
       return parentProps;
     }
     Resource next = inheritanceChain.next();
-    log.trace("Property inheritance: Merge with properties from {}", next.getPath());
+    log.trace("! Property inheritance: Merge with properties from {}", next.getPath());
     Map<String, Object> merged = new HashMap<>(next.getValueMap());
     merged.putAll(parentProps);
     return getInheritedProperties(merged, inheritanceChain);
@@ -328,7 +337,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     Resource resource = resourceResolver.getResource(configResourcePath);
     if (resource != null) {
       try {
-        log.trace("Delete resource {}", resource.getPath());
+        log.trace("! Delete resource {}", resource.getPath());
         resourceResolver.delete(resource);
       }
       catch (PersistenceException ex) {
@@ -370,7 +379,9 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
   private Resource getOrCreateResource(ResourceResolver resourceResolver, String path, Map<String, Object> properties) {
     try {
       Resource resource = ResourceUtil.getOrCreateResource(resourceResolver, path, (String)null, (String)null, false);
-      replaceProperties(resource, properties);
+      if (properties != null) {
+        replaceProperties(resource, properties);
+      }
       return resource;
     }
     catch (PersistenceException ex) {
@@ -380,7 +391,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
 
   private void replaceProperties(Resource resource, Map<String, Object> properties) {
     if (log.isTraceEnabled()) {
-      log.trace("Replace properties of resource {} with {}", resource.getPath(), MapUtil.traceOutput(properties));
+      log.trace("! Store properties for resource {}: {}", resource.getPath(), MapUtil.traceOutput(properties));
     }
     ModifiableValueMap modValueMap = resource.adaptTo(ModifiableValueMap.class);
     // remove all existing properties that are not filterd
