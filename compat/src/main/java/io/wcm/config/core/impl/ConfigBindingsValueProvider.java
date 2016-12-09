@@ -58,7 +58,7 @@ public class ConfigBindingsValueProvider implements BindingsValuesProvider {
   static @interface Config {
 
     @AttributeDefinition(name = "Enabled", description = "Enable provider.")
-    boolean enabled() default false;
+    boolean enabled() default true;
 
   }
 
