@@ -14,7 +14,7 @@
     </thead>
     <tbody>
       <tr class="coral-Table-row" ng-repeat="config in configNamesCollection | filter:{exists:true}"
-          ng-click="go(config.configName + (config.collection ? '/c' : '') )" ng-cloak>
+          ng-click="go(config.configName)" ng-cloak>
         <td class="coral-Table-cell">
           <i class="coral-Icon coral-Icon--sizeS"
             ng-class="{'coral-Icon--page': !config.collection, 'coral-Icon--pages': config.collection}"></i>

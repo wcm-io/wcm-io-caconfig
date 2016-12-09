@@ -38,6 +38,15 @@
         return $http.get(restUrls.configNamesUrl);
       };
 
+      this.isCollection = function(configName, configNamesCollection) {
+        var config = _.find(configNamesCollection, {configName: configName});
+
+        if (!angular.isUndefined(config) && config.collection) {
+          return true;
+        }
+        return false;
+      };
+
       this.getConfigLabel = function(configName, configNamesCollection) {
         var configLabel = configName;
         var config = _.find(configNamesCollection, {configName: configName});

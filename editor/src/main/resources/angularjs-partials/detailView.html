@@ -7,7 +7,7 @@
 
   <p>{{i18n.contextPath}}: <code>{{contextPath}}</code></p>
 
-  <div ng-repeat="config in configs" class="caconfig-configurationDetails" ng-hide="config.isCollectionRoot && (!config.properties || !config.properties.length)"  ng-cloak>
+  <div ng-repeat="config in configs | filter:{isCollectionRoot:'!true'}" class="caconfig-configurationDetails" ng-cloak>
     <h3 class="config-caption">
       {{!isCollection || config.isCollectionRoot ? configLabel : (configLabel + ': ' + config.collectionItemName) }}
     </h3>
@@ -54,7 +54,7 @@
     </table>
 
     <p><button class="coral-Button coral-Button--warning"
-      ng-hide="!isCollection || config.isCollectionRoot" ng-click="removeCollectionItem($index)" >{{i18n.button.deleteItem}}</button></p>
+      ng-hide="!isCollection || config.isCollectionRoot" ng-click="removeCollectionItem($index + 1)" >{{i18n.button.deleteItem}}</button></p>
 
   </div>
 

@@ -27,7 +27,7 @@
 
   function configureRoutes($routeProvider) {
     $routeProvider
-    .when("/:configName/:isCollection?", {
+    .when("/:configName*", {
       templateUrl: "detailView.html",
       controller: "DetailController"
     })

@@ -37,7 +37,7 @@
                 </button>
                 <select class="coral-Select-select">
                   <option ng-repeat="item in configNamesCollection | filter:{exists:false}"
-                    value="{{item.collection ? item.configName + '/c' : item.configName}}" >{{item.label || item.configName}}</option>
+                    value="{{item.configName}}" >{{item.label || item.configName}}</option>
                 </select>
               </span>
             </section>
