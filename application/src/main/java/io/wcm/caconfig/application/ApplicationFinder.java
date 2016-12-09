@@ -19,7 +19,7 @@
  */
 package io.wcm.caconfig.application;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
@@ -43,6 +43,6 @@ public interface ApplicationFinder {
    * Get all applications that are registered in the system.
    * @return Set of application instances
    */
-  Set<ApplicationInfo> getAll();
+  Collection<ApplicationInfo> getAll();
 
 }
