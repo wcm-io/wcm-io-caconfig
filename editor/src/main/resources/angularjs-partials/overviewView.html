@@ -4,7 +4,7 @@
 
   <p>{{i18n.contextPath}}: <code>{{contextPath}}</code></p>
 
-  <table class="coral-Table coral-Table--hover" ng-cloak>
+  <table class="coral-Table coral-Table--hover" ng-show="(configNamesCollection | filter:{exists:true}).length" ng-cloak>
     <thead>
       <tr class="coral-Table-row">
         <th class="coral-Table-headerCell" style="width:1%"></th>

@@ -20,7 +20,15 @@
 (function (angular) {
   "use strict";
 
-  angular.module("io.wcm.caconfig.widgets", [
-    "io.wcm.caconfig.utilities"
-  ]);
+  angular.module("io.wcm.caconfig.modals")
+    .controller("AddConfigController", AddConfigController);
+
+  AddConfigController.$inject = ["$rootScope", "$scope"];
+
+  function AddConfigController($rootScope, $scope) {
+    $rootScope.addConfigModal = new CUI.Modal({
+      element: "#caconfig-addConfigModal",
+      visible: false
+    });
+  }
 })(angular);

@@ -20,7 +20,16 @@
 (function (angular) {
   "use strict";
 
-  angular.module("io.wcm.caconfig.widgets", [
-    "io.wcm.caconfig.utilities"
-  ]);
+  angular.module("io.wcm.caconfig.modals")
+    .controller("ErrorController", ErrorController);
+
+  ErrorController.$inject = ["$rootScope"];
+
+  function ErrorController($rootScope) {
+    $rootScope.errorModal = new CUI.Modal({
+      element: "#caconfig-errorModal",
+      type: "error",
+      visible: false
+    });
+  }
 })(angular);

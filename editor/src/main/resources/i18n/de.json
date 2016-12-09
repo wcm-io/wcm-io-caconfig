@@ -25,8 +25,7 @@
       "addTitle": "Konfiguration hinzufügen",
       "close": "Schließen",
       "deleteTitle": "Konfiguration löschen",
-      "delete": "Diese Konfiguration wird gelöscht:",
-      "success": "Speichern erfolgreich.",
+      "delete": "Diese Konfiguration wird gelöscht.",
       "error": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren."
     }
   }

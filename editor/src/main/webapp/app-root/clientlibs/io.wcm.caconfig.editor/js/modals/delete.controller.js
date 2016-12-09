@@ -20,7 +20,16 @@
 (function (angular) {
   "use strict";
 
-  angular.module("io.wcm.caconfig.widgets", [
-    "io.wcm.caconfig.utilities"
-  ]);
+  angular.module("io.wcm.caconfig.modals")
+    .controller("DeleteController", DeleteController);
+
+  DeleteController.$inject = ["$rootScope"];
+
+  function DeleteController($rootScope) {
+    $rootScope.deleteModal = new CUI.Modal({
+      element: "#caconfig-deleteModal",
+      type: "notice",
+      visible: false
+    });
+  }
 })(angular);

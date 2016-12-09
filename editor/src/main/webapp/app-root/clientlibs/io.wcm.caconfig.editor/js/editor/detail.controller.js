@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, _) {
   "use strict";
 
   angular.module("io.wcm.caconfig.editor")
@@ -41,29 +41,38 @@
     }
 
     $scope.save = function() {
-      dataService.saveConfigData($scope.configName, $scope.isCollection, $scope.configs)
-        .then(
-          function success() {
-            $rootScope.go();
-          },
-          function error() {
-            $scope.errorModal.show();
-          }
-        );
+      if ($scope.configs.length === 0 ||
+          $scope.configs.length === 1 && $scope.configs[0].isCollectionRoot) {
+        $scope.removeConfig();
+      }
+      else {
+        dataService.saveConfigData($scope.configName, $scope.isCollection, $scope.configs)
+          .then(
+            function success() {
+              $rootScope.go();
+            },
+            function error() {
+              $scope.errorModal.show();
+            }
+          );
+      }
     };
 
     $scope.addCollectionItem = function() {
       $scope.addCollectionItemModal.show();
     }
 
+    $rootScope.getCollectionItemNames = function() {
+      return _.map($scope.configs.slice(1), "collectionItemName");
+    }
+
     $rootScope.addItem = function() {
       var configName = $scope.configName;
       $scope.configs.push({
-        collectionItemName: $("#caconfig-collectionItemName").val(),
+        collectionItemName: $("#caconfig-collectionItemName").val().trim(),
         configName: configName,
         properties: angular.copy($rootScope.collectionProperties[configName])
       });
-      $("#caconfig-collectionItemName").val("");
     }
 
     $scope.removeConfig = function() {
@@ -87,8 +96,9 @@
     };
 
     function init() {
-      updateTitle();
       $scope.isCollection = dataService.isCollection($scope.configName, $rootScope.configNamesCollection);
+      $scope.configLabel = dataService.getConfigLabel($scope.configName, $rootScope.configNamesCollection);
+      $rootScope.title = $rootScope.i18n.title + ": " + $scope.configLabel;
 
       // Load Configuration Details
       dataService.getConfigData($scope.configName, $scope.isCollection).then(
@@ -116,10 +126,5 @@
         );
       }
     }
-
-    function updateTitle() {
-      $scope.configLabel = dataService.getConfigLabel($scope.configName, $rootScope.configNamesCollection);
-      $rootScope.title = $rootScope.i18n.title + ": " + $scope.configLabel;
-    }
   };
-})(angular);
+})(angular, _);

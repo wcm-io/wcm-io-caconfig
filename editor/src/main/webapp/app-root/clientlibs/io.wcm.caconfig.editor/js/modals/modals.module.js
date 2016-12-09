@@ -20,7 +20,20 @@
 (function (angular) {
   "use strict";
 
-  angular.module("io.wcm.caconfig.widgets", [
-    "io.wcm.caconfig.utilities"
-  ]);
+  angular.module("io.wcm.caconfig.modals", [
+    "io.wcm.caconfig.templates"
+  ])
+  .run(initRun);
+
+  initRun.$inject = ["$rootScope"];
+
+  function initRun($rootScope) {
+    $rootScope.modalTemplates = {
+      addCollectionItem: "addCollectionItemModal.html",
+      addConfig: "addConfigModal.html",
+      delete: "deleteModal.html",
+      error: "errorModal.html"
+    };
+  }
+
 })(angular);

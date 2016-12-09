@@ -29,8 +29,8 @@
   width: 100%;
 }
 
-form#caconfig-configuration.ng-dirty textarea.ng-dirty.ng-invalid,
-form#caconfig-configuration.ng-dirty input.ng-dirty.ng-invalid {
+form.ng-dirty textarea.ng-dirty.ng-invalid,
+form.ng-dirty input.ng-dirty.ng-invalid {
   border: 1px solid red;
 }
 
@@ -75,4 +75,13 @@ span.wcm-io-editor-pathbrowser {
 
 span.wcm-io-editor.endor-Brand {
   cursor: default;
+}
+
+#caconfig-addConfigModal .caconfig-addConfigModal-body {
+  overflow-y: visible;
+}
+
+.caconfig-delete-item {
+  cursor: pointer;
+  float: right;
 }
