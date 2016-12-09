@@ -60,8 +60,8 @@
     };
 
     $rootScope.addConfig = function() {
-      var configUrl = $rootScope.configurationSelect.getValue();
-      $rootScope.go(configUrl);
+      var configName = $rootScope.configurationSelect.getValue();
+      $rootScope.go(configName);
     };
   }
 })(angular);

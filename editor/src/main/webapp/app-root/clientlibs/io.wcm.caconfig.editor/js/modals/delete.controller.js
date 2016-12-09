@@ -20,21 +20,16 @@
 (function (angular) {
   "use strict";
 
-  angular.module("io.wcm.caconfig.editor")
-    .config(configureRoutes);
+  angular.module("io.wcm.caconfig.modals")
+    .controller("DeleteController", DeleteController);
 
-  configureRoutes.$inject = ["$routeProvider"];
+  DeleteController.$inject = ["$rootScope"];
 
-  function configureRoutes($routeProvider) {
-    $routeProvider
-    .when("/:configName*", {
-      templateUrl: "detailView.html",
-      controller: "DetailController"
-    })
-    .otherwise({
-      templateUrl: "overviewView.html",
-      controller: "OverviewController"
+  function DeleteController($rootScope) {
+    $rootScope.deleteModal = new CUI.Modal({
+      element: "#caconfig-deleteModal",
+      type: "notice",
+      visible: false
     });
   }
-
 })(angular);

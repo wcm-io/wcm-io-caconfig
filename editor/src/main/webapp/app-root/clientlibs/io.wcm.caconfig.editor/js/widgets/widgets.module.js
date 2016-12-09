@@ -21,7 +21,6 @@
   "use strict";
 
   angular.module("io.wcm.caconfig.widgets", [
-    "io.wcm.caconfig.utilities",
-    "io.wcm.caconfig.templates"
+    "io.wcm.caconfig.utilities"
   ]);
 })(angular);

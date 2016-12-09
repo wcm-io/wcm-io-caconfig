@@ -20,21 +20,15 @@
 (function (angular) {
   "use strict";
 
-  angular.module("io.wcm.caconfig.editor")
-    .config(configureRoutes);
+  angular.module("io.wcm.caconfig.modals")
+    .controller("AddConfigController", AddConfigController);
 
-  configureRoutes.$inject = ["$routeProvider"];
+  AddConfigController.$inject = ["$rootScope", "$scope"];
 
-  function configureRoutes($routeProvider) {
-    $routeProvider
-    .when("/:configName*", {
-      templateUrl: "detailView.html",
-      controller: "DetailController"
-    })
-    .otherwise({
-      templateUrl: "overviewView.html",
-      controller: "OverviewController"
+  function AddConfigController($rootScope, $scope) {
+    $rootScope.addConfigModal = new CUI.Modal({
+      element: "#caconfig-addConfigModal",
+      visible: false
     });
   }
-
 })(angular);

@@ -28,27 +28,6 @@
   initRun.$inject = ["$rootScope", "$location", "dataService"];
 
   function initRun($rootScope, $location, dataService) {
-    $rootScope.addConfigModal = new CUI.Modal({
-      element: "#caconfig-addConfigModal",
-      visible: false
-    });
-
-    $rootScope.addCollectionItemModal = new CUI.Modal({
-      element: "#caconfig-addCollectionItemModal",
-      visible: false
-    });
-
-    $rootScope.deleteModal = new CUI.Modal({
-      element: "#caconfig-deleteModal",
-      type: "notice",
-      visible: false
-    });
-
-    $rootScope.errorModal = new CUI.Modal({
-      element: "#caconfig-errorModal",
-      type: "error",
-      visible: false
-    });
 
     $rootScope.go = function(path) {
       path = path ? String(path) : "";

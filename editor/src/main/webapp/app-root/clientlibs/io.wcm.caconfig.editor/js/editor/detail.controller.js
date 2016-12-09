@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, _) {
   "use strict";
 
   angular.module("io.wcm.caconfig.editor")
@@ -28,70 +28,51 @@
   function DetailController($rootScope, $scope, $route, dataService) {
     $scope.configs = [];
     $scope.configName = $route.current.params.configName;
-    $scope.isCollection = angular.isString($route.current.params.isCollection) &&
-      ($route.current.params.isCollection !== "");
 
-    // If detail view is loaded directly via deeplink, bypassing overview
+    // If detail view is loaded directly via deeplink, we need to first getConfigNames
     if (!$rootScope.contextPath || !$rootScope.configNamesCollection.length) {
       $rootScope.getConfigNames()
         .then(function success() {
-          updateTitle();
+          init();
         });
     }
     else {
-      updateTitle();
-    }
-
-    // Load Configuration Details
-    dataService.getConfigData($scope.configName, $scope.isCollection).then(
-      function success(result){
-        $scope.configs = result.data;
-      },
-      function error() {
-        $rootScope.errorModal.show();
-      }
-    );
-
-    // Storage for collection property "schemas"
-    if (!$rootScope.collectionProperties) {
-      $rootScope.collectionProperties = {};
-    }
-
-    if ($scope.isCollection && !$rootScope.collectionProperties[$scope.configName]) {
-      dataService.getConfigData($scope.configName).then(
-        function success(result){
-          $rootScope.collectionProperties[$scope.configName] = result.data[0].properties;
-        },
-        function error() {
-          $rootScope.errorModal.show();
-        }
-      );
+      init();
     }
 
     $scope.save = function() {
-      dataService.saveConfigData($scope.configName, $scope.isCollection, $scope.configs)
-        .then(
-          function success() {
-            $rootScope.go();
-          },
-          function error() {
-            $scope.errorModal.show();
-          }
-        );
+      if ($scope.configs.length === 0 ||
+          $scope.configs.length === 1 && $scope.configs[0].isCollectionRoot) {
+        $scope.removeConfig();
+      }
+      else {
+        dataService.saveConfigData($scope.configName, $scope.isCollection, $scope.configs)
+          .then(
+            function success() {
+              $rootScope.go();
+            },
+            function error() {
+              $scope.errorModal.show();
+            }
+          );
+      }
     };
 
     $scope.addCollectionItem = function() {
       $scope.addCollectionItemModal.show();
     }
 
+    $rootScope.getCollectionItemNames = function() {
+      return _.map($scope.configs.slice(1), "collectionItemName");
+    }
+
     $rootScope.addItem = function() {
       var configName = $scope.configName;
       $scope.configs.push({
-        collectionItemName: $("#caconfig-collectionItemName").val(),
+        collectionItemName: $("#caconfig-collectionItemName").val().trim(),
         configName: configName,
         properties: angular.copy($rootScope.collectionProperties[configName])
       });
-      $("#caconfig-collectionItemName").val("");
     }
 
     $scope.removeConfig = function() {
@@ -114,9 +95,36 @@
       );
     };
 
-    function updateTitle() {
+    function init() {
+      $scope.isCollection = dataService.isCollection($scope.configName, $rootScope.configNamesCollection);
       $scope.configLabel = dataService.getConfigLabel($scope.configName, $rootScope.configNamesCollection);
       $rootScope.title = $rootScope.i18n.title + ": " + $scope.configLabel;
+
+      // Load Configuration Details
+      dataService.getConfigData($scope.configName, $scope.isCollection).then(
+        function success(result){
+          $scope.configs = result.data;
+        },
+        function error() {
+          $rootScope.errorModal.show();
+        }
+      );
+
+      // Storage for collection property "schemas"
+      if (!$rootScope.collectionProperties) {
+        $rootScope.collectionProperties = {};
+      }
+
+      if ($scope.isCollection && !$rootScope.collectionProperties[$scope.configName]) {
+        dataService.getConfigData($scope.configName).then(
+          function success(result){
+            $rootScope.collectionProperties[$scope.configName] = result.data[0].properties;
+          },
+          function error() {
+            $rootScope.errorModal.show();
+          }
+        );
+      }
     }
   };
-})(angular);
+})(angular, _);

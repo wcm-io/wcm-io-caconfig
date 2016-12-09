@@ -22,6 +22,7 @@
 
   angular.module("io.wcm.caconfig.app", [
     "io.wcm.caconfig.widgets",
+    "io.wcm.caconfig.modals",
     "io.wcm.caconfig.editor"
   ]);
 

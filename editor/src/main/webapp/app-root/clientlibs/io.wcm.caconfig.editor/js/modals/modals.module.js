@@ -20,21 +20,20 @@
 (function (angular) {
   "use strict";
 
-  angular.module("io.wcm.caconfig.editor")
-    .config(configureRoutes);
+  angular.module("io.wcm.caconfig.modals", [
+    "io.wcm.caconfig.templates"
+  ])
+  .run(initRun);
 
-  configureRoutes.$inject = ["$routeProvider"];
+  initRun.$inject = ["$rootScope"];
 
-  function configureRoutes($routeProvider) {
-    $routeProvider
-    .when("/:configName*", {
-      templateUrl: "detailView.html",
-      controller: "DetailController"
-    })
-    .otherwise({
-      templateUrl: "overviewView.html",
-      controller: "OverviewController"
-    });
+  function initRun($rootScope) {
+    $rootScope.modalTemplates = {
+      addCollectionItem: "addCollectionItemModal.html",
+      addConfig: "addConfigModal.html",
+      delete: "deleteModal.html",
+      error: "errorModal.html"
+    };
   }
 
 })(angular);
