@@ -1,6 +1,6 @@
 ## About Configuration Editor
 
-Configuration Editor Template for AEM.
+Context-Aware Configuration Editor Template for AEM.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor)
 
@@ -14,10 +14,8 @@ Configuration Editor Template for AEM.
 
 ### Overview
 
-The configuration editor can be used by AEM editors to read and write configuration data in the current
-configuration scope.
+The configuration editor can be used by AEM author users to read and write configuration data mapped to the current context pages.
 
-It supports configuration parameter inheritance as well.
 
 
 [usage]: usage.html

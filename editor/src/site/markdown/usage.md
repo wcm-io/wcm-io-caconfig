@@ -4,15 +4,9 @@
 
 ![Configuration levels](images/configuration-editor.png)
 
-The parameters displayed in the editor are fetched dynamically from the parameter providers.
-
 The editor supports:
 
-- Filtering parameters by parameter group and/or application
-- Entering parameter values using different widgets, e.g. text field, checkbox, multi value field
-- Controlling parameter inheritance from ancestor configuration levels
-- Locking a parameter value on this level so it cannot be overwritten on decendant configuration levels
-- Display parameter documentation in a separate flyout
+- TBD
 
 The editor is based on AngularJS and CoralUI.
 
@@ -28,10 +22,9 @@ Only the template has to be defined, the page component resource type can be ref
 ```json
 {
   "jcr:primaryType": "cq:Template",
-  "jcr:title": "wcm.io Sample Configuration Editor",
+  "jcr:title": "Configuration Editor",
 
-  "allowedPaths": "^/content/[^/]+/[^/]+/tools(/.*)?$",
-  "allowedChildren": "",
+  "allowedPaths": "^/content(/.*)?$",
 
   "jcr:content": {
     "jcr:primaryType": "cq:PageContent",
