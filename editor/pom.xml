@@ -30,9 +30,9 @@
   </parent>
 
   <groupId>io.wcm</groupId>
-  <artifactId>io.wcm.caconfig.editor</artifactId>
+  <artifactId>io.wcm.caconfig.editor.parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <packaging>bundle</packaging>
+  <packaging>pom</packaging>
 
   <name>Context-Aware Configuration Editor</name>
   <description>Context-Aware Configuration Editor Template for AEM.</description>
@@ -47,166 +47,35 @@
   <properties>
     <site.url.module.prefix>caconfig/editor</site.url.module.prefix>
   </properties>
-
-  <dependencies>
-
-    <dependency>
-      <groupId>org.apache.sling</groupId>
-      <artifactId>org.apache.sling.models.api</artifactId>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.sling</groupId>
-      <artifactId>org.apache.sling.caconfig.api</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.sling</groupId>
-      <artifactId>org.apache.sling.caconfig.spi</artifactId>
-      <version>1.1.1-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.sling</groupId>
-      <artifactId>org.apache.sling.caconfig.impl</artifactId>
-      <version>1.1.1-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.skyscreamer</groupId>
-      <artifactId>jsonassert</artifactId>
-      <version>1.4.0</version>
-      <scope>test</scope>
-    </dependency>
-
-  </dependencies>
+  
+  <modules>
+    <module>bundle</module>
+    <module>package</module>
+  </modules>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>false</filtering>
-        <excludes>
-          <!-- those resources are processed by the i18n-maven-plugin -->
-          <exclude>i18n/**</exclude>
-          <!-- processed by grund html2js -->
-          <exclude>angularjs-partials/**</exclude>
-        </excludes>
-      </resource>
-      <!-- copy webapp resources to SLING-INF/app-root -->
-      <resource>
-        <directory>src/main/webapp</directory>
-        <targetPath>SLING-INF</targetPath>
-        <filtering>false</filtering>
-      </resource>
-    </resources>
     <plugins>
 
+      <!-- Do not generate eclipse project files -->
       <plugin>
         <groupId>io.wcm.devops.maven.plugins</groupId>
         <artifactId>eclipse-maven-plugin</artifactId>
+        <inherited>true</inherited>
         <configuration>
-          <addVersionToProjectName>false</addVersionToProjectName>
+          <skip>true</skip>
         </configuration>
       </plugin>
 
+      <!-- Do not deploy sources to repository -->
       <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
         <configuration>
-          <instructions>
-            <Sling-Initial-Content>
-              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/caconfig/editor
-            </Sling-Initial-Content>
-            <Sling-Model-Packages>
-              io.wcm.caconfig.editor.model
-            </Sling-Model-Packages>
-
-            <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
-            <Import-Package>
-              javax.inject;version="[0.0,2)",
-              *
-            </Import-Package>
-
-          </instructions>
+          <attach>false</attach>
         </configuration>
-      </plugin>
-
-      <!-- Nodejs Maven Plugin to run the templates compilation and tests -->
-      <plugin>
-        <groupId>io.wcm.maven.plugins</groupId>
-        <artifactId>nodejs-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>compile</phase>
-            <goals><goal>run</goal></goals>
-          </execution>
-        </executions>
-        <configuration>
-          <nodeJsVersion>4.4.7</nodeJsVersion>
-          <npmVersion>2.15.8</npmVersion>
-          <tasks>
-            <npmInstallTask>
-              <workingDirectory>${project.basedir}</workingDirectory>
-            </npmInstallTask>
-            <nodeJsTask>
-              <workingDirectory>${project.basedir}</workingDirectory>
-              <moduleName>grunt-cli</moduleName>
-              <executableName>grunt</executableName>
-              <arguments>
-                <argument>build</argument>
-              </arguments>
-            </nodeJsTask>
-          </tasks>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>io.wcm.maven.plugins</groupId>
-        <artifactId>i18n-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>transform</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
     </plugins>
-    <pluginManagement>
-      <plugins>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <configuration>
-            <excludePackageNames>*.impl,*.model</excludePackageNames>
-          </configuration>
-        </plugin>
-
-      </plugins>
-    </pluginManagement>
   </build>
 
   <distributionManagement>
