@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  wcm.io
+  %%
+  Copyright (C) 2016 wcm.io
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.wcm</groupId>
+    <artifactId>io.wcm.caconfig.parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../../parent/pom.xml</relativePath>
+  </parent>
+
+  <groupId>io.wcm</groupId>
+  <artifactId>io.wcm.caconfig.editor</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+
+  <name>Context-Aware Configuration Editor</name>
+  <description>Context-Aware Configuration Editor Template for AEM.</description>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.models.api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.caconfig.api</artifactId>
+      <version>1.0.1-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.caconfig.spi</artifactId>
+      <version>1.1.1-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.caconfig.impl</artifactId>
+      <version>1.1.1-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.skyscreamer</groupId>
+      <artifactId>jsonassert</artifactId>
+      <version>1.4.0</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <!-- those resources are processed by the i18n-maven-plugin -->
+          <exclude>i18n/**</exclude>
+          <!-- processed by grund html2js -->
+          <exclude>angularjs-partials/**</exclude>
+        </excludes>
+      </resource>
+      <!-- copy webapp resources to SLING-INF/app-root -->
+      <resource>
+        <directory>src/main/webapp</directory>
+        <targetPath>SLING-INF</targetPath>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+    <plugins>
+
+      <plugin>
+        <groupId>io.wcm.devops.maven.plugins</groupId>
+        <artifactId>eclipse-maven-plugin</artifactId>
+        <configuration>
+          <addVersionToProjectName>false</addVersionToProjectName>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Sling-Initial-Content>
+              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/caconfig/editor
+            </Sling-Initial-Content>
+            <Sling-Model-Packages>
+              io.wcm.caconfig.editor.model
+            </Sling-Model-Packages>
+
+            <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
+            <Import-Package>
+              javax.inject;version="[0.0,2)",
+              *
+            </Import-Package>
+
+          </instructions>
+        </configuration>
+      </plugin>
+
+      <!-- Nodejs Maven Plugin to run the templates compilation and tests -->
+      <plugin>
+        <groupId>io.wcm.maven.plugins</groupId>
+        <artifactId>nodejs-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals><goal>run</goal></goals>
+          </execution>
+        </executions>
+        <configuration>
+          <nodeJsVersion>4.4.7</nodeJsVersion>
+          <npmVersion>2.15.8</npmVersion>
+          <tasks>
+            <npmInstallTask>
+              <workingDirectory>${project.basedir}</workingDirectory>
+            </npmInstallTask>
+            <nodeJsTask>
+              <workingDirectory>${project.basedir}</workingDirectory>
+              <moduleName>grunt-cli</moduleName>
+              <executableName>grunt</executableName>
+              <arguments>
+                <argument>build</argument>
+              </arguments>
+            </nodeJsTask>
+          </tasks>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>io.wcm.maven.plugins</groupId>
+        <artifactId>i18n-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- do not generate site for this project -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <skipDeploy>true</skipDeploy>
+        </configuration>
+      </plugin>
+
+    </plugins>
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+            <excludePackageNames>*.impl,*.model</excludePackageNames>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+  </build>
+
+</project>

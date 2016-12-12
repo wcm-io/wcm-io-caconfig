@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  wcm.io
+  %%
+  Copyright (C) 2016 wcm.io
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.wcm</groupId>
+    <artifactId>io.wcm.caconfig.parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../../parent/pom.xml</relativePath>
+  </parent>
+
+  <groupId>io.wcm</groupId>
+  <artifactId>io.wcm.caconfig.editor.package</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>content-package</packaging>
+
+  <properties>
+    <content-package-name>io.wcm.caconfig.editor.package</content-package-name>
+    <content-package-group>wcm-io</content-package-group>
+    <dependency-includeArtifactIds>
+      io.wcm.caconfig.editor
+    </dependency-includeArtifactIds>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>io.wcm</groupId>
+      <artifactId>io.wcm.caconfig.editor</artifactId>
+      <scope>compile</scope>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <finalName>${content-package-name}-${project.version}</finalName>
+    <plugins>
+
+      <plugin>
+        <groupId>com.day.jcr.vault</groupId>
+        <artifactId>content-package-maven-plugin</artifactId>
+        <configuration>
+          <name>${content-package-name}</name>
+          <group>${content-package-group}</group>
+          <filters>
+            <filter>
+              <root>/apps/${content-package-name}</root>
+            </filter>
+          </filters>
+        </configuration>
+      </plugin>
+
+      <!-- copy the application's dependencies -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies-by-artifactid</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
+              <includeArtifactIds>${dependency-includeArtifactIds}</includeArtifactIds>
+              <outputDirectory>${project.build.directory}/vault-work/jcr_root/apps/${content-package-name}/install</outputDirectory>
+              <includeScope>compile</includeScope>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Do not generate eclipse project files -->
+      <plugin>
+        <groupId>io.wcm.devops.maven.plugins</groupId>
+        <artifactId>eclipse-maven-plugin</artifactId>
+        <inherited>true</inherited>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <!-- Do not deploy sources to repository -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <configuration>
+          <attach>false</attach>
+        </configuration>
+      </plugin>
+
+      <!-- do not generate site for this project -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <skipDeploy>true</skipDeploy>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
+  </build>
+</project>
