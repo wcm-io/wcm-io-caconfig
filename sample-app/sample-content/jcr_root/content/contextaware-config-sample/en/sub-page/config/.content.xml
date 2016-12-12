@@ -2,10 +2,8 @@
 <jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
     jcr:primaryType="cq:Page">
   <jcr:content
-      cq:template="/apps/contextaware-config-sample/templates/sample"
+      cq:template="/apps/wcm-io/caconfig/editor/templates/editor"
       jcr:primaryType="cq:PageContent"
-      jcr:title="Sub Page"
-      sling:configRef="/conf/contextaware-config-sample/sample/sub"
-      sling:resourceType="/apps/contextaware-config-sample/components/page/sample" />
-  <config />
+      jcr:title="Config"
+      sling:resourceType="/apps/wcm-io/caconfig/editor/components/page/editor" />
 </jcr:root>
