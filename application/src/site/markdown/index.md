@@ -7,7 +7,6 @@ API for configuring Application-specific bundles.
 
 ### Documentation
 
-* [API documentation][apidocs]
 * [Changelog][changelog]
 
 
@@ -17,5 +16,4 @@ API for configuring Application-specific bundles.
 TBD
 
 
-[apidocs]: apidocs/
 [changelog]: changes-report.html
