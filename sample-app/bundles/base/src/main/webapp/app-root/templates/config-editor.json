@@ -1,11 +1,11 @@
 {
   "jcr:primaryType": "cq:Template",
-  "jcr:title": "Context-Aware Sample Config Test Page",
+  "jcr:title": "Context-Aware Sample Config Editor",
 
   "allowedPaths": "^/content/contextaware-config-sample(/.+)?$",
 
   "jcr:content": {
     "jcr:primaryType": "cq:PageContent",
-    "sling:resourceType": "/apps/contextaware-config-sample/components/page/sample"
+    "sling:resourceType": "/apps/wcm-io/caconfig/editor/components/page/editor"
   }
 }
