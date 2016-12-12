@@ -36,7 +36,7 @@
 
   <properties>
     <content-package-name>contextaware-config-sample-complete</content-package-name>
-    <content-package-group>pv-sample</content-package-group>
+    <content-package-group>wcm-io-sample</content-package-group>
     <dependency-includeGroupIds>
       io.wcm
     </dependency-includeGroupIds>

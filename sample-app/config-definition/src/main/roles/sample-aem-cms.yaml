@@ -45,7 +45,7 @@ files:
 # Defines configuration parameters and default values
 config:
   contentPackage:
-    group: pv-sample
+    group: wcm-io-sample
     version: "${version}"
 
   # Log levels

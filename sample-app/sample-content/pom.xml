@@ -36,7 +36,7 @@
 
   <properties>
     <content-package-name>contextaware-config-sample-samplecontent</content-package-name>
-    <content-package-group>pv-sample</content-package-group>
+    <content-package-group>wcm-io-sample</content-package-group>
   </properties>
 
   <build>

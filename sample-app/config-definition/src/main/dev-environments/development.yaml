@@ -17,7 +17,7 @@ nodes:
     variant: aem-publish
 
 config:
-  contentPackage.group: pv-sample
+  contentPackage.group: wcm-io-sample
 
   # Log levels
   log:
