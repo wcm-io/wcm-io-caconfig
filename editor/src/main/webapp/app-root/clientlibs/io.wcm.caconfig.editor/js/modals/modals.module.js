@@ -31,7 +31,7 @@
     $rootScope.modalTemplates = {
       addCollectionItem: "addCollectionItemModal.html",
       addConfig: "addConfigModal.html",
-      delete: "deleteModal.html",
+      deleteConfig: "deleteConfigModal.html",
       error: "errorModal.html"
     };
   }

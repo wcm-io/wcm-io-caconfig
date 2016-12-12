@@ -6,7 +6,7 @@
       "add": "Add",
       "addItem": "Add Item",
       "cancel": "Cancel",
-      "delete": "Delete",
+      "deleteConfig": "Delete",
       "deleteCollection": "Delete Collection",
       "deleteItem": "Delete Item",
       "ok": "OK",
@@ -25,8 +25,8 @@
       "addTitle": "Add Configuration",
       "close": "Close",
       "deleteTitle": "Delete Configuration",
-      "delete": "This configuration will be deleted.",
-      "error": "An internal error occurred. Please try again.",
+      "deleteMessage": "This configuration will be deleted.",
+      "errorMessage": "An internal error occurred. Please try again.",
       "tooltip": {
         "allowed": "Allowed characters: A-Z a-z 0-9 - _",
         "unique": "This name is already in use."

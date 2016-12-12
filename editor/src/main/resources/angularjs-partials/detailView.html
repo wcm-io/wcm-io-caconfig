@@ -6,16 +6,19 @@
   <button class="coral-Button coral-Button--secondary" ng-click="go()" >{{i18n.button.cancel}}</button>
   <button ng-hide="!configs.length" ng-click="removeConfig()"
           class="coral-Button coral-Button--square coral-Button--default"
-          title="{{isCollection ? i18n.button.deleteCollection : i18n.button.delete}}">
+          title="{{isCollection ? i18n.button.deleteCollection : i18n.button.deleteConfig}}">
     <i class="coral-Icon coral-Icon--delete"></i>
   </button>
 
   <p>{{i18n.contextPath}}: <code>{{contextPath}}</code></p>
 
-  <div ng-repeat="config in configs | filter:{isCollectionRoot:'!true'}" class="caconfig-configurationDetails" ng-cloak>
-    <h3>
-      {{!isCollection || config.isCollectionRoot ? configLabel : (configLabel + ': ' + config.collectionItemName) }}
-      <span ng-hide="!isCollection || config.isCollectionRoot" ng-click="removeCollectionItem($index + 1)" title="{{i18n.button.deleteItem}}" class="coral-Icon coral-Icon--delete caconfig-delete-item"></span>
+  <h2>{{configLabel}}</h2>
+  <p>{{configDescription}}</p>
+
+  <div ng-repeat="config in configs" class="caconfig-configurationDetails" ng-cloak>
+    <h3 ng-hide="!isCollection">
+      {{config.collectionItemName}}
+      <span ng-click="removeCollectionItem($index)" title="{{i18n.button.deleteItem}}" class="coral-Icon coral-Icon--delete caconfig-delete-item"></span>
     </h3>
     <table class="coral-Table coral-Table--hover" ng-cloak>
       <thead>
@@ -61,6 +64,6 @@
 
   </div>
 
-  <p><button ng-hide="!isCollection || !configs.length" ng-click="addCollectionItem()" class="coral-Button coral-Button--primary">{{i18n.button.addItem}}</button></p>
+  <p><button ng-hide="!isCollection" ng-click="addCollectionItem()" class="coral-Button coral-Button--primary">{{i18n.button.addItem}}</button></p>
 
 </form>

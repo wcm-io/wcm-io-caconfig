@@ -61,7 +61,7 @@
   function MultifieldController($scope) {
     $scope.addNewValue = function(index) {
       $scope.$evalAsync(function() {
-        $scope.values.splice(index + 1, 0, { value: $scope.type === "text" ? "" : undefined });
+        $scope.values.splice(index + 1, 0, { value: undefined });
       });
     };
     $scope.removeValue = function(index) {

@@ -6,6 +6,12 @@ module.exports = function (grunt) {
       js: ['<%= pkg.config.jsPath %>*.js'],
       html: ['src/main/resources/angularjs-partials/*.html']
     },
+    min: {
+      dist: {
+        src: ['<%= pkg.config.jsPath %>**/*.js'],
+        dest: 'target/yui-compression-test/io.wcm.caconfig.editor.js'
+      }
+    },
     html2js: {
       templates: {
         options: {
@@ -20,12 +26,17 @@ module.exports = function (grunt) {
       html: {
         files: ['src/main/resources/angularjs-partials/*.html'],
         tasks: ['html2js:templates']
+      },
+      js: {
+        files: ['<%= pkg.config.jsPath %>**/*.js'],
+        tasks: ['min']
       }
     }
   });
+  grunt.loadNpmTasks('grunt-yui-compressor');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.registerTask('build', ['html2js:templates']);
+  grunt.registerTask('build', ['html2js:templates', 'min']);
   grunt.registerTask('default', ['build']);
 };
