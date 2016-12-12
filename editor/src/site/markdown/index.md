@@ -8,7 +8,6 @@ Context-Aware Configuration Editor Template for AEM.
 ### Documentation
 
 * [Usage][usage]
-* [API documentation][apidocs]
 * [Changelog][changelog]
 
 
@@ -19,5 +18,4 @@ The configuration editor can be used by AEM author users to read and write confi
 
 
 [usage]: usage.html
-[apidocs]: apidocs/
 [changelog]: changes-report.html
