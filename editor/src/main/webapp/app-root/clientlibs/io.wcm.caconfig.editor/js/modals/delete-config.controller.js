@@ -21,13 +21,13 @@
   "use strict";
 
   angular.module("io.wcm.caconfig.modals")
-    .controller("DeleteController", DeleteController);
+    .controller("DeleteConfigController", DeleteConfigController);
 
-  DeleteController.$inject = ["$rootScope"];
+  DeleteConfigController.$inject = ["$rootScope"];
 
-  function DeleteController($rootScope) {
-    $rootScope.deleteModal = new CUI.Modal({
-      element: "#caconfig-deleteModal",
+  function DeleteConfigController($rootScope) {
+    $rootScope.deleteConfigModal = new CUI.Modal({
+      element: "#caconfig-deleteConfigModal",
       type: "notice",
       visible: false
     });

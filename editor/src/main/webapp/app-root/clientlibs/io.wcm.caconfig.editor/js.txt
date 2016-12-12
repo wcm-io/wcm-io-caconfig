@@ -13,7 +13,7 @@ editor/overview.controller.js
 modals/modals.module.js
 modals/add-collection-item.controller.js
 modals/add-config.controller.js
-modals/delete.controller.js
+modals/delete-config.controller.js
 modals/error.controller.js
 
 widgets/widgets.module.js

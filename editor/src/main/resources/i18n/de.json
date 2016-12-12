@@ -6,7 +6,7 @@
       "add": "Hinzufügen",
       "addItem": "Element Hinzufügen",
       "cancel": "Abbrechen",
-      "delete": "Löschen",
+      "deleteConfig": "Löschen",
       "deleteCollection": "Sammlung Löschen",
       "deleteItem": "Element Löschen",
       "ok": "OK",
@@ -25,8 +25,8 @@
       "addTitle": "Konfiguration hinzufügen",
       "close": "Schließen",
       "deleteTitle": "Konfiguration löschen",
-      "delete": "Diese Konfiguration wird gelöscht.",
-      "error": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren.",
+      "deleteMessage": "Diese Konfiguration wird gelöscht.",
+      "errorMessage": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren.",
       "tooltip": {
         "allowed": "Erlaubte Zeichen: A-Z a-z 0-9 - _",
         "unique": "Dieser Name ist bereits in Verwendung."

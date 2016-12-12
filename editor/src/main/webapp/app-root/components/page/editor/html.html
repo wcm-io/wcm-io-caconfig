@@ -21,7 +21,7 @@
 
       <ng-include src="modalTemplates.addConfig"></ng-include>
       <ng-include src="modalTemplates.addCollectionItem"></ng-include>
-      <ng-include src="modalTemplates.delete"></ng-include>
+      <ng-include src="modalTemplates.deleteConfig"></ng-include>
       <ng-include src="modalTemplates.error"></ng-include>
 
       <meta data-sly-call="${clientLib.js @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
@@ -35,7 +35,7 @@
                 add: "${'io.wcm.caconfig.editor.button.add' @ i18n, context='text'}",
                 addItem: "${'io.wcm.caconfig.editor.button.addItem' @ i18n, context='text'}",
                 cancel: "${'io.wcm.caconfig.editor.button.cancel' @ i18n, context='text'}",
-                delete: "${'io.wcm.caconfig.editor.button.delete' @ i18n, context='text'}",
+                deleteConfig: "${'io.wcm.caconfig.editor.button.deleteConfig' @ i18n, context='text'}",
                 deleteCollection: "${'io.wcm.caconfig.editor.button.deleteCollection' @ i18n, context='text'}",
                 deleteItem: "${'io.wcm.caconfig.editor.button.deleteItem' @ i18n, context='text'}",
                 ok: "${'io.wcm.caconfig.editor.button.ok' @ i18n, context='text'}",
@@ -52,9 +52,9 @@
               modal: {
                 addTitle: "${'io.wcm.caconfig.editor.modal.addTitle' @ i18n, context='text'}",
                 close: "${'io.wcm.caconfig.editor.modal.close' @ i18n, context='text'}",
-                delete: "${'io.wcm.caconfig.editor.modal.delete' @ i18n, context='text'}",
+                deleteMessage: "${'io.wcm.caconfig.editor.modal.deleteMessage' @ i18n, context='text'}",
                 deleteTitle: "${'io.wcm.caconfig.editor.modal.deleteTitle' @ i18n, context='text'}",
-                error: "${'io.wcm.caconfig.editor.modal.error' @ i18n, context='text'}",
+                errorMessage: "${'io.wcm.caconfig.editor.modal.errorMessage' @ i18n, context='text'}",
                 tooltip: {
                   allowed: "${'io.wcm.caconfig.editor.modal.tooltip.allowed' @ i18n, context='text'}",
                   unique: "${'io.wcm.caconfig.editor.modal.tooltip.unique' @ i18n, context='text'}"

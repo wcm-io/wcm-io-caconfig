@@ -76,7 +76,7 @@
     }
 
     $scope.removeConfig = function() {
-      $rootScope.deleteModal.show();
+      $rootScope.deleteConfigModal.show();
     }
 
     $scope.removeCollectionItem = function(index) {
