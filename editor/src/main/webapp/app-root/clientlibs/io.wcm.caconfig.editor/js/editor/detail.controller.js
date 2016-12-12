@@ -41,8 +41,7 @@
     }
 
     $scope.save = function() {
-      if ($scope.configs.length === 0 ||
-          $scope.configs.length === 1 && $scope.configs[0].isCollectionRoot) {
+      if ($scope.configs.length === 0) {
         $scope.removeConfig();
       }
       else {
@@ -63,7 +62,7 @@
     }
 
     $rootScope.getCollectionItemNames = function() {
-      return _.map($scope.configs.slice(1), "collectionItemName");
+      return _.map($scope.configs, "collectionItemName");
     }
 
     $rootScope.addItem = function() {
@@ -96,8 +95,10 @@
     };
 
     function init() {
-      $scope.isCollection = dataService.isCollection($scope.configName, $rootScope.configNamesCollection);
-      $scope.configLabel = dataService.getConfigLabel($scope.configName, $rootScope.configNamesCollection);
+      $scope.configNameObject = dataService.getConfigNameObject($scope.configName, $rootScope.configNamesCollection);
+      $scope.isCollection = !!$scope.configNameObject.collection;
+      $scope.configLabel = $scope.configNameObject.label || $scope.configName;
+      $scope.configDescription = $scope.configNameObject.description;
       $rootScope.title = $rootScope.i18n.title + ": " + $scope.configLabel;
 
       // Load Configuration Details
@@ -118,7 +119,7 @@
       if ($scope.isCollection && !$rootScope.collectionProperties[$scope.configName]) {
         dataService.getConfigData($scope.configName).then(
           function success(result){
-            $rootScope.collectionProperties[$scope.configName] = result.data[0].properties;
+            $rootScope.collectionProperties[$scope.configName] = _.reject(result.data[0].properties, "skip");
           },
           function error() {
             $rootScope.errorModal.show();

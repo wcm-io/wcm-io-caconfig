@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-.wcm-io-editor-page-border {
+.caconfig-page-border {
   padding: 15px;
 }
 
@@ -34,7 +34,7 @@ form.ng-dirty input.ng-dirty.ng-invalid {
   border: 1px solid red;
 }
 
-span.wcm-io-editor-pathbrowser {
+span.caconfig-pathbrowser {
   width: 100% !important;
 }
 
@@ -42,27 +42,27 @@ span.wcm-io-editor-pathbrowser {
   display: none !important;
 }
 
-.wcm-io-editor-multifield {
+.caconfig-multifield {
   position: relative;
   padding-right: 103px;
 }
-.wcm-io-editor-multifield .coral-Textfield {
+.caconfig-multifield .coral-Textfield {
   width: 98%;
 }
-.wcm-io-editor-multifield .coral-ButtonGroup {
+.caconfig-multifield .coral-ButtonGroup {
   position: absolute;
   top: 0;
   right: 0;
 }
 
-.wcm-io-editor-map {
+.caconfig-map {
   position: relative;
   padding-right: 103px;
 }
-.wcm-io-editor-map .coral-Textfield {
+.caconfig-map .coral-Textfield {
   width: 49%;
 }
-.wcm-io-editor-map .coral-ButtonGroup {
+.caconfig-map .coral-ButtonGroup {
   position: absolute;
   top: 0;
   right: 0;
@@ -84,4 +84,10 @@ span.wcm-io-editor.endor-Brand {
 .caconfig-delete-item {
   cursor: pointer;
   float: right;
+}
+
+.caconfig-disabled-button,
+.caconfig-disabled-button:disabled,
+.caconfig-disabled-button.is-disabled {
+  display: inline-block;
 }

@@ -38,23 +38,12 @@
         return $http.get(restUrls.configNamesUrl);
       };
 
-      this.isCollection = function(configName, configNamesCollection) {
+      this.getConfigNameObject = function(configName, configNamesCollection) {
         var config = _.find(configNamesCollection, {configName: configName});
-
-        if (!angular.isUndefined(config) && config.collection) {
-          return true;
+        if (angular.isObject(config)) {
+          return config;
         }
-        return false;
-      };
-
-      this.getConfigLabel = function(configName, configNamesCollection) {
-        var configLabel = configName;
-        var config = _.find(configNamesCollection, {configName: configName});
-
-        if (!angular.isUndefined(config) && config.label) {
-          configLabel = config.label;
-        }
-        return configLabel;
+        return {};
       };
 
       /**
@@ -130,11 +119,6 @@
 
     if (angular.isArray(configData.items)) {
       configs = parseCollectionItems(configData.items);
-      configs.unshift({
-        isCollectionRoot: true,
-        configName: configData.configName,
-        properties: parseProperties(configData.properties)
-      })
     }
     else {
       configs.push({
@@ -177,12 +161,8 @@
     var items;
 
     angular.forEach(properties, function(property) {
-      if (property.name === "jcr:created" || property.name === "jcr:createdBy") {
+      if (!angular.isObject(property.metadata)) {
         property.skip = true;
-      }
-      else if (!angular.isObject(property.metadata)) {
-        property.skip = true;
-        parsed.push(property);
       }
       else if (property.nestedConfig || property.nestedConfigCollection) {
         property.skip = true;
@@ -203,20 +183,21 @@
    * @returns {json}
    */
   function buildConfigData(configs, isCollection) {
-    var configData = {
-      properties: buildProperties(configs[0])
-    };
+    var configData = {};
 
     if (isCollection) {
       configData.items = [];
 
-      angular.forEach(configs.slice(1), function(config) {
+      angular.forEach(configs, function(config) {
         var item = {
           collectionItemName: config.collectionItemName,
           properties: buildProperties(config)
         };
         configData.items.push(item);
       });
+    }
+    else {
+      configData.properties = buildProperties(configs[0]);
     }
 
     return angular.toJson(configData);
@@ -230,12 +211,17 @@
   function buildProperties(config) {
     var properties = {};
     angular.forEach(config.properties, function(property) {
+      var tempArray;
       if (!property.skip) {
-        if (property.value === "" && property.metadata.type !== "String") {
+        if (property.value === "" || property.value === null ||
+          angular.isUndefined(property.value)) {
           properties[property.name] = null;
         }
-        else if (angular.isArray(property.value) && property.metadata.type !== "String") {
-          properties[property.name] = _.reject(property.value, angular.isUndefined);
+        else if (angular.isArray(property.value)) {
+          tempArray = _.reject(property.value, function (element) {
+              return angular.isUndefined(element) || element === null || element === "";
+            });
+          properties[property.name] = tempArray.length ? _.clone(tempArray) : null;
         }
         else {
           properties[property.name] = property.value;
