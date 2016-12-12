@@ -2,7 +2,7 @@
 
 ### Editor GUI
 
-![Configuration levels](images/configuration-editor.png)
+![Configuration Editor](images/configuration-editor.png)
 
 The editor supports:
 
