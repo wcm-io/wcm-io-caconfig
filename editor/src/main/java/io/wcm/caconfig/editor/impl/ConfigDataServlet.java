@@ -139,6 +139,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
     result.putOpt("configName", config.getConfigName());
     result.putOpt("collectionItemName", config.getCollectionItemName());
+    result.putOpt("overridden", config.isOverridden());
 
     JSONArray props = new JSONArray();
     for (String propertyName : config.getPropertyNames()) {

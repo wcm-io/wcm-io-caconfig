@@ -158,7 +158,7 @@ public class ConfigDataServletTest {
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
-    String expectedJson = "{configName:'nestedConfig',properties:["
+    String expectedJson = "{configName:'nestedConfig',overridden:false,properties:["
         + "{name:'param1',default:false,inherited:false,overridden:false},"
         + "{name:'subConfig',metadata:{label:'subConfig-label',description:'subConfig-desc'},nestedConfig:" + buildConfigDataJson("nestedConfig/subConfig", 0)
         + "},"
@@ -214,7 +214,7 @@ public class ConfigDataServletTest {
   }
 
   private String buildConfigDataJson(String configName, int index) {
-    return "{configName:'" + configName + "',"
+    return "{configName:'" + configName + "',overridden:false,"
         + (index > 0 ? "collectionItemName:'item" + index + "'," : "")
         + "properties:["
         + "{name:'param1',value:['v1'],effectiveValue:['v1','v2'],default:false,inherited:true,overridden:false,"
