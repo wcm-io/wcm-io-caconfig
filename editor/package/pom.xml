@@ -65,7 +65,10 @@
           <group>${content-package-group}</group>
           <filters>
             <filter>
-              <root>/apps/${content-package-name}</root>
+              <root>/apps/wcm-io/${content-package-name}</root>
+            </filter>
+            <filter>
+              <root>/apps/wcm-io/caconfig/editor-package</root>
             </filter>
           </filters>
         </configuration>
@@ -85,7 +88,7 @@
             <configuration>
               <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
               <includeArtifactIds>${dependency-includeArtifactIds}</includeArtifactIds>
-              <outputDirectory>${project.build.directory}/vault-work/jcr_root/apps/${content-package-name}/install</outputDirectory>
+              <outputDirectory>${project.build.directory}/vault-work/jcr_root/apps/wcm-io/${content-package-name}/install</outputDirectory>
               <includeScope>compile</includeScope>
             </configuration>
           </execution>
