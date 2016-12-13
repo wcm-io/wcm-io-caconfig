@@ -38,7 +38,7 @@
           scope.values.push({value: values[i]});
         }
       }
-      scope.$watch("values", function() {
+      scope.$watch("values", function () {
         var values = _.map(scope.values, "value");
         scope.parameter.value = values;
       }, true);
@@ -59,12 +59,12 @@
   MultifieldController.$inject = ["$scope"];
 
   function MultifieldController($scope) {
-    $scope.addNewValue = function(index) {
-      $scope.$evalAsync(function() {
+    $scope.addNewValue = function (index) {
+      $scope.$evalAsync(function () {
         $scope.values.splice(index + 1, 0, { value: undefined });
       });
     };
-    $scope.removeValue = function(index) {
+    $scope.removeValue = function (index) {
       $scope.values.splice(index, 1);
     };
   }

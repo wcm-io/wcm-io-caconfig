@@ -20,32 +20,42 @@
 (function (angular) {
   "use strict";
 
+  var CONFIG_SELECT = "config";
+
   angular.module("io.wcm.caconfig.editor")
     .controller("OverviewController", OverviewController);
 
-  OverviewController.$inject = ["$rootScope", "$scope", "$filter", "dataService"];
+  OverviewController.$inject = ["$rootScope", "$scope", "$filter", "configService", "uiService", "modalService"];
 
-  function OverviewController($rootScope, $scope, $filter, dataService) {
-    $rootScope.getConfigNames();
+  function OverviewController($rootScope, $scope, $filter, configService, uiService, modalService) {
+    configService.loadConfigNames()
+      .then(function success() {
+        $scope.contextPath = configService.getContextPath();
+        $scope.configNames = configService.getConfigNames();
+      });
     $rootScope.title = $rootScope.i18n.title;
 
-    $scope.hasNonExistingConfig = function() {
-      if (!$scope.configNamesCollection) {
+    $scope.hasNonExistingConfig = function () {
+      if (!$scope.configNames) {
         return false;
       }
-      for (var i in $scope.configNamesCollection) {
-        if (!$scope.configNamesCollection[i].exists) {
+
+      for (var i = 0;  i < $scope.configNames.length; i++) {
+        if (!$scope.configNames[i].exists) {
           return true;
         }
       }
       return false;
     };
 
-    $scope.showNonExistingConfigs = function() {
+    $scope.showNonExistingConfigs = function () {
+      var $select;
+      var $selectClone;
+
       $("#caconfig-configurationSelectClone").remove();
 
-      var $select = $("#caconfig-configurationSelect").hide().removeClass("coral-Select");
-      var $selectClone = $("#caconfig-configurationSelect")
+      $select = $("#caconfig-configurationSelect").hide().removeClass("coral-Select");
+      $selectClone = $("#caconfig-configurationSelect")
         .clone()
         .addClass("coral-Select")
         .css("display", "inline-block")
@@ -53,14 +63,15 @@
 
       $select.before($selectClone);
 
-      $rootScope.configurationSelect = new CUI.Select({
+      uiService.addUI(uiService.component.SELECT, CONFIG_SELECT, {
         element: $selectClone
       });
-      $scope.addConfigModal.show();
+
+      modalService.show(modalService.modal.ADD_CONFIG);
     };
 
-    $rootScope.addConfig = function() {
-      var configName = $rootScope.configurationSelect.getValue();
+    $rootScope.addConfig = function () {
+      var configName = uiService.callMethod(uiService.component.SELECT, CONFIG_SELECT, uiService.method.GET_VALUE);
       $rootScope.go(configName);
     };
   }

@@ -15,7 +15,7 @@
             <span class="coral-Select-button-text">Choose</span>
           </button>
           <select class="coral-Select-select">
-            <option ng-repeat="item in configNamesCollection | filter:{exists:false}"
+            <option ng-repeat="item in getConfigNames() | filter:{exists:false}"
               value="{{item.configName}}" >{{item.label || item.configName}}</option>
           </select>
         </span>

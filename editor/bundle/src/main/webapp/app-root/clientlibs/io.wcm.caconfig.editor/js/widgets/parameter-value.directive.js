@@ -26,18 +26,23 @@
   angular.module("io.wcm.caconfig.widgets")
     .directive("caconfigParameterValue", parameterValue);
 
-  parameterValue.$inject = ["templateUrlList", "inputMap"];
+  parameterValue.$inject = ["templateUrlList", "inputMap", "$rootScope"];
 
-  function parameterValue(templateList, inputMap) {
+  function parameterValue(templateList, inputMap, $rootScope) {
 
     function link(scope, element, attr, ctrl) {
       var input;
-      if (!scope.parameter.metadata) {
-        scope.type = null;
-        return;
-      }
 
-      if (scope.parameter.metadata.multivalue) {
+      scope.go = $rootScope.go;
+      scope.i18n = $rootScope.i18n;
+
+      if (scope.parameter.nestedConfig) {
+        scope.type = "nestedConfig";
+      }
+      else if (scope.parameter.nestedConfigCollection) {
+        scope.type = "nestedConfigCollection";
+      }
+      else if (scope.parameter.metadata && scope.parameter.metadata.multivalue) {
         scope.type = "multivalue";
       }
       else if (scope.parameter.metadata && scope.parameter.metadata.type) {
@@ -45,6 +50,9 @@
         scope.type = input.type || scope.parameter.metadata.type;
         scope.pattern = input.pattern || /^.*$/;
         scope.required = input.required;
+      }
+      else {
+        scope.type = null;
       }
     }
 

@@ -23,10 +23,10 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("DeleteConfigController", DeleteConfigController);
 
-  DeleteConfigController.$inject = ["$rootScope"];
+  DeleteConfigController.$inject = ["modalService"];
 
-  function DeleteConfigController($rootScope) {
-    $rootScope.deleteConfigModal = new CUI.Modal({
+  function DeleteConfigController(modalService) {
+    modalService.addModal(modalService.modal.DELETE_CONFIG, {
       element: "#caconfig-deleteConfigModal",
       type: "notice",
       visible: false

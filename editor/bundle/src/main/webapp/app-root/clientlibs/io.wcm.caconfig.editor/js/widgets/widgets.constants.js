@@ -28,10 +28,8 @@
    */
   angular.module("io.wcm.caconfig.widgets")
     .constant("templateUrlList", {
-      filterDropDownList: "filterDropDownList.html",
       map: "map.html",
       parameterValue: "parameterValue.html",
-      pathBrowser: "pathBrowser.html",
       popupContainer: "popupContainer.html",
       popupContent: "popupContent.html",
       multifield: "multifield.html"

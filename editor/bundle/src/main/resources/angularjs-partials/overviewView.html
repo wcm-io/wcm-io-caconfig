@@ -4,7 +4,7 @@
 
   <p>{{i18n.contextPath}}: <code>{{contextPath}}</code></p>
 
-  <table class="coral-Table coral-Table--hover" ng-show="(configNamesCollection | filter:{exists:true}).length" ng-cloak>
+  <table class="coral-Table coral-Table--hover" ng-show="(configNames | filter:{exists:true}).length" ng-cloak>
     <thead>
       <tr class="coral-Table-row">
         <th class="coral-Table-headerCell" style="width:1%"></th>
@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="coral-Table-row" ng-repeat="config in configNamesCollection | filter:{exists:true}"
+      <tr class="coral-Table-row" ng-repeat="config in configNames | filter:{exists:true}"
           ng-click="go(config.configName)" ng-cloak>
         <td class="coral-Table-cell">
           <i class="coral-Icon coral-Icon--sizeS"

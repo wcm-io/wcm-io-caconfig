@@ -91,3 +91,7 @@ span.wcm-io-editor.endor-Brand {
 .caconfig-disabled-button.is-disabled {
   display: inline-block;
 }
+
+.caconfig-breadcrumb .caconfig-breadcrumb-link {
+  cursor: pointer;
+}

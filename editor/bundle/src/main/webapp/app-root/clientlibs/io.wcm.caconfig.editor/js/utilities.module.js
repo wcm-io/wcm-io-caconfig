@@ -26,21 +26,14 @@
    * TODO: write unit tests
    */
   angular.module("io.wcm.caconfig.utilities", [])
-    .factory("utilities", utilitiesFactory);
+    .service("utilities", utilitiesService);
 
-  function utilitiesFactory() {
-
-    var utilities = {
-      nextUid: nextUid,
-      loadAutocompleteOptions: loadAutocompleteOptions
-    };
-    return utilities;
+  function utilitiesService() {
 
     /**
-     *
      * @returns unique Id
      */
-    function nextUid() {
+    this.nextUid = function () {
       var index = uid.length;
       var digit;
 
@@ -60,28 +53,9 @@
       }
       uid.unshift("0");
       return uid.join("");
-    }
+    };
 
-    /**
-     * Helper method for the CUI:PathBrowser widget
-     * @param path
-     * @param callback
-     * @returns {boolean}
-     */
-    function loadAutocompleteOptions(path, callback) {
-      jQuery.get(path + ".pages.json", {
-          predicate: "hierarchyNotFile"
-        },
-        function(data) {
-          var pages = data.pages;
-          var result = [];
-          for(var i = 0; i < pages.length; i++) {
-            result.push(pages[i].label);
-          }
-          if (callback) callback(result);
-        }, "json");
-      return false;
-    }
+
   }
 })(angular);
 

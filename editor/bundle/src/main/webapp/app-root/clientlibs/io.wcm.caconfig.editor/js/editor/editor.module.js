@@ -21,32 +21,21 @@
   "use strict";
 
   angular.module("io.wcm.caconfig.editor", [
-      "ngRoute"
+      "ngRoute",
+      "io.wcm.caconfig.templates"
     ])
     .run(initRun);
 
-  initRun.$inject = ["$rootScope", "$location", "dataService"];
+  initRun.$inject = ["$rootScope", "$location"];
 
-  function initRun($rootScope, $location, dataService) {
+  function initRun($rootScope, $location) {
 
-    $rootScope.go = function(path) {
+    $rootScope.go = function (path) {
       path = path ? String(path) : "";
       if (path.charAt(0) !== "/") {
         path = "/" + path;
       }
       $location.path(path);
-    };
-
-    $rootScope.getConfigNames = function() {
-      return dataService.getConfigNames().then(
-        function success(result) {
-          $rootScope.contextPath = result.data.contextPath;
-          $rootScope.configNamesCollection = result.data.configNames;
-        },
-        function error() {
-          $rootScope.errorModal.show();
-        }
-      );
     };
   }
 
