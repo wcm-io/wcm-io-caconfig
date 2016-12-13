@@ -18,6 +18,13 @@ The configuration editor can be used by AEM author users to read and write confi
 ![Configuration Editor](images/configuration-editor.png)
 
 
+### Supported AEM versions
+
+Context-Aware Configuration is supported in AEM 6.1, 6.2 and upwards. AEM 6.0 is not supported.
+
+When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles to AEM.
+
+
 
 [usage]: usage.html
 [changelog]: changes-report.html

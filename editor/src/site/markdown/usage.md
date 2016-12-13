@@ -1,14 +1,24 @@
 ## Configuration Editor usage
 
-### Editor GUI
+### Basic concepts
 
-![Configuration Editor](images/configuration-editor.png)
+The Configuration Editor is a template which is used inside the '/content' tree. It allows to edit configurations for the inner-most context that is detected within the context tree (e.g. by defining `sling:configRef` properties). Where the configuration itself is stored depends on your system settings, by default it's stored in `/conf`.
 
-The editor supports:
+You cannot define the contexts via the configuration editor, you have to set the `sling:configRef` manually or within the page properties of your content templates, or by defining custom context path strategies. But once your contexts are defined you can create a config editor page within each context and edit the configuration parameters.
 
-- TBD
+The configuration editor supports only editing configuration for which configuration metadata is present. This is normally done by deploying configuration annotation classes with your applications.
 
-The editor is based on AngularJS and CoralUI.
+See [Apache Sling Context-Aware Configuration documentation][sling-caconfig] for more details.
+
+
+### Installation
+
+In most cases you will deploy the configuration editor bundle `io.wcm.caconfig.editor` together with your application. In this case you should define your own template definition for it which controls where editor config pages can created (see next section).
+
+Alternatively you can deploy this AEM package which contains the config editor bundle together with a template definitions which allows all paths below `/content`:
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package)
+
+When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles to AEM.
 
 
 ### Defining the editor template
@@ -32,3 +42,19 @@ Only the template has to be defined, the page component resource type can be ref
   }
 }
 ```
+
+
+### Editor GUI
+
+![Configuration Editor](images/configuration-editor.png)
+
+The editor supports:
+
+- TBD
+
+The editor is based on AngularJS and CoralUI.
+
+
+
+
+[sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
