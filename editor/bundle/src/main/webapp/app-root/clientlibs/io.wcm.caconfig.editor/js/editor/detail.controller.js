@@ -37,11 +37,11 @@
     if (!configService.getContextPath() || !configService.getConfigNames().length) {
       configService.loadConfigNames()
         .then(function success() {
-          init();
+          init($scope.configName);
         });
     }
     else {
-      init();
+      init($scope.configName);
     }
 
     $scope.save = function () {
