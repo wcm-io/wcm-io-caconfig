@@ -12,8 +12,13 @@
 
   <p>{{i18n.contextPath}}: <code>{{contextPath}}</code></p>
 
-  <h2>{{configLabel}}</h2>
-  <p>{{configDescription}}</p>
+  <h2>
+    <span ng-repeat="breadcrumb in breadcrumbs" class="caconfig-breadcrumb">
+      <span class="coral-Link caconfig-breadcrumb-link" ng-click="go(breadcrumb.configName)">{{breadcrumb.label}}</span> /
+    </span>
+    {{label}}
+  </h2>
+  <p>{{description}}</p>
 
   <div ng-repeat="config in configs" class="caconfig-configurationDetails" ng-cloak>
     <h3 ng-hide="!isCollection">

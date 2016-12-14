@@ -32,7 +32,7 @@
       if (scope.parameter.value && scope.parameter.value.length > 0) {
         scope.values = scope.parameter.value;
       }
-      scope.$watch("values", function() {
+      scope.$watch("values", function () {
         scope.parameter.value = scope.values;
       }, true);
     }
@@ -52,12 +52,12 @@
   MapController.$inject = ["$scope"];
 
   function MapController($scope) {
-    $scope.addNewValue = function(index) {
-      $scope.$evalAsync(function() {
+    $scope.addNewValue = function (index) {
+      $scope.$evalAsync(function () {
         $scope.values.splice(index + 1, 0, { key: "", value: "" });
       });
     };
-    $scope.removeValue = function(index) {
+    $scope.removeValue = function (index) {
       $scope.values.splice(index, 1);
     };
   }

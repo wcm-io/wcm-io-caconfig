@@ -20,18 +20,22 @@
 (function (angular, _) {
   "use strict";
 
+  /**
+   * Controller for details view
+   * (for singletons, collections and nested configs/collection)
+   */
   angular.module("io.wcm.caconfig.editor")
     .controller("DetailController", DetailController);
 
-  DetailController.$inject = ["$rootScope", "$scope", "$route", "dataService"];
+  DetailController.$inject = ["$rootScope", "$scope", "$route", "configService", "modalService"];
 
-  function DetailController($rootScope, $scope, $route, dataService) {
-    $scope.configs = [];
+  function DetailController($rootScope, $scope, $route, configService, modalService) {
     $scope.configName = $route.current.params.configName;
+    $scope.configs = [];
 
-    // If detail view is loaded directly via deeplink, we need to first getConfigNames
-    if (!$rootScope.contextPath || !$rootScope.configNamesCollection.length) {
-      $rootScope.getConfigNames()
+    // If detail view was loaded directly via deeplink, we need to first loadConfigNames
+    if (!configService.getContextPath() || !configService.getConfigNames().length) {
+      configService.loadConfigNames()
         .then(function success() {
           init();
         });
@@ -40,92 +44,75 @@
       init();
     }
 
-    $scope.save = function() {
+    $scope.save = function () {
       if ($scope.configs.length === 0) {
         $scope.removeConfig();
       }
       else {
-        dataService.saveConfigData($scope.configName, $scope.isCollection, $scope.configs)
-          .then(
-            function success() {
-              $rootScope.go();
-            },
-            function error() {
-              $scope.errorModal.show();
-            }
-          );
+        configService.saveConfig($scope.configName, $scope.isCollection, $scope.configs)
+          .then(function () {
+            $rootScope.go();
+          });
       }
     };
 
-    $scope.addCollectionItem = function() {
-      $scope.addCollectionItemModal.show();
+    $scope.addCollectionItem = function () {
+      modalService.show(modalService.modal.ADD_COLLECTION_ITEM);
     }
 
-    $rootScope.getCollectionItemNames = function() {
+    $rootScope.getCollectionItemNames = function () {
       return _.map($scope.configs, "collectionItemName");
     }
 
-    $rootScope.addItem = function() {
+    $rootScope.addItem = function () {
       var configName = $scope.configName;
       $scope.configs.push({
         collectionItemName: $("#caconfig-collectionItemName").val().trim(),
         configName: configName,
-        properties: angular.copy($rootScope.collectionProperties[configName])
+        properties: configService.getCollectionItemTemplate(configName)
       });
     }
 
-    $scope.removeConfig = function() {
-      $rootScope.deleteConfigModal.show();
+    $scope.removeConfig = function () {
+      modalService.show(modalService.modal.DELETE_CONFIG);
     }
 
-    $scope.removeCollectionItem = function(index) {
+    $scope.removeCollectionItem = function (index) {
       $scope.configs.splice(index, 1);
     }
 
-    $rootScope.deleteConfig = function() {
+    $rootScope.deleteConfig = function () {
       var configName = $scope.configName;
-      dataService.deleteConfigData(configName).then(
-        function success()  {
+      configService.deleteConfig(configName)
+        .then(function () {
           $rootScope.go();
-        },
-        function error() {
-          $scope.errorModal.show();
-        }
-      );
+        });
     };
 
+    /**
+     * Sets various $scope properties and loads config data
+     */
     function init() {
-      $scope.configNameObject = dataService.getConfigNameObject($scope.configName, $rootScope.configNamesCollection);
-      $scope.isCollection = !!$scope.configNameObject.collection;
-      $scope.configLabel = $scope.configNameObject.label || $scope.configName;
-      $scope.configDescription = $scope.configNameObject.description;
-      $rootScope.title = $rootScope.i18n.title + ": " + $scope.configLabel;
+      var configNameObject = configService.getConfigNameObject($scope.configName);
+
+      if (!configNameObject) {
+        modalService.show(modalService.modal.ERROR);
+        $rootScope.go();
+        return;
+      }
+
+      $scope.isCollection = !!configNameObject.collection;
+      $scope.label = configNameObject.label || $scope.configName;
+      $scope.breadcrumbs = configNameObject.breadcrumbs || [];
+      $rootScope.title = $rootScope.i18n.title + ": " + $scope.label;
+      $scope.description = configNameObject.description;
+      $scope.contextPath = configService.getContextPath();
 
       // Load Configuration Details
-      dataService.getConfigData($scope.configName, $scope.isCollection).then(
-        function success(result){
+      configService.loadConfig($scope.configName, $scope.isCollection)
+        .then(function (result) {
           $scope.configs = result.data;
-        },
-        function error() {
-          $rootScope.errorModal.show();
-        }
-      );
-
-      // Storage for collection property "schemas"
-      if (!$rootScope.collectionProperties) {
-        $rootScope.collectionProperties = {};
-      }
-
-      if ($scope.isCollection && !$rootScope.collectionProperties[$scope.configName]) {
-        dataService.getConfigData($scope.configName).then(
-          function success(result){
-            $rootScope.collectionProperties[$scope.configName] = _.reject(result.data[0].properties, "skip");
-          },
-          function error() {
-            $rootScope.errorModal.show();
-          }
-        );
-      }
+        });
     }
   };
 })(angular, _);

@@ -35,16 +35,16 @@
   angular.module("io.wcm.caconfig.widgets")
     .directive("caconfigDescriptionPopup", descriptionPopup);
 
-  descriptionPopup.$inject = ["templateUrlList", "utilities"];
+  descriptionPopup.$inject = ["templateUrlList", "utilities", "uiService"];
 
-  function descriptionPopup(templateList, utilities) {
+  function descriptionPopup(templateList, utilities, uiService) {
 
     function link(scope, element, attr) {
-      var widget;
-
       scope.id = utilities.nextUid();
       scope.$evalAsync(function () {
-        widget = new CUI.Popover({element: $("coral-Popover", element)});
+        uiService.addUI(uiService.component.POPOVER, scope.id, {
+          element: $("coral-Popover", element)
+        });
       });
     }
 

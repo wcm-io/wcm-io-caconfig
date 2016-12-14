@@ -23,10 +23,10 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("ErrorController", ErrorController);
 
-  ErrorController.$inject = ["$rootScope"];
+  ErrorController.$inject = ["modalService"];
 
-  function ErrorController($rootScope) {
-    $rootScope.errorModal = new CUI.Modal({
+  function ErrorController(modalService) {
+    modalService.addModal(modalService.modal.ERROR, {
       element: "#caconfig-errorModal",
       type: "error",
       visible: false

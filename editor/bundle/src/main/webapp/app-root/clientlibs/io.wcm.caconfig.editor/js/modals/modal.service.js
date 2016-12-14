@@ -20,19 +20,34 @@
 (function (angular) {
   "use strict";
 
+  /**
+   * Modals service
+   */
   angular.module("io.wcm.caconfig.modals")
-    .controller("AddConfigController", AddConfigController);
+    .service("modalService", modalService);
 
-  AddConfigController.$inject = ["$scope", "modalService", "configService"];
+  modalService.$inject = ["uiService"];
 
-  function AddConfigController($scope, modalService, configService) {
-    modalService.addModal(modalService.modal.ADD_CONFIG, {
-      element: "#caconfig-addConfigModal",
-      visible: false
-    });
+  function modalService(uiService) {
 
-    $scope.getConfigNames = function () {
-      return configService.getConfigNames();
+    this.modal = {
+      ADD_CONFIG: "addConfig",
+      ADD_COLLECTION_ITEM: "addCollectionItem",
+      DELETE_CONFIG: "deleteConfig",
+      ERROR: "error"
     }
+
+    this.addModal = function (name, options) {
+      uiService.addUI(uiService.component.MODAL, name, options);
+    };
+
+    this.addEvent = function (name, eventName, callback) {
+      uiService.addEvent(uiService.component.MODAL, name, eventName, callback);
+    };
+
+    this.show = function (name) {
+      uiService.callMethod(uiService.component.MODAL, name, uiService.method.SHOW);
+    };
   }
+
 })(angular);

@@ -25,18 +25,18 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("AddCollectionItemController", AddCollectionItemController);
 
-  AddCollectionItemController.$inject = ["$rootScope", "$scope"];
+  AddCollectionItemController.$inject = ["$rootScope", "$scope", "modalService"];
 
-  function AddCollectionItemController($rootScope, $scope) {
+  function AddCollectionItemController($rootScope, $scope, modalService) {
     $scope.blacklist = [];
     $scope.itemTitleRegex = DEFAULT_ITEM_NAME_PATTERN;
 
-    $rootScope.addCollectionItemModal = new CUI.Modal({
+    modalService.addModal(modalService.modal.ADD_COLLECTION_ITEM, {
       element: "#caconfig-addCollectionItemModal",
       visible: false
     });
 
-    $rootScope.addCollectionItemModal.on("show", function() {
+    modalService.addEvent(modalService.modal.ADD_COLLECTION_ITEM, "show", function () {
       $scope.newCollectionName = null;
       $scope.blacklist = $rootScope.getCollectionItemNames();
       $("#caconfig-collectionItemName").focus();

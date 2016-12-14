@@ -29,8 +29,12 @@
     <caconfig-map  parameter="parameter" />
   </div>
 
-  <div ng-switch-when="pathbrowser">
-    <caconfig-path-browser  parameter="parameter" root-path="{{parameter.rootPath}}"></path-browser>
+  <div ng-switch-when="nestedConfig">
+    <button class="coral-Button coral-Button--block coral-Button--default" ng-click="go(parameter.nestedConfig.configName)">{{i18n.button.edit}}</button>
+  </div>
+
+  <div ng-switch-when="nestedConfigCollection">
+    <button class="coral-Button coral-Button--block coral-Button--default" ng-click="go(parameter.nestedConfigCollection.configName)">{{i18n.button.edit}}</button>
   </div>
 
   <div ng-switch-default>
