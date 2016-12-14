@@ -46,4 +46,10 @@ public @interface ConfigSampleNested {
   @Property(label = "Sub Config 2", description = "Another nested configuration")
   ConfigSampleSub2 sub2();
 
+  /**
+   * @return Sub Config 2 as list
+   */
+  @Property(label = "Sub Config 2 List", description = "Another nested configuration as list")
+  ConfigSampleSub2[] sub2List();
+
 }
