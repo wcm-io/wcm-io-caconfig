@@ -15,7 +15,15 @@ Context-Aware Configuration Editor Template for AEM.
 
 The configuration editor can be used by AEM author users to read and write configuration data mapped to the current context pages.
 
-![Configuration Editor](images/configuration-editor.png)
+Features:
+
+- Manage Context-Aware Configuration by creating an editor page in the content context
+- Manage singleton configuration, configuration collections and nested configurations
+- Display all configuration metadata and default values
+- Support all data types and arrays of values
+- Special support for inherited and overridden values
+
+See [Usage][usage] for further details and some screenshots.
 
 
 ### Supported AEM versions

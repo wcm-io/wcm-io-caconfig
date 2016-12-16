@@ -18,7 +18,7 @@ In most cases you will deploy the configuration editor bundle `io.wcm.caconfig.e
 Alternatively you can deploy this AEM package which contains the config editor bundle together with a template definitions which allows all paths below `/content`:
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package)
 
-When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles to AEM.
+When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles (API, SPI, Impl) to AEM.
 
 
 ### Defining the editor template
@@ -46,11 +46,19 @@ Only the template has to be defined, the page component resource type can be ref
 
 ### Editor GUI
 
-![Configuration Editor](images/configuration-editor.png)
+![Configuration Overview](images/configuration-overview.png)
 
-The editor supports:
+When opening the Configuration Editor an overview of all configurations is displayed for which some configuration data is present. By using the "Add" button you can enter new configuration data for other configurations where no data exists yet.
 
-- TBD
+![Singleton Configuration](images/configuration-editor-singleton.png)
+
+For a singleton configuration all configuration parameters are displayed and can be changed. With the "Save" button the changes are persisted, the "Delete" button removes the whole configuration.
+
+![ConfigurationL Collection](images/configuration-editor-list.png)
+
+For a configuration collection all existing collection items are displayed, and new ones can be added after entering a name. Single items or the whole configuration collection can be removed.
+
+
 
 The editor is based on AngularJS and CoralUI.
 
