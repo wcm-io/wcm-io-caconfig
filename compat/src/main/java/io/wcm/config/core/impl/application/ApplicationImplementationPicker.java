@@ -36,7 +36,7 @@ import io.wcm.config.spi.annotations.Application;
  * but with support for the deprecated Application annotation.
  */
 @Component(immediate = true, service = ImplementationPicker.class, property = {
-    Constants.SERVICE_RANKING + ":Integer=1001"
+    Constants.SERVICE_RANKING + ":Integer=900"
 })
 @SuppressWarnings("deprecation")
 public class ApplicationImplementationPicker implements ImplementationPicker {
