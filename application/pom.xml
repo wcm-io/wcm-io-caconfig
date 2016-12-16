@@ -35,7 +35,7 @@
   <packaging>bundle</packaging>
 
   <name>Application API</name>
-  <description>API for configuring Application-specific bundles.</description>
+  <description>Context-Aware system configuration of shared bundles.</description>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io/wcm-io-caconfig.git</connection>

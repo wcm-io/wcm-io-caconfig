@@ -8,7 +8,7 @@ Context-Aware means configurations that are related to a content resource or a r
 ### Overview
 
 * [Editor](editor/): Configuration Editor Template for AEM.
-* [Application](application/): Multi Application-Support for AEM.
+* [Application](application/): Context-Aware system configuration of shared bundles.
 * [Extensions](extensions/): AEM-specific extensions for Sling Context-Aware Configuration.
 * [Compatibility Layer](compat/): Compatibility Layer for wcm.io Configuration 0.x.
 

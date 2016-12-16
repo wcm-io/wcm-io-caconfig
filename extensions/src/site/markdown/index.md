@@ -13,7 +13,10 @@ AEM-specific extensions for Apache Sling Context-Aware Configuration.
 
 ### Overview
 
-TBD
+The following extensions are provided:
+
+* Configure Context Path Strategies without the need for `sling:configRef` attributes based on hierarchy levels or root templates
+* Configuration Override Provider based on request headers (e.g. for QA instances - disabled by default)
 
 
 [apidocs]: apidocs/
