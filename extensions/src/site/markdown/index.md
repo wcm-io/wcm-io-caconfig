@@ -7,7 +7,6 @@ AEM-specific extensions for Apache Sling Context-Aware Configuration.
 
 ### Documentation
 
-* [API documentation][apidocs]
 * [Changelog][changelog]
 
 
@@ -19,5 +18,4 @@ The following extensions are provided:
 * Configuration Override Provider based on request headers (e.g. for QA instances - disabled by default)
 
 
-[apidocs]: apidocs/
 [changelog]: changes-report.html

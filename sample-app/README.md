@@ -17,11 +17,11 @@ Open Configuration Editor
 -------------------------
 
 Open configuration editor at<br/>
-http://localhost:4502/content/contextaware-config-sample/en/config.html
+(http://localhost:4502/content/contextaware-config-sample/en/config.html)
 
 To see how inheritance and override works you can also look at<br/>
-http://localhost:4502/content/contextaware-config-sample/en/sub-page/config.html<br/>
-http://localhost:4502/content/contextaware-config-sample/en/sub-page/sub-page-override/config.html
+(http://localhost:4502/content/contextaware-config-sample/en/sub-page/config.html)<br/>
+(http://localhost:4502/content/contextaware-config-sample/en/sub-page/sub-page-override/config.html)
 
 
 Inspect Configuration
