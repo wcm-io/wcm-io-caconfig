@@ -24,8 +24,7 @@ Nearly all features of [wcm.io Configuration 0.x][config-deprecated] are support
 
 When this compat bundle is deployed you can either use the old wcm.io Configuration API or the Apache Sling Context-Aware Configuration API to access the configuration. All wcm.io Configurations are grouped in one single configuration with the internal name `config`.
 
-
-[Migrate from wcm.io Configuration 0.x to Context-Aware Configuration][caconfig-migration]
+There is also a wiki page with lists different migration scenarios: [Migrate from wcm.io Configuration 0.x to Context-Aware Configuration][caconfig-migration]
 
 [apidocs]: apidocs/
 [changelog]: changes-report.html
