@@ -99,7 +99,8 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private JSONObject getConfiguration(Resource contextResource, String configName, boolean collection) throws JSONException {
     JSONObject result;
     if (collection) {
-      result = toJson(configManager.getConfigurationCollection(contextResource, configName));
+      result = toJson(configManager.getConfigurationCollection(contextResource, configName),
+          configManager.newCollectionItem(contextResource, configName));
     }
     else {
       ConfigurationData configData = configManager.getConfiguration(contextResource, configName);
@@ -113,7 +114,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
-  private JSONObject toJson(ConfigurationCollectionData configCollection) throws JSONException {
+  private JSONObject toJson(ConfigurationCollectionData configCollection, ConfigurationData newItem) throws JSONException {
     JSONObject result = new JSONObject();
     result.putOpt("configName", configCollection.getConfigName());
 
@@ -130,6 +131,8 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
       items.put(toJson(configData));
     }
     result.put("items", items);
+
+    result.put("newItem", toJson(newItem));
 
     return result;
   }

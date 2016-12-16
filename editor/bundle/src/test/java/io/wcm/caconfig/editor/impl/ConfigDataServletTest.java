@@ -98,11 +98,13 @@ public class ConfigDataServletTest {
   public void testCollection() throws Exception {
     ConfigurationData configData1 = buildConfigData("name1", 1);
     ConfigurationData configData2 = buildConfigData("name1", 2);
+    ConfigurationData configDataNew = buildConfigData("new", 0);
     ConfigurationCollectionData configCollectionData = mock(ConfigurationCollectionData.class);
     when(configCollectionData.getConfigName()).thenReturn("name1");
     when(configCollectionData.getItems()).thenReturn(ImmutableList.of(configData1, configData2));
     when(configCollectionData.getProperties()).thenReturn(ImmutableMap.<String, Object>of("colProp1", true));
     when(configManager.getConfigurationCollection(context.currentResource(), "name1")).thenReturn(configCollectionData);
+    when(configManager.newCollectionItem(context.currentResource(), "name1")).thenReturn(configDataNew);
 
     context.request().setQueryString(RP_CONFIGNAME + "=name1&" + RP_COLLECTION + "=true");
     underTest.doGet(context.request(), context.response());
@@ -112,7 +114,7 @@ public class ConfigDataServletTest {
     String expectedJson = "{configName:'name1',properties:{colProp1:true},items:["
         + buildConfigDataJson("name1", 1) + ","
         + buildConfigDataJson("name1", 2)
-        + "]}";
+        + "],newItem:" + buildConfigDataJson("new", 0) + "}";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
