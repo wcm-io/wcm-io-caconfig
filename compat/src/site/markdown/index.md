@@ -22,6 +22,8 @@ Nearly all features of [wcm.io Configuration 0.x][config-deprecated] are support
 * Locking parameters in the configuration hierarchy is not supported (but you can use overrides to mimic this)
 * Map data type is no longer supported - but it is mapped to a string array with key value pairs separated by "="
 
+Configuration collections and nested configurations are new features from Sling Context-Aware Configuration are not supported by the compatibility layer (as they where not supported in wcm.io Configuration 0.x).
+
 When this compat bundle is deployed you can either use the old wcm.io Configuration API or the Apache Sling Context-Aware Configuration API to access the configuration. All wcm.io Configurations are grouped in one single configuration with the internal name `config`.
 
 There is also a wiki page with lists different migration scenarios: [Migrate from wcm.io Configuration 0.x to Context-Aware Configuration][caconfig-migration]
