@@ -25,6 +25,7 @@ import java.util.SortedSet;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -62,9 +63,16 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
   private ConfigurationManager configManager;
   @Reference
   private ConfigurationResourceResolver configurationResourceResolver;
+  @Reference
+  private EditorConfig editorConfig;
 
   @Override
   protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+    if (!editorConfig.isEnabled()) {
+      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      return;
+    }
+
     Resource contextResource = request.getResource();
     try {
       JSONObject result = new JSONObject();

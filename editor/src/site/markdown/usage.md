@@ -63,6 +63,18 @@ For a configuration collection all existing collection items are displayed, and 
 The editor is based on AngularJS and CoralUI.
 
 
+### Disable Editor on Publish
+
+You should disable the configuration editor on publish by applying an OSGi configuration like this:
+
+```
+[configurations runModes=publish]
+  
+  # Disable Configuration Editor on publish
+  io.wcm.caconfig.editor.impl.EditorConfig
+    enabled=B"false"
+```
+
 
 
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html

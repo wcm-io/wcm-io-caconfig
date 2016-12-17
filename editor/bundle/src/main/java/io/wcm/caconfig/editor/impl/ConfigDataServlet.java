@@ -68,9 +68,15 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
   @Reference
   private ConfigurationManager configManager;
+  @Reference
+  private EditorConfig editorConfig;
 
   @Override
   protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+    if (!editorConfig.isEnabled()) {
+      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      return;
+    }
 
     // get parameters
     String configName = request.getParameter(RP_CONFIGNAME);

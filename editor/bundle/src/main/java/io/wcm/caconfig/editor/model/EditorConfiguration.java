@@ -32,6 +32,7 @@ import org.osgi.annotation.versioning.ProviderType;
 import io.wcm.caconfig.editor.impl.ConfigDataServlet;
 import io.wcm.caconfig.editor.impl.ConfigNamesServlet;
 import io.wcm.caconfig.editor.impl.ConfigPersistServlet;
+import io.wcm.caconfig.editor.impl.EditorConfig;
 
 /**
  * Provides editor configuration options
@@ -47,17 +48,20 @@ public class EditorConfiguration {
   private final String configDataUrl;
   private final String configPersistUrl;
   private final String contextPath;
+  private final boolean enabled;
 
   /**
    * @param currentResource Current resource
    */
   @Inject
   public EditorConfiguration(@SlingObject Resource currentResource,
-      @OSGiService ConfigurationResourceResolver configResourceResolver) {
-    configNamesUrl = currentResource.getPath() + "." + ConfigNamesServlet.SELECTOR + ".json";
-    configDataUrl = currentResource.getPath() + "." + ConfigDataServlet.SELECTOR + ".json";
-    configPersistUrl = currentResource.getPath() + "." + ConfigPersistServlet.SELECTOR + ".json";
-    contextPath = configResourceResolver.getContextPath(currentResource);
+      @OSGiService ConfigurationResourceResolver configResourceResolver,
+      @OSGiService EditorConfig editorConfig) {
+    this.configNamesUrl = currentResource.getPath() + "." + ConfigNamesServlet.SELECTOR + ".json";
+    this.configDataUrl = currentResource.getPath() + "." + ConfigDataServlet.SELECTOR + ".json";
+    this.configPersistUrl = currentResource.getPath() + "." + ConfigPersistServlet.SELECTOR + ".json";
+    this.contextPath = configResourceResolver.getContextPath(currentResource);
+    this.enabled = editorConfig.isEnabled();
   }
 
   public String getConfigNamesUrl() {
@@ -74,6 +78,10 @@ public class EditorConfiguration {
 
   public String getContextPath() {
     return this.contextPath;
+  }
+
+  public boolean isEnabled() {
+    return this.enabled;
   }
 
 }

@@ -71,6 +71,7 @@ public class ConfigDataServletTest {
     });
 
     context.registerService(ConfigurationManager.class, configManager);
+    context.registerInjectActivateService(new EditorConfig());
     underTest = context.registerInjectActivateService(new ConfigDataServlet());
   }
 

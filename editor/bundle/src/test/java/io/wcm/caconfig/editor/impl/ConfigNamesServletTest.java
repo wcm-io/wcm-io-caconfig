@@ -83,6 +83,7 @@ public class ConfigNamesServletTest {
 
     context.registerService(ConfigurationManager.class, configManager);
     context.registerService(ConfigurationResourceResolver.class, configurationResourceResolver);
+    context.registerInjectActivateService(new EditorConfig());
     underTest = context.registerInjectActivateService(new ConfigNamesServlet());
   }
 

@@ -71,6 +71,7 @@ public class ConfigPersistServletTest {
   @Before
   public void setUp() {
     context.registerService(ConfigurationManager.class, configManager);
+    context.registerInjectActivateService(new EditorConfig());
     underTest = context.registerInjectActivateService(new ConfigPersistServlet());
 
     ConfigurationMetadata configMetadata = new ConfigurationMetadata(CONFIG_NAME, ImmutableList.<PropertyMetadata<?>>of(
