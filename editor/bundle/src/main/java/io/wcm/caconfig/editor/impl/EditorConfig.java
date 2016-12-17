@@ -32,8 +32,8 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 @Designate(ocd = EditorConfig.Config.class)
 public class EditorConfig {
 
-  @ObjectClassDefinition(name = "wcm.io Configuration Editor",
-      description = "Configure the wcm.io Configuration Editor.")
+  @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration Editor",
+      description = "Configure the Editor for Apache Sling Context-Aware Configuration.")
   @interface Config {
 
     @AttributeDefinition(description = "Enable the Configuration Editor and HTTP APIs.")
