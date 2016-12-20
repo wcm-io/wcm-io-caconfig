@@ -18,20 +18,23 @@
  * #L%
  */
 (function (angular) {
-  var uid = ["0", "0", "0" ];
-
   "use strict";
+
+  var uid = ["0", "0", "0"];
+  var DIGIT_9 = 57;
+  var LETTER_Z = 90;
+
   /**
    * Utilities module.
-   * TODO: write unit tests
    */
   angular.module("io.wcm.caconfig.utilities", [])
-    .service("utilities", utilitiesService);
+    .service("utilities", UtilitiesService);
 
-  function utilitiesService() {
+  function UtilitiesService() {
 
     /**
-     * @returns unique Id
+     * Generates unique id
+     * @return {String}
      */
     this.nextUid = function () {
       var index = uid.length;
@@ -40,13 +43,14 @@
       while (index) {
         index--;
         digit = uid[index].charCodeAt(0);
-        if (digit == 57 /*"9"*/) {
+        if (digit === DIGIT_9) {
           uid[index] = "A";
           return uid.join("");
         }
-        if (digit == 90  /*"Z"*/) {
+        if (digit === LETTER_Z) {
           uid[index] = "0";
-        } else {
+        }
+        else {
           uid[index] = String.fromCharCode(digit + 1);
           return uid.join("");
         }
@@ -54,9 +58,6 @@
       uid.unshift("0");
       return uid.join("");
     };
-
-
   }
-})(angular);
 
-
+}(angular));

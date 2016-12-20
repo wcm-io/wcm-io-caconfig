@@ -24,11 +24,11 @@
    * Current Config service
    */
   angular.module("io.wcm.caconfig.editor")
-    .service("currentConfigService", currentConfigService);
+    .service("currentConfigService", CurrentConfigService);
 
-  currentConfigService.$inject = [];
+  CurrentConfigService.$inject = [];
 
-  function currentConfigService() {
+  function CurrentConfigService() {
     var collectionItemTemplates = {};
     var current = {
       configName: null,
@@ -38,10 +38,10 @@
     };
 
     this.setCollectionItemTemplate = function (configName, newItem) {
-      if(!collectionItemTemplates[configName]) {
+      if (!collectionItemTemplates[configName]) {
         collectionItemTemplates[configName] = newItem;
       }
-    }
+    };
 
     /**
      * Gets "template" newItem object for collections
@@ -54,7 +54,7 @@
 
     this.getCollectionItemNames = function () {
       return _.map(current.configs, "collectionItemName");
-    }
+    };
 
     this.getCurrent = function () {
       return current;
@@ -89,4 +89,4 @@
 
   }
 
-})(angular, _);
+}(angular, _));

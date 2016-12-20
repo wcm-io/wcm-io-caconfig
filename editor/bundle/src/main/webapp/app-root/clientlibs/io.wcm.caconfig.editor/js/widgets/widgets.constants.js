@@ -22,7 +22,8 @@
 
   var ANYTHING = /^.*$/;
   var INTEGER = /^[-+]?[0-9]+([eE][-+]?[0-9]+)?$/;
-  var FLOAT = /^[-+]?[0-9]*[\.,]?[0-9]+([eE][-+]?[0-9]+)?$/;
+  var FLOAT = /^[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?$/;
+
   /**
    * Provides the list of available templates, used in directives
    */
@@ -36,10 +37,22 @@
     })
     .constant("inputMap", {
       Boolean: {type: "checkbox"},
-      Integer: {type: "number", pattern: INTEGER},
-      Long: {type: "number", pattern: INTEGER},
-      Double: {type: "number", pattern: FLOAT},
-      String: {type: "text", pattern: ANYTHING}
+      Integer: {
+        type: "number",
+        pattern: INTEGER
+      },
+      Long: {
+        type: "number",
+        pattern: INTEGER
+      },
+      Double: {
+        type: "number",
+        pattern: FLOAT
+      },
+      String: {
+        type: "text",
+        pattern: ANYTHING
+      }
     });
-})(angular);
+}(angular));
 

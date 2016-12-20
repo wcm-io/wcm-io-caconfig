@@ -33,6 +33,6 @@
 
     $scope.getConfigNames = function () {
       return configService.getConfigNames();
-    }
+    };
   }
-})(angular);
+}(angular));

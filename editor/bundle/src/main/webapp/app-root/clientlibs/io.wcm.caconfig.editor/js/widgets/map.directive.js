@@ -36,7 +36,7 @@
       originalLength = scope.values.length;
       scope.$watch("values", function () {
         scope.parameter.value = scope.values;
-        if (values.length !== originalLength) {
+        if (scope.values.length !== originalLength) {
           form.$setDirty();
         }
       }, true);
@@ -60,11 +60,15 @@
   function MapController($scope) {
     $scope.addNewValue = function (index) {
       $scope.$evalAsync(function () {
-        $scope.values.splice(index + 1, 0, { key: "", value: "" });
+        var newKeyValuePair = {
+          key: "",
+          value: ""
+        };
+        $scope.values.splice(index + 1, 0, newKeyValuePair);
       });
     };
     $scope.removeValue = function (index) {
       $scope.values.splice(index, 1);
     };
   }
-})(angular);
+}(angular));

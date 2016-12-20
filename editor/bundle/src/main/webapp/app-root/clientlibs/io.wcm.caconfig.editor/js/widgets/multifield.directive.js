@@ -28,22 +28,25 @@
 
     function link(scope, element, attr, form) {
       var input = inputMap[scope.parameter.metadata.type];
-      var originalLength;
+      var i,
+          originalLength,
+          values;
+
       scope.type = input.type;
       scope.pattern = input.pattern;
       scope.required = input.required;
       scope.values = [];
       if (scope.parameter.value && scope.parameter.value.length > 0) {
-        var values = scope.parameter.value;
-        for (var i = 0; i < values.length; i++) {
+        values = scope.parameter.value;
+        for (i = 0; i < values.length; i++) {
           scope.values.push({value: values[i]});
         }
       }
       originalLength = scope.values.length;
       scope.$watch("values", function () {
-        var values = _.map(scope.values, "value");
-        scope.parameter.value = values;
-        if (values.length !== originalLength) {
+        var valueArray = _.map(scope.values, "value");
+        scope.parameter.value = valueArray;
+        if (valueArray.length !== originalLength) {
           form.$setDirty();
         }
       }, true);
@@ -59,7 +62,7 @@
       },
       controller: MultifieldController,
       link: link
-    }
+    };
   }
 
   MultifieldController.$inject = ["$scope"];
@@ -74,4 +77,4 @@
       $scope.values.splice(index, 1);
     };
   }
-})(angular, _);
+}(angular, _));

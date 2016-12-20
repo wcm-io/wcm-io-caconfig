@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, $) {
   "use strict";
 
   var CONFIG_SELECT = "config";
@@ -37,11 +37,13 @@
       });
 
     $scope.hasNonExistingConfig = function () {
+      var i;
+
       if (!$scope.configNames) {
         return false;
       }
 
-      for (var i = 0;  i < $scope.configNames.length; i++) {
+      for (i = 0; i < $scope.configNames.length; i++) {
         if (!$scope.configNames[i].exists) {
           return true;
         }
@@ -50,12 +52,13 @@
     };
 
     $scope.showNonExistingConfigs = function () {
-      var $select;
-      var $selectClone;
+      var $select,
+          $selectClone;
 
       $("#caconfig-configurationSelectClone").remove();
 
-      $select = $("#caconfig-configurationSelect").hide().removeClass("coral-Select");
+      $select = $("#caconfig-configurationSelect").hide()
+        .removeClass("coral-Select");
       $selectClone = $("#caconfig-configurationSelect")
         .clone()
         .addClass("coral-Select")
@@ -76,4 +79,4 @@
       $rootScope.go(configName);
     };
   }
-})(angular);
+}(angular, jQuery));

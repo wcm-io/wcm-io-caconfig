@@ -68,6 +68,6 @@
         isNewItem: "=caconfigIsNewItem"
       },
       link: link
-    }
+    };
   }
-})(angular);
+}(angular));

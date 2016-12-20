@@ -19,17 +19,19 @@
  */
 (function (angular) {
   "use strict";
+
   /**
    * Data Services module
    * $http calls to the REST API
    */
   angular.module("io.wcm.caconfig.editor")
-    .provider("dataService", dataServiceProvider);
+    .provider("dataService", DataServiceProvider);
 
-  function dataServiceProvider() {
+  function DataServiceProvider() {
     var configUrls = {};
 
     function DataService($http, dataHelperService, restUrls) {
+
       /**
        * Get configuration names.
        * @returns {Promise}
@@ -79,7 +81,7 @@
        * @param {String} configName
        * @returns {Promise}
        */
-      this.deleteConfigData =  function (configName) {
+      this.deleteConfigData = function (configName) {
         var url = restUrls.configPersistUrl + "?configName=" + configName;
         return $http({
           method: "DELETE",
@@ -97,4 +99,4 @@
     }];
   }
 
-})(angular);
+}(angular));

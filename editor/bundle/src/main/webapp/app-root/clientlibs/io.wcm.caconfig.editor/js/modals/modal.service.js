@@ -24,11 +24,11 @@
    * Modals service
    */
   angular.module("io.wcm.caconfig.modals")
-    .service("modalService", modalService);
+    .service("modalService", ModalService);
 
-  modalService.$inject = ["uiService"];
+  ModalService.$inject = ["uiService"];
 
-  function modalService(uiService) {
+  function ModalService(uiService) {
 
     this.modal = {
       ADD_CONFIG: "addConfig",
@@ -36,7 +36,7 @@
       DELETE_CONFIG: "deleteConfig",
       ERROR: "error",
       SAVE_CONFIG: "saveConfig"
-    }
+    };
 
     this.addModal = function (name, options) {
       uiService.addUI(uiService.component.MODAL, name, options);
@@ -51,4 +51,4 @@
     };
   }
 
-})(angular);
+}(angular));
