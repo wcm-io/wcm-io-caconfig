@@ -20,7 +20,8 @@
 (function (angular, _) {
   "use strict";
   /**
-   * Config service
+   * Parses data returned from GET calls.
+   * Builds payloads for POST calls.
    */
   angular.module("io.wcm.caconfig.editor")
     .service("dataHelperService", dataHelperService);
@@ -34,17 +35,19 @@
     this.parseConfigData = function (data) {
       var configs = [];
       var configData = angular.fromJson(data);
+      var newItem = null;
 
       if (angular.isArray(configData.items)) {
-        configs = parseCollectionItems(configData.items);
+        configs = configData.items;
+        newItem = configData.newItem;
       }
       else {
-        configs.push({
-          configName: configData.configName,
-          properties: parseProperties(configData.properties)
-        });
+        configs.push(configData);
       }
-      return configs;
+      return {
+        configs: configs,
+        newItem: newItem
+      };
     };
 
     /**
@@ -74,55 +77,6 @@
     };
   }
 
-  // HELPER FUNCTIONS (for helper service)
-
-  /**
-   * Parses items (in configuration collection)
-   * @param {Array} items
-   * @returns {Array} parsed
-   */
-  function parseCollectionItems(items) {
-    var parsed = [];
-
-    angular.forEach(items, function (item) {
-      parsed.push({
-        collectionItemName: item.collectionItemName,
-        configName: item.configName,
-        properties: parseProperties(item.properties)
-      });
-    });
-
-    return parsed;
-  }
-
-  /**
-   * TODO - extraction of nested properties here insufficient
-   * - need to create separate configuration(s), with different configName(s)
-   *
-   * Parses properties - including extraction of nested properties.
-   * @param {Array} properties
-   * @returns {Array} parsed
-   */
-  function parseProperties(properties) {
-    var parsed = [];
-    var items;
-
-    angular.forEach(properties, function (property) {
-      if (!angular.isObject(property.metadata)) {
-        property.skip = true;
-      }
-      else if (property.nestedConfig || property.nestedConfigCollection) {
-        property.skip = true;
-        parsed.push(property);
-      }
-      else {
-        parsed.push(property);
-      }
-    });
-
-    return parsed;
-  }
-
   /**
    * Gets properties from config object
    * @param {Object} config
@@ -135,13 +89,12 @@
     for (var i = 0; i < config.properties.length; i++) {
       property = config.properties[i];
 
-      if (property.skip) {
+      if (property.nestedConfig || property.nestedConfigCollection) {
         continue;
       }
 
-      if (property.value === "" ||
-          property.value === null ||
-          angular.isUndefined(property.value)) {
+      if (angular.isUndefined(property.value) ||
+          property.value === "") {
         properties[property.name] = null;
       }
       else if (angular.isArray(property.value)) {

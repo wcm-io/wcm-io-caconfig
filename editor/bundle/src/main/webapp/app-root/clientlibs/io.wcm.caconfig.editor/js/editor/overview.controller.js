@@ -25,15 +25,16 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("OverviewController", OverviewController);
 
-  OverviewController.$inject = ["$rootScope", "$scope", "$filter", "configService", "uiService", "modalService"];
+  OverviewController.$inject = ["$rootScope", "$scope", "configService", "uiService", "modalService"];
 
-  function OverviewController($rootScope, $scope, $filter, configService, uiService, modalService) {
+  function OverviewController($rootScope, $scope, configService, uiService, modalService) {
+    $rootScope.title = $rootScope.i18n.title;
+
     configService.loadConfigNames()
       .then(function success() {
         $scope.contextPath = configService.getContextPath();
         $scope.configNames = configService.getConfigNames();
       });
-    $rootScope.title = $rootScope.i18n.title;
 
     $scope.hasNonExistingConfig = function () {
       if (!$scope.configNames) {

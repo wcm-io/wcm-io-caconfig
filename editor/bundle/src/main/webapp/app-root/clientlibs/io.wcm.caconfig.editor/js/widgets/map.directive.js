@@ -27,19 +27,25 @@
 
   function map(templateList) {
 
-    function link(scope, element, attr) {
+    function link(scope, element, attr, form) {
+      var originalLength;
       scope.values = [];
       if (scope.parameter.value && scope.parameter.value.length > 0) {
         scope.values = scope.parameter.value;
       }
+      originalLength = scope.values.length;
       scope.$watch("values", function () {
         scope.parameter.value = scope.values;
+        if (values.length !== originalLength) {
+          form.$setDirty();
+        }
       }, true);
     }
 
     return {
       restrict: "E",
       replace: true,
+      require: "^form",
       templateUrl: templateList.map,
       scope: {
         parameter: "="

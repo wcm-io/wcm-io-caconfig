@@ -26,8 +26,9 @@
 
   function multifield(templateList, inputMap) {
 
-    function link(scope, element, attr) {
+    function link(scope, element, attr, form) {
       var input = inputMap[scope.parameter.metadata.type];
+      var originalLength;
       scope.type = input.type;
       scope.pattern = input.pattern;
       scope.required = input.required;
@@ -38,15 +39,20 @@
           scope.values.push({value: values[i]});
         }
       }
+      originalLength = scope.values.length;
       scope.$watch("values", function () {
         var values = _.map(scope.values, "value");
         scope.parameter.value = values;
+        if (values.length !== originalLength) {
+          form.$setDirty();
+        }
       }, true);
     }
 
     return {
       restrict: "E",
       replace: true,
+      require: "^form",
       templateUrl: templateList.multifield,
       scope: {
         parameter: "="
