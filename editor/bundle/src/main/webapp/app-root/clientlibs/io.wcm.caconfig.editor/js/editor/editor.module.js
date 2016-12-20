@@ -21,8 +21,7 @@
   "use strict";
 
   angular.module("io.wcm.caconfig.editor", [
-      "ngRoute",
-      "io.wcm.caconfig.templates"
+      "ngRoute"
     ])
     .run(initRun);
 
@@ -30,12 +29,19 @@
 
   function initRun($rootScope, $location) {
 
+    $rootScope.redirectUrl = null;
+
     $rootScope.go = function (path) {
       path = path ? String(path) : "";
       if (path.charAt(0) !== "/") {
         path = "/" + path;
       }
       $location.path(path);
+    };
+
+    $rootScope.goToRedirectUrl = function () {
+      $rootScope.go($rootScope.redirectUrl);
+      $rootScope.redirectUrl = null;
     };
   }
 

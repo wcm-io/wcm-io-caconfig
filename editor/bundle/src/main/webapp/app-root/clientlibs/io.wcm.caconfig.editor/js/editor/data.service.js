@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, _) {
+(function (angular) {
   "use strict";
   /**
    * Data Services module
@@ -27,7 +27,7 @@
     .provider("dataService", dataServiceProvider);
 
   function dataServiceProvider() {
-    var restUrls = {};
+    var configUrls = {};
 
     function DataService($http, dataHelperService, restUrls) {
       /**
@@ -89,12 +89,12 @@
     }
 
     this.setRestUrls = function (restUrlsConfig) {
-      restUrls = restUrlsConfig;
+      configUrls = restUrlsConfig;
     };
 
     this.$get = ["$http", "dataHelperService", function ($http, dataHelperService) {
-      return new DataService($http, dataHelperService, restUrls);
+      return new DataService($http, dataHelperService, configUrls);
     }];
   }
 
-})(angular, _);
+})(angular);

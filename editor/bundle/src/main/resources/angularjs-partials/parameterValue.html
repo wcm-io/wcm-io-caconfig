@@ -30,11 +30,11 @@
   </div>
 
   <div ng-switch-when="nestedConfig">
-    <button class="coral-Button coral-Button--block coral-Button--default" ng-click="go(parameter.nestedConfig.configName)">{{i18n.button.edit}}</button>
+    <button class="coral-Button coral-Button--block coral-Button--default" ng-disabled="isNewItem" ng-click="form.$pristine ? go(parameter.nestedConfig.configName) : saveWarning(parameter.nestedConfig.configName)">{{i18n.button.edit}}</button>
   </div>
 
   <div ng-switch-when="nestedConfigCollection">
-    <button class="coral-Button coral-Button--block coral-Button--default" ng-click="go(parameter.nestedConfigCollection.configName)">{{i18n.button.edit}}</button>
+    <button class="coral-Button coral-Button--block coral-Button--default" ng-disabled="isNewItem" ng-click="form.$pristine ? go(parameter.nestedConfigCollection.configName) : saveWarning(parameter.nestedConfigCollection.configName)">{{i18n.button.edit}}</button>
   </div>
 
   <div ng-switch-default>

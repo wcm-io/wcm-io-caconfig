@@ -7,7 +7,9 @@ ui.service.js
 
 editor/editor.module.js
 editor/editor.routes.js
+editor/config-cache.service.js
 editor/config.service.js
+editor/current-config.service.js
 editor/data-helper.service.js
 editor/data.service.js
 editor/detail.controller.js
@@ -19,6 +21,7 @@ modals/add-collection-item.controller.js
 modals/add-config.controller.js
 modals/delete-config.controller.js
 modals/error.controller.js
+modals/save-config.controller.js
 
 widgets/widgets.module.js
 widgets/widgets.constants.js

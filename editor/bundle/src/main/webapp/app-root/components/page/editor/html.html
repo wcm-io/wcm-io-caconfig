@@ -9,7 +9,7 @@
     <title ng-bind="title"></title>
     <meta data-sly-call="${clientLib.css @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
   </head>
-  <body class="coral--light">
+  <body class="coral--light" ng-cloak>
     <nav class="coral-Panel-header endor-BlackBar header-main">
       <a href="/" class="wcm-io-editor endor-Brand">
         <i class="wcm-io-editor endor-Brand-icon coral-Icon coral-Icon--adobeMarketingCloud coral-Icon--sizeM"></i>
@@ -24,11 +24,12 @@
       <ng-include src="modalTemplates.addCollectionItem"></ng-include>
       <ng-include src="modalTemplates.deleteConfig"></ng-include>
       <ng-include src="modalTemplates.error"></ng-include>
+      <ng-include src="modalTemplates.saveConfig"></ng-include>
 
       <meta data-sly-call="${clientLib.js @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
       <script type="text/javascript">
         angular.module("io.wcm.caconfig.app")
-          .run(function($rootScope) {
+          .run(function ($rootScope) {
             var i18n = {
               title: "${'io.wcm.caconfig.editor.title' @ i18n, context='text'}",
               contextPath: "${'io.wcm.caconfig.editor.contextPath' @ i18n, context='text'}",
@@ -39,6 +40,7 @@
                 deleteConfig: "${'io.wcm.caconfig.editor.button.deleteConfig' @ i18n, context='text'}",
                 deleteCollection: "${'io.wcm.caconfig.editor.button.deleteCollection' @ i18n, context='text'}",
                 deleteItem: "${'io.wcm.caconfig.editor.button.deleteItem' @ i18n, context='text'}",
+                discard: "${'io.wcm.caconfig.editor.button.discard' @ i18n, context='text'}",
                 edit: "${'io.wcm.caconfig.editor.button.edit' @ i18n, context='text'}",
                 ok: "${'io.wcm.caconfig.editor.button.ok' @ i18n, context='text'}",
                 save: "${'io.wcm.caconfig.editor.button.save' @ i18n, context='text'}"
@@ -57,6 +59,8 @@
                 deleteMessage: "${'io.wcm.caconfig.editor.modal.deleteMessage' @ i18n, context='text'}",
                 deleteTitle: "${'io.wcm.caconfig.editor.modal.deleteTitle' @ i18n, context='text'}",
                 errorMessage: "${'io.wcm.caconfig.editor.modal.errorMessage' @ i18n, context='text'}",
+                saveMessage: "${'io.wcm.caconfig.editor.modal.saveMessage' @ i18n, context='text'}",
+                saveTitle: "${'io.wcm.caconfig.editor.modal.saveTitle' @ i18n, context='text'}",
                 tooltip: {
                   allowed: "${'io.wcm.caconfig.editor.modal.tooltip.allowed' @ i18n, context='text'}",
                   unique: "${'io.wcm.caconfig.editor.modal.tooltip.unique' @ i18n, context='text'}"
@@ -67,7 +71,7 @@
           });
 
         angular.module("io.wcm.caconfig.editor")
-          .config(["dataServiceProvider", function(dataServiceProvider) {
+          .config(["dataServiceProvider", function (dataServiceProvider) {
             var configNamesUrl = "${editorConfig.configNamesUrl @ context='uri'}";
             var configDataUrl = "${editorConfig.configDataUrl @ context='uri'}";
             var configPersistUrl = "${editorConfig.configPersistUrl @ context='uri'}";

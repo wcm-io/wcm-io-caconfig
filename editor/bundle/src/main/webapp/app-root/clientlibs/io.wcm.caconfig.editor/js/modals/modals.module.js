@@ -33,7 +33,8 @@
       addCollectionItem: "addCollectionItemModal.html",
       addConfig: "addConfigModal.html",
       deleteConfig: "deleteConfigModal.html",
-      error: "errorModal.html"
+      error: "errorModal.html",
+      saveConfig: "saveConfigModal.html"
     };
   }
 

@@ -9,6 +9,7 @@
       "deleteConfig": "Delete",
       "deleteCollection": "Delete Collection",
       "deleteItem": "Delete Item",
+      "discard": "Discard Changes",
       "edit": "Edit",
       "ok": "OK",
       "save": "Save"
@@ -28,6 +29,8 @@
       "deleteTitle": "Delete Configuration",
       "deleteMessage": "This configuration will be deleted.",
       "errorMessage": "An internal error occurred. Please try again.",
+      "saveTitle": "Save Configuration",
+      "saveMessage": "Your current changes will be lost. Would you like to save them?",
       "tooltip": {
         "allowed": "Allowed characters: A-Z a-z 0-9 - _",
         "unique": "This name is already in use."

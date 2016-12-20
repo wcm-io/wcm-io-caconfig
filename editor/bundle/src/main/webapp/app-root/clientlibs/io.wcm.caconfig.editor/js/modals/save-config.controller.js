@@ -21,15 +21,22 @@
   "use strict";
 
   angular.module("io.wcm.caconfig.modals")
-    .controller("DeleteConfigController", DeleteConfigController);
+    .controller("SaveConfigController", SaveConfigController);
 
-  DeleteConfigController.$inject = ["$rootScope", "$scope", "modalService"];
+  SaveConfigController.$inject = ["$rootScope", "$scope", "modalService", "configService"];
 
-  function DeleteConfigController($rootScope, $scope, modalService) {
-    modalService.addModal(modalService.modal.DELETE_CONFIG, {
-      element: "#caconfig-deleteConfigModal",
+  function SaveConfigController($rootScope, $scope, modalService, configService) {
+    modalService.addModal(modalService.modal.SAVE_CONFIG, {
+      element: "#caconfig-saveConfigModal",
       type: "notice",
       visible: false
     });
+
+    $scope.saveConfigWithRedirect = function () {
+      configService.saveCurrentConfig()
+        .then(function () {
+          $rootScope.goToRedirectUrl();
+        });
+    };
   }
 })(angular);

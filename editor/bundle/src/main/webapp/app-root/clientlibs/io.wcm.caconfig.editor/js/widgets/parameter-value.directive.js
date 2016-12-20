@@ -30,10 +30,12 @@
 
   function parameterValue(templateList, inputMap, $rootScope) {
 
-    function link(scope, element, attr, ctrl) {
+    function link(scope, element, attr, form) {
       var input;
 
+      scope.form = form;
       scope.go = $rootScope.go;
+      scope.saveWarning = $rootScope.saveWarning;
       scope.i18n = $rootScope.i18n;
 
       if (scope.parameter.nestedConfig) {
@@ -62,7 +64,8 @@
       require: "^form",
       templateUrl: templateList.parameterValue,
       scope: {
-        parameter: "=caconfigParameterValue"
+        parameter: "=caconfigParameterValue",
+        isNewItem: "=caconfigIsNewItem"
       },
       link: link
     }

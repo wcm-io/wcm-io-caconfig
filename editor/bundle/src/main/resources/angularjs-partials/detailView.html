@@ -1,9 +1,14 @@
-<form class="caconfig-detail" id="caconfig-configuration" name="configForm" novalidate>
+<form class="caconfig-detail" id="caconfig-configuration" name="configForm" novalidate ng-cloak>
 
+  <button ng-click="(configForm.$pristine && originalLength === configs.length) || (isNewCollection && !configs.length) ? go() : saveWarning()"
+          class="coral-Button coral-Button--square coral-Button--default"
+          title="{{i18n.button.home}}">
+    <i class="coral-Icon coral-Icon--home"></i>
+  </button>
   <button id="caconfig-save" class="coral-Button coral-Button--primary"
-    ng-click="save()"
-    ng-disabled="!configForm.$valid">{{i18n.button.save}}</button>
-  <button class="coral-Button coral-Button--secondary" ng-click="go()" >{{i18n.button.cancel}}</button>
+    ng-click="saveConfig()"
+    ng-disabled="configForm.$invalid || (configForm.$pristine && originalLength === configs.length) || (isNewCollection && !configs.length)">{{i18n.button.save}}</button>
+  <button class="coral-Button coral-Button--secondary" ng-click="go(parent ? parent.configName : '')" >{{i18n.button.cancel}}</button>
   <button ng-hide="!configs.length" ng-click="removeConfig()"
           class="coral-Button coral-Button--square coral-Button--default"
           title="{{isCollection ? i18n.button.deleteCollection : i18n.button.deleteConfig}}">
@@ -14,7 +19,8 @@
 
   <h2>
     <span ng-repeat="breadcrumb in breadcrumbs" class="caconfig-breadcrumb">
-      <span class="coral-Link caconfig-breadcrumb-link" ng-click="go(breadcrumb.configName)">{{breadcrumb.label}}</span> /
+      <span class="coral-Link caconfig-breadcrumb-link" ng-click="(configForm.$pristine && originalLength === configs.length) || (isNewCollection && !configs.length) ? go(breadcrumb.configName) : saveWarning(breadcrumb.configName)">{{breadcrumb.label}}</span> /
+      <span ng-show="breadcrumb.itemName">{{breadcrumb.itemName}} / </span>
     </span>
     {{label}}
   </h2>
@@ -40,7 +46,7 @@
         <td class="coral-Table-cell">
           {{property.metadata.label || property.name}}
         </td>
-        <td class="coral-Table-cell" caconfig-parameter-value="property" >
+        <td class="coral-Table-cell" caconfig-parameter-value="property" caconfig-is-new-item="config.isNewItem">
         </td>
         <td class="coral-Table-cell">
           <caconfig-description-popup ng-show="property.metadata.description">

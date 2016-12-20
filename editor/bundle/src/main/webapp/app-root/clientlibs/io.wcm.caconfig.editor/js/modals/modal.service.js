@@ -34,7 +34,8 @@
       ADD_CONFIG: "addConfig",
       ADD_COLLECTION_ITEM: "addCollectionItem",
       DELETE_CONFIG: "deleteConfig",
-      ERROR: "error"
+      ERROR: "error",
+      SAVE_CONFIG: "saveConfig"
     }
 
     this.addModal = function (name, options) {
