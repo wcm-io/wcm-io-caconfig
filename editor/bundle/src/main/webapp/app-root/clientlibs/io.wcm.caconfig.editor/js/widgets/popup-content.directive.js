@@ -41,6 +41,6 @@
       replace: true,
       transclude: true,
       templateUrl: templateList.popupContent
-    }
+    };
   }
-})(angular);
+}(angular));

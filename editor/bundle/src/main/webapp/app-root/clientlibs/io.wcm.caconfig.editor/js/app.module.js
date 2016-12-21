@@ -26,4 +26,4 @@
     "io.wcm.caconfig.editor"
   ]);
 
-})(angular);
+}(angular));

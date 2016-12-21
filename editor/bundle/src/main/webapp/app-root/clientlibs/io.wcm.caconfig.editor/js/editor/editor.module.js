@@ -21,8 +21,8 @@
   "use strict";
 
   angular.module("io.wcm.caconfig.editor", [
-      "ngRoute"
-    ])
+    "ngRoute"
+  ])
     .run(initRun);
 
   initRun.$inject = ["$rootScope", "$location"];
@@ -45,4 +45,4 @@
     };
   }
 
-})(angular);
+}(angular));

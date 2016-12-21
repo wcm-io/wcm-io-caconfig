@@ -23,4 +23,4 @@
   angular.module("io.wcm.caconfig.widgets", [
     "io.wcm.caconfig.utilities"
   ]);
-})(angular);
+}(angular));

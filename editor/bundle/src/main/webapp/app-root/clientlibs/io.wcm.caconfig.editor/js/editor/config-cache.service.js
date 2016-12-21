@@ -28,11 +28,11 @@
    * Storing Config Data information in memory / in local storage.
    */
   angular.module("io.wcm.caconfig.editor")
-    .service("configCacheService", configCacheService);
+    .service("configCacheService", ConfigCacheService);
 
-  configCacheService.$inject = ["$window"];
+  ConfigCacheService.$inject = ["$window"];
 
-  function configCacheService($window) {
+  function ConfigCacheService($window) {
     var configCache = {};
 
     /**
@@ -59,7 +59,7 @@
       }
 
       return {};
-    };
+    }
 
     this.getConfigNameObject = getConfigNameObject;
 
@@ -80,12 +80,13 @@
 
     /**
      * @param  {Array}   data
-     * @param  {Object=} parent - configNameObject
+     * @param  {String=} parentName
      */
     function addConfigsToCache(data, parentName) {
-      var configData;
+      var configData,
+          i;
 
-      for (var i = 0; i < data.length; i++) {
+      for (i = 0; i < data.length; i++) {
         configData = data[i];
         addConfigToCache(configData, parentName);
       }
@@ -93,13 +94,13 @@
     }
 
     function addConfigToCache(configData, parentName) {
-      var configName;
       var isNested = false;
       var isCollection = false;
-      var config;
-      var parent;
-      var properties;
-      var children;
+      var children,
+          config,
+          configName,
+          parent,
+          properties;
 
       if (angular.isObject(configData.nestedConfig)) {
         configName = configData.nestedConfig.configName;
@@ -118,7 +119,7 @@
         return;
       }
 
-      configCache[configName] = configCache[configName] || {};
+      configCache[configName] = configCache[configName] || {};
       config = configCache[configName];
 
       // if already has been added to cache
@@ -154,7 +155,7 @@
     }
 
     /**
-     * @param  {Object}  config
+     * @param  {Object}  configData
      * @param  {Boolean} isNested
      * @param  {Boolean} isCollection
      * @return {Array}
@@ -184,9 +185,9 @@
     function getChildren(properties) {
       var children = [];
       children = _.filter(properties, function (property) {
-        return angular.isObject(property.nestedConfig) ||
-          angular.isObject(property.nestedConfigCollection);
-        });
+        return angular.isObject(property.nestedConfig)
+          || angular.isObject(property.nestedConfigCollection);
+      });
 
       return children;
     }
@@ -197,9 +198,9 @@
      */
     function buildBreadcrumbs(configName) {
       var config = configCache[configName];
-      var configNameObject;
       var breadcrumbs = [];
-      var parent;
+      var configNameObject,
+          parent;
 
       if (!config || !config.parent) {
         return breadcrumbs;
@@ -239,8 +240,8 @@
 
     this.removeStoredConfigCache = function () {
       $window.localStorage.removeItem(STORED_CONFIG_CACHE);
-    }
+    };
 
   }
 
-})(angular, _);
+}(angular, _));

@@ -32,4 +32,4 @@
       visible: false
     });
   }
-})(angular);
+}(angular));

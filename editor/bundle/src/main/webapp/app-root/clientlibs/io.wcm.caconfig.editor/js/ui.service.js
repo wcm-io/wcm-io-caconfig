@@ -19,13 +19,14 @@
  */
 (function (angular, CUI) {
   "use strict";
+
   /**
    * Wrapper service for CoralUI
    */
   angular.module("io.wcm.caconfig.utilities")
-    .service("uiService", uiService);
+    .service("uiService", UIService);
 
-  function uiService() {
+  function UIService() {
     var ui = {};
 
     this.component = {
@@ -70,12 +71,10 @@
      * @return {*}
      */
     this.callMethod = function (componentType, name, methodName) {
-      if (ui[componentType] &&
-          ui[componentType][name] &&
-          angular.isFunction(ui[componentType][name][methodName])) {
+      if (ui[componentType] && ui[componentType][name] && angular.isFunction(ui[componentType][name][methodName])) {
         return ui[componentType][name][methodName]();
       }
+      return null;
     };
   }
-
-})(angular, CUI);
+}(angular, CUI));

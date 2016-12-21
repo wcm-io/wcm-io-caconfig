@@ -50,7 +50,7 @@
         $rootScope.redirectUrl = redirectUrl;
       }
       modalService.show(modalService.modal.SAVE_CONFIG);
-    }
+    };
 
     $scope.saveConfig = function () {
       if ($scope.configs.length === 0) {
@@ -79,7 +79,7 @@
             $rootScope.go($scope.parent ? $scope.parent.configName : "");
           }
         });
-    }
+    };
 
     $scope.addCollectionItem = function () {
       modalService.show(modalService.modal.ADD_COLLECTION_ITEM);
@@ -112,5 +112,5 @@
           $rootScope.title = $rootScope.i18n.title + ": " + $scope.label;
         });
     }
-  };
-})(angular);
+  }
+}(angular));

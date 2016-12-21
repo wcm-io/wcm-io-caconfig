@@ -26,19 +26,18 @@
    * Interface between dataService and controllers (and storage)
    */
   angular.module("io.wcm.caconfig.editor")
-    .service("configService", configService);
+    .service("configService", ConfigService);
 
-  configService.$inject = ["dataService", "configCacheService", "currentConfigService", "modalService"];
+  ConfigService.$inject = ["dataService", "configCacheService", "currentConfigService", "modalService"];
 
-  function configService(dataService, configCacheService, currentConfigService, modalService) {
+  function ConfigService(dataService, configCacheService, currentConfigService, modalService) {
 
     var contextPath = null;
     var configNames = [];
-    var configNameObject;
 
     this.getContextPath = function () {
       return contextPath;
-    }
+    };
 
     function setContextPath(contextPathData) {
       contextPath = contextPathData;
@@ -53,21 +52,6 @@
 
     function setConfigNames(configNamesData) {
       configNames = configNamesData;
-    }
-
-    function setConfigNameObject(configNameObject) {
-      configNameObject = configNameObjectData;
-    }
-
-    /**
-     * @return {Array} configNames
-     */
-    this.isCollection = function () {
-      return isCollection;
-    };
-
-    function setIsCollection(isCollectionData) {
-      isCollection = !!isCollectionData;
     }
 
     /**
@@ -96,11 +80,11 @@
      */
     this.loadConfig = function (configName) {
       var configNameObject = configCacheService.getConfigNameObject(configName);
-      var isCollection = !!configNameObject.collection;
+      var isCollection = Boolean(configNameObject.collection);
 
       return dataService.getConfigData(configName, isCollection)
         .then(
-          function success(result){
+          function success(result) {
             var current = {};
 
             if (isCollection) {
@@ -127,7 +111,7 @@
       var parent = current.configNameObject.parent || "";
       return dataService.saveConfigData(current.configName, current.isCollection, current.configs)
         .then(
-          function success(){
+          function success() {
             configCacheService.removeStoredConfigCache();
             return parent;
           },
@@ -141,7 +125,7 @@
       var current = currentConfigService.getCurrent();
       var parent = current.configNameObject.parent || "";
       return dataService.deleteConfigData(current.configName).then(
-        function success()  {
+        function success() {
           configCacheService.removeStoredConfigCache();
           return parent;
         },
@@ -152,4 +136,4 @@
     };
   }
 
-})(angular);
+}(angular));

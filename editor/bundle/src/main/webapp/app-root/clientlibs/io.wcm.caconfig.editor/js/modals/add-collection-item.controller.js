@@ -17,10 +17,10 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, $) {
   "use strict";
 
-  var DEFAULT_ITEM_NAME_PATTERN = /^[\w\-]+$/;
+  var DEFAULT_ITEM_NAME_PATTERN = /^[\w-]+$/;
 
   angular.module("io.wcm.caconfig.modals")
     .controller("AddCollectionItemController", AddCollectionItemController);
@@ -43,8 +43,9 @@
     });
 
     $scope.addItem = function () {
-      var collectionItemName = $("#caconfig-collectionItemName").val().trim();
+      var collectionItemName = $("#caconfig-collectionItemName").val()
+        .trim();
       currentConfigService.addItemToCurrentCollection(collectionItemName);
     };
   }
-})(angular);
+}(angular, jQuery));

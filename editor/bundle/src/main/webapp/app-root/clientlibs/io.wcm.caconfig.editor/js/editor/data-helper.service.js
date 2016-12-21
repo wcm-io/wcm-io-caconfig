@@ -19,14 +19,16 @@
  */
 (function (angular, _) {
   "use strict";
+
   /**
    * Parses data returned from GET calls.
    * Builds payloads for POST calls.
    */
   angular.module("io.wcm.caconfig.editor")
-    .service("dataHelperService", dataHelperService);
+    .service("dataHelperService", DataHelperService);
 
-  function dataHelperService() {
+  function DataHelperService() {
+
     /**
      * Parses configuration data.
      * @param {Object} data
@@ -84,31 +86,31 @@
    */
   function buildProperties(config) {
     var properties = {};
-    var property;
-    var tempArray;
-    for (var i = 0; i < config.properties.length; i++) {
+    var i,
+        property,
+        tempArray;
+    for (i = 0; i < config.properties.length; i++) {
       property = config.properties[i];
 
-      if (property.nestedConfig || property.nestedConfigCollection) {
-        continue;
-      }
+      if (!property.nestedConfig && !property.nestedConfigCollection) {
 
-      if (angular.isUndefined(property.value) ||
-          property.value === "") {
-        properties[property.name] = null;
-      }
-      else if (angular.isArray(property.value)) {
-        tempArray = _.reject(property.value, function (element) {
+        if (angular.isUndefined(property.value) || property.value === "") {
+          properties[property.name] = null;
+        }
+        else if (angular.isArray(property.value)) {
+          tempArray = _.reject(property.value, function (element) {
             return angular.isUndefined(element) || element === null || element === "";
           });
-        properties[property.name] = tempArray.length ? _.clone(tempArray) : null;
-      }
-      else {
-        properties[property.name] = property.value;
+          properties[property.name] = tempArray.length ? _.clone(tempArray) : null;
+        }
+        else {
+          properties[property.name] = property.value;
+        }
+
       }
 
     }
     return properties;
   }
 
-})(angular, _);
+}(angular, _));

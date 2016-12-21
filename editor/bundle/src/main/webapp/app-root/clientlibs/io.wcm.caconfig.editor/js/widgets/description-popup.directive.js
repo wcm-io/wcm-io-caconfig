@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, $) {
   "use strict";
 
   /**
@@ -39,7 +39,7 @@
 
   function descriptionPopup(templateList, utilities, uiService) {
 
-    function link(scope, element, attr) {
+    function link(scope, element) {
       scope.id = utilities.nextUid();
       scope.$evalAsync(function () {
         uiService.addUI(uiService.component.POPOVER, scope.id, {
@@ -56,4 +56,4 @@
       link: link
     };
   }
-})(angular);
+}(angular, jQuery));
