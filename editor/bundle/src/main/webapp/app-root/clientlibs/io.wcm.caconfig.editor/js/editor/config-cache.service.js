@@ -80,7 +80,7 @@
 
     /**
      * @param  {Array}   data
-     * @param  {Object=} parentName - configNameObject
+     * @param  {String=} parentName
      */
     function addConfigsToCache(data, parentName) {
       var configData,
