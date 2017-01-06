@@ -58,9 +58,9 @@
     /**
      * Loads config from REST url
      * Triggers update of configCache
-     * @param  {[type]}  configName   [description]
-     * @param  {Boolean} isCollection [description]
-     * @return {[type]}               [description]
+     * @param  {String}  configName
+     * @param  {Boolean} isCollection
+     * @return {Promise}
      */
     this.loadConfig = function (configName) {
       var configNameObject = configCacheService.getConfigNameObject(configName);

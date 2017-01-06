@@ -74,20 +74,23 @@
       });
     };
 
-    this.updateConfigCache = function (data, parent) {
-      addConfigsToCache(data, parent);
+    /**
+     * @param  {Array} configs
+     */
+    this.updateConfigCache = function (configs) {
+      addConfigsToCache(configs);
     };
 
     /**
-     * @param  {Array}   data
+     * @param  {Array}   configs
      * @param  {String=} parentName
      */
-    function addConfigsToCache(data, parentName) {
+    function addConfigsToCache(configs, parentName) {
       var configData,
           i;
 
-      for (i = 0; i < data.length; i++) {
-        configData = data[i];
+      for (i = 0; i < configs.length; i++) {
+        configData = configs[i];
         addConfigToCache(configData, parentName);
       }
       setStoredConfigCache();
@@ -96,6 +99,7 @@
     function addConfigToCache(configData, parentName) {
       var isNested = false;
       var isCollection = false;
+      var isCollectionItem = false;
       var children,
           config,
           configName,
@@ -122,25 +126,30 @@
       configCache[configName] = configCache[configName] || {};
       config = configCache[configName];
 
+      isCollectionItem = angular.isString(configData.collectionItemName);
+
       // if already has been added to cache
-      if (!angular.isUndefined(config.hasChildren) && !(isNested && isCollection)) {
+      if (!angular.isUndefined(config.hasChildren) && !isCollectionItem
+          && !(isNested && isCollection)) {
         return;
       }
 
-      parent = getConfigNameObject(parentName);
+      if (!isCollectionItem) {
+        parent = getConfigNameObject(parentName);
 
-      config.parent = angular.equals(parent, {}) ? null : parent;
-      config.configNameObject = config.configNameObject || {};
+        config.parent = angular.equals(parent, {}) ? null : parent;
+        config.configNameObject = config.configNameObject || {};
 
-      if (isNested) {
-        config.configNameObject.configName = configName;
-        config.configNameObject.collection = isCollection;
-        config.configNameObject.name = configData.name;
-        config.configNameObject.description = configData.metadata.description;
-        config.configNameObject.label = configData.metadata.label;
+        if (isNested) {
+          config.configNameObject.configName = configName;
+          config.configNameObject.collection = isCollection;
+          config.configNameObject.name = configData.name;
+          config.configNameObject.description = configData.metadata.description;
+          config.configNameObject.label = configData.metadata.label;
+        }
+
+        config.configNameObject.breadcrumbs = buildBreadcrumbs(configName);
       }
-
-      config.configNameObject.breadcrumbs = buildBreadcrumbs(configName);
 
       properties = getConfigProperties(configData, isNested, isCollection);
       children = getChildren(properties);
