@@ -1,33 +1,34 @@
-<div >
-  <div class="caconfig-map caconfig-map--empty"  ng-show="!values.length">
-    <input type="type" class="coral-Textfield"
+<div>
+  <div class="caconfig-map caconfig-map--empty"
+       ng-show="!values.length">
+    <input class="coral-Textfield" type="type"
            ng-disabled="true" />
-    <input type="type" class="coral-Textfield"
+    <input class="coral-Textfield" type="type"
            ng-disabled="true" />
     <div class="coral-ButtonGroup">
-      <button ng-click="addNewValue(0)" class="coral-ButtonGroup-item coral-Button coral-Button--secondary">
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary"
+              ng-click="addNewValue(0)">
         <i class="coral-Icon coral-Icon--add"></i>
       </button>
-      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disabled-button" ng-disabled="true">
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disabled-button"
+              ng-disabled="true">
         <i class="coral-Icon coral-Icon--minus"></i>
       </button>
     </div>
   </div>
   <div class="caconfig-map" ng-repeat="value in values">
-    <input type="text" class="coral-Textfield"
+    <input class="coral-Textfield" type="text" placeholder="Key"
            ng-model="value.key"
            ng-maxlength="{{parameter.maxlength}}"
            ng-minlength="{{parameter.minlength}}"
            ng-pattern="{{parameter.pattern}}"
-           ng-required="{{parameter.required}}"
-           placeholder="Key"
-    /><input type="text" class="coral-Textfield"
+           ng-required="{{parameter.required}}" />
+    <input type="text" class="coral-Textfield" placeholder="Value"
            ng-model="value.value"
            ng-maxlength="{{parameter.maxlength}}"
            ng-minlength="{{parameter.minlength}}"
            ng-pattern="{{parameter.pattern}}"
-           ng-required="{{parameter.required}}"
-           placeholder="Value"/>
+           ng-required="{{parameter.required}}" />
     <div class="coral-ButtonGroup">
       <button ng-click="addNewValue($index)" class="coral-ButtonGroup-item coral-Button coral-Button--secondary">
         <i class="coral-Icon coral-Icon--add"></i>

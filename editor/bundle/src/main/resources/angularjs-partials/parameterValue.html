@@ -1,40 +1,51 @@
 <div ng-switch on="type">
 
-  <input ng-switch-when="text"
-         type="text" class="coral-Textfield"
-         ng-model="parameter.value"/>
+  <input class="coral-Textfield" type="text"
+         ng-switch-when="text" ng-model="parameter.value" />
 
   <div ng-switch-when="multivalue">
-    <caconfig-multifield  parameter="parameter" />
+    <caconfig-multifield parameter="parameter" />
   </div>
 
-  <input ng-switch-when="number"
-         type="text" class="coral-Textfield"
+  <input class="coral-Textfield" type="text"
+         ng-switch-when="number"
          ng-model="parameter.value"
          ng-pattern="pattern"
          ng-required="required" />
 
   <div ng-switch-when="IntegerMultivalue">
-    <caconfig-multifield  parameter="parameter" />
+    <caconfig-multifield parameter="parameter" />
   </div>
 
-  <div ng-switch-when="checkbox" >
+  <div ng-switch-when="checkbox">
     <label class="coral-Checkbox">
-      <input ng-required="{{parameter.required}}" class="coral-Checkbox-input" ng-model="parameter.value" type="checkbox">
+      <input class="coral-Checkbox-input" type="checkbox"
+             ng-model="parameter.value"
+             ng-required="{{parameter.required}}">
       <span class="coral-Checkbox-checkmark"></span>
     </label>
   </div>
 
   <div ng-switch-when="map">
-    <caconfig-map  parameter="parameter" />
+    <caconfig-map parameter="parameter" />
   </div>
 
   <div ng-switch-when="nestedConfig">
-    <button class="coral-Button coral-Button--block coral-Button--default" ng-disabled="isNewItem" ng-click="form.$pristine ? go(parameter.nestedConfig.configName) : saveWarning(parameter.nestedConfig.configName)">{{i18n.button.edit}}</button>
+    <button class="coral-Button coral-Button--block coral-Button--default"
+            ng-disabled="isNewItem"
+            ng-click="form.$pristine ? go(parameter.nestedConfig.configName)
+                      : saveWarning(parameter.nestedConfig.configName)">
+      {{i18n.button.edit}}
+    </button>
   </div>
 
   <div ng-switch-when="nestedConfigCollection">
-    <button class="coral-Button coral-Button--block coral-Button--default" ng-disabled="isNewItem" ng-click="form.$pristine ? go(parameter.nestedConfigCollection.configName) : saveWarning(parameter.nestedConfigCollection.configName)">{{i18n.button.edit}}</button>
+    <button class="coral-Button coral-Button--block coral-Button--default"
+            ng-disabled="isNewItem"
+            ng-click="form.$pristine ? go(parameter.nestedConfigCollection.configName)
+                      : saveWarning(parameter.nestedConfigCollection.configName)">
+      {{i18n.button.edit}}
+    </button>
   </div>
 
   <div ng-switch-default>

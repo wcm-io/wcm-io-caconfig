@@ -29,11 +29,13 @@
     $routeProvider
     .when("/:configName*", {
       templateUrl: "detailView.html",
-      controller: "DetailController"
+      controller: "DetailController",
+      controllerAs: "detail"
     })
     .otherwise({
       templateUrl: "overviewView.html",
-      controller: "OverviewController"
+      controller: "OverviewController",
+      controllerAs: "overview"
     });
   }
 

@@ -27,14 +27,19 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("DetailController", DetailController);
 
-  DetailController.$inject = ["$rootScope", "$scope", "$route", "configService", "currentConfigService", "modalService"];
+  DetailController.$inject = ["$rootScope", "$route", "configService", "currentConfigService", "modalService"];
 
-  function DetailController($rootScope, $scope, $route, configService, currentConfigService, modalService) {
-    $scope.configName = $route.current.params.configName;
-    $scope.configs = [];
+  function DetailController($rootScope, $route, configService, currentConfigService, modalService) {
+    var current = {
+      configName: $route.current.params.configName,
+      configs: []
+    };
+
+    this.current = current;
+    this.removeConfig = removeConfig;
 
     // If detail view was loaded directly via deeplink, we need to first loadConfigNames
-    if (!configService.getContextPath() || !configService.getConfigNames().length) {
+    if (!configService.state.contextPath || !configService.state.configNames.length) {
       configService.loadConfigNames()
         .then(function success() {
           init();
@@ -52,9 +57,9 @@
       modalService.show(modalService.modal.SAVE_CONFIG);
     };
 
-    $scope.saveConfig = function () {
-      if ($scope.configs.length === 0) {
-        $scope.removeConfig();
+    this.saveConfig = function () {
+      if (current.configs.length === 0) {
+        removeConfig();
       }
       else {
         configService.saveCurrentConfig()
@@ -63,11 +68,15 @@
               $rootScope.go(redirect.configName || "");
             }
             else {
-              $rootScope.go($scope.parent ? $scope.parent.configName : "");
+              $rootScope.go(current.parent ? current.parent.configName : "");
             }
           });
       }
     };
+
+    function removeConfig() {
+      modalService.show(modalService.modal.DELETE_CONFIG);
+    }
 
     $rootScope.deleteConfig = function () {
       configService.deleteCurrentConfig()
@@ -76,21 +85,21 @@
             $rootScope.go(redirect.configName || "");
           }
           else {
-            $rootScope.go($scope.parent ? $scope.parent.configName : "");
+            $rootScope.go(current.parent ? current.parent.configName : "");
           }
         });
     };
 
-    $scope.addCollectionItem = function () {
+    this.addCollectionItem = function () {
       modalService.show(modalService.modal.ADD_COLLECTION_ITEM);
     };
 
-    $scope.removeConfig = function () {
-      modalService.show(modalService.modal.DELETE_CONFIG);
+    this.removeCollectionItem = function (index) {
+      currentConfigService.removeItemFromCurrentCollection(index);
     };
 
-    $scope.removeCollectionItem = function (index) {
-      currentConfigService.removeItemFromCurrentCollection(index);
+    this.isModified = function (formPristine) {
+      return !formPristine || current.originalLength !== current.configs.length;
     };
 
     /**
@@ -98,18 +107,18 @@
      */
     function init() {
       // Load Configuration Details
-      configService.loadConfig($scope.configName)
-        .then(function (current) {
-          $scope.configs = current.configs;
-          $scope.originalLength = current.configs.length;
-          $scope.isCollection = current.isCollection;
-          $scope.isNewCollection = current.isCollection && current.configs.length === 0;
-          $scope.label = current.configNameObject.label || $scope.configName;
-          $scope.breadcrumbs = current.configNameObject.breadcrumbs || [];
-          $scope.parent = $scope.breadcrumbs[$scope.breadcrumbs.length - 1];
-          $scope.description = current.configNameObject.description;
-          $scope.contextPath = configService.getContextPath();
-          $rootScope.title = $rootScope.i18n.title + ": " + $scope.label;
+      configService.loadConfig(current.configName)
+        .then(function (currentData) {
+          current.configs = currentData.configs;
+          current.originalLength = currentData.configs.length;
+          current.isCollection = currentData.isCollection;
+          current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
+          current.label = currentData.configNameObject.label || current.configName;
+          current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
+          current.parent = current.breadcrumbs[current.breadcrumbs.length - 1];
+          current.description = currentData.configNameObject.description;
+          current.contextPath = configService.state.contextPath;
+          $rootScope.title = $rootScope.i18n.title + ": " + current.label;
         });
     }
   }

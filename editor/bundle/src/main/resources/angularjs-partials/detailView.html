@@ -1,35 +1,46 @@
-<form class="caconfig-detail" id="caconfig-configuration" name="configForm" novalidate ng-cloak>
+<form class="caconfig-detail" name="configForm" novalidate ng-cloak>
 
-  <button ng-click="(configForm.$pristine && originalLength === configs.length) || (isNewCollection && !configs.length) ? go() : saveWarning()"
-          class="coral-Button coral-Button--square coral-Button--default"
-          title="{{i18n.button.home}}">
+  <button class="coral-Button coral-Button--square coral-Button--default"
+          title="{{i18n.button.home}}"
+          ng-click="detail.isModified(configForm.$pristine) ? saveWarning() : go()">
     <i class="coral-Icon coral-Icon--home"></i>
   </button>
-  <button id="caconfig-save" class="coral-Button coral-Button--primary"
-    ng-click="saveConfig()"
-    ng-disabled="configForm.$invalid || (configForm.$pristine && originalLength === configs.length) || (isNewCollection && !configs.length)">{{i18n.button.save}}</button>
-  <button class="coral-Button coral-Button--secondary" ng-click="go(parent ? parent.configName : '')" >{{i18n.button.cancel}}</button>
-  <button ng-hide="!configs.length" ng-click="removeConfig()"
-          class="coral-Button coral-Button--square coral-Button--default"
-          title="{{isCollection ? i18n.button.deleteCollection : i18n.button.deleteConfig}}">
+  <button class="coral-Button coral-Button--primary"
+          ng-disabled="configForm.$invalid || !detail.isModified(configForm.$pristine)"
+          ng-click="detail.saveConfig()">
+    {{i18n.button.save}}
+  </button>
+  <button class="coral-Button coral-Button--secondary"
+          ng-click="go(detail.current.parent ? detail.current.parent.configName : '')">
+    {{i18n.button.cancel}}
+  </button>
+  <button class="coral-Button coral-Button--square coral-Button--default"
+          title="{{detail.current.isCollection ? i18n.button.deleteCollection : i18n.button.deleteConfig}}"
+          ng-hide="!detail.current.configs.length"
+          ng-click="detail.removeConfig()">
     <i class="coral-Icon coral-Icon--delete"></i>
   </button>
 
-  <p>{{i18n.contextPath}}: <code>{{contextPath}}</code></p>
+  <p>{{i18n.contextPath}}: <code>{{detail.current.contextPath}}</code></p>
 
   <h2>
-    <span ng-repeat="breadcrumb in breadcrumbs" class="caconfig-breadcrumb">
-      <span class="coral-Link caconfig-breadcrumb-link" ng-click="(configForm.$pristine && originalLength === configs.length) || (isNewCollection && !configs.length) ? go(breadcrumb.configName) : saveWarning(breadcrumb.configName)">{{breadcrumb.label}}</span> /
+    <span class="caconfig-breadcrumb" ng-repeat="breadcrumb in detail.current.breadcrumbs">
+      <span class="coral-Link caconfig-breadcrumb-link"
+            ng-click="detail.isModified(configForm.$pristine)
+              ? saveWarning(breadcrumb.configName) : go(breadcrumb.configName)">
+        {{breadcrumb.label}}
+      </span> /
       <span ng-show="breadcrumb.itemName">{{breadcrumb.itemName}} / </span>
     </span>
-    {{label}}
+    {{detail.current.label}}
   </h2>
-  <p>{{description}}</p>
+  <p>{{detail.current.description}}</p>
 
-  <div ng-repeat="config in configs" class="caconfig-configurationDetails" ng-cloak>
-    <h3 ng-hide="!isCollection">
+  <div class="caconfig-configurationDetails" ng-repeat="config in detail.current.configs" ng-cloak>
+    <h3 ng-hide="!detail.current.isCollection">
       {{config.collectionItemName}}
-      <span ng-click="removeCollectionItem($index)" title="{{i18n.button.deleteItem}}" class="coral-Icon coral-Icon--delete caconfig-delete-item"></span>
+      <i class="coral-Icon coral-Icon--delete caconfig-delete-item" title="{{i18n.button.deleteItem}}"
+            ng-click="detail.removeCollectionItem($index)"></i>
     </h3>
     <table class="coral-Table coral-Table--hover" ng-cloak>
       <thead>
@@ -75,6 +86,6 @@
 
   </div>
 
-  <p><button ng-hide="!isCollection" ng-click="addCollectionItem()" class="coral-Button coral-Button--primary">{{i18n.button.addItem}}</button></p>
+  <p><button ng-hide="!detail.current.isCollection" ng-click="detail.addCollectionItem()" class="coral-Button coral-Button--primary">{{i18n.button.addItem}}</button></p>
 
 </form>

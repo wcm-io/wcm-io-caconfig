@@ -25,33 +25,32 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("OverviewController", OverviewController);
 
-  OverviewController.$inject = ["$rootScope", "$scope", "configService", "uiService", "modalService"];
+  OverviewController.$inject = ["$rootScope", "configService", "uiService", "modalService"];
 
-  function OverviewController($rootScope, $scope, configService, uiService, modalService) {
+  function OverviewController($rootScope, configService, uiService, modalService) {
+    var state = configService.state;
+    this.state = state;
+
     $rootScope.title = $rootScope.i18n.title;
 
-    configService.loadConfigNames()
-      .then(function success() {
-        $scope.contextPath = configService.getContextPath();
-        $scope.configNames = configService.getConfigNames();
-      });
+    configService.loadConfigNames();
 
-    $scope.hasNonExistingConfig = function () {
+    this.hasNonExistingConfig = function () {
       var i;
 
-      if (!$scope.configNames) {
+      if (!state.configNames) {
         return false;
       }
 
-      for (i = 0; i < $scope.configNames.length; i++) {
-        if (!$scope.configNames[i].exists) {
+      for (i = 0; i < state.configNames.length; i++) {
+        if (!state.configNames[i].exists) {
           return true;
         }
       }
       return false;
     };
 
-    $scope.showNonExistingConfigs = function () {
+    this.showNonExistingConfigs = function () {
       var $select,
           $selectClone;
 

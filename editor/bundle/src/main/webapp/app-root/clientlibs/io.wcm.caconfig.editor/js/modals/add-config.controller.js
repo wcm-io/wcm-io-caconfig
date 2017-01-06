@@ -32,7 +32,7 @@
     });
 
     $scope.getConfigNames = function () {
-      return configService.getConfigNames();
+      return configService.state.configNames;
     };
   }
 }(angular));

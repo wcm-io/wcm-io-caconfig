@@ -32,27 +32,11 @@
 
   function ConfigService(dataService, configCacheService, currentConfigService, modalService) {
 
-    var contextPath = null;
-    var configNames = [];
-
-    this.getContextPath = function () {
-      return contextPath;
+    var state = {
+      contextPath: null,
+      configNames: []
     };
-
-    function setContextPath(contextPathData) {
-      contextPath = contextPathData;
-    }
-
-    /**
-     * @return {Array} configNames
-     */
-    this.getConfigNames = function () {
-      return configNames;
-    };
-
-    function setConfigNames(configNamesData) {
-      configNames = configNamesData;
-    }
+    this.state = state;
 
     /**
      * [loadConfigNames description]
@@ -61,8 +45,8 @@
     this.loadConfigNames = function () {
       return dataService.getConfigNames().then(
         function success(result) {
-          setContextPath(result.data.contextPath);
-          setConfigNames(result.data.configNames);
+          state.contextPath = result.data.contextPath;
+          state.configNames = result.data.configNames;
           configCacheService.plantConfigCache(result.data.configNames);
         },
         function error() {
