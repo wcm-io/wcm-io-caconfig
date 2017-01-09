@@ -94,7 +94,7 @@
 
       if (!property.nestedConfig && !property.nestedConfigCollection) {
 
-        if (angular.isUndefined(property.value) || property.value === "") {
+        if (property.inherited || angular.isUndefined(property.value) || property.value === "") {
           properties[property.name] = null;
         }
         else if (angular.isArray(property.value)) {

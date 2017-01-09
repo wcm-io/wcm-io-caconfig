@@ -102,6 +102,15 @@
       return !formPristine || current.originalLength !== current.configs.length;
     };
 
+    this.handleInheritedChange = function (property) {
+      if (!property.inherited && angular.isUndefined(property.value)) {
+        property.value = property.effectiveValue;
+      }
+      else {
+        property.effectiveValue = "(" + $rootScope.i18n.config.inherited + ")";
+      }
+    };
+
     /**
      * Loads config data and sets various $scope properties
      */
