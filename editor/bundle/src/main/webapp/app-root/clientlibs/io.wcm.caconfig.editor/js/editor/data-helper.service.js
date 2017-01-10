@@ -92,9 +92,10 @@
     for (i = 0; i < config.properties.length; i++) {
       property = config.properties[i];
 
-      if (!property.nestedConfig && !property.nestedConfigCollection) {
+      if (!property.overridden && !property.inherited
+          && !property.nestedConfig && !property.nestedConfigCollection) {
 
-        if (property.inherited || angular.isUndefined(property.value) || property.value === "") {
+        if (angular.isUndefined(property.value) || property.value === "") {
           properties[property.name] = null;
         }
         else if (angular.isArray(property.value)) {

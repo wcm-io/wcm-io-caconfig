@@ -103,7 +103,8 @@
     };
 
     this.handleInheritedChange = function (property) {
-      if (!property.inherited && angular.isUndefined(property.value)) {
+      if (!property.metadata.multivalue
+          && !property.inherited && angular.isUndefined(property.value)) {
         property.value = property.effectiveValue;
       }
       else {

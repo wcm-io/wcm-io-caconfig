@@ -28,28 +28,63 @@
 
     function link(scope, element, attr, form) {
       var input = inputMap[scope.parameter.metadata.type];
-      var i,
-          originalLength,
-          values;
+      var inheritedStateChanged = false;
 
       scope.type = input.type;
       scope.pattern = input.pattern;
       scope.required = input.required;
+      scope.effectiveValues = [];
       scope.values = [];
-      if (scope.parameter.value && scope.parameter.value.length > 0) {
-        values = scope.parameter.value;
-        for (i = 0; i < values.length; i++) {
-          scope.values.push({value: values[i]});
-        }
-      }
-      originalLength = scope.values.length;
-      scope.$watch("values", function () {
-        var valueArray = _.map(scope.values, "value");
+
+      setValueArray(scope.parameter.effectiveValue, scope.effectiveValues);
+      setValueArray(scope.parameter.value, scope.values);
+
+      scope.$watch("values", function (newValues, oldValues) {
+        var valueArray = _.map(newValues, "value");
         scope.parameter.value = valueArray;
-        if (valueArray.length !== originalLength) {
+        if (newValues.length !== oldValues.length) {
           form.$setDirty();
         }
       }, true);
+
+      scope.$watch("parameter.inherited", function (isInherited, wasInherited) {
+        var effectiveValueArray,
+            valueArray;
+
+        if (isInherited === wasInherited) {
+          return;
+        }
+
+        valueArray = _.map(scope.values, "value");
+
+        if (!inheritedStateChanged && isInherited === false && valueArray.length === 0) {
+          effectiveValueArray = _.map(scope.effectiveValues, "value");
+          valueArray = effectiveValueArray;
+          setValueArray(valueArray, scope.values);
+        }
+        else if (isInherited === true) {
+          scope.effectiveValues = [{
+            value: String(scope.parameter.effectiveValue)
+          }];
+        }
+
+        inheritedStateChanged = true;
+        form.$setDirty();
+      });
+    }
+
+    function setValueArray(src, target) {
+      var i,
+          tempArray;
+      if (src && src.length > 0) {
+        tempArray = src;
+        for (i = 0; i < tempArray.length; i++) {
+          target.push({value: tempArray[i]});
+        }
+      }
+      else {
+        target = [];
+      }
     }
 
     return {
