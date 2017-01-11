@@ -1,6 +1,6 @@
 <div>
  <div class="caconfig-multifield caconfig-multifield--empty"
-      ng-show="!parameter.overridden && !parameter.inherited && !values.length">
+      ng-hide="parameter.overridden || parameter.inherited || values.length">
     <input class="coral-Textfield" type="type"
            ng-disabled="true" />
     <div class="coral-ButtonGroup">
@@ -18,6 +18,7 @@
        ng-show="parameter.overridden || parameter.inherited" ng-repeat="effectiveValue in effectiveValues">
     <input class="coral-Textfield" type="type"
            ng-disabled="true"
+            ng-readonly="true"
            ng-model="effectiveValue.value" />
     <div class="coral-ButtonGroup">
       <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disabled-button"

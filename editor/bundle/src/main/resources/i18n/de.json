@@ -21,7 +21,11 @@
       "inherited": "Vererbt",
       "overridden": "Überschrieben",
       "description": "Beschreibung",
-      "group": "Gruppe"
+      "group": "Gruppe",
+      "inheritance": {
+        "property": "config.inheritance.property",
+        "collection": "config.inheritance.collection"
+      },
     },
     "modal": {
       "addTitle": "Konfiguration hinzufügen",

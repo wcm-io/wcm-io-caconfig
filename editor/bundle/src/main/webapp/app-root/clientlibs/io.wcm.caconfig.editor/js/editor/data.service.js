@@ -62,16 +62,14 @@
       };
 
       /**
-       * @param {String} configName
-       * @param {Boolean} isCollection
-       * @param {Array} configs
+       * @param {Object} current
        * @returns {Promise}
        */
-      this.saveConfigData = function (configName, isCollection, configs) {
-        var configData = dataHelperService.buildConfigData(configs, isCollection);
-        var url = restUrls.configPersistUrl + "?configName=" + configName;
+      this.saveConfigData = function (current) {
+        var configData = dataHelperService.buildConfigData(current);
+        var url = restUrls.configPersistUrl + "?configName=" + current.configName;
 
-        if (isCollection) {
+        if (current.isCollection) {
           url += "&collection=true";
         }
         return $http.post(url, configData);

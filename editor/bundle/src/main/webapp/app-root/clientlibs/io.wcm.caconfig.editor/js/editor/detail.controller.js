@@ -112,6 +112,21 @@
       }
     };
 
+    this.getConfigPropertyInherit = function (config) {
+      var configPropertyInherit = _.find(config.properties, {
+        name: "sling:configPropertyInherit"
+      });
+      if (!configPropertyInherit) {
+        configPropertyInherit = {
+          name: "sling:configPropertyInherit",
+          value: false
+        };
+        config.properties.push(configPropertyInherit);
+      }
+      return configPropertyInherit;
+    };
+
+
     /**
      * Loads config data and sets various $scope properties
      */
@@ -123,6 +138,7 @@
           current.originalLength = currentData.configs.length;
           current.isCollection = currentData.isCollection;
           current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
+          current.collectionProperties = currentData.collectionProperties;
           current.label = currentData.configNameObject.label || current.configName;
           current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
           current.parent = current.breadcrumbs[current.breadcrumbs.length - 1];

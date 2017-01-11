@@ -38,43 +38,50 @@
       var configs = [];
       var configData = angular.fromJson(data);
       var newItem = null;
+      var collectionProperties = {};
 
       if (angular.isArray(configData.items)) {
         configs = configData.items;
         newItem = configData.newItem;
+        collectionProperties = configData.properties || {};
       }
       else {
         configs.push(configData);
       }
       return {
         configs: configs,
-        newItem: newItem
+        newItem: newItem,
+        collectionProperties: collectionProperties
       };
     };
 
     /**
-     * @param {Array} configs
-     * @param {Boolean} isCollection
+     * @param {Object} current
      * @returns {json}
      */
-    this.buildConfigData = function (configs, isCollection) {
+    this.buildConfigData = function (current) {
       var configData = {};
 
-      if (isCollection) {
+      if (current.isCollection) {
+        configData.properties = {};
         configData.items = [];
 
-        angular.forEach(configs, function (config) {
+        angular.forEach(current.configs, function (config) {
           var item = {
             collectionItemName: config.collectionItemName,
             properties: buildProperties(config)
           };
           configData.items.push(item);
         });
+
+        configData.properties = current.collectionProperties || {};
+        if (configData.properties["sling:configCollectionInherit"] !== true) {
+          delete configData.properties["sling:configCollectionInherit"];
+        }
       }
       else {
-        configData.properties = buildProperties(configs[0]);
+        configData.properties = buildProperties(current.configs[0]);
       }
-
       return angular.toJson(configData);
     };
   }
@@ -95,7 +102,12 @@
       if (!property.overridden && !property.inherited
           && !property.nestedConfig && !property.nestedConfigCollection) {
 
-        if (angular.isUndefined(property.value) || property.value === "") {
+        if (property.name === "sling:configPropertyInherit") {
+          if (property.value === true) {
+            properties[property.name] = property.value;
+          }
+        }
+        else if (angular.isUndefined(property.value) || property.value === "") {
           properties[property.name] = null;
         }
         else if (angular.isArray(property.value)) {

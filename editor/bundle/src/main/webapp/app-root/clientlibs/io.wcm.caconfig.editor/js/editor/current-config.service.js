@@ -65,6 +65,7 @@
       current.isCollection = data.isCollection;
       current.configs = data.configs;
       current.configNameObject = data.configNameObject;
+      current.collectionProperties = data.collectionProperties;
     };
 
     /**

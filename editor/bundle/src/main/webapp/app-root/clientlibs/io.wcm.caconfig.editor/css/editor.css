@@ -81,7 +81,7 @@ span.wcm-io-editor.endor-Brand {
   overflow-y: visible;
 }
 
-.caconfig-delete-item {
+.caconfig-configurationDetails .caconfig-delete-item {
   cursor: pointer;
   float: right;
 }

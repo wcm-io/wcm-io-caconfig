@@ -79,7 +79,8 @@
               configName: configName,
               isCollection: isCollection,
               configs: result.data.configs,
-              configNameObject: configNameObject
+              configNameObject: configNameObject,
+              collectionProperties: result.data.collectionProperties
             };
             currentConfigService.setCurrent(current);
             return current;
@@ -93,7 +94,7 @@
     this.saveCurrentConfig = function () {
       var current = currentConfigService.getCurrent();
       var parent = current.configNameObject.parent || "";
-      return dataService.saveConfigData(current.configName, current.isCollection, current.configs)
+      return dataService.saveConfigData(current)
         .then(
           function success() {
             configCacheService.removeStoredConfigCache();
