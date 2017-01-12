@@ -4,7 +4,11 @@
     "angular": false,
     "CUI": false,
     "jQuery": false,
-    "_": false
+    "_": false,
+    "inject": false,
+    "browser": false,
+    "by": false,
+    "getJSONFixture": false
   },
   "rules": {
     "func-style": ["error", "declaration"],

@@ -1,0 +1,37 @@
+[
+   {
+      "configName":"io.wcm.caconfig.sample.config.ConfigSample",
+      "label":"Sample Configuration",
+      "description":"This is a sample configuration.",
+      "collection":false,
+      "exists":true
+   },
+   {
+      "configName":"io.wcm.caconfig.sample.config.ConfigSampleList",
+      "label":"Sample Configuration List",
+      "description":"This is a sample configuration list.",
+      "collection":true,
+      "exists":true
+   },
+   {
+      "configName":"io.wcm.caconfig.sample.config.ConfigSampleNested",
+      "label":"Sample Configuration Nested",
+      "description":"This is another sample configuration that is nested.",
+      "collection":false,
+      "exists":false
+   },
+   {
+      "configName":"sample/configuration/2",
+      "label":"Sample Configuration 2",
+      "description":"This is another sample configuration.",
+      "collection":false,
+      "exists":false
+   },
+   {
+      "configName":"sample/configuration/list/2",
+      "label":"Sample Configuration List 2",
+      "description":"This is another sample configuration list.",
+      "collection":true,
+      "exists":false
+   }
+]

@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "stylelint-config-pv/plain-css"
+  ],
+  "rules": {
+  }
+}
