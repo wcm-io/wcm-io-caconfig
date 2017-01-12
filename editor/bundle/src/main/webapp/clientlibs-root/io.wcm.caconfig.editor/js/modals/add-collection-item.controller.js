@@ -28,21 +28,23 @@
   AddCollectionItemController.$inject = ["$scope", "modalService", "currentConfigService"];
 
   function AddCollectionItemController($scope, modalService, currentConfigService) {
-    $scope.blacklist = [];
-    $scope.itemTitleRegex = DEFAULT_ITEM_NAME_PATTERN;
+    var that = this;
+
+    that.blacklist = [];
+    that.itemTitleRegex = DEFAULT_ITEM_NAME_PATTERN;
 
     modalService.addModal(modalService.modal.ADD_COLLECTION_ITEM, {
       element: "#caconfig-addCollectionItemModal",
       visible: false
     });
 
-    modalService.addEvent(modalService.modal.ADD_COLLECTION_ITEM, "show", function () {
-      $scope.newCollectionName = null;
-      $scope.blacklist = currentConfigService.getCollectionItemNames();
+    modalService.onEvent(modalService.modal.ADD_COLLECTION_ITEM, "show", function () {
+      that.newCollectionName = null;
+      that.blacklist = currentConfigService.getCollectionItemNames();
       $("#caconfig-collectionItemName").focus();
     });
 
-    $scope.addItem = function () {
+    that.addItem = function () {
       var collectionItemName = $("#caconfig-collectionItemName").val()
         .trim();
       currentConfigService.addItemToCurrentCollection(collectionItemName);

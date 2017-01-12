@@ -29,6 +29,8 @@
   CurrentConfigService.$inject = [];
 
   function CurrentConfigService() {
+    var that = this;
+
     var collectionItemTemplates = {};
     var current = {
       configName: null,
@@ -37,7 +39,7 @@
       configNameObject: {}
     };
 
-    this.setCollectionItemTemplate = function (configName, newItem) {
+    that.setCollectionItemTemplate = function (configName, newItem) {
       if (!collectionItemTemplates[configName]) {
         collectionItemTemplates[configName] = newItem;
       }
@@ -52,15 +54,15 @@
       return angular.copy(collectionItemTemplates[configName]);
     }
 
-    this.getCollectionItemNames = function () {
+    that.getCollectionItemNames = function () {
       return _.map(current.configs, "collectionItemName");
     };
 
-    this.getCurrent = function () {
+    that.getCurrent = function () {
       return current;
     };
 
-    this.setCurrent = function (data) {
+    that.setCurrent = function (data) {
       current.configName = data.configName;
       current.isCollection = data.isCollection;
       current.configs = data.configs;
@@ -72,7 +74,7 @@
      * [addItemToCurrentCollection description]
      * @param {[type]} collectionItemName [description]
      */
-    this.addItemToCurrentCollection = function (collectionItemName) {
+    that.addItemToCurrentCollection = function (collectionItemName) {
       var configName = current.configName;
       var itemTemplate = getCollectionItemTemplate(configName);
       current.configs.push({
@@ -84,7 +86,7 @@
       });
     };
 
-    this.removeItemFromCurrentCollection = function (index) {
+    that.removeItemFromCurrentCollection = function (index) {
       current.configs.splice(index, 1);
     };
 

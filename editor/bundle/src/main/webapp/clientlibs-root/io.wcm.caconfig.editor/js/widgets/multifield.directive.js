@@ -26,6 +26,20 @@
 
   function multifield(templateList, inputMap) {
 
+    var directive = {
+      restrict: "E",
+      replace: true,
+      require: "^form",
+      templateUrl: templateList.multifield,
+      scope: {
+        parameter: "="
+      },
+      controller: MultifieldController,
+      link: link
+    };
+
+    return directive;
+
     function link(scope, element, attr, form) {
       var input = inputMap[scope.parameter.metadata.type];
       var inheritedStateChanged = false;
@@ -58,10 +72,11 @@
 
         valueArray = _.map(scope.values, "value");
 
-        if (!inheritedStateChanged && isInherited === false && valueArray.length === 0) {
+        if (!inheritedStateChanged
+            && isInherited === false
+            && valueArray.length === 0) {
           effectiveValueArray = _.map(scope.effectiveValues, "value");
-          valueArray = effectiveValueArray;
-          setValueArray(valueArray, scope.values);
+          setValueArray(effectiveValueArray, scope.values);
         }
         else if (isInherited === true) {
           scope.effectiveValues = [{
@@ -87,18 +102,6 @@
         target = [];
       }
     }
-
-    return {
-      restrict: "E",
-      replace: true,
-      require: "^form",
-      templateUrl: templateList.multifield,
-      scope: {
-        parameter: "="
-      },
-      controller: MultifieldController,
-      link: link
-    };
   }
 
   MultifieldController.$inject = ["$scope"];

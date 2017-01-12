@@ -30,6 +30,20 @@
 
   function parameterValue(templateList, inputMap, $rootScope) {
 
+    var directive = {
+      restrict: "A",
+      replace: false,
+      require: "^form",
+      templateUrl: templateList.parameterValue,
+      scope: {
+        parameter: "=caconfigParameterValue",
+        isNewItem: "=caconfigIsNewItem"
+      },
+      link: link
+    };
+
+    return directive;
+
     function link(scope, element, attr, form) {
       var input;
 
@@ -57,17 +71,5 @@
         scope.type = null;
       }
     }
-
-    return {
-      restrict: "A",
-      replace: false,
-      require: "^form",
-      templateUrl: templateList.parameterValue,
-      scope: {
-        parameter: "=caconfigParameterValue",
-        isNewItem: "=caconfigIsNewItem"
-      },
-      link: link
-    };
   }
 }(angular));

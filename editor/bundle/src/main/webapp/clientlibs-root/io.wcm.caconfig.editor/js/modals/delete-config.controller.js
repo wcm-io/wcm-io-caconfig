@@ -23,9 +23,9 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("DeleteConfigController", DeleteConfigController);
 
-  DeleteConfigController.$inject = ["$rootScope", "$scope", "modalService"];
+  DeleteConfigController.$inject = ["modalService"];
 
-  function DeleteConfigController($rootScope, $scope, modalService) {
+  function DeleteConfigController(modalService) {
     modalService.addModal(modalService.modal.DELETE_CONFIG, {
       element: "#caconfig-deleteConfigModal",
       type: "notice",

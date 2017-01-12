@@ -17,22 +17,52 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, $) {
   "use strict";
+
+  var CONFIG_SELECT = "config";
 
   angular.module("io.wcm.caconfig.modals")
     .controller("AddConfigController", AddConfigController);
 
-  AddConfigController.$inject = ["$scope", "modalService", "configService"];
+  AddConfigController.$inject = ["$rootScope", "modalService", "configService", "uiService"];
 
-  function AddConfigController($scope, modalService, configService) {
+  function AddConfigController($rootScope, modalService, configService, uiService) {
+    var that = this;
+
     modalService.addModal(modalService.modal.ADD_CONFIG, {
       element: "#caconfig-addConfigModal",
       visible: false
     });
 
-    $scope.getConfigNames = function () {
-      return configService.state.configNames;
+    modalService.onEvent(modalService.modal.ADD_CONFIG, "caconfig-setup", function () {
+      var $select,
+          $selectClone;
+
+      $("#caconfig-configurationSelectClone").remove();
+
+      $select = $("#caconfig-configurationSelect").hide()
+        .removeClass("coral-Select");
+      $selectClone = $("#caconfig-configurationSelect")
+        .clone()
+        .addClass("coral-Select")
+        .css("display", "inline-block")
+        .attr("id", "caconfig-configurationSelectClone");
+
+      $select.before($selectClone);
+
+      uiService.addUI(uiService.component.SELECT, CONFIG_SELECT, {
+        element: $selectClone
+      });
+    });
+
+    that.getConfigNames = function () {
+      return configService.getState().configNames;
+    };
+
+    that.addConfig = function () {
+      var configName = uiService.callMethod(uiService.component.SELECT, CONFIG_SELECT, uiService.method.GET_VALUE);
+      $rootScope.go(configName);
     };
   }
-}(angular));
+}(angular, jQuery));

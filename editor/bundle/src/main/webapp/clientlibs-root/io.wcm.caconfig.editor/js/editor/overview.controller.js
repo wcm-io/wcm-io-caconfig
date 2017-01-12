@@ -17,65 +17,39 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, $) {
+(function (angular) {
   "use strict";
-
-  var CONFIG_SELECT = "config";
 
   angular.module("io.wcm.caconfig.editor")
     .controller("OverviewController", OverviewController);
 
-  OverviewController.$inject = ["$rootScope", "configService", "uiService", "modalService"];
+  OverviewController.$inject = ["$rootScope", "configService", "modalService"];
 
-  function OverviewController($rootScope, configService, uiService, modalService) {
-    var state = configService.state;
-    this.state = state;
+  function OverviewController($rootScope, configService, modalService) {
+    var that = this;
 
     $rootScope.title = $rootScope.i18n.title;
-
+    that.state = configService.getState();
     configService.loadConfigNames();
 
-    this.hasNonExistingConfig = function () {
+    that.hasNonExistingConfig = function () {
       var i;
 
-      if (!state.configNames) {
+      if (!that.state.configNames) {
         return false;
       }
 
-      for (i = 0; i < state.configNames.length; i++) {
-        if (!state.configNames[i].exists) {
+      for (i = 0; i < that.state.configNames.length; i++) {
+        if (!that.state.configNames[i].exists) {
           return true;
         }
       }
       return false;
     };
 
-    this.showNonExistingConfigs = function () {
-      var $select,
-          $selectClone;
-
-      $("#caconfig-configurationSelectClone").remove();
-
-      $select = $("#caconfig-configurationSelect").hide()
-        .removeClass("coral-Select");
-      $selectClone = $("#caconfig-configurationSelect")
-        .clone()
-        .addClass("coral-Select")
-        .css("display", "inline-block")
-        .attr("id", "caconfig-configurationSelectClone");
-
-      $select.before($selectClone);
-
-      uiService.addUI(uiService.component.SELECT, CONFIG_SELECT, {
-        element: $selectClone
-      });
-
+    that.showNonExistingConfigs = function () {
+      modalService.triggerEvent(modalService.modal.ADD_CONFIG, "caconfig-setup");
       modalService.show(modalService.modal.ADD_CONFIG);
     };
-
-    $rootScope.addConfig = function () {
-      var configName = uiService.callMethod(uiService.component.SELECT, CONFIG_SELECT, uiService.method.GET_VALUE);
-      $rootScope.go(configName);
-    };
   }
-}(angular, jQuery));
+}(angular));

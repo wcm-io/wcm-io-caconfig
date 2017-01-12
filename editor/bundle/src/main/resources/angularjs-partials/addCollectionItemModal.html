@@ -1,10 +1,10 @@
 <div class="coral-Modal" id="caconfig-addCollectionItemModal"
-     ng-controller="AddCollectionItemController">
+     ng-controller="AddCollectionItemController as addCollectionItem">
   <div class="coral-Modal-header">
     <i class="coral-Modal-typeIcon coral-Icon coral-Icon--sizeS"></i>
     <h2 class="coral-Modal-title coral-Heading coral-Heading--2">{{i18n.modal.addTitle}}</h2>
     <button class="coral-MinimalButton coral-Modal-closeButton"
-            data-dismiss="modal" type="button" title="{i18n.modal.close}}">
+            data-dismiss="modal" type="button" title="{{i18n.modal.close}}">
       <i class="coral-Icon coral-Icon--sizeXS coral-Icon--close coral-MinimalButton-icon"></i>
     </button>
   </div>
@@ -17,17 +17,17 @@
              data-init="quicktip" data-quicktip-arrow="right" data-quicktip-type="error"
              data-quicktip-content="{{i18n.modal.tooltip.unique}}"
              role="img" tabindex="0"
-             ng-show="blacklist.indexOf(newCollectionName) !== -1"></i>
+             ng-show="addCollectionItem.blacklist.indexOf(addCollectionItem.newCollectionName) !== -1"></i>
           <i class="coral-Form-fielderror coral-Icon coral-Icon--alert"
              data-init="quicktip" data-quicktip-arrow="right" data-quicktip-type="error"
-             data-quicktip-content="{i18n.modal.tooltip.allowed}}"
+             data-quicktip-content="{{i18n.modal.tooltip.allowed}}"
              role="img" tabindex="0"
              ng-show="addCollectionItemForm.collectionItemName.$error.pattern"></i>
-          <input class="coral-Form-field coral-Textfield {{blacklist.indexOf(newCollectionName) !== -1
+          <input class="coral-Form-field coral-Textfield {{addCollectionItem.blacklist.indexOf(addCollectionItem.newCollectionName) !== -1
                         ? 'ng-dirty ng-invalid' : ''}}"
                  id="caconfig-collectionItemName" name="collectionItemName"
                  type="text" placeholder="Item Name"
-                 ng-model="newCollectionName" ng-pattern="itemTitleRegex">
+                 ng-model="addCollectionItem.newCollectionName" ng-pattern="addCollectionItem.itemTitleRegex">
         </div>
       </section>
     </form>
@@ -35,9 +35,9 @@
   <div class="coral-Modal-footer">
     <button class="coral-Button coral-Button--primary" data-dismiss="modal" type="button"
             ng-disabled="!addCollectionItemForm.$valid
-                         || blacklist.indexOf(newCollectionName) !== -1
-                         || !newCollectionName"
-            ng-click="addItem()">
+                         || addCollectionItem.blacklist.indexOf(addCollectionItem.newCollectionName) !== -1
+                         || !addCollectionItem.newCollectionName"
+            ng-click="addCollectionItem.addItem()">
       {{i18n.button.ok}}
     </button>
     <button class="coral-Button coral-Button--secondary" data-dismiss="modal"

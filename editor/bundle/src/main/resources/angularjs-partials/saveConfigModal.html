@@ -1,11 +1,11 @@
 <div class="coral-Modal"
      id="caconfig-saveConfigModal"
-     ng-controller="SaveConfigController">
+     ng-controller="SaveConfigController as saveConfig">
   <div class="coral-Modal-header">
     <i class="coral-Modal-typeIcon coral-Icon coral-Icon--sizeS"></i>
     <h2 class="coral-Modal-title coral-Heading coral-Heading--2">{{i18n.modal.saveTitle}}</h2>
     <button class="coral-MinimalButton coral-Modal-closeButton" data-dismiss="modal"
-            type="button" title="{i18n.modal.close}}">
+            type="button" title="{{i18n.modal.close}}">
       <i class="coral-Icon coral-Icon--sizeXS coral-Icon--close coral-MinimalButton-icon"></i>
     </button>
   </div>
@@ -15,7 +15,7 @@
   <div class="coral-Modal-footer">
     <button class="coral-Button coral-Button--primary" data-dismiss="modal"
             type="button"
-            ng-click="saveConfigWithRedirect()">
+            ng-click="saveConfig.saveConfigWithRedirect()">
       {{i18n.button.save}}
     </button>
     <button class="coral-Button coral-Button--secondary"  data-dismiss="modal"

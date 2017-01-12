@@ -1,4 +1,5 @@
 module.exports = function (grunt) {
+  require("load-grunt-tasks")(grunt);
 
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
@@ -26,7 +27,7 @@ module.exports = function (grunt) {
       options: {
         configFile: ".eslintrc"
       },
-      target: ["<%= pkg.config.jsPath %>**/*.js"]
+      target: ["src/**/*.js"]
     },
     watch: {
       html: {
@@ -39,12 +40,6 @@ module.exports = function (grunt) {
       }
     }
   });
-  grunt.loadNpmTasks("grunt-yui-compressor");
-  grunt.loadNpmTasks("grunt-contrib-clean");
-  grunt.loadNpmTasks("grunt-html2js");
-  grunt.loadNpmTasks("grunt-contrib-watch");
-  grunt.loadNpmTasks("grunt-eslint");
-  grunt.registerTask("test", ["min"]);
   grunt.registerTask("lint:js", ["eslint"]);
   grunt.registerTask("build", ["html2js:templates", "min"]);
   grunt.registerTask("default", ["build"]);

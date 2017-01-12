@@ -23,16 +23,18 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("SaveConfigController", SaveConfigController);
 
-  SaveConfigController.$inject = ["$rootScope", "$scope", "modalService", "configService"];
+  SaveConfigController.$inject = ["$rootScope", "modalService", "configService"];
 
-  function SaveConfigController($rootScope, $scope, modalService, configService) {
+  function SaveConfigController($rootScope, modalService, configService) {
+    var that = this;
+
     modalService.addModal(modalService.modal.SAVE_CONFIG, {
       element: "#caconfig-saveConfigModal",
       type: "notice",
       visible: false
     });
 
-    $scope.saveConfigWithRedirect = function () {
+    that.saveConfigWithRedirect = function () {
       configService.saveCurrentConfig()
         .then(function () {
           $rootScope.goToRedirectUrl();

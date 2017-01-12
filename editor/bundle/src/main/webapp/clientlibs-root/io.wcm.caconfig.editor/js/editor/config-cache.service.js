@@ -33,6 +33,7 @@
   ConfigCacheService.$inject = ["$window"];
 
   function ConfigCacheService($window) {
+    var that = this;
     var configCache = {};
 
     /**
@@ -43,7 +44,7 @@
      * @param  {String} configName
      * @return {Object}
      */
-    function getConfigNameObject(configName) {
+    that.getConfigNameObject = function(configName) {
       var storedConfigCache;
       var config = configCache[configName];
 
@@ -59,11 +60,9 @@
       }
 
       return {};
-    }
+    };
 
-    this.getConfigNameObject = getConfigNameObject;
-
-    this.plantConfigCache = function (data) {
+    that.plantConfigCache = function (data) {
       configCache = configCache || {};
       angular.forEach(data, function (config) {
         var configName = config.configName;
@@ -72,20 +71,14 @@
           configCache[configName].configNameObject = config;
         }
       });
-    };
-
-    /**
-     * @param  {Array} configs
-     */
-    this.updateConfigCache = function (configs) {
-      addConfigsToCache(configs);
+      return configCache;
     };
 
     /**
      * @param  {Array}   configs
      * @param  {String=} parentName
      */
-    function addConfigsToCache(configs, parentName) {
+    that.updateConfigCache = function (configs, parentName) {
       var configData,
           i;
 
@@ -94,7 +87,7 @@
         addConfigToCache(configData, parentName);
       }
       setStoredConfigCache();
-    }
+    };
 
     function addConfigToCache(configData, parentName) {
       var isNested = false;
@@ -135,7 +128,7 @@
       }
 
       if (!isCollectionItem) {
-        parent = getConfigNameObject(parentName);
+        parent = that.getConfigNameObject(parentName);
 
         config.parent = angular.equals(parent, {}) ? null : parent;
         config.configNameObject = config.configNameObject || {};
@@ -156,7 +149,7 @@
 
       if (children.length) {
         config.hasChildren = true;
-        addConfigsToCache(children, configName);
+        that.updateConfigCache(children, configName);
       }
       else {
         config.hasChildren = false;
@@ -247,7 +240,7 @@
       return {};
     }
 
-    this.removeStoredConfigCache = function () {
+    that.removeStoredConfigCache = function () {
       $window.localStorage.removeItem(STORED_CONFIG_CACHE);
     };
 

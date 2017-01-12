@@ -31,12 +31,13 @@
     .service("utilities", UtilitiesService);
 
   function UtilitiesService() {
+    var that = this;
 
     /**
      * Generates unique id
      * @return {String}
      */
-    this.nextUid = function () {
+    that.nextUid = function () {
       var index = uid.length;
       var digit;
 

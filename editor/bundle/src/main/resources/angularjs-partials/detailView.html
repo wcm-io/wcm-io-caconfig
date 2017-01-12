@@ -1,5 +1,4 @@
 <form class="caconfig-detail" name="configForm" novalidate ng-cloak>
-
   <button class="coral-Button coral-Button--square coral-Button--default"
           title="{{i18n.button.home}}"
           ng-click="detail.isModified(configForm.$pristine) ? saveWarning() : go()">
@@ -46,9 +45,7 @@
     </label>
   </p>
 
-
   <div class="caconfig-configurationDetails" ng-repeat="config in detail.current.configs" ng-cloak>
-
     <table class="coral-Table coral-Table--hover" ng-cloak>
       <thead>
       <tr class="coral-Table-row">
@@ -117,7 +114,6 @@
       </tr>
       </tbody>
     </table>
-
   </div>
 
   <p><button ng-show="detail.current.isCollection" ng-click="detail.addCollectionItem()" class="coral-Button coral-Button--primary">{{i18n.button.addItem}}</button></p>

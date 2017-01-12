@@ -31,18 +31,22 @@
   ConfigService.$inject = ["dataService", "configCacheService", "currentConfigService", "modalService"];
 
   function ConfigService(dataService, configCacheService, currentConfigService, modalService) {
+    var that = this;
 
     var state = {
       contextPath: null,
       configNames: []
     };
-    this.state = state;
+
+    that.getState = function () {
+      return state;
+    };
 
     /**
      * [loadConfigNames description]
      * @return {Promise} [description]
      */
-    this.loadConfigNames = function () {
+    that.loadConfigNames = function () {
       return dataService.getConfigNames().then(
         function success(result) {
           state.contextPath = result.data.contextPath;
@@ -62,7 +66,7 @@
      * @param  {Boolean} isCollection
      * @return {Promise}
      */
-    this.loadConfig = function (configName) {
+    that.loadConfig = function (configName) {
       var configNameObject = configCacheService.getConfigNameObject(configName);
       var isCollection = Boolean(configNameObject.collection);
 
@@ -91,7 +95,7 @@
         );
     };
 
-    this.saveCurrentConfig = function () {
+    that.saveCurrentConfig = function () {
       var current = currentConfigService.getCurrent();
       var parent = current.configNameObject.parent || "";
       return dataService.saveConfigData(current)
@@ -106,7 +110,7 @@
         );
     };
 
-    this.deleteCurrentConfig = function () {
+    that.deleteCurrentConfig = function () {
       var current = currentConfigService.getCurrent();
       var parent = current.configNameObject.parent || "";
       return dataService.deleteConfigData(current.configName).then(

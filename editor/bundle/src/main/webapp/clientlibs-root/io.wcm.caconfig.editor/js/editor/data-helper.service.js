@@ -28,13 +28,14 @@
     .service("dataHelperService", DataHelperService);
 
   function DataHelperService() {
+    var that = this;
 
     /**
      * Parses configuration data.
      * @param {Object} data
-     * @returns {Array} configs
+     * @returns {Object}
      */
-    this.parseConfigData = function (data) {
+    that.parseConfigData = function (data) {
       var configs = [];
       var configData = angular.fromJson(data);
       var newItem = null;
@@ -59,7 +60,7 @@
      * @param {Object} current
      * @returns {json}
      */
-    this.buildConfigData = function (current) {
+    that.buildConfigData = function (current) {
       var configData = {};
 
       if (current.isCollection) {
@@ -93,7 +94,7 @@
     var i,
         property,
         tempArray;
-    for (i = 0; i < config.properties.length; i++) {
+    for (i = 0; (config.properties && i < config.properties.length); i++) {
       property = config.properties[i];
 
       if (!property.overridden && !property.inherited

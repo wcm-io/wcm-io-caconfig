@@ -39,6 +39,16 @@
 
   function descriptionPopup(templateList, utilities, uiService) {
 
+    var directive = {
+      restrict: "E",
+      replace: true,
+      templateUrl: templateList.popupContainer,
+      transclude: true,
+      link: link
+    };
+
+    return directive;
+
     function link(scope, element) {
       scope.id = utilities.nextUid();
       scope.$evalAsync(function () {
@@ -47,13 +57,5 @@
         });
       });
     }
-
-    return {
-      restrict: "E",
-      replace: true,
-      templateUrl: templateList.popupContainer,
-      transclude: true,
-      link: link
-    };
   }
 }(angular, jQuery));

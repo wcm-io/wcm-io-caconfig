@@ -31,12 +31,13 @@
     var configUrls = {};
 
     function DataService($http, dataHelperService, restUrls) {
+      var that = this;
 
       /**
        * Get configuration names.
        * @returns {Promise}
        */
-      this.getConfigNames = function () {
+      that.getConfigNames = function () {
         return $http.get(restUrls.configNamesUrl);
       };
 
@@ -46,7 +47,7 @@
        * @param {Boolean} isCollection
        * @returns {Promise}
        */
-      this.getConfigData = function (configName, isCollection) {
+      that.getConfigData = function (configName, isCollection) {
         var url = restUrls.configDataUrl;
 
         if (angular.isString(configName)) {
@@ -65,7 +66,7 @@
        * @param {Object} current
        * @returns {Promise}
        */
-      this.saveConfigData = function (current) {
+      that.saveConfigData = function (current) {
         var configData = dataHelperService.buildConfigData(current);
         var url = restUrls.configPersistUrl + "?configName=" + current.configName;
 
@@ -79,7 +80,7 @@
        * @param {String} configName
        * @returns {Promise}
        */
-      this.deleteConfigData = function (configName) {
+      that.deleteConfigData = function (configName) {
         var url = restUrls.configPersistUrl + "?configName=" + configName;
         return $http({
           method: "DELETE",

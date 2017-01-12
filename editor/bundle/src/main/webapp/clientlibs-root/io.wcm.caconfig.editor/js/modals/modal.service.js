@@ -29,8 +29,9 @@
   ModalService.$inject = ["uiService"];
 
   function ModalService(uiService) {
+    var that = this;
 
-    this.modal = {
+    that.modal = {
       ADD_CONFIG: "addConfig",
       ADD_COLLECTION_ITEM: "addCollectionItem",
       DELETE_CONFIG: "deleteConfig",
@@ -38,15 +39,19 @@
       SAVE_CONFIG: "saveConfig"
     };
 
-    this.addModal = function (name, options) {
+    that.addModal = function (name, options) {
       uiService.addUI(uiService.component.MODAL, name, options);
     };
 
-    this.addEvent = function (name, eventName, callback) {
-      uiService.addEvent(uiService.component.MODAL, name, eventName, callback);
+    that.onEvent = function (name, eventName, callback) {
+      uiService.onEvent(uiService.component.MODAL, name, eventName, callback);
     };
 
-    this.show = function (name) {
+    that.triggerEvent = function (name, eventName) {
+      uiService.triggerEvent(uiService.component.MODAL, name, eventName);
+    };
+
+    that.show = function (name) {
       uiService.callMethod(uiService.component.MODAL, name, uiService.method.SHOW);
     };
   }

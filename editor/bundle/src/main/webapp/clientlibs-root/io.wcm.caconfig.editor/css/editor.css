@@ -31,14 +31,19 @@
 
 form.ng-dirty textarea.ng-dirty.ng-invalid,
 form.ng-dirty input.ng-dirty.ng-invalid {
-  border: 1px solid red;
+  border: 1px solid #f00;
 }
 
 span.caconfig-pathbrowser {
   width: 100% !important;
 }
 
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
   display: none !important;
 }
 
@@ -46,9 +51,11 @@ span.caconfig-pathbrowser {
   position: relative;
   padding-right: 103px;
 }
+
 .caconfig-multifield .coral-Textfield {
   width: 98%;
 }
+
 .caconfig-multifield .coral-ButtonGroup {
   position: absolute;
   top: 0;

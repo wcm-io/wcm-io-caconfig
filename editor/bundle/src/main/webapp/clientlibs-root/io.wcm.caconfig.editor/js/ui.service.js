@@ -27,15 +27,16 @@
     .service("uiService", UIService);
 
   function UIService() {
+    var that = this;
     var ui = {};
 
-    this.component = {
+    that.component = {
       MODAL: "Modal",
       POPOVER: "Popover",
       SELECT: "Select"
     };
 
-    this.method = {
+    that.method = {
       SHOW: "show",
       GET_VALUE: "getValue"
     };
@@ -47,21 +48,30 @@
      * @param {String} name
      * @param {Object=} options
      */
-    this.addUI = function (componentType, name, options) {
+    that.addUI = function (componentType, name, options) {
       ui[componentType] = ui[componentType] || {};
       ui[componentType][name] = new CUI[componentType](options);
     };
 
     /**
-     * Attach event to UI instance
+     * Attach event listener to UI instance
      *
      * @param {String}   componentType
      * @param {String}   name
      * @param {String}   eventName
      * @param {Function} callback
      */
-    this.addEvent = function (componentType, name, eventName, callback) {
+    that.onEvent = function (componentType, name, eventName, callback) {
       ui[componentType][name].on(eventName, callback);
+    };
+
+    /**
+     * @param {String}   componentType
+     * @param {String}   name
+     * @param {String}   eventName
+     */
+    that.triggerEvent = function (componentType, name, eventName) {
+      ui[componentType][name].$element.trigger(eventName);
     };
 
     /**
@@ -70,7 +80,7 @@
      * @param  {String} methodName
      * @return {*}
      */
-    this.callMethod = function (componentType, name, methodName) {
+    that.callMethod = function (componentType, name, methodName) {
       if (ui[componentType] && ui[componentType][name] && angular.isFunction(ui[componentType][name][methodName])) {
         return ui[componentType][name][methodName]();
       }

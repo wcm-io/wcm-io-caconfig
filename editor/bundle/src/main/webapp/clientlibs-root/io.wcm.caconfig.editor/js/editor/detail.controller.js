@@ -31,6 +31,7 @@
 
   function DetailController($rootScope, $route, configService, currentConfigService, modalService) {
     var CONFIG_PROPERTY_INHERIT = "sling:configPropertyInherit";
+    var CONFIG_COLLECTION_INHERIT = "sling:configCollectionInherit";
     var that = this;
 
     that.current = {
@@ -39,7 +40,7 @@
     };
 
     // If detail view was loaded directly via deeplink, we need to first loadConfigNames
-    if (!configService.state.contextPath || !configService.state.configNames.length) {
+    if (!configService.getState().contextPath || !configService.getState().configNames.length) {
       configService.loadConfigNames()
         .then(function success() {
           init();
@@ -58,7 +59,7 @@
     };
 
     that.saveConfig = function () {
-      if (that.current.configs.length === 0 && Boolean(that.current.collectionProperties["sling:configCollectionInherit"])) {
+      if (that.current.configs.length === 0 && Boolean(that.current.collectionProperties[CONFIG_COLLECTION_INHERIT])) {
         that.removeConfig();
       }
       else {
@@ -159,7 +160,7 @@
           that.current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
           that.current.parent = that.current.breadcrumbs[that.current.breadcrumbs.length - 1];
           that.current.description = currentData.configNameObject.description;
-          that.current.contextPath = configService.state.contextPath;
+          that.current.contextPath = configService.getState().contextPath;
           $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
         });
     }

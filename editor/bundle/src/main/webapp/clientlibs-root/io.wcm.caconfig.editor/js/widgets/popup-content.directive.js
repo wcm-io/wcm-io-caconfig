@@ -21,7 +21,7 @@
   "use strict";
 
   /**
-   * Renders the wrapping elements for the coral ui popover.
+   * Renders the wrapping elements for the Coral ui popover.
    * The content itself is transcluded. The content can also contain markup.
    *
    * @example
@@ -36,11 +36,14 @@
   popupContent.$inject = ["templateUrlList"];
 
   function popupContent(templateList) {
-    return {
+
+    var directive = {
       restrict: "E",
       replace: true,
       transclude: true,
       templateUrl: templateList.popupContent
     };
+
+    return directive;
   }
 }(angular));
