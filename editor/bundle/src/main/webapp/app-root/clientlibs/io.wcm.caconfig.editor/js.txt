@@ -26,7 +26,6 @@ modals/save-config.controller.js
 widgets/widgets.module.js
 widgets/widgets.constants.js
 widgets/description-popup.directive.js
-widgets/map.directive.js
 widgets/multifield.directive.js
 widgets/parameter-value.directive.js
 widgets/popup-content.directive.js

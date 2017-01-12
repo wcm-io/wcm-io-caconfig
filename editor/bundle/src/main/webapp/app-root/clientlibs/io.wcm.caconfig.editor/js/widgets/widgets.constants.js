@@ -29,14 +29,15 @@
    */
   angular.module("io.wcm.caconfig.widgets")
     .constant("templateUrlList", {
-      map: "map.html",
       parameterValue: "parameterValue.html",
       popupContainer: "popupContainer.html",
       popupContent: "popupContent.html",
       multifield: "multifield.html"
     })
     .constant("inputMap", {
-      Boolean: {type: "checkbox"},
+      Boolean: {
+        type: "checkbox"
+      },
       Integer: {
         type: "number",
         pattern: INTEGER

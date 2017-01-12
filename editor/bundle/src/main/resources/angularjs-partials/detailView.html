@@ -84,7 +84,7 @@
           ng-repeat="property in config.properties"
           ng-hide="property.name==='sling:configPropertyInherit'" ng-cloak>
         <td class="coral-Table-cell">
-          {{property.metadata.label || property.name}}
+          {{property.metadata.label || property.name}}
         </td>
         <td class="coral-Table-cell" caconfig-parameter-value="property" caconfig-is-new-item="config.isNewItem">
         </td>
@@ -99,8 +99,8 @@
           <label class="coral-Checkbox">
             <input class="coral-Checkbox-input" type="checkbox"
               ng-model="property.inherited"
-              ng-disabled="property.overridden || property.nestedConfig
-                           || property.nestedConfigCollection"
+              ng-disabled="property.overridden || property.nestedConfig
+                           || property.nestedConfigCollection"
               ng-change="detail.handleInheritedChange(property)">
             <span class="coral-Checkbox-checkmark"></span>
           </label>

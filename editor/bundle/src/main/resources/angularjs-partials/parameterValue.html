@@ -2,45 +2,34 @@
 
   <div ng-switch-when="text">
     <input class="coral-Textfield" type="text"
-           ng-hide="parameter.overridden || parameter.inherited"
+           ng-hide="parameter.overridden || parameter.inherited"
            ng-model="parameter.value" />
     <input class="coral-Textfield" type="text"
-           ng-show="parameter.overridden || parameter.inherited"
+           ng-show="parameter.overridden || parameter.inherited"
            ng-model="parameter.effectiveValue"
            ng-disabled="true" ng-readonly="true" />
-  </div>
-
-
-  <div ng-switch-when="multivalue">
-    <caconfig-multifield parameter="parameter" />
   </div>
 
   <div ng-switch-when="number">
     <input class="coral-Textfield" type="text"
-           ng-hide="parameter.overridden || parameter.inherited"
+           ng-hide="parameter.overridden || parameter.inherited"
            ng-model="parameter.value"
-           ng-pattern="pattern"
-           ng-required="required" />
+           ng-pattern="pattern" />
     <input class="coral-Textfield" type="text"
-           ng-show="parameter.overridden || parameter.inherited"
+           ng-show="parameter.overridden || parameter.inherited"
            ng-model="parameter.effectiveValue"
            ng-disabled="true" ng-readonly="true" />
   </div>
 
-  <div ng-switch-when="IntegerMultivalue">
-    <caconfig-multifield parameter="parameter" />
-  </div>
-
   <div ng-switch-when="checkbox">
     <label class="coral-Checkbox"
-           ng-hide="parameter.overridden || parameter.inherited">
+           ng-hide="parameter.overridden || parameter.inherited">
       <input class="coral-Checkbox-input" type="checkbox"
-             ng-model="parameter.value"
-             ng-required="{{parameter.required}}" />
+             ng-model="parameter.value" />
       <span class="coral-Checkbox-checkmark"></span>
     </label>
     <label class="coral-Checkbox"
-           ng-show="parameter.overridden || parameter.inherited">
+           ng-show="parameter.overridden || parameter.inherited">
       <input class="coral-Checkbox-input" type="checkbox"
              ng-model="parameter.effectiveValue"
              ng-disabled="true" ng-readonly="true" />
@@ -48,8 +37,8 @@
     </label>
   </div>
 
-  <div ng-switch-when="map">
-    <caconfig-map parameter="parameter" />
+  <div ng-switch-when="multivalue">
+    <caconfig-multifield parameter="parameter" />
   </div>
 
   <div ng-switch-when="nestedConfig">

@@ -15,7 +15,7 @@
     </div>
   </div>
   <div class="caconfig-multifield"
-       ng-show="parameter.overridden || parameter.inherited" ng-repeat="effectiveValue in effectiveValues">
+       ng-show="parameter.overridden || parameter.inherited" ng-repeat="effectiveValue in effectiveValues">
     <input class="coral-Textfield" type="type"
            ng-disabled="true"
             ng-readonly="true"
@@ -32,11 +32,10 @@
     </div>
   </div>
   <div class="caconfig-multifield"
-       ng-hide="parameter.overridden || parameter.inherited" ng-repeat="value in values">
+       ng-hide="parameter.overridden || parameter.inherited" ng-repeat="value in values">
     <input class="coral-Textfield" type="type"
            ng-model="value.value"
-           ng-pattern="pattern"
-           ng-required="required" />
+           ng-pattern="pattern" />
     <div class="coral-ButtonGroup">
       <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary"
               ng-click="addNewValue($index)">

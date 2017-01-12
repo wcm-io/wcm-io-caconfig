@@ -55,19 +55,6 @@ span.caconfig-pathbrowser {
   right: 0;
 }
 
-.caconfig-map {
-  position: relative;
-  padding-right: 103px;
-}
-.caconfig-map .coral-Textfield {
-  width: 49%;
-}
-.caconfig-map .coral-ButtonGroup {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
 .wcm-io-editor.endor-Brand {
   display: inline-block;
   background-color: transparent;

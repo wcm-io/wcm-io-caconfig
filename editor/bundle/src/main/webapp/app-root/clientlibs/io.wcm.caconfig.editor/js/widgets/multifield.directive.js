@@ -32,7 +32,6 @@
 
       scope.type = input.type;
       scope.pattern = input.pattern;
-      scope.required = input.required;
       scope.effectiveValues = [];
       scope.values = [];
 
