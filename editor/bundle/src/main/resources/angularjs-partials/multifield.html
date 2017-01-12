@@ -1,7 +1,14 @@
 <div>
  <div class="caconfig-multifield caconfig-multifield--empty"
       ng-hide="parameter.overridden || parameter.inherited || values.length">
+    <label class="coral-Checkbox"
+           ng-show="type==='checkbox'">
+      <input class="coral-Checkbox-input" type="checkbox"
+             ng-disabled="true" />
+      <span class="coral-Checkbox-checkmark"></span>
+    </label>
     <input class="coral-Textfield" type="type"
+           ng-hide="type==='checkbox'"
            ng-disabled="true" />
     <div class="coral-ButtonGroup">
       <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary"
@@ -16,9 +23,18 @@
   </div>
   <div class="caconfig-multifield"
        ng-show="parameter.overridden || parameter.inherited" ng-repeat="effectiveValue in effectiveValues">
+    <label class="coral-Checkbox"
+           ng-show="type==='checkbox'">
+      <input class="coral-Checkbox-input" type="checkbox"
+             ng-disabled="true"
+             ng-readonly="true"
+             ng-model="effectiveValue.value" />
+      <span class="coral-Checkbox-checkmark"></span>
+    </label>
     <input class="coral-Textfield" type="type"
+           ng-hide="type==='checkbox'"
            ng-disabled="true"
-            ng-readonly="true"
+           ng-readonly="true"
            ng-model="effectiveValue.value" />
     <div class="coral-ButtonGroup">
       <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disabled-button"
@@ -33,7 +49,14 @@
   </div>
   <div class="caconfig-multifield"
        ng-hide="parameter.overridden || parameter.inherited" ng-repeat="value in values">
+    <label class="coral-Checkbox"
+           ng-show="type==='checkbox'">
+      <input class="coral-Checkbox-input" type="checkbox"
+             ng-model="value.value" />
+      <span class="coral-Checkbox-checkmark"></span>
+    </label>
     <input class="coral-Textfield" type="type"
+           ng-hide="type==='checkbox'"
            ng-model="value.value"
            ng-pattern="pattern" />
     <div class="coral-ButtonGroup">

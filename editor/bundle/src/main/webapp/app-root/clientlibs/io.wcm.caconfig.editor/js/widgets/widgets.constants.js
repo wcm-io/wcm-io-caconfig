@@ -21,6 +21,7 @@
   "use strict";
 
   var ANYTHING = /^.*$/;
+  var BOOLEAN = /^(true|false)$/;
   var INTEGER = /^[-+]?[0-9]+([eE][-+]?[0-9]+)?$/;
   var FLOAT = /^[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?$/;
 
@@ -36,7 +37,8 @@
     })
     .constant("inputMap", {
       Boolean: {
-        type: "checkbox"
+        type: "checkbox",
+        pattern: BOOLEAN
       },
       Integer: {
         type: "number",

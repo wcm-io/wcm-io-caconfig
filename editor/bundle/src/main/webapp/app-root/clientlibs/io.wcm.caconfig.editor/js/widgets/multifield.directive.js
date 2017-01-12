@@ -39,7 +39,9 @@
       setValueArray(scope.parameter.value, scope.values);
 
       scope.$watch("values", function (newValues, oldValues) {
-        var valueArray = _.map(newValues, "value");
+        var valueArray = _.map(newValues, function(newValue) {
+          return scope.type === "checkbox" ? Boolean(newValue.value) : newValue.value;
+        });
         scope.parameter.value = valueArray;
         if (newValues.length !== oldValues.length) {
           form.$setDirty();

@@ -36,7 +36,7 @@ public @interface ConfigSample2 {
   String stringParam() default "Default Value";
 
   /**
-   * @return Integer parameter
+   * @return Double parameter
    */
   @Property(label = "Double Param")
   double doubleParam();
@@ -47,4 +47,9 @@ public @interface ConfigSample2 {
   @Property(label = "Integer Array Param")
   int[] intArrayParam();
 
+  /**
+   * @return Boolean array parameter
+   */
+  @Property(label = "Boolean Array Param")
+  boolean[] boolArrayParam();
 }
