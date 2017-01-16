@@ -58,7 +58,8 @@
         <th class="coral-Table-headerCell">
           <label class="caconfig-propertyInheritance coral-Checkbox">
             <input class="coral-Checkbox-input" type="checkbox"
-                   ng-model="detail.getConfigPropertyInherit(config).value" />
+                   ng-model="detail.getConfigPropertyInherit(config).value"
+                   ng-change="detail.handleConfigPropertyInheritChange(config)" />
             <span class="coral-Checkbox-checkmark"></span>
             <span class="coral-Checkbox-description">{{i18n.config.inheritance.property}}</span>
           </label>
@@ -72,11 +73,11 @@
         </th>
       </tr>
       <tr class="coral-Table-row">
-        <th class="coral-Table-headerCell" style="width: 15%;">{{i18n.config.property}}</th>
+        <th class="coral-Table-headerCell">{{i18n.config.property}}</th>
         <th class="coral-Table-headerCell">{{i18n.config.value}}</th>
-        <th class="coral-Table-headerCell" style="width: 1%;">{{i18n.config.description}}</th>
-        <th class="coral-Table-headerCell" style="width: 1%;">{{i18n.config.inherited}}</th>
-        <th class="coral-Table-headerCell" style="width: 1%;">{{i18n.config.overridden}}</th>
+        <th class="coral-Table-headerCell">{{i18n.config.description}}</th>
+        <th class="coral-Table-headerCell">{{i18n.config.inherited}}</th>
+        <th class="coral-Table-headerCell">{{i18n.config.overridden}}</th>
       </tr>
       </thead>
       <tbody>
@@ -99,7 +100,8 @@
           <label class="coral-Checkbox">
             <input class="coral-Checkbox-input" type="checkbox"
               ng-model="property.inherited"
-              ng-disabled="property.overridden || property.nestedConfig
+              ng-disabled="!detail.getConfigPropertyInherit(config).value
+                           || property.overridden || property.nestedConfig
                            || property.nestedConfigCollection"
               ng-change="detail.handleInheritedChange(property)">
             <span class="coral-Checkbox-checkmark"></span>

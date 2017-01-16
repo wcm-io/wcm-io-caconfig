@@ -75,9 +75,6 @@
         });
 
         configData.properties = current.collectionProperties || {};
-        if (configData.properties["sling:configCollectionInherit"] !== true) {
-          delete configData.properties["sling:configCollectionInherit"];
-        }
       }
       else {
         configData.properties = buildProperties(current.configs[0]);
@@ -103,9 +100,7 @@
           && !property.nestedConfig && !property.nestedConfigCollection) {
 
         if (property.name === "sling:configPropertyInherit") {
-          if (property.value === true) {
-            properties[property.name] = property.value;
-          }
+          properties[property.name] = Boolean(property.value);
         }
         else if (angular.isUndefined(property.value) || property.value === "") {
           properties[property.name] = null;

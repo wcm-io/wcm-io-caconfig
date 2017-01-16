@@ -44,6 +44,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-html2js");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-eslint");
+  grunt.registerTask("test", ["min"]);
   grunt.registerTask("lint:js", ["eslint"]);
   grunt.registerTask("build", ["html2js:templates", "min"]);
   grunt.registerTask("default", ["build"]);

@@ -9,16 +9,18 @@
   "config": {
     "jsPath": "src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor/js/"
   },
-  "license": "Apache",
+  "license": "Apache-2.0",
   "devDependencies": {
-    "eslint": "^3.12.2",
     "eslint-config-pv": "^1.0.3",
-    "grunt": "~0.4.1",
-    "grunt-cli": "~0.1.13",
+    "grunt": "~0.4.0",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "~0.4.1",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-eslint": "^19.0.0",
     "grunt-html2js": "~0.1.3",
     "grunt-yui-compressor": "^0.4.0"
+  },
+  "scripts": {
+    "test": "grunt test"
   }
 }

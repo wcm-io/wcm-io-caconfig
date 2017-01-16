@@ -30,13 +30,13 @@
   DetailController.$inject = ["$rootScope", "$route", "configService", "currentConfigService", "modalService"];
 
   function DetailController($rootScope, $route, configService, currentConfigService, modalService) {
-    var current = {
+    var CONFIG_PROPERTY_INHERIT = "sling:configPropertyInherit";
+    var that = this;
+
+    that.current = {
       configName: $route.current.params.configName,
       configs: []
     };
-
-    this.current = current;
-    this.removeConfig = removeConfig;
 
     // If detail view was loaded directly via deeplink, we need to first loadConfigNames
     if (!configService.state.contextPath || !configService.state.configNames.length) {
@@ -57,9 +57,9 @@
       modalService.show(modalService.modal.SAVE_CONFIG);
     };
 
-    this.saveConfig = function () {
-      if (current.configs.length === 0) {
-        removeConfig();
+    that.saveConfig = function () {
+      if (that.current.configs.length === 0 && Boolean(that.current.collectionProperties["sling:configCollectionInherit"])) {
+        that.removeConfig();
       }
       else {
         configService.saveCurrentConfig()
@@ -68,15 +68,15 @@
               $rootScope.go(redirect.configName || "");
             }
             else {
-              $rootScope.go(current.parent ? current.parent.configName : "");
+              $rootScope.go(that.current.parent ? that.current.parent.configName : "");
             }
           });
       }
     };
 
-    function removeConfig() {
+    that.removeConfig = function() {
       modalService.show(modalService.modal.DELETE_CONFIG);
-    }
+    };
 
     $rootScope.deleteConfig = function () {
       configService.deleteCurrentConfig()
@@ -85,40 +85,43 @@
             $rootScope.go(redirect.configName || "");
           }
           else {
-            $rootScope.go(current.parent ? current.parent.configName : "");
+            $rootScope.go(that.current.parent ? that.current.parent.configName : "");
           }
         });
     };
 
-    this.addCollectionItem = function () {
+    that.addCollectionItem = function () {
       modalService.show(modalService.modal.ADD_COLLECTION_ITEM);
     };
 
-    this.removeCollectionItem = function (index) {
+    that.removeCollectionItem = function (index) {
       currentConfigService.removeItemFromCurrentCollection(index);
     };
 
-    this.isModified = function (formPristine) {
-      return !formPristine || current.originalLength !== current.configs.length;
+    that.isModified = function (formPristine) {
+      return !formPristine || that.current.originalLength !== that.current.configs.length;
     };
 
-    this.handleInheritedChange = function (property) {
+    that.handleInheritedChange = function (property) {
       if (!property.metadata.multivalue
           && !property.inherited && angular.isUndefined(property.value)) {
         property.value = property.effectiveValue;
       }
       else {
         property.effectiveValue = "(" + $rootScope.i18n.config.inherited + ")";
+        if (angular.isUndefined(property.value)) {
+          property.value = null;
+        }
       }
     };
 
-    this.getConfigPropertyInherit = function (config) {
+    that.getConfigPropertyInherit = function (config) {
       var configPropertyInherit = _.find(config.properties, {
-        name: "sling:configPropertyInherit"
+        name: CONFIG_PROPERTY_INHERIT
       });
       if (!configPropertyInherit) {
         configPropertyInherit = {
-          name: "sling:configPropertyInherit",
+          name: CONFIG_PROPERTY_INHERIT,
           value: false
         };
         config.properties.push(configPropertyInherit);
@@ -126,25 +129,38 @@
       return configPropertyInherit;
     };
 
+    that.handleConfigPropertyInheritChange = function (config) {
+      var configPropertyInherit = that.getConfigPropertyInherit(config);
+      if (configPropertyInherit.value) {
+        return;
+      }
+      angular.forEach(config.properties, function (property) {
+        if (property.name !== CONFIG_PROPERTY_INHERIT && !property.overridden
+            && !property.nestedConfig && !property.nestedConfigCollection) {
+          property.inherited = false;
+          that.handleInheritedChange(property);
+        }
+      });
+    };
 
     /**
-     * Loads config data and sets various $scope properties
+     * Loads config data and sets various properties
      */
     function init() {
       // Load Configuration Details
-      configService.loadConfig(current.configName)
+      configService.loadConfig(that.current.configName)
         .then(function (currentData) {
-          current.configs = currentData.configs;
-          current.originalLength = currentData.configs.length;
-          current.isCollection = currentData.isCollection;
-          current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
-          current.collectionProperties = currentData.collectionProperties;
-          current.label = currentData.configNameObject.label || current.configName;
-          current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
-          current.parent = current.breadcrumbs[current.breadcrumbs.length - 1];
-          current.description = currentData.configNameObject.description;
-          current.contextPath = configService.state.contextPath;
-          $rootScope.title = $rootScope.i18n.title + ": " + current.label;
+          that.current.configs = currentData.configs;
+          that.current.originalLength = currentData.configs.length;
+          that.current.isCollection = currentData.isCollection;
+          that.current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
+          that.current.collectionProperties = currentData.collectionProperties;
+          that.current.label = currentData.configNameObject.label || that.current.configName;
+          that.current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
+          that.current.parent = that.current.breadcrumbs[that.current.breadcrumbs.length - 1];
+          that.current.description = currentData.configNameObject.description;
+          that.current.contextPath = configService.state.contextPath;
+          $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
         });
     }
   }
