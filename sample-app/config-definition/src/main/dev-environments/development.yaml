@@ -8,6 +8,7 @@ nodes:
     variant: aem-author
   - role: sample-aem-cms
     variant: aem-author
+  - role: sample-aem-cms-app
 
 - node: aem-publish
   roles:
@@ -15,9 +16,11 @@ nodes:
     variant: aem-publish
   - role: sample-aem-cms
     variant: aem-publish
+  - role: sample-aem-cms-app
 
 config:
   contentPackage.group: wcm-io-sample
+  sampleContent: true
 
   # Log levels
   log:
