@@ -19,8 +19,3 @@ nodes:
 config:
   contentPackage.group: wcm-io-sample
   app.sampleContent: true
-
-  # Log levels
-  log:
-    logPath: "logs"
-    projectSpecifcLogLevel: info

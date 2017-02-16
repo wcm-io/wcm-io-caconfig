@@ -59,11 +59,6 @@ config:
   app:
     sampleContent: false
 
-  # Log levels
-  log:
-    logPath: "logs"
-    projectSpecifcLogLevel: warn
-
 
   # Example for config override configuration
   #configOverrides:
