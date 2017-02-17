@@ -72,6 +72,10 @@ span.wcm-io-editor.endor-Brand {
   cursor: pointer;
   float: right;
 }
+.caconfig-configurationDetails table.coral-Table {
+  margin-top: 10px;
+  border-top: 1px solid #bbb;
+}
 
 .caconfig-disabled-button,
 .caconfig-disabled-button:disabled,
