@@ -125,7 +125,8 @@
         <configuration>
           <instructions>
             <Sling-Initial-Content>
-              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/caconfig/editor
+              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/caconfig/editor,
+              SLING-INF/clientlibs-root;overwrite:=true;ignoreImportProviders:=xml;path:=/etc/clientlibs/wcm-io/caconfig/editor
             </Sling-Initial-Content>
             <Sling-Model-Packages>
               io.wcm.caconfig.editor.model
