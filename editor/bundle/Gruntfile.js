@@ -37,6 +37,12 @@ module.exports = function (grunt) {
       },
       target: ["src/**/*.js"]
     },
+    stylelint: {
+      options: {
+        configFile: ".stylelintrc"
+      },
+      src: ["src/**/*.css"]
+    },
     karma: {
       options: {
         configFile: "karma.conf.js"
@@ -76,6 +82,7 @@ module.exports = function (grunt) {
   grunt.registerTask("test:e2e", ["shell:installSelenium", "protractor:e2e"]);
   grunt.registerTask("test", ["test:unit", "test:e2e"]);
   grunt.registerTask("lint:js", ["eslint"]);
-  grunt.registerTask("build", ["html2js:templates", "min", "test"]);
+  grunt.registerTask("lint:css", ["stylelint"]);
+  grunt.registerTask("build", ["html2js:templates", "min"]);
   grunt.registerTask("default", ["build"]);
 };

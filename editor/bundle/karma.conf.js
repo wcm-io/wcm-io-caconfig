@@ -15,9 +15,10 @@ module.exports = function(config) {
       "node_modules/jquery/dist/jquery.min.js",
       "node_modules/jasmine-jquery/lib/jasmine-jquery.js",
       "node_modules/lodash/lodash.min.js",
-      "src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor/js/**/*.module.js",
-      "src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor/js/**/!(*.spec).js",
-      "src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor/js/**/*.spec.js",
+      "src/test/webapp/libs/coral.js",
+      "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor/js/**/*.module.js",
+      "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor/js/**/!(*.spec).js",
+      "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor/js/**/*.spec.js",
       {
         pattern: "src/test/webapp/fixtures/*.json",
         watched: true,
@@ -27,7 +28,7 @@ module.exports = function(config) {
     ],
 
     preprocessors: {
-      "./src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor/js/**/*.js": "coverage"
+      "./src/main/webapp/clientlibs-root/io.wcm.caconfig.editor/js/**/*.js": "coverage"
     },
 
     // list of files / patterns to exclude

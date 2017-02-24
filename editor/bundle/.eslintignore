@@ -1,3 +1,4 @@
 **/templates.module.js
 **/*.min.js
 target/*
+src/test/webapp/libs/*

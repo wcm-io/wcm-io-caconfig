@@ -25,6 +25,7 @@
     "grunt-karma": "^2.0.0",
     "grunt-protractor-runner": "^4.0.0",
     "grunt-shell": "^2.1.0",
+    "grunt-stylelint": "^0.6.0",
     "grunt-yui-compressor": "^0.4.0",
     "jasmine-jquery": "^2.1.1",
     "jquery": "^1.11.2",
@@ -39,8 +40,6 @@
   },
   "scripts": {
     "grunt": "grunt",
-    "lint:js": "eslint src/**/*.js",
-    "lint": "npm-run-all --parallel lint:*",
     "test": "grunt test"
   }
 }
