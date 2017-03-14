@@ -21,7 +21,6 @@ package io.wcm.caconfig.extensions.contextpath.impl;
 
 import static io.wcm.caconfig.extensions.contextpath.impl.TestUtils.assertNoResult;
 import static io.wcm.caconfig.extensions.contextpath.impl.TestUtils.assertResult;
-import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
@@ -29,25 +28,18 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RootTemplateContextPathStrategyTest {
 
-  private static final String APP_ID = "/apps/app1";
   private static final String TEMPLATE_1 = "/apps/app1/templates/template1";
   private static final String TEMPLATE_2 = "/apps/app1/templates/template2";
 
   @Rule
   public AemContext context = new AemContext();
-
-  @Mock
-  private ApplicationFinder applicationFinder;
 
   private Resource level1;
   private Resource level2;
@@ -56,8 +48,6 @@ public class RootTemplateContextPathStrategyTest {
 
   @Before
   public void setUp() {
-    context.registerService(ApplicationFinder.class, applicationFinder);
-
     level1 = context.create().page("/content/region1").adaptTo(Resource.class);
     level2 = context.create().page("/content/region1/site1", TEMPLATE_1).adaptTo(Resource.class);
     level3 = context.create().page("/content/region1/site1/en", TEMPLATE_2).adaptTo(Resource.class);
@@ -89,27 +79,6 @@ public class RootTemplateContextPathStrategyTest {
         "/content/region1", "/conf/content/region1");
 
     assertResult(underTest.findContextResources(level1),
-        "/content/region1", "/conf/content/region1");
-  }
-
-  @Test
-  public void testWithNoMatchingApplication() {
-    ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy(),
-        "templatePaths", new String[] { TEMPLATE_1 },
-        "applicationId", APP_ID);
-
-    assertNoResult(underTest.findContextResources(level4));
-  }
-
-  @Test
-  public void testWithMatchingApplication() {
-    ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy(),
-        "templatePaths", new String[] { TEMPLATE_1 },
-        "applicationId", APP_ID);
-    when(applicationFinder.find(level4)).thenReturn(new ApplicationInfo(APP_ID));
-
-    assertResult(underTest.findContextResources(level4),
-        "/content/region1/site1", "/conf/content/region1/site1",
         "/content/region1", "/conf/content/region1");
   }
 

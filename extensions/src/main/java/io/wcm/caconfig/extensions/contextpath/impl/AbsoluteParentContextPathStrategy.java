@@ -36,15 +36,11 @@ import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
 
 /**
  * {@link ContextPathStrategy} that detects context paths by absolute parent levels of a context resource.
@@ -72,10 +68,6 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         required = true)
     String configPathPattern() default "/conf$1";
 
-    @AttributeDefinition(name = "Application ID",
-        description = "Optional: Apply context path strategy only for context resources associated with the given Application ID.")
-    String applicationId() default "";
-
     @AttributeDefinition(name = "Service Ranking",
         description = "Priority of configuration override providers (higher = higher priority).")
     int service_ranking() default 0;
@@ -84,13 +76,9 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
 
   }
 
-  @Reference
-  private ApplicationFinder applicationFinder;
-
   private Set<Integer> levels;
   private Pattern contextPathRegex;
   private String configPathPattern;
-  private String applicationId;
 
   private static final Logger log = LoggerFactory.getLogger(AbsoluteParentContextPathStrategy.class);
 
@@ -109,12 +97,11 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
       log.warn("Invalid context path regex: " + config.contextPathRegex(), ex);
     }
     configPathPattern = config.configPathPattern();
-    applicationId = config.applicationId();
   }
 
   @Override
   public Iterator<ContextResource> findContextResources(Resource resource) {
-    if (!isValidConfig() || !matchesApplication(resource)) {
+    if (!isValidConfig()) {
       return Collections.emptyIterator();
     }
 
@@ -139,14 +126,6 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     return !levels.isEmpty()
         && contextPathRegex != null
         && StringUtils.isNotBlank(configPathPattern);
-  }
-
-  private boolean matchesApplication(Resource resource) {
-    if (StringUtils.isBlank(applicationId)) {
-      return true;
-    }
-    ApplicationInfo appInfo = applicationFinder.find(resource);
-    return (appInfo != null && StringUtils.equals(appInfo.getApplicationId(), this.applicationId));
   }
 
   private String getAbsoluteParent(Resource resource, int absoluteParent) {
