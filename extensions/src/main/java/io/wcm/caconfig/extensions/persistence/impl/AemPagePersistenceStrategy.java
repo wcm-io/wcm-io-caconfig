@@ -101,14 +101,13 @@ public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrat
   @Override
   public boolean persistConfigurationCollection(ResourceResolver resolver, String configResourceCollectionParentPath,
       ConfigurationCollectionPersistData data) {
-    String parentPath = getResourcePath(configResourceCollectionParentPath);
-    ensurePage(resolver, parentPath);
-    Resource configResourceParent = getOrCreateResource(resolver, parentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY);
+    Resource configResourceParent = getOrCreateResource(resolver, configResourceCollectionParentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY);
 
     // delete existing children and create new ones
     deleteChildren(configResourceParent);
     for (ConfigurationPersistData item : data.getItems()) {
-      String path = configResourceParent.getPath() + "/" + item.getCollectionItemName();
+      String path = getResourcePath(configResourceParent.getPath() + "/" + item.getCollectionItemName());
+      ensurePage(resolver, path);
       getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties());
     }
 
@@ -117,7 +116,6 @@ public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrat
       replaceProperties(configResourceParent, data.getProperties());
     }
 
-    updatePageLastMod(resolver, parentPath);
     commit(resolver);
     return true;
   }

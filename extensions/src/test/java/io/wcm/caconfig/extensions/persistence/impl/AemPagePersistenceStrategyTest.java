@@ -25,8 +25,10 @@ import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
 import java.util.Map;
 
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.ConfigurationBuilder;
 import org.junit.Before;
@@ -38,6 +40,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.caconfig.extensions.persistence.example.ListConfig;
+import io.wcm.caconfig.extensions.persistence.example.NestedConfig;
 import io.wcm.caconfig.extensions.persistence.example.SimpleConfig;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
@@ -98,18 +101,18 @@ public class AemPagePersistenceStrategyTest {
         ));
 
     // assert storage in page in /conf
-    Page configPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName());
-    assertNotNull(configPage);
-    ValueMap props1 = configPage.getContentResource("item0").getValueMap();
+    Page configPage1 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName() + "/item0");
+    assertNotNull(configPage1);
+    ValueMap props1 = configPage1.getProperties();
     assertEquals("value1", props1.get("stringParam", String.class));
     assertEquals((Integer)123, props1.get("intParam", Integer.class));
-    ValueMap props2 = configPage.getContentResource("item1").getValueMap();
+    Page configPage2 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName() + "/item1");
+    assertNotNull(configPage2);
+    ValueMap props2 = configPage2.getProperties();
     assertEquals("value2", props2.get("stringParam", String.class));
     assertEquals((Integer)234, props2.get("intParam", Integer.class));
 
     // read config
-    /*
-    // FIXME: does not work as expected!
     List<ListConfig> configs = ImmutableList.copyOf(contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).asCollection(ListConfig.class));
     assertEquals(2, configs.size());
     ListConfig config1 = configs.get(0);
@@ -118,7 +121,59 @@ public class AemPagePersistenceStrategyTest {
     ListConfig config2 = configs.get(1);
     assertEquals("value2", config2.stringParam());
     assertEquals(234, config2.intParam());
-    */
+  }
+
+  @Test
+  public void testNestedConfig() throws Exception {
+    // write config
+    writeConfiguration(context, contentPage.getPath(), NestedConfig.class.getName(),
+        "stringParam", "value1");
+    writeConfiguration(context, contentPage.getPath(), NestedConfig.class.getName() + "/jcr:content/subConfig",
+        "stringParam", "value2",
+        "intParam", 234);
+    writeConfigurationCollection(context, contentPage.getPath(), NestedConfig.class.getName() + "/jcr:content/subListConfig", ImmutableList.of(
+        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value3", "intParam", 345),
+        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value4", "intParam", 456)));
+
+    // assert storage in page in /conf
+    Page configPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + NestedConfig.class.getName());
+    assertNotNull(configPage);
+    ValueMap props = configPage.getProperties();
+    assertEquals("value1", props.get("stringParam", String.class));
+
+    Resource subConfigResource = configPage.getContentResource("subConfig");
+    assertNotNull(subConfigResource);
+    ValueMap subConifgProps = subConfigResource.getValueMap();
+    assertEquals("value2", subConifgProps.get("stringParam", String.class));
+    assertEquals((Integer)234, subConifgProps.get("intParam", Integer.class));
+
+    Resource subListConfigResource1 = configPage.getContentResource("subListConfig/item0");
+    assertNotNull(subListConfigResource1);
+    ValueMap subListConfigProps1 = subListConfigResource1.getValueMap();
+    assertEquals("value3", subListConfigProps1.get("stringParam", String.class));
+    assertEquals((Integer)345, subListConfigProps1.get("intParam", Integer.class));
+    Resource subListConfigResource2 = configPage.getContentResource("subListConfig/item1");
+    assertNotNull(subListConfigResource2);
+    ValueMap subListConfigProps2 = subListConfigResource2.getValueMap();
+    assertEquals("value4", subListConfigProps2.get("stringParam", String.class));
+    assertEquals((Integer)456, subListConfigProps2.get("intParam", Integer.class));
+
+    // read config
+    NestedConfig config = contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).as(NestedConfig.class);
+    assertEquals("value1", config.stringParam());
+
+    SimpleConfig subConfig = config.subConfig();
+    assertEquals("value2", subConfig.stringParam());
+    assertEquals(234, subConfig.intParam());
+
+    List<ListConfig> subListConfigs = ImmutableList.copyOf(config.subListConfig());
+    assertEquals(2, subListConfigs.size());
+    ListConfig subListConfig1 = subListConfigs.get(0);
+    assertEquals("value3", subListConfig1.stringParam());
+    assertEquals(345, subListConfig1.intParam());
+    ListConfig subListConfig2 = subListConfigs.get(1);
+    assertEquals("value4", subListConfig2.stringParam());
+    assertEquals(456, subListConfig2.intParam());
   }
 
 }
