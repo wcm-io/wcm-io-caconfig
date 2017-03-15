@@ -31,7 +31,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 /*
- * Can be removed once updated to osgi-mock 1.9.4/2.2.4 or higher.
+ * TODO: remove once updated to osgi-mock 1.9.4/2.2.4 or higher.
  */
 final class MockOsgi {
 
