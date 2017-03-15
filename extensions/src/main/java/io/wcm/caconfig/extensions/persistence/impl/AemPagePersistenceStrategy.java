@@ -41,7 +41,11 @@ import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy;
 import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +63,17 @@ import com.day.cq.wcm.api.WCMException;
  */
 @Component(service = ConfigurationPersistenceStrategy.class,
     property = Constants.SERVICE_RANKING + ":Integer=500")
+@Designate(ocd = AemPagePersistenceStrategy.Config.class)
 public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrategy {
+
+  @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration AEM Page Persistence Strategy",
+      description = "Stores Context-Aware Configuration in AEM Pages instead of simple resources.")
+  static @interface Config {
+
+    @AttributeDefinition(name = "Enabled",
+        description = "Enable this override provider.")
+    boolean enabled() default false;
+  }
 
   private static final String DEFAULT_CONFIG_NODE_TYPE = NT_UNSTRUCTURED;
   private static final String DEFAULT_FOLDER_NODE_TYPE = "sling:Folder";
@@ -67,8 +81,18 @@ public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrat
 
   private static final Logger log = LoggerFactory.getLogger(AemPagePersistenceStrategy.class);
 
+  private boolean enabled;
+
+  @Activate
+  void activate(Config value) {
+    this.enabled = value.enabled();
+  }
+
   @Override
   public Resource getResource(Resource resource) {
+    if (!enabled) {
+      return null;
+    }
     if (isInsidePage(resource.getPath())) {
       return resource;
     }
@@ -77,6 +101,9 @@ public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrat
 
   @Override
   public String getResourcePath(String resourcePath) {
+    if (!enabled) {
+      return null;
+    }
     if (isInsidePage(resourcePath)) {
       return resourcePath;
     }
@@ -88,8 +115,10 @@ public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrat
   }
 
   @Override
-  public boolean persistConfiguration(ResourceResolver resolver, String configResourcePath,
-      ConfigurationPersistData data) {
+  public boolean persistConfiguration(ResourceResolver resolver, String configResourcePath, ConfigurationPersistData data) {
+    if (!enabled) {
+      return false;
+    }
     String path = getResourcePath(configResourcePath);
     ensurePage(resolver, path);
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties());
@@ -99,8 +128,10 @@ public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrat
   }
 
   @Override
-  public boolean persistConfigurationCollection(ResourceResolver resolver, String configResourceCollectionParentPath,
-      ConfigurationCollectionPersistData data) {
+  public boolean persistConfigurationCollection(ResourceResolver resolver, String configResourceCollectionParentPath, ConfigurationCollectionPersistData data) {
+    if (!enabled) {
+      return false;
+    }
     Resource configResourceParent = getOrCreateResource(resolver, configResourceCollectionParentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY);
 
     // delete existing children and create new ones
@@ -122,6 +153,9 @@ public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrat
 
   @Override
   public boolean deleteConfiguration(ResourceResolver resolver, String configResourcePath) {
+    if (!enabled) {
+      return false;
+    }
     Resource resource = resolver.getResource(configResourcePath);
     if (resource != null) {
       try {

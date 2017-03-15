@@ -24,6 +24,7 @@ import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigu
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.Map;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.ConfigurationBuilder;
+import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -65,8 +67,6 @@ public class AemPagePersistenceStrategyTest {
 
   @Before
   public void setUp() throws Exception {
-    context.registerInjectActivateService(new AemPagePersistenceStrategy());
-
     context.create().resource("/conf");
     contentPage = context.create().page("/content/test/site1", "/apps/app1/templates/template1",
         ImmutableMap.<String, Object>of("sling:configRef", "/conf/test/site1"));
@@ -74,6 +74,8 @@ public class AemPagePersistenceStrategyTest {
 
   @Test
   public void testSimpleConfig() throws Exception {
+    context.registerInjectActivateService(new AemPagePersistenceStrategy(), "enabled", true);
+
     // write config
     writeConfiguration(context, contentPage.getPath(), SimpleConfig.class.getName(),
         "stringParam", "value1",
@@ -90,10 +92,38 @@ public class AemPagePersistenceStrategyTest {
     SimpleConfig config = contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).as(SimpleConfig.class);
     assertEquals("value1", config.stringParam());
     assertEquals(123, config.intParam());
+
+    // delete
+    ConfigurationManager configManager = context.getService(ConfigurationManager.class);
+    configManager.deleteConfiguration(contentPage.getContentResource(), SimpleConfig.class.getName());
+    config = contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).as(SimpleConfig.class);
+    assertNull(config.stringParam());
+    assertEquals(5, config.intParam());
+  }
+
+  @Test
+  public void testSimpleConfig_Disabled() throws Exception {
+    context.registerInjectActivateService(new AemPagePersistenceStrategy(), "enabled", false);
+
+    // write config
+    writeConfiguration(context, contentPage.getPath(), SimpleConfig.class.getName(),
+        "stringParam", "value1",
+        "intParam", 123);
+
+    // assert storage in page in /conf
+    Page configPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + SimpleConfig.class.getName());
+    assertNull(configPage);
+
+    // read config
+    SimpleConfig config = contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).as(SimpleConfig.class);
+    assertEquals("value1", config.stringParam());
+    assertEquals(123, config.intParam());
   }
 
   @Test
   public void testListConfig() throws Exception {
+    context.registerInjectActivateService(new AemPagePersistenceStrategy(), "enabled", true);
+
     // write config
     writeConfigurationCollection(context, contentPage.getPath(), ListConfig.class.getName(), ImmutableList.of(
         (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1", "intParam", 123),
@@ -125,6 +155,8 @@ public class AemPagePersistenceStrategyTest {
 
   @Test
   public void testNestedConfig() throws Exception {
+    context.registerInjectActivateService(new AemPagePersistenceStrategy(), "enabled", true);
+
     // write config
     writeConfiguration(context, contentPage.getPath(), NestedConfig.class.getName(),
         "stringParam", "value1");
