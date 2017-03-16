@@ -85,7 +85,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
 
     @AttributeDefinition(name = "Service Ranking",
         description = "Priority of configuration override providers (higher = higher priority).")
-    int service_ranking() default 0;
+    int service_ranking() default 2000;
 
     String webconsole_configurationFactory_nameHint() default "{applicationId} templates={templatePaths}";
 
