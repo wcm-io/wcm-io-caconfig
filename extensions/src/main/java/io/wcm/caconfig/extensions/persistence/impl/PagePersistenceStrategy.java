@@ -56,21 +56,21 @@ import org.slf4j.LoggerFactory;
  */
 @Component(service = ConfigurationPersistenceStrategy.class,
     property = Constants.SERVICE_RANKING + ":Integer=500")
-@Designate(ocd = AemPagePersistenceStrategy.Config.class)
-public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrategy {
+@Designate(ocd = PagePersistenceStrategy.Config.class)
+public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy {
 
   @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration AEM Page Persistence Strategy",
-      description = "Stores Context-Aware Configuration in AEM Pages instead of simple resources.")
+      description = "Stores Context-Aware Configuration in AEM pages instead of simple resources.")
   static @interface Config {
 
     @AttributeDefinition(name = "Enabled",
-        description = "Enable this override provider.")
+        description = "Enable this persistence strategy.")
     boolean enabled() default false;
   }
 
   private static final String DEFAULT_CONFIG_NODE_TYPE = NT_UNSTRUCTURED;
 
-  private static final Logger log = LoggerFactory.getLogger(AemPagePersistenceStrategy.class);
+  private static final Logger log = LoggerFactory.getLogger(PagePersistenceStrategy.class);
 
   private boolean enabled;
 

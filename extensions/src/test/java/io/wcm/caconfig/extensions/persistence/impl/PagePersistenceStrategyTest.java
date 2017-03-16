@@ -48,7 +48,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 
-public class AemPagePersistenceStrategyTest {
+public class PagePersistenceStrategyTest {
 
   @Rule
   public AemContext context = new AemContextBuilder()
@@ -74,7 +74,7 @@ public class AemPagePersistenceStrategyTest {
 
   @Test
   public void testSimpleConfig() throws Exception {
-    context.registerInjectActivateService(new AemPagePersistenceStrategy(), "enabled", true);
+    context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
 
     // write config
     writeConfiguration(context, contentPage.getPath(), SimpleConfig.class.getName(),
@@ -103,7 +103,7 @@ public class AemPagePersistenceStrategyTest {
 
   @Test
   public void testSimpleConfig_Disabled() throws Exception {
-    context.registerInjectActivateService(new AemPagePersistenceStrategy(), "enabled", false);
+    context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", false);
 
     // write config
     writeConfiguration(context, contentPage.getPath(), SimpleConfig.class.getName(),
@@ -122,7 +122,7 @@ public class AemPagePersistenceStrategyTest {
 
   @Test
   public void testListConfig() throws Exception {
-    context.registerInjectActivateService(new AemPagePersistenceStrategy(), "enabled", true);
+    context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
 
     // write config
     writeConfigurationCollection(context, contentPage.getPath(), ListConfig.class.getName(), ImmutableList.of(
@@ -155,7 +155,7 @@ public class AemPagePersistenceStrategyTest {
 
   @Test
   public void testNestedConfig() throws Exception {
-    context.registerInjectActivateService(new AemPagePersistenceStrategy(), "enabled", true);
+    context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
 
     // write config
     writeConfiguration(context, contentPage.getPath(), NestedConfig.class.getName(),
