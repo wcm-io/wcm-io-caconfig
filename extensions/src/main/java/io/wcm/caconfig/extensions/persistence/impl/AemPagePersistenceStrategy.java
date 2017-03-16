@@ -21,20 +21,17 @@ package io.wcm.caconfig.extensions.persistence.impl;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.commit;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildren;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensurePage;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.getOrCreateResource;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.isInsidePage;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.replaceProperties;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.updatePageLastMod;
 
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ResourceResolverFactory;
-import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
@@ -48,10 +45,6 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.day.cq.wcm.api.NameConstants;
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMException;
 
 /**
  * AEM-specific persistence strategy that has higher precedence than the default strategy from Sling,
@@ -76,8 +69,6 @@ public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrat
   }
 
   private static final String DEFAULT_CONFIG_NODE_TYPE = NT_UNSTRUCTURED;
-  private static final String DEFAULT_FOLDER_NODE_TYPE = "sling:Folder";
-  private static final Pattern PAGE_PATH_PATTERN = Pattern.compile("^(.*)/" + Pattern.quote(JCR_CONTENT) + "(/.*)?$");
 
   private static final Logger log = LoggerFactory.getLogger(AemPagePersistenceStrategy.class);
 
@@ -108,10 +99,6 @@ public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrat
       return resourcePath;
     }
     return resourcePath + "/" + JCR_CONTENT;
-  }
-
-  private boolean isInsidePage(String path) {
-    return PAGE_PATH_PATTERN.matcher(path).matches();
   }
 
   @Override
@@ -170,95 +157,5 @@ public class AemPagePersistenceStrategy implements ConfigurationPersistenceStrat
     commit(resolver);
     return true;
   }
-
-  private void ensurePage(ResourceResolver resolver, String configResourcePath) {
-    Matcher matcher = PAGE_PATH_PATTERN.matcher(configResourcePath);
-    if (!matcher.matches()) {
-      return;
-    }
-    String pagePath = matcher.group(1);
-    Resource resource = resolver.getResource(pagePath);
-    if (resource != null) {
-      return;
-    }
-    // ensure parent folders exist
-    String parentPath = ResourceUtil.getParent(pagePath);
-    getOrCreateResource(resolver, parentPath, DEFAULT_FOLDER_NODE_TYPE, null);
-    try {
-      if (log.isTraceEnabled()) {
-        log.trace("! Create cq:Page node at {}", pagePath);
-      }
-      PageManager pageManager = resolver.adaptTo(PageManager.class);
-      pageManager.create(ResourceUtil.getParent(pagePath), ResourceUtil.getName(pagePath),
-          null, ResourceUtil.getName(pagePath), false);
-    }
-    catch (WCMException ex) {
-      throw new ConfigurationPersistenceException("Unable to create config page at " + pagePath, ex);
-    }
-  }
-
-  private Resource getOrCreateResource(ResourceResolver resolver, String path, String defaultNodeType, Map<String, Object> properties) {
-    try {
-      Resource resource = ResourceUtil.getOrCreateResource(resolver, path, defaultNodeType, defaultNodeType, false);
-      if (properties != null) {
-        replaceProperties(resource, properties);
-      }
-      return resource;
-    }
-    catch (PersistenceException ex) {
-      throw new ConfigurationPersistenceException("Unable to create resource at " + path, ex);
-    }
-  }
-
-  private void deleteChildren(Resource resource) {
-    ResourceResolver resolver = resource.getResourceResolver();
-    try {
-      for (Resource child : resource.getChildren()) {
-        resolver.delete(child);
-      }
-    }
-    catch (PersistenceException ex) {
-      throw new ConfigurationPersistenceException("Unable to remove children from " + resource.getPath(), ex);
-    }
-  }
-
-  private void replaceProperties(Resource resource, Map<String, Object> properties) {
-    if (log.isTraceEnabled()) {
-      log.trace("! Store properties for resource {}: {}", resource.getPath(), properties);
-    }
-    ModifiableValueMap modValueMap = resource.adaptTo(ModifiableValueMap.class);
-    // remove all existing properties that do not have jcr: namespace
-    for (String propertyName : new HashSet<>(modValueMap.keySet())) {
-      if (StringUtils.startsWith(propertyName, "jcr:")) {
-        continue;
-      }
-      modValueMap.remove(propertyName);
-    }
-    modValueMap.putAll(properties);
-  }
-
-  private void updatePageLastMod(ResourceResolver resolver, String configResourcePath) {
-    Matcher matcher = PAGE_PATH_PATTERN.matcher(configResourcePath);
-    if (!matcher.matches()) {
-      return;
-    }
-    String pagePath = matcher.group(1);
-    Resource contentResource = resolver.getResource(pagePath + "/" + JCR_CONTENT);
-    if (contentResource != null) {
-      ModifiableValueMap contentProps = contentResource.adaptTo(ModifiableValueMap.class);
-      contentProps.put(NameConstants.PN_LAST_MOD, Calendar.getInstance());
-      contentProps.put(NameConstants.PN_LAST_MOD_BY, resolver.getAttribute(ResourceResolverFactory.USER));
-    }
-  }
-
-  private void commit(ResourceResolver resolver) {
-    try {
-      resolver.commit();
-    }
-    catch (PersistenceException ex) {
-      throw new ConfigurationPersistenceException("Unable to save configuration: " + ex.getMessage(), ex);
-    }
-  }
-
 
 }
