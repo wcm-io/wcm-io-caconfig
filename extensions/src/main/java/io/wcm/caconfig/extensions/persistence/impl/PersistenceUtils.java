@@ -46,6 +46,7 @@ final class PersistenceUtils {
 
   private static final String DEFAULT_FOLDER_NODE_TYPE = "sling:Folder";
   private static final Pattern PAGE_PATH_PATTERN = Pattern.compile("^(.*)/" + Pattern.quote(JCR_CONTENT) + "(/.*)?$");
+  private static final Pattern JCR_CONTENT_PATTERN = Pattern.compile("^(.*/)?" + Pattern.quote(JCR_CONTENT) + "(/.*)?$");
 
   private static final Logger log = LoggerFactory.getLogger(PersistenceUtils.class);
 
@@ -53,8 +54,8 @@ final class PersistenceUtils {
     // static methods only
   }
 
-  public static boolean isInsidePage(String path) {
-    return PAGE_PATH_PATTERN.matcher(path).matches();
+  public static boolean containsJcrContent(String path) {
+    return JCR_CONTENT_PATTERN.matcher(path).matches();
   }
 
   public static void ensurePage(ResourceResolver resolver, String configResourcePath) {

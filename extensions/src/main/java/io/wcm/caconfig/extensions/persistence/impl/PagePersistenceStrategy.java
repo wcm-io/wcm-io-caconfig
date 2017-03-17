@@ -22,10 +22,10 @@ package io.wcm.caconfig.extensions.persistence.impl;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.commit;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.containsJcrContent;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildren;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensurePage;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.getOrCreateResource;
-import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.isInsidePage;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.replaceProperties;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.updatePageLastMod;
 
@@ -84,7 +84,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     if (!enabled) {
       return null;
     }
-    if (isInsidePage(resource.getPath())) {
+    if (containsJcrContent(resource.getPath())) {
       return resource;
     }
     return resource.getChild(JCR_CONTENT);
@@ -95,7 +95,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     if (!enabled) {
       return null;
     }
-    if (isInsidePage(resourcePath)) {
+    if (containsJcrContent(resourcePath)) {
       return resourcePath;
     }
     return resourcePath + "/" + JCR_CONTENT;
