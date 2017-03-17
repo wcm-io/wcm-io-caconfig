@@ -129,9 +129,6 @@ public class ToolsConfigPagePersistenceStrategyTest {
 
   @Test
   public void testNestedConfig() throws Exception {
-    // TODO: does not work if both are registered?
-    //context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
-
     // write config
     writeConfiguration(context, contentPage.getPath(), NestedConfig.class.getName(),
         "stringParam", "value1");

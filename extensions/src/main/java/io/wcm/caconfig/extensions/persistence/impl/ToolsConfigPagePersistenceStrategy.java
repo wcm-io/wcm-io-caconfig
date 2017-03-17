@@ -229,7 +229,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     }
 
     if (ref != null && !CONFIG_PATH_PATTERN.matcher(ref).matches()) {
-      log.warn("Ignoring reference to {} from {} - not in allowed paths.",
+      log.debug("Ignoring reference to {} from {} - not in allowed paths.",
           contextResource.getConfigRef(), contextResource.getResource().getPath());
       ref = null;
     }
