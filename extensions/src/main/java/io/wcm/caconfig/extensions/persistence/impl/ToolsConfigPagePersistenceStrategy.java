@@ -53,7 +53,7 @@ import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
-import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy2;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -70,10 +70,10 @@ import org.slf4j.LoggerFactory;
  * In this case the configuration date is stored in a single page at /tools/config which can be easily activated by
  * editors via the authoring GUI, and the configuration can neatly be packaged together with the content.
  */
-@Component(service = { ConfigurationPersistenceStrategy.class, ConfigurationResourceResolvingStrategy.class },
+@Component(service = { ConfigurationPersistenceStrategy2.class, ConfigurationResourceResolvingStrategy.class },
     property = Constants.SERVICE_RANKING + ":Integer=2000")
 @Designate(ocd = ToolsConfigPagePersistenceStrategy.Config.class)
-public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersistenceStrategy, ConfigurationResourceResolvingStrategy {
+public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersistenceStrategy2, ConfigurationResourceResolvingStrategy {
 
   @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration AEM Tools Config Page Persistence Strategy",
       description = "Stores Context-Aware Configuration in a single AEM content page at /tools/config.")
@@ -113,6 +113,16 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
+  public Resource getCollectionParentResource(Resource resource) {
+    return getResource(resource);
+  }
+
+  @Override
+  public Resource getCollectionItemResource(Resource resource) {
+    return getResource(resource);
+  }
+
+  @Override
   public String getResourcePath(String resourcePath) {
     if (!enabled || !isConfigPagePath(resourcePath)) {
       return null;
@@ -121,13 +131,44 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
+  public String getCollectionParentResourcePath(String resourcePath) {
+    return getResourcePath(resourcePath);
+  }
+
+  @Override
+  public String getCollectionItemResourcePath(String resourcePath) {
+    return getResourcePath(resourcePath);
+  }
+
+  @Override
+  public String getConfigName(String configName, Resource nestedParentResource) {
+    if (!enabled || (nestedParentResource != null && !isConfigPagePath(nestedParentResource.getPath()))) {
+      return null;
+    }
+    return configName;
+  }
+
+  @Override
+  public String getCollectionParentConfigName(String configName, Resource nestedParentResource) {
+    return getConfigName(configName, nestedParentResource);
+  }
+
+  @Override
+  public String getCollectionItemConfigName(String configName, Resource nestedParentResource) {
+    return getConfigName(configName, nestedParentResource);
+  }
+
+  @Override
   public boolean persistConfiguration(ResourceResolver resolver, String configResourcePath, ConfigurationPersistData data) {
     if (!enabled || !isConfigPagePath(configResourcePath)) {
       return false;
     }
-    ensurePage(resolver, configResourcePath);
-    getOrCreateResource(resolver, configResourcePath, DEFAULT_CONFIG_NODE_TYPE, data.getProperties());
-    updatePageLastMod(resolver, configResourcePath);
+    String path = getResourcePath(configResourcePath);
+    ensurePage(resolver, path);
+
+    getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties());
+
+    updatePageLastMod(resolver, path);
     commit(resolver);
     return true;
   }

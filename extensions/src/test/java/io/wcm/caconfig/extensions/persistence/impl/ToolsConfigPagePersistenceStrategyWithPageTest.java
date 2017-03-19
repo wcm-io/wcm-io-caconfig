@@ -20,9 +20,7 @@
 package io.wcm.caconfig.extensions.persistence.impl;
 
 import org.junit.Before;
-import org.junit.Ignore;
 
-@Ignore // FIXME: open issues with nested config
 public class ToolsConfigPagePersistenceStrategyWithPageTest extends ToolsConfigPagePersistenceStrategyTest {
 
   @Before

@@ -36,7 +36,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
-import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy2;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -54,10 +54,10 @@ import org.slf4j.LoggerFactory;
  * node. Unlike the persistence strategy in AEM 6.3 this also supports writing configuration to /conf.
  * </p>
  */
-@Component(service = ConfigurationPersistenceStrategy.class,
+@Component(service = ConfigurationPersistenceStrategy2.class,
     property = Constants.SERVICE_RANKING + ":Integer=500")
 @Designate(ocd = PagePersistenceStrategy.Config.class)
-public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy {
+public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy2 {
 
   @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration AEM Page Persistence Strategy",
       description = "Stores Context-Aware Configuration in AEM pages instead of simple resources.")
@@ -91,6 +91,19 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
   }
 
   @Override
+  public Resource getCollectionParentResource(Resource resource) {
+    return getResource(resource);
+  }
+
+  @Override
+  public Resource getCollectionItemResource(Resource resource) {
+    if (!enabled) {
+      return null;
+    }
+    return resource;
+  }
+
+  @Override
   public String getResourcePath(String resourcePath) {
     if (!enabled) {
       return null;
@@ -102,13 +115,52 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
   }
 
   @Override
+  public String getCollectionParentResourcePath(String resourcePath) {
+    return getResourcePath(resourcePath);
+  }
+
+  @Override
+  public String getCollectionItemResourcePath(String resourcePath) {
+    if (!enabled) {
+      return null;
+    }
+    return resourcePath;
+  }
+
+  @Override
+  public String getConfigName(String configName, Resource nestedParentResource) {
+    if (!enabled) {
+      return null;
+    }
+    if (containsJcrContent(configName)) {
+      return configName;
+    }
+    return configName + "/" + JCR_CONTENT;
+  }
+
+  @Override
+  public String getCollectionParentConfigName(String configName, Resource nestedParentResource) {
+    return getConfigName(configName, nestedParentResource);
+  }
+
+  @Override
+  public String getCollectionItemConfigName(String configName, Resource nestedParentResource) {
+    if (!enabled) {
+      return null;
+    }
+    return configName;
+  }
+
+  @Override
   public boolean persistConfiguration(ResourceResolver resolver, String configResourcePath, ConfigurationPersistData data) {
     if (!enabled) {
       return false;
     }
     String path = getResourcePath(configResourcePath);
     ensurePage(resolver, path);
+
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties());
+
     updatePageLastMod(resolver, path);
     commit(resolver);
     return true;
@@ -119,13 +171,14 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     if (!enabled) {
       return false;
     }
-    Resource configResourceParent = getOrCreateResource(resolver, configResourceCollectionParentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY);
+    String parentPath = getCollectionParentResourcePath(configResourceCollectionParentPath);
+    ensurePage(resolver, parentPath);
+    Resource configResourceParent = getOrCreateResource(resolver, parentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY);
 
     // delete existing children and create new ones
     deleteChildren(configResourceParent);
     for (ConfigurationPersistData item : data.getItems()) {
-      String path = getResourcePath(configResourceParent.getPath() + "/" + item.getCollectionItemName());
-      ensurePage(resolver, path);
+      String path = parentPath + "/" + item.getCollectionItemName();
       getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties());
     }
 
@@ -134,6 +187,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       replaceProperties(configResourceParent, data.getProperties());
     }
 
+    updatePageLastMod(resolver, parentPath);
     commit(resolver);
     return true;
   }
