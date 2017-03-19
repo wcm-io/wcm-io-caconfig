@@ -128,7 +128,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
   }
 
   @Override
-  public String getConfigName(String configName, Resource nestedParentResource) {
+  public String getConfigName(String configName, Resource relatedConfigResource) {
     if (!enabled) {
       return null;
     }
@@ -139,12 +139,12 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
   }
 
   @Override
-  public String getCollectionParentConfigName(String configName, Resource nestedParentResource) {
-    return getConfigName(configName, nestedParentResource);
+  public String getCollectionParentConfigName(String configName, Resource relatedConfigResource) {
+    return getConfigName(configName, relatedConfigResource);
   }
 
   @Override
-  public String getCollectionItemConfigName(String configName, Resource nestedParentResource) {
+  public String getCollectionItemConfigName(String configName, Resource relatedConfigResource) {
     if (!enabled) {
       return null;
     }

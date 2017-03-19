@@ -141,21 +141,21 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public String getConfigName(String configName, Resource nestedParentResource) {
-    if (!enabled || (nestedParentResource != null && !isConfigPagePath(nestedParentResource.getPath()))) {
+  public String getConfigName(String configName, Resource relatedConfigResource) {
+    if (!enabled || (relatedConfigResource != null && !isConfigPagePath(relatedConfigResource.getPath()))) {
       return null;
     }
     return configName;
   }
 
   @Override
-  public String getCollectionParentConfigName(String configName, Resource nestedParentResource) {
-    return getConfigName(configName, nestedParentResource);
+  public String getCollectionParentConfigName(String configName, Resource relatedConfigResource) {
+    return getConfigName(configName, relatedConfigResource);
   }
 
   @Override
-  public String getCollectionItemConfigName(String configName, Resource nestedParentResource) {
-    return getConfigName(configName, nestedParentResource);
+  public String getCollectionItemConfigName(String configName, Resource relatedConfigResource) {
+    return getConfigName(configName, relatedConfigResource);
   }
 
   @Override
