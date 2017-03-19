@@ -367,6 +367,9 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     }
     ensurePage(resourceResolver, ResourceUtil.getParent(pagePath), config.structurePageTemplate());
     try {
+      if (log.isTraceEnabled()) {
+        log.trace("! Create cq:Page node at {}", pagePath);
+      }
       PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
       pageManager.create(ResourceUtil.getParent(pagePath), ResourceUtil.getName(pagePath),
           template, ResourceUtil.getName(pagePath), false);
@@ -394,7 +397,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
       log.trace("! Store properties for resource {}: {}", resource.getPath(), MapUtil.traceOutput(properties));
     }
     ModifiableValueMap modValueMap = resource.adaptTo(ModifiableValueMap.class);
-    // remove all existing properties that are not filterd
+    // remove all existing properties that are not filtered
     Set<String> propertyNamesToRemove = new HashSet<>(modValueMap.keySet());
     PropertiesFilterUtil.removeIgnoredProperties(propertyNamesToRemove);
     for (String propertyName : propertyNamesToRemove) {

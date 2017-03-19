@@ -63,14 +63,14 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         required = true)
     String contextPathRegex() default "^(/content/.+)$";
 
-    @AttributeDefinition(name = "Config path pattern",
+    @AttributeDefinition(name = "Config path patterns",
         description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.",
         required = true)
-    String configPathPattern() default "/conf$1";
+    String[] configPathPatterns() default "/conf$1";
 
     @AttributeDefinition(name = "Service Ranking",
         description = "Priority of configuration override providers (higher = higher priority).")
-    int service_ranking() default 0;
+    int service_ranking() default 2000;
 
     String webconsole_configurationFactory_nameHint() default "{applicationId} levels={levels}";
 
@@ -78,7 +78,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
 
   private Set<Integer> levels;
   private Pattern contextPathRegex;
-  private String configPathPattern;
+  private String[] configPathPatterns;
 
   private static final Logger log = LoggerFactory.getLogger(AbsoluteParentContextPathStrategy.class);
 
@@ -96,7 +96,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     catch (PatternSyntaxException ex) {
       log.warn("Invalid context path regex: " + config.contextPathRegex(), ex);
     }
-    configPathPattern = config.configPathPattern();
+    configPathPatterns = config.configPathPatterns();
   }
 
   @Override
@@ -111,9 +111,11 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
       if (StringUtils.isNotEmpty(contextPath)) {
         Resource contextResource = resource.getResourceResolver().getResource(contextPath);
         if (contextResource != null) {
-          String configRef = deriveConfigRef(contextPath);
-          if (configRef != null) {
-            contextResources.add(new ContextResource(contextResource, configRef));
+          for (String configPathPattern : configPathPatterns) {
+            String configRef = deriveConfigRef(contextPath, configPathPattern);
+            if (configRef != null) {
+              contextResources.add(new ContextResource(contextResource, configRef));
+            }
           }
         }
       }
@@ -125,14 +127,15 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
   private boolean isValidConfig() {
     return !levels.isEmpty()
         && contextPathRegex != null
-        && StringUtils.isNotBlank(configPathPattern);
+        && configPathPatterns != null
+        && configPathPatterns.length > 0;
   }
 
   private String getAbsoluteParent(Resource resource, int absoluteParent) {
     return Text.getAbsoluteParent(resource.getPath(), absoluteParent);
   }
 
-  private String deriveConfigRef(String contextPath) {
+  private String deriveConfigRef(String contextPath, String configPathPattern) {
     Matcher matcher = contextPathRegex.matcher(contextPath);
     if (matcher.matches()) {
       return matcher.replaceAll(configPathPattern);

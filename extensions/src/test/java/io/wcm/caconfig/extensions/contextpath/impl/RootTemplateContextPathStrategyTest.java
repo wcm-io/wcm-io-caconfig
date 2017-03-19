@@ -87,11 +87,13 @@ public class RootTemplateContextPathStrategyTest {
     ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy(),
         "templatePaths", new String[] { TEMPLATE_1 },
         "contextPathRegex", "^/content(/.+)$",
-        "configPathPattern", "/conf/test$1");
+        "configPathPatterns", new String[] { "/conf/test1$1", "/conf/test2$1" });
 
     assertResult(underTest.findContextResources(level4),
-        "/content/region1/site1", "/conf/test/region1/site1",
-        "/content/region1", "/conf/test/region1");
+        "/content/region1/site1", "/conf/test2/region1/site1",
+        "/content/region1/site1", "/conf/test1/region1/site1",
+        "/content/region1", "/conf/test2/region1",
+        "/content/region1", "/conf/test1/region1");
   }
 
 }

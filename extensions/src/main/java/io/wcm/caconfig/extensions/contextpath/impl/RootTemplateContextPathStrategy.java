@@ -28,7 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
@@ -79,14 +78,14 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
         required = true)
     String contextPathRegex() default "^(/content/.+)$";
 
-    @AttributeDefinition(name = "Config path pattern",
+    @AttributeDefinition(name = "Config path patterns",
         description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.",
         required = true)
-    String configPathPattern() default "/conf$1";
+    String[] configPathPatterns() default "/conf$1";
 
     @AttributeDefinition(name = "Service Ranking",
         description = "Priority of configuration override providers (higher = higher priority).")
-    int service_ranking() default 0;
+    int service_ranking() default 2000;
 
     String webconsole_configurationFactory_nameHint() default "{applicationId} templates={templatePaths}";
 
@@ -96,7 +95,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
   private int minLevel;
   private int maxLevel;
   private Pattern contextPathRegex;
-  private String configPathPattern;
+  private String[] configPathPatterns;
 
   private static final Logger log = LoggerFactory.getLogger(RootTemplateContextPathStrategy.class);
 
@@ -111,7 +110,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     catch (PatternSyntaxException ex) {
       log.warn("Invalid context path regex: " + config.contextPathRegex(), ex);
     }
-    configPathPattern = config.configPathPattern();
+    configPathPatterns = config.configPathPatterns();
   }
 
   @Override
@@ -125,9 +124,11 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     for (String contextPath : contextPathCandidats) {
       Resource contextResource = resource.getResourceResolver().getResource(contextPath);
       if (contextResource != null) {
-        String configRef = deriveConfigRef(contextPath);
-        if (configRef != null) {
-          contextResources.add(new ContextResource(contextResource, configRef));
+        for (String configPathPattern : configPathPatterns) {
+          String configRef = deriveConfigRef(contextPath, configPathPattern);
+          if (configRef != null) {
+            contextResources.add(new ContextResource(contextResource, configRef));
+          }
         }
       }
     }
@@ -138,7 +139,8 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
   private boolean isValidConfig() {
     return !templatePaths.isEmpty()
         && contextPathRegex != null
-        && StringUtils.isNotBlank(configPathPattern);
+        && configPathPatterns != null
+        && configPathPatterns.length > 0;
   }
 
   private List<String> getContextPathCandidates(Resource resource) {
@@ -162,7 +164,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     return candidates;
   }
 
-  private String deriveConfigRef(String contextPath) {
+  private String deriveConfigRef(String contextPath, String configPathPattern) {
     Matcher matcher = contextPathRegex.matcher(contextPath);
     if (matcher.matches()) {
       return matcher.replaceAll(configPathPattern);
