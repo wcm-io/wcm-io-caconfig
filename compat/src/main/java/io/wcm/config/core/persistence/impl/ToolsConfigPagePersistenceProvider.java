@@ -62,9 +62,8 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.NameConstants;
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMException;
 
 import io.wcm.config.core.impl.ParameterProviderBridge;
 
@@ -411,18 +410,27 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     if (resource != null) {
       return;
     }
+
+    String parentPath = ResourceUtil.getParent(pagePath);
+    String pageName = ResourceUtil.getName(pagePath);
     ensurePage(resourceResolver, ResourceUtil.getParent(pagePath), config.structurePageTemplate());
+    Resource parentResource = resourceResolver.getResource(parentPath);
     try {
       if (log.isTraceEnabled()) {
         log.trace("! Create cq:Page node at {}", pagePath);
       }
-      PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
-      pageManager.create(ResourceUtil.getParent(pagePath), ResourceUtil.getName(pagePath),
-          template, ResourceUtil.getName(pagePath), false);
+      // create page directly via Sling API instead of PageManager because page name may contain dots (.)
+      Map<String, Object> props = new HashMap<>();
+      props.put(JcrConstants.JCR_PRIMARYTYPE, NameConstants.NT_PAGE);
+      Resource pageResource = resourceResolver.create(parentResource, pageName, props);
+      props = new HashMap<String, Object>();
+      props.put(JcrConstants.JCR_PRIMARYTYPE, "cq:PageContent");
+      props.put(JcrConstants.JCR_TITLE, pageName);
+      props.put(NameConstants.PN_TEMPLATE, template);
+      resourceResolver.create(pageResource, JcrConstants.JCR_CONTENT, props);
     }
-    catch (WCMException ex) {
-      // TODO: detect error due to missing access rights
-      throw new ConfigurationPersistenceException("Unable to create config page at " + pagePath, ex);
+    catch (PersistenceException ex) {
+      throw convertPersistenceException("Unable to create config page at " + pagePath, ex);
     }
   }
 

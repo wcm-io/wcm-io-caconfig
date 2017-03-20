@@ -79,7 +79,7 @@ final class PersistenceUtils {
       }
 
       // create page directly via Sling API instead of PageManager because page name may contain dots (.)
-      Map<String, Object> props = new HashMap<String, Object>();
+      Map<String, Object> props = new HashMap<>();
       props.put(JcrConstants.JCR_PRIMARYTYPE, NameConstants.NT_PAGE);
       Resource pageResource = resolver.create(parentResource, pageName, props);
       props = new HashMap<String, Object>();
