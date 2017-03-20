@@ -51,6 +51,7 @@ import org.apache.sling.caconfig.spi.ConfigurationInheritanceStrategy;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy;
+import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -75,7 +76,8 @@ import io.wcm.config.core.impl.ParameterProviderBridge;
  */
 @Component(immediate = true, service = {
     ConfigurationResourceResolvingStrategy.class, ConfigurationInheritanceStrategy.class, ConfigurationPersistenceStrategy.class
-})
+},
+    property = Constants.SERVICE_RANKING + ":Integer=2000")
 @Designate(ocd = ToolsConfigPagePersistenceProvider.Config.class)
 public final class ToolsConfigPagePersistenceProvider implements ConfigurationResourceResolvingStrategy,
     ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
