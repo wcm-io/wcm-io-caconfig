@@ -1,26 +1,30 @@
 ## Configuration Editor usage
 
-### Editor GUI
+### Basic concepts
 
-![Configuration levels](images/configuration-editor.png)
+The Configuration Editor is a template which is used inside the '/content' tree. It allows to edit configurations for the inner-most context that is detected within the context tree (e.g. by defining `sling:configRef` properties). Where the configuration itself is stored depends on your system settings, by default it's stored in `/conf`.
 
-The parameters displayed in the editor are fetched dynamically from the parameter providers.
+You cannot define the contexts via the configuration editor, you have to set the `sling:configRef` manually or within the page properties of your content templates, or by defining custom context path strategies. But once your contexts are defined you can create a config editor page within each context and edit the configuration parameters.
 
-The editor supports:
+The configuration editor supports only editing configuration for which configuration metadata is present. This is normally done by deploying configuration annotation classes with your applications.
 
-- Filtering parameters by parameter group and/or application
-- Entering parameter values using different widgets, e.g. text field, checkbox, multi value field
-- Controlling parameter inheritance from ancestor configuration levels
-- Locking a parameter value on this level so it cannot be overwritten on decendant configuration levels
-- Display parameter documentation in a separate flyout
+See [Apache Sling Context-Aware Configuration documentation][sling-caconfig] for more details.
 
-The editor is based on AngularJS and CoralUI.
+
+### Installation
+
+In most cases you will deploy the configuration editor bundle `io.wcm.caconfig.editor` together with your application. In this case you should define your own template definition for it which controls where editor config pages can created (see next section).
+
+Alternatively you can deploy this AEM package which contains the config editor bundle together with a template definition which allows all paths below `/content`:
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package)
+
+When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles (API, SPI, Impl) to AEM.
 
 
 ### Defining the editor template
 
 The editor application contains an AEM template definition, but it is deactivated by default. Each application
-has to define it's own editor template with fitting `allowedPaths`-Definitions and title depending
+has to define it's own editor template with a fitting `allowedPaths` definition and title depending
 on the needs of the application.
 
 Only the template has to be defined, the page component resource type can be referenced. Example:
@@ -28,10 +32,9 @@ Only the template has to be defined, the page component resource type can be ref
 ```json
 {
   "jcr:primaryType": "cq:Template",
-  "jcr:title": "wcm.io Sample Configuration Editor",
+  "jcr:title": "Configuration Editor",
 
-  "allowedPaths": "^/content/[^/]+/[^/]+/tools(/.*)?$",
-  "allowedChildren": "",
+  "allowedPaths": "^/content(/.*)?$",
 
   "jcr:content": {
     "jcr:primaryType": "cq:PageContent",
@@ -39,3 +42,39 @@ Only the template has to be defined, the page component resource type can be ref
   }
 }
 ```
+
+
+### Editor GUI
+
+![Configuration Overview](images/configuration-overview.png)
+
+When opening the Configuration Editor an overview of all configurations is displayed for which some configuration data is present. By using the "Add" button you can enter new configuration data for other configurations where no data exists yet.
+
+![Singleton Configuration](images/configuration-editor-singleton.png)
+
+For a singleton configuration all configuration parameters are displayed and can be changed. With the "Save" button the changes are persisted, the "Delete" button removes the whole configuration.
+
+![ConfigurationL Collection](images/configuration-editor-list.png)
+
+For a configuration collection all existing collection items are displayed, and new ones can be added after entering a name. Single items or the whole configuration collection can be removed.
+
+
+
+The editor is based on AngularJS and CoralUI.
+
+
+### Disable Editor on Publish
+
+You should disable the configuration editor on publish by applying an OSGi configuration like this:
+
+```
+[configurations runModes=publish]
+  
+  # Disable Configuration Editor on publish
+  io.wcm.caconfig.editor.impl.EditorConfig
+    enabled=B"false"
+```
+
+
+
+[sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html

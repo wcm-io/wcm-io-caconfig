@@ -1,0 +1,37 @@
+<div class="caconfig-overview" ng-cloak>
+  <button class="coral-Button coral-Button--primary"
+          ng-disabled="!overview.hasNonExistingConfig()"
+          ng-click="overview.showNonExistingConfigs()">
+    {{i18n.button.add}}
+  </button>
+
+  <p class="caconfig-contextPath">{{i18n.contextPath}}: <code>{{overview.state.contextPath}}</code></p>
+
+  <table class="coral-Table coral-Table--hover"
+         ng-show="(overview.state.configNames | filter:{exists:true}).length" ng-cloak>
+    <thead>
+      <tr class="coral-Table-row">
+        <th class="coral-Table-headerCell" style="width:1%"></th>
+        <th class="coral-Table-headerCell">{{i18n.config.name}}</th>
+        <th class="coral-Table-headerCell">{{i18n.config.description}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="coral-Table-row"
+          ng-repeat="config in overview.state.configNames | filter:{exists:true}"
+          ng-click="go(config.configName)" ng-cloak>
+        <td class="coral-Table-cell">
+          <i class="coral-Icon coral-Icon--sizeS"
+             ng-class="{'coral-Icon--page': !config.collection,
+                        'coral-Icon--pages': config.collection}"></i>
+        </td>
+        <td class="coral-Table-cell">
+          {{config.label || config.configName}}
+        </td>
+        <td class="coral-Table-cell">
+          {{config.description}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

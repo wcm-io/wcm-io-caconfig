@@ -1,0 +1,11 @@
+{
+  "jcr:primaryType": "cq:ClientLibraryFolder",
+  "categories": [
+    "io.wcm.caconfig.editor"
+  ],
+  "dependencies": [
+    "coralui2",
+    "underscore",
+    "angularjs"
+  ]
+}

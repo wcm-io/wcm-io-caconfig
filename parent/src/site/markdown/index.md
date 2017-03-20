@@ -1,28 +1,30 @@
-## wcm.io Configuration
+## wcm.io Context-Aware Configuration
 
-Context-specific configuration for AEM applications.
+Context-Aware configuration for AEM applications, based on [Apache Sling Context-Aware Configuration][sling-caconfig].
 
-
-### Context-specific configuration
-
-wcm.io Configuration manages context-specific configuration, that means configuration that cannot be stored as OSGi configurations. OSGi configurations are always system-wide, so they are not well-suited for storing configurations per context e.g. site, region or tenant. Each context can be described as a path in the resource hierarchy including its subtree. Contexts can be nested.
-
-This wcm.io subproject implements APIs and SPIs to provide a flexible configuration infrastructure for reading and managing context-specific configuration. The implementation is pluggable which ensures it can be adapted to the application needs. It's based on OSGi services.
-
-The problems and usecases solved by this implementation are described in the wcm.io Wiki [Multi Tenancy and Configuration Requirements][wiki-config-requirements] page (although not everything described there is implemented currently). For detailed documentation and usage descriptions see below.
+Context-Aware means configurations that are related to a content resource or a resource tree, e.g. a web site or a tenant site. wcm.io Context-Aware Configuration provides a set of AEM-specific extensions to the Apache Sling implementation. Additionally a compatibility layer for [wcm.io Configuration 0.x][config-deprecated] is provided.
 
 
 ### Overview
 
-* [API](api/): API and SPI for context-specific configuration.
-* [Implementation](core/): Context-specific configuration management implementation.
-* [Configuration Editor](editor/): Configuration Editor Template for AEM.
-* [Sample Application](sample-app/): Sample application to demonstrate configuration API and configuration editor GUI.
+* [Editor](editor/): Configuration Editor Template for AEM.
+* [Application](application/): Context-Aware system configuration of shared bundles.
+* [Extensions](extensions/): AEM-specific extensions for Sling Context-Aware Configuration.
+* [Compatibility Layer](compat/): Compatibility Layer for wcm.io Configuration 0.x.
 
 
-[wiki-config-requirements]: https://wcm-io.atlassian.net/wiki/x/HIAH
+### Supported AEM versions
+
+Context-Aware Configuration is supported in AEM 6.1, 6.2 and upwards. AEM 6.0 is not supported.
+
+When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles (API, SPI, Impl) to AEM.
 
 
 ### GitHub Repository
 
-Sources: https://github.com/wcm-io/wcm-io-config
+Sources: https://github.com/wcm-io/wcm-io-caconfig
+
+
+
+[sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
+[config-deprecated]: http://wcm.io/config/

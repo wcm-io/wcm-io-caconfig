@@ -1,0 +1,37 @@
+<h1>${currentPage.pageTitle || currentPage.title}</h1>
+
+<div>
+
+  <h3>Config name: io.wcm.caconfig.sample.config.ConfigSample</h3>
+
+  <dl>
+    <dt>stringParam:</dt>
+    <dd>${caconfig['io.wcm.caconfig.sample.config.ConfigSample'].stringParam}</dd>
+    <dt>intParam:</dt>
+    <dd>${caconfig['io.wcm.caconfig.sample.config.ConfigSample'].intParam}</dd>
+    <dt>boolParam:</dt>
+    <dd>${caconfig['io.wcm.caconfig.sample.config.ConfigSample'].boolParam}</dd>
+    <dt>stringArrayParam:</dt>
+    <dd>${caconfig['io.wcm.caconfig.sample.config.ConfigSample'].stringArrayParam}</dd>
+  </dl>
+
+  <h3>Config name: io.wcm.caconfig.sample.config.ConfigSample2</h3>
+
+  <dl>
+    <dt>stringParam:</dt>
+    <dd>${caconfig['sample/configuration/2'].stringParam}</dd>
+    <dt>doubleParam:</dt>
+    <dd>${caconfig['sample/configuration/2'].doubleParam}</dd>
+    <dt>intArrayParam:</dt>
+    <dd>${caconfig['sample/configuration/2'].intArrayParam}</dd>
+    <dt>boolArrayParam:</dt>
+    <dd>${caconfig['sample/configuration/2'].boolArrayParam}</dd>
+  </dl>
+
+  <h3>Config collection name: io.wcm.caconfig.sample.config.ConfigSampleList</h3>
+
+  <ul data-sly-list.item="${caconfig['io.wcm.caconfig.sample.config.ConfigSampleList']}">
+    <li>stringParam: ${item.stringParam}</li>
+  </ul>
+
+</div>

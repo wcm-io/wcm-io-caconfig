@@ -1,0 +1,42 @@
+{
+  "io.wcm.caconfig.editor": {
+    "title": "Konfiguration bearbeiten",
+    "contextPath": "Kontext Pfad",
+    "button": {
+      "add": "Hinzufügen",
+      "addItem": "Element Hinzufügen",
+      "cancel": "Abbrechen",
+      "deleteConfig": "Löschen",
+      "deleteCollection": "Sammlung Löschen",
+      "deleteItem": "Element Löschen",
+      "discard": "Änderungen verwefen",
+      "edit": "Bearbeiten",
+      "ok": "OK",
+      "save": "Speichern"
+    },
+    "config": {
+      "name": "Konfigurations-Name",
+      "property": "Eigenschaft",
+      "value": "Wert",
+      "inherited": "Vererbt",
+      "overridden": "Überschrieben",
+      "description": "Beschreibung",
+      "group": "Gruppe",
+      "inheritance": {
+        "property": "config.inheritance.property",
+        "collection": "config.inheritance.collection"
+      },
+    },
+    "modal": {
+      "addTitle": "Konfiguration hinzufügen",
+      "close": "Schließen",
+      "deleteTitle": "Konfiguration löschen",
+      "deleteMessage": "Diese Konfiguration wird gelöscht.",
+      "errorMessage": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren.",
+      "tooltip": {
+        "allowed": "Erlaubte Zeichen: A-Z a-z 0-9 - _",
+        "unique": "Dieser Name ist bereits in Verwendung."
+      }
+    }
+  }
+}
