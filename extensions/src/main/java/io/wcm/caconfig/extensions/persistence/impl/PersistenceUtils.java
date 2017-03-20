@@ -22,6 +22,7 @@ package io.wcm.caconfig.extensions.persistence.impl;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -39,9 +40,8 @@ import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.NameConstants;
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMException;
 
 final class PersistenceUtils {
 
@@ -71,18 +71,24 @@ final class PersistenceUtils {
     }
     // ensure parent folders exist
     String parentPath = ResourceUtil.getParent(pagePath);
-    getOrCreateResource(resolver, parentPath, DEFAULT_FOLDER_NODE_TYPE, null);
+    String pageName = ResourceUtil.getName(pagePath);
+    Resource parentResource = getOrCreateResource(resolver, parentPath, DEFAULT_FOLDER_NODE_TYPE, null);
     try {
       if (log.isTraceEnabled()) {
         log.trace("! Create cq:Page node at {}", pagePath);
       }
-      PageManager pageManager = resolver.adaptTo(PageManager.class);
-      pageManager.create(ResourceUtil.getParent(pagePath), ResourceUtil.getName(pagePath),
-          null, ResourceUtil.getName(pagePath), false);
+
+      // create page directly via Sling API instead of PageManager because page name may contain dots (.)
+      Map<String, Object> props = new HashMap<String, Object>();
+      props.put(JcrConstants.JCR_PRIMARYTYPE, NameConstants.NT_PAGE);
+      Resource pageResource = resolver.create(parentResource, pageName, props);
+      props = new HashMap<String, Object>();
+      props.put(JcrConstants.JCR_PRIMARYTYPE, "cq:PageContent");
+      props.put(JcrConstants.JCR_TITLE, pageName);
+      resolver.create(pageResource, JcrConstants.JCR_CONTENT, props);
     }
-    catch (WCMException ex) {
-      // TODO: detect error due to missing access rights
-      throw new ConfigurationPersistenceException("Unable to create config page at " + pagePath, ex);
+    catch (PersistenceException ex) {
+      throw convertPersistenceException("Unable to create config page at " + pagePath, ex);
     }
   }
 
