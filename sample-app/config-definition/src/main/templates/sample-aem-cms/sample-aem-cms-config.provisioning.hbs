@@ -31,6 +31,13 @@
     overrides=["[/content/contextaware-config-sample/en/sub-page/sub-page-override]io.wcm.caconfig.sample.config.ConfigSample\={'stringParam':'override-stringParam','intParam':999}","[/content/contextaware-config-sample/en/sub-page/sub-page-override]sample/configuration/2/stringParam\='override2-stringParam'"]
     enabled=B"true"
 
+  # Enable wcm.io caconfig extensions
+  io.wcm.caconfig.extensions.persistence.impl.PagePersistenceStrategy
+    enabled=B"true"
+
+  io.wcm.caconfig.extensions.persistence.impl.ToolsConfigPagePersistenceStrategy
+    enabled=B"false"
+
   # Trace logging for Context-Aware Config
   org.apache.sling.commons.log.LogManager.factory.config-slingconfig.log
     org.apache.sling.commons.log.names=["org.apache.sling.caconfig","io.wcm.config"]
