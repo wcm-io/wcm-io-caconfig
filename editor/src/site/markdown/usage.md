@@ -15,7 +15,7 @@ See [Apache Sling Context-Aware Configuration documentation][sling-caconfig] for
 
 In most cases you will deploy the configuration editor bundle `io.wcm.caconfig.editor` together with your application. In this case you should define your own template definition for it which controls where editor config pages can created (see next section).
 
-Alternatively you can deploy this AEM package which contains the config editor bundle together with a template definitions which allows all paths below `/content`:
+Alternatively you can deploy this AEM package which contains the config editor bundle together with a template definition which allows all paths below `/content`:
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package)
 
 When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles (API, SPI, Impl) to AEM.
@@ -24,7 +24,7 @@ When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sli
 ### Defining the editor template
 
 The editor application contains an AEM template definition, but it is deactivated by default. Each application
-has to define it's own editor template with fitting `allowedPaths`-Definitions and title depending
+has to define it's own editor template with a fitting `allowedPaths` definition and title depending
 on the needs of the application.
 
 Only the template has to be defined, the page component resource type can be referenced. Example:
