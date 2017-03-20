@@ -169,7 +169,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties());
 
     updatePageLastMod(resolver, path);
-    commit(resolver);
+    commit(resolver, configResourcePath);
     return true;
   }
 
@@ -194,7 +194,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     }
 
     updatePageLastMod(resolver, configResourceCollectionParentPath);
-    commit(resolver);
+    commit(resolver, configResourceCollectionParentPath);
     return true;
   }
 
@@ -214,7 +214,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
       }
     }
     updatePageLastMod(resolver, configResourcePath);
-    commit(resolver);
+    commit(resolver, configResourcePath);
     return true;
   }
 

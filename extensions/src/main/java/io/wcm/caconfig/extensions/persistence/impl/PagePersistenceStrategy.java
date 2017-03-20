@@ -162,7 +162,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties());
 
     updatePageLastMod(resolver, path);
-    commit(resolver);
+    commit(resolver, configResourcePath);
     return true;
   }
 
@@ -188,7 +188,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     }
 
     updatePageLastMod(resolver, parentPath);
-    commit(resolver);
+    commit(resolver, configResourceCollectionParentPath);
     return true;
   }
 
@@ -208,7 +208,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       }
     }
     updatePageLastMod(resolver, configResourcePath);
-    commit(resolver);
+    commit(resolver, configResourcePath);
     return true;
   }
 

@@ -358,7 +358,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     // store config data
     getOrCreateResource(resourceResolver, configResourcePath, data.getProperties());
     updatePageLastMod(resourceResolver, configPagePath);
-    commit(resourceResolver);
+    commit(resourceResolver, configResourcePath);
     return false;
   }
 
@@ -391,7 +391,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
       }
     }
     updatePageLastMod(resourceResolver, configPagePath);
-    commit(resourceResolver);
+    commit(resourceResolver, configResourcePath);
     return true;
   }
 
@@ -421,6 +421,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
           template, ResourceUtil.getName(pagePath), false);
     }
     catch (WCMException ex) {
+      // TODO: detect error due to missing access rights
       throw new ConfigurationPersistenceException("Unable to create config page at " + pagePath, ex);
     }
   }
@@ -444,7 +445,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     }
     ModifiableValueMap modValueMap = resource.adaptTo(ModifiableValueMap.class);
     if (modValueMap == null) {
-      throw new ConfigurationPersistenceAccessDeniedException("Unable to write properties to " + resource.getPath() + " - access is read-only.");
+      throw new ConfigurationPersistenceAccessDeniedException("No write access: Unable to store configuration data to " + resource.getPath() + ".");
     }
     // remove all existing properties that are not filtered
     Set<String> propertyNamesToRemove = new HashSet<>(modValueMap.keySet());
@@ -460,19 +461,19 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     if (contentResource != null) {
       ModifiableValueMap contentProps = contentResource.adaptTo(ModifiableValueMap.class);
       if (contentProps == null) {
-        throw new ConfigurationPersistenceAccessDeniedException("Unable to write properties to " + configPagePath + " - access is read-only.");
+        throw new ConfigurationPersistenceAccessDeniedException("No write access: Unable to update page " + configPagePath + ".");
       }
       contentProps.put(NameConstants.PN_LAST_MOD, Calendar.getInstance());
       contentProps.put(NameConstants.PN_LAST_MOD_BY, resourceResolver.getAttribute(ResourceResolverFactory.USER));
     }
   }
 
-  private void commit(ResourceResolver resourceResolver) {
+  private void commit(ResourceResolver resourceResolver, String relatedResourcePath) {
     try {
       resourceResolver.commit();
     }
     catch (PersistenceException ex) {
-      throw convertPersistenceException("Unable to save configuration: " + ex.getMessage(), ex);
+      throw convertPersistenceException("Unable to persist configuration changes to " + relatedResourcePath, ex);
     }
   }
 
@@ -490,7 +491,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
   private ConfigurationPersistenceException convertPersistenceException(String message, PersistenceException ex) {
     if (StringUtils.equals(ex.getCause().getClass().getName(), "javax.jcr.AccessDeniedException")) {
       // detect if commit failed due to read-only access to repository
-      return new ConfigurationPersistenceAccessDeniedException(message, ex);
+      return new ConfigurationPersistenceAccessDeniedException("No write access: " + message, ex);
     }
     return new ConfigurationPersistenceException(message, ex);
   }

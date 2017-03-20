@@ -80,7 +80,7 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
   @Override
   protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
     if (!editorConfig.isEnabled()) {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      sendForbiddenWithMessage(response, "Configuration editor is disabled.");
       return;
     }
 
@@ -126,7 +126,7 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
       }
     }
     catch (ConfigurationPersistenceAccessDeniedException ex) {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN, "Not allowed to persist data: " + ex.getMessage());
+      sendForbiddenWithMessage(response, ex.getMessage());
     }
     catch (ConfigurationPersistenceException ex) {
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to persist data: " + ex.getMessage());
@@ -305,11 +305,17 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
       configManager.deleteConfiguration(request.getResource(), configName);
     }
     catch (ConfigurationPersistenceAccessDeniedException ex) {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN, "Not allowed to persist data: " + ex.getMessage());
+      sendForbiddenWithMessage(response, ex.getMessage());
     }
     catch (ConfigurationPersistenceException ex) {
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to delete data: " + ex.getMessage());
     }
+  }
+
+  private void sendForbiddenWithMessage(SlingHttpServletResponse response, String message) throws IOException {
+    response.setContentType("text/plain;charset=" + CharEncoding.UTF_8);
+    response.getWriter().write(message);
+    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
   }
 
 }

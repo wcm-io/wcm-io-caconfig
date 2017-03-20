@@ -81,6 +81,7 @@ final class PersistenceUtils {
           null, ResourceUtil.getName(pagePath), false);
     }
     catch (WCMException ex) {
+      // TODO: detect error due to missing access rights
       throw new ConfigurationPersistenceException("Unable to create config page at " + pagePath, ex);
     }
   }
@@ -116,7 +117,7 @@ final class PersistenceUtils {
     }
     ModifiableValueMap modValueMap = resource.adaptTo(ModifiableValueMap.class);
     if (modValueMap == null) {
-      throw new ConfigurationPersistenceAccessDeniedException("Unable to write properties to " + resource.getPath() + " - access is read-only.");
+      throw new ConfigurationPersistenceAccessDeniedException("No write access: Unable to store configuration data to " + resource.getPath() + ".");
     }
     // remove all existing properties that do not have jcr: namespace
     for (String propertyName : new HashSet<>(modValueMap.keySet())) {
@@ -138,26 +139,26 @@ final class PersistenceUtils {
     if (contentResource != null) {
       ModifiableValueMap contentProps = contentResource.adaptTo(ModifiableValueMap.class);
       if (contentProps == null) {
-        throw new ConfigurationPersistenceAccessDeniedException("Unable to write properties to " + configResourcePath + " - access is read-only.");
+        throw new ConfigurationPersistenceAccessDeniedException("No write access: Unable to update page " + configResourcePath + ".");
       }
       contentProps.put(NameConstants.PN_LAST_MOD, Calendar.getInstance());
       contentProps.put(NameConstants.PN_LAST_MOD_BY, resolver.getAttribute(ResourceResolverFactory.USER));
     }
   }
 
-  public static void commit(ResourceResolver resolver) {
+  public static void commit(ResourceResolver resourceResolver, String relatedResourcePath) {
     try {
-      resolver.commit();
+      resourceResolver.commit();
     }
     catch (PersistenceException ex) {
-      throw convertPersistenceException("Unable to save configuration: " + ex.getMessage(), ex);
+      throw convertPersistenceException("Unable to persist configuration changes to " + relatedResourcePath, ex);
     }
   }
 
   public static ConfigurationPersistenceException convertPersistenceException(String message, PersistenceException ex) {
     if (StringUtils.equals(ex.getCause().getClass().getName(), "javax.jcr.AccessDeniedException")) {
       // detect if commit failed due to read-only access to repository
-      return new ConfigurationPersistenceAccessDeniedException(message, ex);
+      return new ConfigurationPersistenceAccessDeniedException("No write access: " + message, ex);
     }
     return new ConfigurationPersistenceException(message, ex);
   }
