@@ -67,33 +67,33 @@ public class RootTemplateContextPathStrategyTest {
         "templatePaths", new String[] { TEMPLATE_1 });
 
     assertResult(underTest.findContextResources(level4),
-        "/content/region1/site1", "/conf/content/region1/site1",
-        "/content/region1", "/conf/content/region1");
+        "/content/region1/site1", "/conf/region1/site1",
+        "/content/region1", "/conf/region1");
 
     assertResult(underTest.findContextResources(level3),
-        "/content/region1/site1", "/conf/content/region1/site1",
-        "/content/region1", "/conf/content/region1");
+        "/content/region1/site1", "/conf/region1/site1",
+        "/content/region1", "/conf/region1");
 
     assertResult(underTest.findContextResources(level2),
-        "/content/region1/site1", "/conf/content/region1/site1",
-        "/content/region1", "/conf/content/region1");
+        "/content/region1/site1", "/conf/region1/site1",
+        "/content/region1", "/conf/region1");
 
     assertResult(underTest.findContextResources(level1),
-        "/content/region1", "/conf/content/region1");
+        "/content/region1", "/conf/region1");
   }
 
   @Test
   public void testWithAlternativePatterns() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy(),
         "templatePaths", new String[] { TEMPLATE_1 },
-        "contextPathRegex", "^/content(/.+)$",
+        "contextPathRegex", "^(/content/.+)$",
         "configPathPatterns", new String[] { "/conf/test1$1", "/conf/test2$1" });
 
     assertResult(underTest.findContextResources(level4),
-        "/content/region1/site1", "/conf/test2/region1/site1",
-        "/content/region1/site1", "/conf/test1/region1/site1",
-        "/content/region1", "/conf/test2/region1",
-        "/content/region1", "/conf/test1/region1");
+        "/content/region1/site1", "/conf/test2/content/region1/site1",
+        "/content/region1/site1", "/conf/test1/content/region1/site1",
+        "/content/region1", "/conf/test2/content/region1",
+        "/content/region1", "/conf/test1/content/region1");
   }
 
 }

@@ -74,9 +74,9 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     int maxLevel() default 5;
 
     @AttributeDefinition(name = "Context path expression",
-        description = "Expression to match context paths. Only context paths matching this expression are allowed.",
+        description = "Expression to match context paths. Only context paths matching this expression are allowed. Use groups to reference them in configPathPatterns.",
         required = true)
-    String contextPathRegex() default "^(/content/.+)$";
+    String contextPathRegex() default "^/content(/.+)$";
 
     @AttributeDefinition(name = "Config path patterns",
         description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.",
