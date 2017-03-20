@@ -23,15 +23,18 @@ import static io.wcm.caconfig.editor.impl.NameConstants.RP_COLLECTION;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.management.ConfigurationCollectionData;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.management.ValueInfo;
+import org.apache.sling.caconfig.management.multiplexer.ConfigurationPersistenceStrategyMultiplexer;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
 import org.junit.Before;
@@ -58,12 +61,14 @@ public class ConfigDataServletTest {
 
   @Mock
   private ConfigurationManager configManager;
+  @Mock
+  private ConfigurationPersistenceStrategyMultiplexer configurationPersistenceStrategy;
 
   private ConfigDataServlet underTest;
 
   @Before
   public void setUp() {
-    when(configManager.getPersistenceResourcePath(anyString())).then(new Answer<String>() {
+    when(configurationPersistenceStrategy.getCollectionParentConfigName(anyString(), nullable(Resource.class))).then(new Answer<String>() {
       @Override
       public String answer(InvocationOnMock invocation) {
         return (String)invocation.getArgument(0);
@@ -71,6 +76,7 @@ public class ConfigDataServletTest {
     });
 
     context.registerService(ConfigurationManager.class, configManager);
+    context.registerService(ConfigurationPersistenceStrategyMultiplexer.class, configurationPersistenceStrategy);
     context.registerInjectActivateService(new EditorConfig());
     underTest = context.registerInjectActivateService(new ConfigDataServlet());
   }

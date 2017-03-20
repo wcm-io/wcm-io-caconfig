@@ -44,6 +44,7 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceAccessDeniedException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
@@ -123,6 +124,9 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
       else {
         configManager.persistConfiguration(request.getResource(), configName, persistData);
       }
+    }
+    catch (ConfigurationPersistenceAccessDeniedException ex) {
+      response.sendError(HttpServletResponse.SC_FORBIDDEN, "Not allowed to persist data: " + ex.getMessage());
     }
     catch (ConfigurationPersistenceException ex) {
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to persist data: " + ex.getMessage());
@@ -299,6 +303,9 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
     // delete data
     try {
       configManager.deleteConfiguration(request.getResource(), configName);
+    }
+    catch (ConfigurationPersistenceAccessDeniedException ex) {
+      response.sendError(HttpServletResponse.SC_FORBIDDEN, "Not allowed to persist data: " + ex.getMessage());
     }
     catch (ConfigurationPersistenceException ex) {
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to delete data: " + ex.getMessage());

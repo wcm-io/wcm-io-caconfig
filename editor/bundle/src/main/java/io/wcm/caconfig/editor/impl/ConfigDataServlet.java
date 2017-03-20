@@ -42,6 +42,7 @@ import org.apache.sling.caconfig.management.ConfigurationCollectionData;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.management.ValueInfo;
+import org.apache.sling.caconfig.management.multiplexer.ConfigurationPersistenceStrategyMultiplexer;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
@@ -68,6 +69,8 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
   @Reference
   private ConfigurationManager configManager;
+  @Reference
+  private ConfigurationPersistenceStrategyMultiplexer configurationPersistenceStrategy;
   @Reference
   private EditorConfig editorConfig;
 
@@ -170,7 +173,9 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
           ConfigurationData[] configDatas = (ConfigurationData[])item.getValue();
           if (configDatas != null) {
             JSONObject nestedConfigCollection = new JSONObject();
-            String collectionConfigName = configManager.getPersistenceResourcePath(config.getConfigName()) + "/" + itemMetadata.getConfigurationMetadata().getName();
+            // FIXME: pass in resource or resource path
+            String collectionConfigName = configurationPersistenceStrategy.getCollectionParentConfigName(config.getConfigName(), null)
+                + "/" + itemMetadata.getConfigurationMetadata().getName();
             nestedConfigCollection.put("configName", collectionConfigName);
             JSONArray items = new JSONArray();
             for (ConfigurationData configData : configDatas) {
