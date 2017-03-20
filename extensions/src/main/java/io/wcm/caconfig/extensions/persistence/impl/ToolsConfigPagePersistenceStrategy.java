@@ -21,6 +21,7 @@ package io.wcm.caconfig.extensions.persistence.impl;
 
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.commit;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.convertPersistenceException;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildren;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensurePage;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.getOrCreateResource;
@@ -52,7 +53,6 @@ import org.apache.sling.caconfig.resource.spi.ConfigurationResourceResolvingStra
 import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
-import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy2;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
@@ -210,7 +210,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
         resolver.delete(resource);
       }
       catch (PersistenceException ex) {
-        throw new ConfigurationPersistenceException("Unable to delete configuration at " + configResourcePath, ex);
+        throw convertPersistenceException("Unable to delete configuration at " + configResourcePath, ex);
       }
     }
     updatePageLastMod(resolver, configResourcePath);

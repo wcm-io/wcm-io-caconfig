@@ -49,6 +49,7 @@ import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationInheritanceStrategy;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceAccessDeniedException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy2;
 import org.osgi.framework.Constants;
@@ -386,7 +387,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
         resourceResolver.delete(resource);
       }
       catch (PersistenceException ex) {
-        throw new ConfigurationPersistenceException("Unable to delete configuration at " + configResourcePath, ex);
+        throw convertPersistenceException("Unable to delete configuration at " + configResourcePath, ex);
       }
     }
     updatePageLastMod(resourceResolver, configPagePath);
@@ -433,7 +434,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
       return resource;
     }
     catch (PersistenceException ex) {
-      throw new ConfigurationPersistenceException("Unable to persist configuration to " + path, ex);
+      throw convertPersistenceException("Unable to persist configuration to " + path, ex);
     }
   }
 
@@ -442,6 +443,9 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
       log.trace("! Store properties for resource {}: {}", resource.getPath(), MapUtil.traceOutput(properties));
     }
     ModifiableValueMap modValueMap = resource.adaptTo(ModifiableValueMap.class);
+    if (modValueMap == null) {
+      throw new ConfigurationPersistenceAccessDeniedException("Unable to write properties to " + resource.getPath() + " - access is read-only.");
+    }
     // remove all existing properties that are not filtered
     Set<String> propertyNamesToRemove = new HashSet<>(modValueMap.keySet());
     PropertiesFilterUtil.removeIgnoredProperties(propertyNamesToRemove);
@@ -455,6 +459,9 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     Resource contentResource = resourceResolver.getResource(configPagePath + "/jcr:content");
     if (contentResource != null) {
       ModifiableValueMap contentProps = contentResource.adaptTo(ModifiableValueMap.class);
+      if (contentProps == null) {
+        throw new ConfigurationPersistenceAccessDeniedException("Unable to write properties to " + configPagePath + " - access is read-only.");
+      }
       contentProps.put(NameConstants.PN_LAST_MOD, Calendar.getInstance());
       contentProps.put(NameConstants.PN_LAST_MOD_BY, resourceResolver.getAttribute(ResourceResolverFactory.USER));
     }
@@ -465,7 +472,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
       resourceResolver.commit();
     }
     catch (PersistenceException ex) {
-      throw new ConfigurationPersistenceException("Unable to save configuration: " + ex.getMessage(), ex);
+      throw convertPersistenceException("Unable to save configuration: " + ex.getMessage(), ex);
     }
   }
 
@@ -480,5 +487,12 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     return CONFIG_PATH_PATTERN.matcher(configPath).matches();
   }
 
+  private ConfigurationPersistenceException convertPersistenceException(String message, PersistenceException ex) {
+    if (StringUtils.equals(ex.getCause().getClass().getName(), "javax.jcr.AccessDeniedException")) {
+      // detect if commit failed due to read-only access to repository
+      return new ConfigurationPersistenceAccessDeniedException(message, ex);
+    }
+    return new ConfigurationPersistenceException(message, ex);
+  }
 
 }
