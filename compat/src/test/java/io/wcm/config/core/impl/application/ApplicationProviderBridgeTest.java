@@ -84,19 +84,22 @@ public class ApplicationProviderBridgeTest {
   private ServiceRegistration registerProvider(final String applicationId) {
     return context.bundleContext().registerService(io.wcm.config.spi.ApplicationProvider.class.getName(),
         new io.wcm.config.spi.ApplicationProvider() {
-      @Override
-      public String getApplicationId() {
-        return applicationId;
-      }
-      @Override
-      public String getLabel() {
-        return applicationId + "-label";
-      }
-      @Override
-      public boolean matches(Resource resource) {
-        return true;
-      }
-    }, new Hashtable());
+
+          @Override
+          public String getApplicationId() {
+            return applicationId;
+          }
+
+          @Override
+          public String getLabel() {
+            return applicationId + "-label";
+          }
+
+          @Override
+          public boolean matches(Resource resource) {
+            return true;
+          }
+        }, new Hashtable<String, Object>());
   }
 
 }

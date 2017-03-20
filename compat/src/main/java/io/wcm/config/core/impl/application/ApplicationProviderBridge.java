@@ -56,20 +56,23 @@ public final class ApplicationProviderBridge {
 
     ServiceRegistration serviceReg = bundleContext.registerService(io.wcm.caconfig.application.spi.ApplicationProvider.class.getName(),
         new io.wcm.caconfig.application.spi.ApplicationProvider() {
-      @Override
-      public String getApplicationId() {
-        return service.getApplicationId();
-      }
-      @Override
-      public String getLabel() {
-        return service.getLabel();
-      }
-      @Override
-      public boolean matches(Resource resource) {
-        return service.matches(resource);
-      }
 
-    }, new Hashtable());
+          @Override
+          public String getApplicationId() {
+            return service.getApplicationId();
+          }
+
+          @Override
+          public String getLabel() {
+            return service.getLabel();
+          }
+
+          @Override
+          public boolean matches(Resource resource) {
+            return service.matches(resource);
+          }
+
+        }, new Hashtable<String, Object>());
     bridgeServices.put(service, serviceReg);
   }
 
