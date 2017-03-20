@@ -36,7 +36,12 @@
     enabled=B"true"
 
   io.wcm.caconfig.extensions.persistence.impl.ToolsConfigPagePersistenceStrategy
-    enabled=B"false"
+    enabled=B"true"
+
+  io.wcm.caconfig.extensions.contextpath.impl.AbsoluteParentContextPathStrategy-default
+    levels=I["2","3"]
+    contextPathRegex="^/content(/.+)$"
+    configPathPatterns=["/conf$1","/content$1/tools/config/jcr:content"]
 
   # Trace logging for Context-Aware Config
   org.apache.sling.commons.log.LogManager.factory.config-slingconfig.log

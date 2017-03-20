@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
     jcr:primaryType="cq:Page">
   <jcr:content
       cq:template="/apps/contextaware-config-sample/templates/config-editor"
+      jcr:isCheckedOut="{Boolean}true"
+      jcr:mixinTypes="[mix:versionable]"
       jcr:primaryType="cq:PageContent"
       jcr:title="Config"
       sling:resourceType="/apps/wcm-io/caconfig/editor/components/page/editor" />

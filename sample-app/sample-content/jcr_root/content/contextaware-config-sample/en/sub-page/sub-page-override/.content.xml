@@ -6,5 +6,5 @@
       jcr:primaryType="cq:PageContent"
       jcr:title="Sub Page Override"
       sling:resourceType="/apps/contextaware-config-sample/components/page/sample" />
-  <config />
+  <tools />
 </jcr:root>
