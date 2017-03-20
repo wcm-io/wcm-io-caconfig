@@ -173,8 +173,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
           ConfigurationData[] configDatas = (ConfigurationData[])item.getValue();
           if (configDatas != null) {
             JSONObject nestedConfigCollection = new JSONObject();
-            // FIXME: pass in resource or resource path
-            String collectionConfigName = configurationPersistenceStrategy.getCollectionParentConfigName(config.getConfigName(), null)
+            String collectionConfigName = configurationPersistenceStrategy.getCollectionParentConfigName(config.getConfigName(), config.getResourcePath())
                 + "/" + itemMetadata.getConfigurationMetadata().getName();
             nestedConfigCollection.put("configName", collectionConfigName);
             JSONArray items = new JSONArray();

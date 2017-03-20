@@ -323,8 +323,8 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
 
 
   @Override
-  public String getConfigName(String configName, Resource relatedConfigResource) {
-    if (!config.enabled() || (relatedConfigResource != null && !isConfigPagePath(relatedConfigResource.getPath()))) {
+  public String getConfigName(String configName, String relatedConfigPath) {
+    if (!config.enabled() || (relatedConfigPath != null && !isConfigPagePath(relatedConfigPath))) {
       return null;
     }
     return configName;
@@ -332,13 +332,13 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
 
 
   @Override
-  public String getCollectionParentConfigName(String configName, Resource relatedConfigResource) {
+  public String getCollectionParentConfigName(String configName, String relatedConfigPath) {
     return getResourcePath(configName);
   }
 
 
   @Override
-  public String getCollectionItemConfigName(String configName, Resource relatedConfigResource) {
+  public String getCollectionItemConfigName(String configName, String relatedConfigPath) {
     return getResourcePath(configName);
   }
 

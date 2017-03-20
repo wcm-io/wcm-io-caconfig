@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.management.ConfigurationCollectionData;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
@@ -68,7 +67,7 @@ public class ConfigDataServletTest {
 
   @Before
   public void setUp() {
-    when(configurationPersistenceStrategy.getCollectionParentConfigName(anyString(), nullable(Resource.class))).then(new Answer<String>() {
+    when(configurationPersistenceStrategy.getCollectionParentConfigName(anyString(), nullable(String.class))).then(new Answer<String>() {
       @Override
       public String answer(InvocationOnMock invocation) {
         return (String)invocation.getArgument(0);
