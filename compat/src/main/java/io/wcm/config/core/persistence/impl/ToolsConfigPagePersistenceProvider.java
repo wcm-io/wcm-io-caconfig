@@ -43,14 +43,14 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
-import org.apache.sling.caconfig.management.ContextPathStrategyMultiplexer;
+import org.apache.sling.caconfig.management.multiplexer.ContextPathStrategyMultiplexer;
 import org.apache.sling.caconfig.resource.spi.ConfigurationResourceResolvingStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationInheritanceStrategy;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
-import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy2;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -75,12 +75,12 @@ import io.wcm.config.core.impl.ParameterProviderBridge;
  * - No other config names and no config resource collections are supported
  */
 @Component(immediate = true, service = {
-    ConfigurationResourceResolvingStrategy.class, ConfigurationInheritanceStrategy.class, ConfigurationPersistenceStrategy.class
+    ConfigurationResourceResolvingStrategy.class, ConfigurationInheritanceStrategy.class, ConfigurationPersistenceStrategy2.class
 },
     property = Constants.SERVICE_RANKING + ":Integer=2000")
 @Designate(ocd = ToolsConfigPagePersistenceProvider.Config.class)
 public final class ToolsConfigPagePersistenceProvider implements ConfigurationResourceResolvingStrategy,
-    ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
+    ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy2 {
 
   private static final String RELATIVE_CONFIG_PATH = "/tools/config";
   private static final Pattern CONFIG_PATH_PATTERN = Pattern.compile("^.*" + RELATIVE_CONFIG_PATH + "(/.*)?$");
@@ -291,11 +291,54 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
   }
 
   @Override
+  public Resource getCollectionParentResource(Resource resource) {
+    return getResource(resource);
+  }
+
+
+  @Override
+  public Resource getCollectionItemResource(Resource resource) {
+    return getResource(resource);
+  }
+
+  @Override
   public String getResourcePath(String resourcePath) {
     if (!config.enabled() || !isConfigPagePath(resourcePath)) {
       return null;
     }
     return resourcePath;
+  }
+
+  @Override
+  public String getCollectionParentResourcePath(String resourcePath) {
+    return getResourcePath(resourcePath);
+  }
+
+
+  @Override
+  public String getCollectionItemResourcePath(String resourcePath) {
+    return getResourcePath(resourcePath);
+  }
+
+
+  @Override
+  public String getConfigName(String configName, Resource relatedConfigResource) {
+    if (!config.enabled() || (relatedConfigResource != null && !isConfigPagePath(relatedConfigResource.getPath()))) {
+      return null;
+    }
+    return configName;
+  }
+
+
+  @Override
+  public String getCollectionParentConfigName(String configName, Resource relatedConfigResource) {
+    return getResourcePath(configName);
+  }
+
+
+  @Override
+  public String getCollectionItemConfigName(String configName, Resource relatedConfigResource) {
+    return getResourcePath(configName);
   }
 
   @Override
@@ -436,5 +479,6 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
   private boolean isConfigPagePath(String configPath) {
     return CONFIG_PATH_PATTERN.matcher(configPath).matches();
   }
+
 
 }
