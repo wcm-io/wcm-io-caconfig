@@ -84,7 +84,6 @@ final class PersistenceUtils {
       Resource pageResource = resolver.create(parentResource, pageName, props);
       props = new HashMap<String, Object>();
       props.put(JcrConstants.JCR_PRIMARYTYPE, "cq:PageContent");
-      props.put(JcrConstants.JCR_TITLE, pageName);
       resolver.create(pageResource, JcrConstants.JCR_CONTENT, props);
     }
     catch (PersistenceException ex) {
