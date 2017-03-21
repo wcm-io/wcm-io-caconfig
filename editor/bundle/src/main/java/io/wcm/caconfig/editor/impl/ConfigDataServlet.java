@@ -49,6 +49,8 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Read configuration data.
@@ -73,6 +75,8 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private ConfigurationPersistenceStrategyMultiplexer configurationPersistenceStrategy;
   @Reference
   private EditorConfig editorConfig;
+
+  private static Logger log = LoggerFactory.getLogger(ConfigDataServlet.class);
 
   @Override
   protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
@@ -100,8 +104,9 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         response.getWriter().write(result.toString());
       }
     }
-    catch (JSONException ex) {
-      throw new ServletException("Unable to generate JSON.", ex);
+    catch (Throwable ex) {
+      log.error("Error getting configuration for " + configName + (collection ? "[col]" : ""), ex);
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
     }
   }
 
