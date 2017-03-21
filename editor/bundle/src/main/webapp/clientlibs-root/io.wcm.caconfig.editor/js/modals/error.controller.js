@@ -23,13 +23,33 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("ErrorController", ErrorController);
 
-  ErrorController.$inject = ["modalService"];
+  ErrorController.$inject = ["$rootScope", "$timeout", "modalService"];
 
-  function ErrorController(modalService) {
+  function ErrorController($rootScope, $timeout, modalService) {
+    var that = this;
+    var defaultMessage = $rootScope.i18n.modal.error.message;
+    that.message = defaultMessage;
+
     modalService.addModal(modalService.modal.ERROR, {
       element: "#caconfig-errorModal",
       type: "error",
       visible: false
+    });
+
+    modalService.onEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, function (e, response) {
+      if (response.status === 403 && response.data && angular.isString(response.data)) {
+        that.message = response.data;
+      }
+      else {
+        that.message = defaultMessage;
+      }
+      $timeout(function() {
+        modalService.show(modalService.modal.ERROR);
+      }, 10);
+    });
+
+    modalService.onEvent(modalService.modal.ERROR, "hide", function () {
+      that.message = defaultMessage;
     });
   }
 }(angular));
