@@ -56,6 +56,9 @@ final class PersistenceUtils {
   }
 
   public static boolean containsJcrContent(String path) {
+    if (path == null) {
+      return false;
+    }
     return JCR_CONTENT_PATTERN.matcher(path).matches();
   }
 
