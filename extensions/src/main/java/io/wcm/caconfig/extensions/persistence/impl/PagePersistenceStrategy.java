@@ -92,15 +92,15 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
 
   @Override
   public Resource getCollectionParentResource(Resource resource) {
-    return getResource(resource);
-  }
-
-  @Override
-  public Resource getCollectionItemResource(Resource resource) {
     if (!enabled) {
       return null;
     }
     return resource;
+  }
+
+  @Override
+  public Resource getCollectionItemResource(Resource resource) {
+    return getResource(resource);
   }
 
   @Override
@@ -116,15 +116,15 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
 
   @Override
   public String getCollectionParentResourcePath(String resourcePath) {
-    return getResourcePath(resourcePath);
-  }
-
-  @Override
-  public String getCollectionItemResourcePath(String resourcePath) {
     if (!enabled) {
       return null;
     }
     return resourcePath;
+  }
+
+  @Override
+  public String getCollectionItemResourcePath(String resourcePath) {
+    return getResourcePath(resourcePath);
   }
 
   @Override
@@ -140,15 +140,15 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
 
   @Override
   public String getCollectionParentConfigName(String configName, String relatedConfigPath) {
-    return getConfigName(configName, relatedConfigPath);
-  }
-
-  @Override
-  public String getCollectionItemConfigName(String configName, String relatedConfigPath) {
     if (!enabled) {
       return null;
     }
     return configName;
+  }
+
+  @Override
+  public String getCollectionItemConfigName(String configName, String relatedConfigPath) {
+    return getConfigName(configName, relatedConfigPath);
   }
 
   @Override
@@ -172,14 +172,15 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       return false;
     }
     String parentPath = getCollectionParentResourcePath(configResourceCollectionParentPath);
-    ensurePage(resolver, parentPath);
     Resource configResourceParent = getOrCreateResource(resolver, parentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY);
 
     // delete existing children and create new ones
     deleteChildren(configResourceParent);
     for (ConfigurationPersistData item : data.getItems()) {
-      String path = parentPath + "/" + item.getCollectionItemName();
+      String path = getCollectionItemResourcePath(parentPath + "/" + item.getCollectionItemName());
+      ensurePage(resolver, path);
       getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties());
+      updatePageLastMod(resolver, path);
     }
 
     // if resource collection parent properties are given replace them as well
@@ -187,7 +188,6 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       replaceProperties(configResourceParent, data.getProperties());
     }
 
-    updatePageLastMod(resolver, parentPath);
     commit(resolver, configResourceCollectionParentPath);
     return true;
   }
