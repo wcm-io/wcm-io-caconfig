@@ -42,9 +42,7 @@
     // If detail view was loaded directly via deeplink, we need to first loadConfigNames
     if (!configService.getState().contextPath || !configService.getState().configNames.length) {
       configService.loadConfigNames()
-        .then(function success() {
-          init();
-        });
+        .then(init);
     }
     else {
       init();
