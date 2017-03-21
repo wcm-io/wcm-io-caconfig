@@ -47,6 +47,15 @@ public @interface ConfigSample {
   boolean boolParam();
 
   /**
+   * @return Path parameter
+   */
+  @Property(label = "Path", description = "String parameter using path browser widget.", order = 4, property = {
+      "widgetType=pathbrowser",
+      "pathbrowserRootPath=/content/dam"
+  })
+  String path();
+
+  /**
    * @return String array parameter with default value
    */
   @Property(label = "String Array Param", order = 4)
