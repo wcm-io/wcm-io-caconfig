@@ -149,7 +149,7 @@
       // Load Configuration Details
       configService.loadConfig(that.current.configName)
         .then(function (currentData) {
-          that.current.configs = currentData.configs;
+          that.current.configs = setDefaultValues(currentData.configs);
           that.current.originalLength = currentData.configs.length;
           that.current.isCollection = currentData.isCollection;
           that.current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
@@ -161,6 +161,17 @@
           that.current.contextPath = configService.getState().contextPath;
           $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
         });
+    }
+
+    function setDefaultValues(configs) {
+      angular.forEach(configs, function (config) {
+        angular.forEach(config.properties, function (property) {
+          if (property["default"] && angular.isUndefined(property.value)) {
+            property.value = property.effectiveValue;
+          }
+        });
+      });
+      return configs;
     }
   }
 }(angular));
