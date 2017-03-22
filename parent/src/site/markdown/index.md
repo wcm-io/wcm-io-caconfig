@@ -8,8 +8,8 @@ Context-Aware means configurations that are related to a content resource or a r
 ### Overview
 
 * [Editor](editor/): Configuration Editor Template for AEM.
-* [Application](application/): Context-Aware system configuration of shared bundles.
 * [Extensions](extensions/): AEM-specific extensions for Sling Context-Aware Configuration.
+* [Application](application/): Context-Aware system configuration of shared bundles.
 * [Compatibility Layer](compat/): Compatibility Layer for wcm.io Configuration 0.x.
 
 
@@ -22,9 +22,9 @@ When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sli
 Links to the latest Apache Sling Context-Aware Configuration bundles:
 
 |---|---|---|
-| Apache Sling Context-Aware Configuration API | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.api/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.api) |
-| Apache Sling Context-Aware Configuration SPI | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.spi/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.spi) |
-| Apache Sling Context-Aware Configuration Implementation | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.impl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.impl) |
+| [Apache Sling Context-Aware Configuration API](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.api) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.api/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.api) |
+| [Apache Sling Context-Aware Configuration SPI](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.spi) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.spi/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.spi) |
+| [Apache Sling Context-Aware Configuration Implementation](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.impl) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.impl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.impl) |
 
 
 ### GitHub Repository
