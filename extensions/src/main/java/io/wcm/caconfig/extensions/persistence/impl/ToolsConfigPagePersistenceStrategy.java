@@ -75,7 +75,7 @@ import org.slf4j.LoggerFactory;
 @Designate(ocd = ToolsConfigPagePersistenceStrategy.Config.class)
 public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersistenceStrategy2, ConfigurationResourceResolvingStrategy {
 
-  @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration AEM Tools Config Page Persistence Strategy",
+  @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration Persistence Strategy: Tools Config Page",
       description = "Stores Context-Aware Configuration in a single AEM content page at /tools/config.")
   static @interface Config {
 

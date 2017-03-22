@@ -10,7 +10,7 @@ wcm.io Configuration Extensions for AEM provides two alternatives for defining c
 
 ### Context Path Strategy: Absolute Parents
 
-OSGi Factory configuration: "wcm.io Context-Aware Configuration Context Path Strategy: Absolute Parents":
+OSGi factory configuration: "wcm.io Context-Aware Configuration Context Path Strategy: Absolute Parents":
 
 * **Absolute Levels**: List of absolute parent levels that should be considered as context roots. Example: Absolute parent level 1 of `/foo/bar/test` is `/foo/bar`.
 * **Context path whitelist**: Expression to match context paths. Context paths matching this expression are allowed. Use groups to reference them in configPathPatterns.
@@ -32,7 +32,7 @@ With this configuration content paths like `/content/brand1/region1` and `/conte
 
 ### Context Path Strategy: Root Templates
 
-OSGi Factory configuration: "wcm.io Context-Aware Configuration Context Path Strategy: Root Template":
+OSGi factory configuration: "wcm.io Context-Aware Configuration Context Path Strategy: Root Template":
 
 * **Templates**: List of template paths allowed for context root pages.
 * **Min. Level**: Minimum allowed absolute parent level. Example: Absolute parent level 1 of `/foo/bar/test` is `/foo/bar`.

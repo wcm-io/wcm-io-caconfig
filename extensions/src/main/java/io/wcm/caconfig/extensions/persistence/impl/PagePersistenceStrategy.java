@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory;
 @Designate(ocd = PagePersistenceStrategy.Config.class)
 public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy2 {
 
-  @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration AEM Page Persistence Strategy",
+  @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration Persistence Strategy: AEM Page",
       description = "Stores Context-Aware Configuration in AEM pages instead of simple resources.")
   static @interface Config {
 
