@@ -28,8 +28,19 @@ When this compat bundle is deployed you can either use the old wcm.io Configurat
 
 There is also a wiki page with lists different migration scenarios: [Migrate from wcm.io Configuration 0.x to Context-Aware Configuration][caconfig-migration]
 
+
+### Supported AEM versions
+
+Context-Aware Configuration is supported in AEM 6.1, 6.2, 6.3 and upwards. AEM 6.0 is not supported.
+
+When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles (API, SPI, Impl) to AEM. In AEM 6.3 you have to update the Apache Sling Context-Aware Configuration SPI and Impl bundles to the latest version to use all features.
+
+See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-caconfig-in-aem] for details.
+
+
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [config-deprecated]: http://wcm.io/config/
 [caconfig-migration]: https://wcm-io.atlassian.net/wiki/x/BgCvAg
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
+[deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
