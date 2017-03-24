@@ -10,6 +10,10 @@
            ng-disabled="true" ng-readonly="true" />
   </div>
 
+  <div ng-switch-when="pathbrowser">
+    <caconfig-pathbrowser parameter="parameter" root-path="{{rootPath}}" />
+  </div>
+
   <div ng-switch-when="number">
     <input class="coral-Textfield" type="text"
            ng-hide="parameter.overridden || parameter.inherited"

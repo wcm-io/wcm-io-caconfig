@@ -33,7 +33,8 @@
       parameterValue: "parameterValue.html",
       popupContainer: "popupContainer.html",
       popupContent: "popupContent.html",
-      multifield: "multifield.html"
+      multifield: "multifield.html",
+      pathbrowser: "pathbrowser.html"
     })
     .constant("inputMap", {
       Boolean: {

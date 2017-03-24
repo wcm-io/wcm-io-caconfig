@@ -1,0 +1,10 @@
+<div class="caconfig-pathbrowser">
+    <!-- TODO: ng-hide="parameter.overridden || parameter.inherited" -->
+    <span class="coral-PathBrowser" data-init="pathbrowser" data-option-loader="granite.ui.pathBrowser.pages.hierarchyNotFile" data-picker-src="/libs/wcm/core/content/common/pathbrowser/column.html/content?predicate=hierarchyNotFile">
+    <input class="coral-InputGroup-input coral-Textfield js-coral-pathbrowser-input" type="text"
+       ng-model="parameter.value" autocomplete="off"/>
+    <button class="coral-Button coral-Button--square js-coral-pathbrowser-button" type="button" title="Browse" ng-click="choosePath()">
+    <i class="coral-Icon coral-Icon--sizeS coral-Icon--folderSearch"></i>
+    </button>
+</span>
+</div>
