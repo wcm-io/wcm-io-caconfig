@@ -20,6 +20,7 @@
 package io.wcm.config.core.override.impl;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -81,12 +82,45 @@ public final class OsgiConfigOverrideProvider implements ParameterOverrideProvid
 
     Map<String, String> map = new HashMap<>();
     if (enabled) {
-      Map<String, String> overrides = PropertiesUtil.toMap(config.overrides(), ArrayUtils.EMPTY_STRING_ARRAY);
+      Map<String, String> overrides = toMap(config.overrides(), ArrayUtils.EMPTY_STRING_ARRAY);
       if (overrides != null) {
         map.putAll(overrides);
       }
     }
     this.overrideMap = ImmutableMap.copyOf(map);
+  }
+
+  // methods copied from org.apache.sling.commons.osgi 2.4.0 - can be removed when updated to this version
+  private static Map<String, String> toMap(Object propValue, String[] defaultArray) {
+    String[] arrayValue = PropertiesUtil.toStringArray(propValue, defaultArray);
+
+    if (arrayValue == null) {
+      return null;
+    }
+
+    //in property values
+    Map<String, String> result = new LinkedHashMap<String, String>();
+    for (String kv : arrayValue) {
+      int indexOfEqual = kv.indexOf('=');
+      if (indexOfEqual > 0) {
+        String key = trimToNull(kv.substring(0, indexOfEqual));
+        String value = trimToNull(kv.substring(indexOfEqual + 1));
+        if (key != null) {
+          result.put(key, value);
+        }
+      }
+    }
+    return result;
+  }
+  private static String trimToNull(String str) {
+    String ts = trim(str);
+    return isEmpty(ts) ? null : ts;
+  }
+  private static String trim(String str) {
+    return str == null ? null : str.trim();
+  }
+  private static boolean isEmpty(String str) {
+    return str == null || str.length() == 0;
   }
 
 }
