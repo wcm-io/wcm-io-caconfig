@@ -19,7 +19,6 @@
 
 language: java
 
-# Build only with Java 8 because the sample-app does no support Java 7
 jdk:
   - oraclejdk8
 
