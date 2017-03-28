@@ -25,7 +25,7 @@ import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.commi
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.containsJcrContent;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.convertPersistenceException;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildren;
-import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensurePage;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensureContainingPage;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.getOrCreateResource;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.replaceProperties;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.updatePageLastMod;
@@ -157,7 +157,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       return false;
     }
     String path = getResourcePath(configResourcePath);
-    ensurePage(resolver, path);
+    ensureContainingPage(resolver, path);
 
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties());
 
@@ -178,7 +178,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     deleteChildren(configResourceParent);
     for (ConfigurationPersistData item : data.getItems()) {
       String path = getCollectionItemResourcePath(parentPath + "/" + item.getCollectionItemName());
-      ensurePage(resolver, path);
+      ensureContainingPage(resolver, path);
       getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties());
       updatePageLastMod(resolver, path);
     }
