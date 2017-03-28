@@ -44,13 +44,15 @@ import io.wcm.sling.commons.osgi.RankedServices;
 /**
  * Default implementation of {@link ApplicationFinder}.
  */
-@Component(immediate = true, service = ApplicationFinder.class)
+@Component(immediate = true, service = ApplicationFinder.class, reference = {
+    @Reference(name = "applicationProvider", service = ApplicationProvider.class,
+        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+        bind = "bindApplicationProvider", unbind = "unbindApplicationProvider")
+})
 public final class ApplicationFinderImpl implements ApplicationFinder {
 
   private static final ApplicationInfo APPLICATION_NOT_FOUND = new ApplicationInfo("APPLICATION_NOT_FOUND", null);
 
-  @Reference(service = ApplicationProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-      bind = "bindApplicationProvider", unbind = "unbindApplicationProvider")
   private final RankedServices<ApplicationProvider> applicationProviders = new RankedServices<>();
 
   // apply a simple cache mechanism for looking up application per resource path
