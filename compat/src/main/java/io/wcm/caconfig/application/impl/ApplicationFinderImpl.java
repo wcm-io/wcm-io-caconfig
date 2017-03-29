@@ -28,6 +28,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.commons.osgi.Order;
+import org.apache.sling.commons.osgi.RankedServices;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -39,7 +41,6 @@ import com.google.common.cache.CacheBuilder;
 import io.wcm.caconfig.application.ApplicationFinder;
 import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.caconfig.application.spi.ApplicationProvider;
-import io.wcm.sling.commons.osgi.RankedServices;
 
 /**
  * Default implementation of {@link ApplicationFinder}.
@@ -53,7 +54,7 @@ public final class ApplicationFinderImpl implements ApplicationFinder {
 
   private static final ApplicationInfo APPLICATION_NOT_FOUND = new ApplicationInfo("APPLICATION_NOT_FOUND", null);
 
-  private final RankedServices<ApplicationProvider> applicationProviders = new RankedServices<>();
+  private final RankedServices<ApplicationProvider> applicationProviders = new RankedServices<>(Order.ASCENDING);
 
   // apply a simple cache mechanism for looking up application per resource path
   private final Cache<String, ApplicationInfo> applicationFindCache = CacheBuilder.newBuilder()
