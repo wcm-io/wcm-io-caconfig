@@ -22,9 +22,9 @@
   angular.module("io.wcm.caconfig.widgets")
       .directive("caconfigPathbrowser", pathbrowser);
 
-  pathbrowser.$inject = ["templateUrlList", "inputMap"];
+  pathbrowser.$inject = ["templateUrlList", "inputMap", "directivePropertyPrefixes", "$rootScope"];
 
-  function pathbrowser(templateList, inputMap) {
+  function pathbrowser(templateList, inputMap, directivePropertyPrefixes, $rootScope) {
     var directive = {
       restrict: "E",
       replace: true,
@@ -33,7 +33,6 @@
       scope: {
         parameter: "="
       },
-      controller: PathbrowserController,
       link: link
     };
 
@@ -45,27 +44,59 @@
 
       scope.type = input.type;
       scope.pattern = input.pattern;
+      scope.i18n = $rootScope.i18n;
+
+      var prefix = directivePropertyPrefixes.pathbrowser;
+      var props = scope.parameter.metadata.properties;
+      var options = {};
+      for (var prop in props) {
+          if (prop && prop.substring(0, prefix.length) != -1) {
+              var propName = prop.substring(prefix.length);
+              options[propName.charAt(0).toLowerCase() + propName.slice(1)] = props[prop];
+          }
+      }
+
+      options.rootPath = options.rootPath || "/content";
+      options.predicate = options.predicate || "hierarchyNotFile";
+      options.pickerSrc = options.pickerSrc || "/libs/wcm/core/content/common/pathbrowser/column.html" + options.rootPath + "?predicate=" + options.predicate;
+      options.optionLoader = loadAutocompleteOptions;
+
+      options.element = element.children(".coral-PathBrowser");
+      var widget = new CUI.PathBrowser(options);
+
+      scope.$on("$destroy", function() {
+          // remove listeners
+          widget.off();
+      });
 
       scope.$watch("parameter.inherited", function (isInherited, wasInherited) {
         if (isInherited === wasInherited) {
           return;
         }
-
         inheritedStateChanged = true;
         form.$setDirty();
       });
     }
   }
 
-  PathbrowserController.$inject = ["$scope"];
-
-  function PathbrowserController($scope) {
-    $scope.choosePath = function () {
-      /*
-      $scope.$evalAsync(function () {
-        $scope.values.splice(index + 1, 0, { value: undefined });
-      });
-      */
-    };
+  /**
+   * Helper method for the CUI:PathBrowser widget
+   * @param path
+   * @param callback
+   * @returns {boolean}
+   */
+  function loadAutocompleteOptions (path, callback) {
+      jQuery.get(path + '.pages.json', {
+              predicate: 'hierarchyNotFile'
+          },
+          function(data) {
+              var pages = data.pages;
+              var result = [];
+              for(var i = 0; i < pages.length; i++) {
+                  result.push(pages[i].label);
+              }
+              if (callback) callback(result);
+          }, 'json');
+      return false;
   }
 }(angular, _));

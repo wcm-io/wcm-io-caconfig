@@ -62,6 +62,10 @@ span.caconfig-pathbrowser {
   right: 0;
 }
 
+.caconfig-pathbrowser .coral-PathBrowser {
+  width: 100%;
+}
+
 .wcm-io-editor.endor-Brand {
   display: inline-block;
   background-color: transparent;

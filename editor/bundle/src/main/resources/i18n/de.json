@@ -12,7 +12,8 @@
       "discard": "Änderungen verwefen",
       "edit": "Bearbeiten",
       "ok": "OK",
-      "save": "Speichern"
+      "save": "Speichern",
+      "browse": "Durchsuchen"
     },
     "config": {
       "name": "Konfigurations-Name",

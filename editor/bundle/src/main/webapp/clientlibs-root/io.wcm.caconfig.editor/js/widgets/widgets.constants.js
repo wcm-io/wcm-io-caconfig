@@ -36,6 +36,9 @@
       multifield: "multifield.html",
       pathbrowser: "pathbrowser.html"
     })
+    .constant("directivePropertyPrefixes", {
+      pathbrowser: "pathbrowser"
+    })
     .constant("inputMap", {
       Boolean: {
         type: "checkbox",
