@@ -50,7 +50,8 @@
       var props = scope.parameter.metadata.properties;
       var options = {};
       for (var prop in props) {
-          if (prop && prop.substring(0, prefix.length) != -1) {
+          // if the property starts with the prefix "pathbrowser" followed by a pathbrowser property name
+          if (prop && prop.length > prefix.length && prop.substring(0, prefix.length) != -1) {
               var propName = prop.substring(prefix.length);
               options[propName.charAt(0).toLowerCase() + propName.slice(1)] = props[prop];
           }
