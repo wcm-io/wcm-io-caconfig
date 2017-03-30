@@ -25,9 +25,11 @@ import java.util.Set;
 
 import org.apache.sling.api.resource.ValueMap;
 
+import com.adobe.cq.commerce.common.ValueMapDecorator;
+import com.google.common.collect.ImmutableMap;
+
 import io.wcm.config.api.Configuration;
 import io.wcm.config.api.Parameter;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 /**
  * Default implementation of {@link Configuration}.
@@ -43,7 +45,7 @@ public final class ConfigurationImpl implements Configuration {
    */
   public ConfigurationImpl(String configurationId, Map<String, Object> properties) {
     this.configurationId = configurationId;
-    this.properties = ImmutableValueMap.copyOf(properties);
+    this.properties = new ValueMapDecorator(ImmutableMap.<String, Object>copyOf(properties));
   }
 
   @Override

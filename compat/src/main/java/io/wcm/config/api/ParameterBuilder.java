@@ -26,10 +26,11 @@ import java.util.regex.Pattern;
 
 import org.osgi.annotation.versioning.ProviderType;
 
+import com.adobe.cq.commerce.common.ValueMapDecorator;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 import io.wcm.caconfig.application.spi.ApplicationProvider;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 /**
  * Fluent API for building configuration parameter definitions.
@@ -215,7 +216,7 @@ public final class ParameterBuilder<T> {
         this.applicationId,
         this.defaultOsgiConfigProperty,
         this.defaultValue,
-        ImmutableValueMap.copyOf(this.properties));
+        new ValueMapDecorator(ImmutableMap.<String, Object>copyOf(this.properties)));
   }
 
 }
