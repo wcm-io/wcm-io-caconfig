@@ -24,8 +24,11 @@
   <body>
 
     <release version="1.1.0" date="not released">
-      <action type="fix" dev="sseifert" issue="WCON-25">
+      <action type="fix" dev="dding" issue="WCON-25">
         Show proper error message when write access to repository is denied.
+      </action>
+      <action type="fix" dev="dding" issue="WCON-26">
+        Config Editor: Default values are not displayed.
       </action>
       <action type="update" dev="sseifert">
         Depend on Sling Context-Aware Configuration SPI and Impl 1.3.

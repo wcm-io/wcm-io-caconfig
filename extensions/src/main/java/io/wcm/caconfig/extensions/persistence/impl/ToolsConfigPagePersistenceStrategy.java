@@ -23,7 +23,7 @@ import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.commit;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.convertPersistenceException;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildren;
-import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensurePage;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensureContainingPage;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.getOrCreateResource;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.replaceProperties;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.updatePageLastMod;
@@ -75,13 +75,21 @@ import org.slf4j.LoggerFactory;
 @Designate(ocd = ToolsConfigPagePersistenceStrategy.Config.class)
 public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersistenceStrategy2, ConfigurationResourceResolvingStrategy {
 
-  @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration AEM Tools Config Page Persistence Strategy",
+  @ObjectClassDefinition(name = "wcm.io Context-Aware Configuration Persistence Strategy: Tools Config Page",
       description = "Stores Context-Aware Configuration in a single AEM content page at /tools/config.")
   static @interface Config {
 
     @AttributeDefinition(name = "Enabled",
         description = "Enable this persistence strategy.")
     boolean enabled() default false;
+
+    @AttributeDefinition(name = "Config Template",
+        description = "Template that is used for a configuration page.")
+    String configPageTemplate();
+
+    @AttributeDefinition(name = "Structure Template",
+        description = "Template that is used for the tools page.")
+    String structurePageTemplate();
   }
 
   private static final String RELATIVE_CONFIG_PATH = "/tools/config/jcr:content";
@@ -92,6 +100,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   private static final Logger log = LoggerFactory.getLogger(ToolsConfigPagePersistenceStrategy.class);
 
   private boolean enabled;
+  private Config config;
 
   @Reference
   private ContextPathStrategyMultiplexer contextPathStrategy;
@@ -102,6 +111,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   @Activate
   void activate(Config value) {
     this.enabled = value.enabled();
+    this.config = value;
   }
 
   @Override
@@ -164,7 +174,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
       return false;
     }
     String path = getResourcePath(configResourcePath);
-    ensurePage(resolver, path);
+    ensureContainingPage(resolver, path, config.configPageTemplate(), config.structurePageTemplate());
 
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties());
 
@@ -178,7 +188,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     if (!enabled || !isConfigPagePath(configResourceCollectionParentPath)) {
       return false;
     }
-    ensurePage(resolver, configResourceCollectionParentPath);
+    ensureContainingPage(resolver, configResourceCollectionParentPath, config.configPageTemplate(), config.structurePageTemplate());
     Resource configResourceParent = getOrCreateResource(resolver, configResourceCollectionParentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY);
 
     // delete existing children and create new ones

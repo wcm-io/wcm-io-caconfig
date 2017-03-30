@@ -48,13 +48,13 @@
      */
     that.loadConfigNames = function () {
       return dataService.getConfigNames().then(
-        function success(result) {
-          state.contextPath = result.data.contextPath;
-          state.configNames = result.data.configNames;
-          configCacheService.plantConfigCache(result.data.configNames);
+        function success(response) {
+          state.contextPath = response.data.contextPath;
+          state.configNames = response.data.configNames;
+          configCacheService.plantConfigCache(response.data.configNames);
         },
-        function error() {
-          modalService.show(modalService.modal.ERROR);
+        function error(response) {
+          modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, response);
         }
       );
     };
@@ -72,25 +72,24 @@
 
       return dataService.getConfigData(configName, isCollection)
         .then(
-          function success(result) {
+          function success(response) {
             var current = {};
-
             if (isCollection) {
-              currentConfigService.setCollectionItemTemplate(configName, result.data.newItem);
+              currentConfigService.setCollectionItemTemplate(configName, response.data.newItem);
             }
-            configCacheService.updateConfigCache(result.data.configs);
+            configCacheService.updateConfigCache(response.data.configs);
             current = {
               configName: configName,
               isCollection: isCollection,
-              configs: result.data.configs,
+              configs: response.data.configs,
               configNameObject: configNameObject,
-              collectionProperties: result.data.collectionProperties
+              collectionProperties: response.data.collectionProperties
             };
             currentConfigService.setCurrent(current);
             return current;
           },
-          function error() {
-            modalService.show(modalService.modal.ERROR);
+          function error(response) {
+            modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, response);
           }
         );
     };
@@ -104,8 +103,8 @@
             configCacheService.removeStoredConfigCache();
             return parent;
           },
-          function error() {
-            modalService.show(modalService.modal.ERROR);
+          function error(response) {
+            modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, response);
           }
         );
     };
@@ -118,8 +117,8 @@
           configCacheService.removeStoredConfigCache();
           return parent;
         },
-        function error() {
-          modalService.show(modalService.modal.ERROR);
+        function error(response) {
+          modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, response);
         }
       );
     };

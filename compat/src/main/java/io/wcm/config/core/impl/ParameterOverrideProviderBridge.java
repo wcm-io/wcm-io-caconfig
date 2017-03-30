@@ -32,6 +32,9 @@ import org.apache.sling.caconfig.spi.ConfigurationOverrideProvider;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
 import org.apache.sling.commons.json.JSONObject;
+import org.apache.sling.commons.osgi.Order;
+import org.apache.sling.commons.osgi.RankedServices;
+import org.apache.sling.commons.osgi.RankedServices.ChangeListener;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -42,8 +45,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.config.spi.ParameterOverrideProvider;
-import io.wcm.sling.commons.osgi.RankedServices;
-import io.wcm.sling.commons.osgi.RankedServices.ChangeListener;
 
 /**
  * Bridges parameter override provider to configuration override providers.
@@ -53,7 +54,7 @@ public class ParameterOverrideProviderBridge implements ConfigurationOverridePro
 
   @Reference(service = ParameterOverrideProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
       bind = "bindParameterOverrideProvider", unbind = "unbindParameterOverrideProvider")
-  private RankedServices<ParameterOverrideProvider> parameterOverrideProviders = new RankedServices<>(this);
+  private RankedServices<ParameterOverrideProvider> parameterOverrideProviders = new RankedServices<>(Order.ASCENDING, this);
 
   private volatile List<String> overrideStrings = ImmutableList.of();
 

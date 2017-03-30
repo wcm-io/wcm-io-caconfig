@@ -31,6 +31,10 @@
   function ModalService(uiService) {
     var that = this;
 
+    that.event = {
+      CUSTOM_MESSAGE: "caconfig-customMessage"
+    };
+
     that.modal = {
       ADD_CONFIG: "addConfig",
       ADD_COLLECTION_ITEM: "addCollectionItem",
@@ -39,20 +43,37 @@
       SAVE_CONFIG: "saveConfig"
     };
 
-    that.addModal = function (name, options) {
-      uiService.addUI(uiService.component.MODAL, name, options);
+    /**
+     * @param {String} modalName
+     * @param {Object} options
+     */
+    that.addModal = function (modalName, options) {
+      uiService.addUI(uiService.component.MODAL, modalName, options);
     };
 
-    that.onEvent = function (name, eventName, callback) {
-      uiService.onEvent(uiService.component.MODAL, name, eventName, callback);
+    /**
+     * @param {String} modalName
+     * @param {String} eventName
+     * @param {Function} callback
+     */
+    that.onEvent = function (modalName, eventName, callback) {
+      uiService.onEvent(uiService.component.MODAL, modalName, eventName, callback);
     };
 
-    that.triggerEvent = function (name, eventName) {
-      uiService.triggerEvent(uiService.component.MODAL, name, eventName);
+    /**
+     * @param {String} modalName
+     * @param {String} eventName
+     * @param {Object=} data
+     */
+    that.triggerEvent = function (modalName, eventName, data) {
+      uiService.triggerEvent(uiService.component.MODAL, modalName, eventName, data);
     };
 
-    that.show = function (name) {
-      uiService.callMethod(uiService.component.MODAL, name, uiService.method.SHOW);
+    /**
+     * @param {String} modalName
+     */
+    that.show = function (modalName) {
+      uiService.callMethod(uiService.component.MODAL, modalName, uiService.method.SHOW);
     };
   }
 

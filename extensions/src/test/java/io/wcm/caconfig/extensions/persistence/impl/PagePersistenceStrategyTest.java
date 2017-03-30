@@ -132,12 +132,14 @@ public class PagePersistenceStrategyTest {
         ));
 
     // assert storage in page in /conf
-    Page configPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName());
-    assertNotNull(configPage);
-    ValueMap props1 = configPage.getContentResource("item0").getValueMap();
+    Page configPage1 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName() + "/item0");
+    assertNotNull(configPage1);
+    ValueMap props1 = configPage1.getProperties();
     assertEquals("value1", props1.get("stringParam", String.class));
     assertEquals((Integer)123, props1.get("intParam", Integer.class));
-    ValueMap props2 = configPage.getContentResource("item1").getValueMap();
+    Page configPage2 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName() + "/item1");
+    assertNotNull(configPage2);
+    ValueMap props2 = configPage2.getProperties();
     assertEquals("value2", props2.get("stringParam", String.class));
     assertEquals((Integer)234, props2.get("intParam", Integer.class));
 
