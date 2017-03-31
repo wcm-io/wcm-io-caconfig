@@ -29,11 +29,24 @@
       },
     },
     "modal": {
-      "addTitle": "Konfiguration hinzufügen",
+      "addConfig": {
+        "title": "Konfiguration hinzufügen"
+      },
+      "addCollectionItem": {
+        "title": "Konfiguration hinzufügen"
+      },
       "close": "Schließen",
-      "deleteTitle": "Konfiguration löschen",
-      "deleteMessage": "Diese Konfiguration wird gelöscht.",
-      "errorMessage": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren.",
+      "deleteConfig": {
+        "title": "Konfiguration löschen",
+        "message": "Diese Konfiguration wird gelöscht."
+      },
+      "error": {
+        "message": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren."
+      },
+      "saveConfig": {
+        "title": "Konfiguration speichern",
+        "message": "Die Konfiguration wurde verändert. Möchten Sie die Änderungen speichern?"
+      },
       "tooltip": {
         "allowed": "Erlaubte Zeichen: A-Z a-z 0-9 - _",
         "unique": "Dieser Name ist bereits in Verwendung."

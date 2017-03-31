@@ -29,6 +29,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
+import org.apache.sling.commons.osgi.Order;
+import org.apache.sling.commons.osgi.RankedServices;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -39,7 +41,6 @@ import org.slf4j.LoggerFactory;
 import io.wcm.caconfig.application.ApplicationFinder;
 import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
-import io.wcm.sling.commons.osgi.RankedServices;
 
 /**
  * Bridges configuration finder strategies to a caconfig context path strategy.
@@ -49,7 +50,7 @@ public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
 
   @Reference(service = ConfigurationFinderStrategy.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
       bind = "bindConfigurationFinderStrategy", unbind = "unbindConfigurationFinderStrategy")
-  private RankedServices<ConfigurationFinderStrategy> configurationFinderStrategies = new RankedServices<>();
+  private RankedServices<ConfigurationFinderStrategy> configurationFinderStrategies = new RankedServices<>(Order.ASCENDING);
 
   @Reference
   private ApplicationFinder applicationFinder;

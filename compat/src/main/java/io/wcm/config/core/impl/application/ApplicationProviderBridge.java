@@ -25,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.commons.osgi.Order;
+import org.apache.sling.commons.osgi.RankedServices;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
@@ -34,7 +36,6 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
 import io.wcm.config.spi.ApplicationProvider;
-import io.wcm.sling.commons.osgi.RankedServices;
 
 /**
  * Bridges deprecated ApplicationProvider implementations to
@@ -46,7 +47,7 @@ public final class ApplicationProviderBridge {
 
   @Reference(service = ApplicationProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
       bind = "bindApplicationProvider", unbind = "unbindApplicationProvider")
-  private final RankedServices<ApplicationProvider> applicationProviders = new RankedServices<>();
+  private final RankedServices<ApplicationProvider> applicationProviders = new RankedServices<>(Order.ASCENDING);
   private ConcurrentMap<Object, ServiceRegistration> bridgeServices = new ConcurrentHashMap<>();
 
   private BundleContext bundleContext;

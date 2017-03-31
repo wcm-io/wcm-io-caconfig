@@ -56,39 +56,82 @@ final class PersistenceUtils {
   }
 
   public static boolean containsJcrContent(String path) {
+    if (path == null) {
+      return false;
+    }
     return JCR_CONTENT_PATTERN.matcher(path).matches();
   }
 
-  public static void ensurePage(ResourceResolver resolver, String configResourcePath) {
+  public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath) {
+    ensureContainingPage(resolver, configResourcePath, null, null);
+  }
+
+  public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath, String template, String parentTemplate) {
     Matcher matcher = PAGE_PATH_PATTERN.matcher(configResourcePath);
     if (!matcher.matches()) {
       return;
     }
     String pagePath = matcher.group(1);
+    ensurePage(resolver, pagePath, template, parentTemplate);
+  }
+
+  private static Resource ensurePage(ResourceResolver resolver, String pagePath, String template, String parentTemplate) {
+    // check if page or resource already exists
     Resource resource = resolver.getResource(pagePath);
     if (resource != null) {
-      return;
+      return resource;
     }
-    // ensure parent folders exist
+
+    // ensure parent page or resource exists
     String parentPath = ResourceUtil.getParent(pagePath);
     String pageName = ResourceUtil.getName(pagePath);
-    Resource parentResource = getOrCreateResource(resolver, parentPath, DEFAULT_FOLDER_NODE_TYPE, null);
-    try {
-      if (log.isTraceEnabled()) {
-        log.trace("! Create cq:Page node at {}", pagePath);
-      }
+    Resource parentResource;
+    if (StringUtils.isNotEmpty(parentTemplate)) {
+      parentResource = ensurePage(resolver, parentPath, parentTemplate, parentTemplate);
+    }
+    else {
+      parentResource = getOrCreateResource(resolver, parentPath, DEFAULT_FOLDER_NODE_TYPE, null);
+    }
 
+    // create page
+    return createPage(resolver, parentResource, pageName, template);
+  }
+
+  private static Resource createPage(ResourceResolver resolver, Resource parentResource, String pageName, String template) {
+    String pagePath = parentResource.getPath() + "/" + pageName;
+    log.trace("! Create cq:Page node at {}", pagePath);
+    try {
       // create page directly via Sling API instead of PageManager because page name may contain dots (.)
       Map<String, Object> props = new HashMap<>();
       props.put(JcrConstants.JCR_PRIMARYTYPE, NameConstants.NT_PAGE);
       Resource pageResource = resolver.create(parentResource, pageName, props);
-      props = new HashMap<String, Object>();
+
+      // create jcr:content node
+      props = new HashMap<>();
       props.put(JcrConstants.JCR_PRIMARYTYPE, "cq:PageContent");
-      props.put(JcrConstants.JCR_TITLE, pageName);
+      if (StringUtils.isNotEmpty(template)) {
+        applyPageTemplate(resolver, props, pageName, template);
+      }
       resolver.create(pageResource, JcrConstants.JCR_CONTENT, props);
+
+      return pageResource;
     }
     catch (PersistenceException ex) {
       throw convertPersistenceException("Unable to create config page at " + pagePath, ex);
+    }
+  }
+
+  private static void applyPageTemplate(ResourceResolver resolver, Map<String, Object> props, String pageName, String template) {
+    // set template
+    props.put(NameConstants.PN_TEMPLATE, template);
+
+    // also set title for author when template is set
+    props.put(JcrConstants.JCR_TITLE, pageName);
+
+    // get sling:resourceType from template definition
+    Resource templateContentResource = resolver.getResource(template + "/" + JcrConstants.JCR_CONTENT);
+    if (templateContentResource != null) {
+      props.put("sling:resourceType", templateContentResource.getValueMap().get("sling:resourceType", String.class));
     }
   }
 
