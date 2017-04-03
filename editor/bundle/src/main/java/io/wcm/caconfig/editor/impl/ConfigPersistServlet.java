@@ -197,7 +197,6 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
             props.put(propertyName, ArrayUtils.EMPTY_STRING_ARRAY);
           }
           else {
-            propertyType = String.class;
             if (values.get(0) instanceof Integer) {
               props.put(propertyName, toArray(properties, propertyName, int.class));
             }
