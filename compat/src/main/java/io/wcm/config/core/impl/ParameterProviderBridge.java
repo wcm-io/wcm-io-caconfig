@@ -47,7 +47,10 @@ import io.wcm.config.spi.ParameterProvider;
 /**
  * Bridges parameter provider to configuration metadata providers.
  */
-@Component(service = ConfigurationMetadataProvider.class, immediate = true)
+@Component(service = ConfigurationMetadataProvider.class, immediate = true, reference = {
+    @Reference(service = ParameterProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+        name = "parameterProvider", bind = "bindParameterProvider", unbind = "unbindParameterProvider")
+})
 public class ParameterProviderBridge implements ConfigurationMetadataProvider, ChangeListener {
 
   /**
@@ -55,8 +58,6 @@ public class ParameterProviderBridge implements ConfigurationMetadataProvider, C
    */
   public static final String DEFAULT_CONFIG_NAME = "config";
 
-  @Reference(service = ParameterProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-      bind = "bindParameterProvider", unbind = "unbindParameterProvider")
   private RankedServices<ParameterProvider> parameterProviders = new RankedServices<>(Order.ASCENDING, this);
 
   private volatile ConfigurationMetadata configMetadata;

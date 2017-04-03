@@ -45,11 +45,12 @@ import io.wcm.config.spi.ConfigurationFinderStrategy;
 /**
  * Bridges configuration finder strategies to a caconfig context path strategy.
  */
-@Component(service = ContextPathStrategy.class, immediate = true)
+@Component(service = ContextPathStrategy.class, immediate = true, reference = {
+    @Reference(service = ConfigurationFinderStrategy.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+        name = "configurationFinderStrategy", bind = "bindConfigurationFinderStrategy", unbind = "unbindConfigurationFinderStrategy")
+})
 public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
 
-  @Reference(service = ConfigurationFinderStrategy.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-      bind = "bindConfigurationFinderStrategy", unbind = "unbindConfigurationFinderStrategy")
   private RankedServices<ConfigurationFinderStrategy> configurationFinderStrategies = new RankedServices<>(Order.ASCENDING);
 
   @Reference

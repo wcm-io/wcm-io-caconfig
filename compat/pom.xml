@@ -124,6 +124,8 @@
               javax.inject;version="[0.0,2)",
               <!-- Remove those package imports because embedded and relocated via shade plugin (see below) -->
               !org.apache.sling.commons.osgi,
+              <!-- Manual import for embedded org.apache.sling. -->
+              org.osgi.framework,
               <!-- Make dependency to io.wcm.sling.commons optional, only required for RequestHeaderConfigurationOverrideProvider -->
               io.wcm.sling.commons.*;version="[0.0,2)";resolution:=optional,
               *
