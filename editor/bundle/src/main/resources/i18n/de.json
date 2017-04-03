@@ -1,14 +1,14 @@
 {
   "io.wcm.caconfig.editor": {
     "title": "Konfiguration bearbeiten",
-    "contextPath": "Kontext Pfad",
+    "contextPath": "Kontext-Pfad",
     "button": {
       "add": "Hinzufügen",
-      "addItem": "Element Hinzufügen",
+      "addItem": "Element hinzufügen",
       "cancel": "Abbrechen",
       "deleteConfig": "Löschen",
-      "deleteCollection": "Sammlung Löschen",
-      "deleteItem": "Element Löschen",
+      "deleteCollection": "Sammlung löschen",
+      "deleteItem": "Element löschen",
       "discard": "Änderungen verwefen",
       "edit": "Bearbeiten",
       "ok": "OK",
@@ -21,10 +21,9 @@
       "inherited": "Vererbt",
       "overridden": "Überschrieben",
       "description": "Beschreibung",
-      "group": "Gruppe",
       "inheritance": {
-        "property": "config.inheritance.property",
-        "collection": "config.inheritance.collection"
+        "property": "Eigenschafts-Vererbung aktivieren",
+        "collection": "Sammlungs-Vererbung aktivieren"
       },
     },
     "modal": {
