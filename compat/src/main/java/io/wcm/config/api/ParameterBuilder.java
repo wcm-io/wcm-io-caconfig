@@ -24,9 +24,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.osgi.annotation.versioning.ProviderType;
 
-import com.adobe.cq.commerce.common.ValueMapDecorator;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 

@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 
-import com.adobe.cq.commerce.common.ValueMapDecorator;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.config.api.Configuration;
