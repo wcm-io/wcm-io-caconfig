@@ -29,13 +29,11 @@ import javax.inject.Qualifier;
 
 /**
  * Qualifier to mark a Sling Models interface application to be associated with a certain application.
- * @deprecated Please use {@link io.wcm.caconfig.application.spi.annotations.Application}
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Qualifier
-@Deprecated
 public @interface Application {
 
   /**

@@ -38,8 +38,8 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
+import io.wcm.config.core.management.Application;
+import io.wcm.config.core.management.ApplicationFinder;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 
 /**
@@ -81,7 +81,7 @@ public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
   }
 
   private String findApplicationId(Resource resource) {
-    ApplicationInfo application = applicationFinder.find(resource);
+    Application application = applicationFinder.find(resource);
     if (application != null) {
       return application.getApplicationId();
     }

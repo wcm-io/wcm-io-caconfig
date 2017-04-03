@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caconfig.application.impl;
+package io.wcm.config.core.impl;
 
 import static org.apache.sling.api.adapter.AdapterFactory.ADAPTABLE_CLASSES;
 import static org.apache.sling.api.adapter.AdapterFactory.ADAPTER_CLASSES;
@@ -27,8 +27,8 @@ import org.apache.sling.api.resource.Resource;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
+import io.wcm.config.core.management.Application;
+import io.wcm.config.core.management.ApplicationFinder;
 
 /**
  * AdapterFactory that adapts application info objects
@@ -47,7 +47,7 @@ public final class ApplicationAdapterFactory implements AdapterFactory {
   @SuppressWarnings("unchecked")
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
-    if (type == ApplicationInfo.class) {
+    if (type == Application.class) {
       Resource resource = AdaptableUtil.getResource(adaptable);
       if (resource != null) {
         return (AdapterType)applicationFinder.find(resource);

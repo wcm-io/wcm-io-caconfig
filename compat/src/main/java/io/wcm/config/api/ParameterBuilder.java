@@ -30,7 +30,7 @@ import com.adobe.cq.commerce.common.ValueMapDecorator;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-import io.wcm.caconfig.application.spi.ApplicationProvider;
+import io.wcm.config.spi.ApplicationProvider;
 
 /**
  * Fluent API for building configuration parameter definitions.

@@ -29,9 +29,7 @@ import org.osgi.annotation.versioning.ConsumerType;
  * application or not.
  * This interface has to be implemented by applications that provide their own templates and components, and need
  * their own controller or handler implementations chosen by the ApplicationImplementationPicker for Sling Models.
- * @deprecated Please use {@link io.wcm.caconfig.application.spi.ApplicationProvider}
  */
-@Deprecated
 @ConsumerType
 public interface ApplicationProvider {
 
