@@ -6,6 +6,6 @@
 
   "jcr:content": {
     "jcr:primaryType": "cq:PageContent",
-    "sling:resourceType": "/apps/contextaware-config-sample/components/page/sample"
+    "sling:resourceType": "contextaware-config-sample/components/page/sample"
   }
 }
