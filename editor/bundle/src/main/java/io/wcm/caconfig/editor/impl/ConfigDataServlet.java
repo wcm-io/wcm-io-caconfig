@@ -42,12 +42,15 @@ import org.apache.sling.caconfig.management.ConfigurationCollectionData;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.management.ValueInfo;
+import org.apache.sling.caconfig.management.multiplexer.ConfigurationPersistenceStrategyMultiplexer;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Read configuration data.
@@ -69,7 +72,11 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
   @Reference
   private ConfigurationManager configManager;
   @Reference
+  private ConfigurationPersistenceStrategyMultiplexer configurationPersistenceStrategy;
+  @Reference
   private EditorConfig editorConfig;
+
+  private static Logger log = LoggerFactory.getLogger(ConfigDataServlet.class);
 
   @Override
   protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
@@ -97,8 +104,9 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         response.getWriter().write(result.toString());
       }
     }
-    catch (JSONException ex) {
-      throw new ServletException("Unable to generate JSON.", ex);
+    /*CHECKSTYLE:OFF*/ catch (Exception ex) { /*CHECKSTYLE:ON*/
+      log.error("Error getting configuration for " + configName + (collection ? "[col]" : ""), ex);
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
     }
   }
 
@@ -170,7 +178,8 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
           ConfigurationData[] configDatas = (ConfigurationData[])item.getValue();
           if (configDatas != null) {
             JSONObject nestedConfigCollection = new JSONObject();
-            String collectionConfigName = configManager.getPersistenceResourcePath(config.getConfigName()) + "/" + itemMetadata.getConfigurationMetadata().getName();
+            String collectionConfigName = configurationPersistenceStrategy.getCollectionParentConfigName(config.getConfigName(), config.getResourcePath())
+                + "/" + itemMetadata.getConfigurationMetadata().getName();
             nestedConfigCollection.put("configName", collectionConfigName);
             JSONArray items = new JSONArray();
             for (ConfigurationData configData : configDatas) {

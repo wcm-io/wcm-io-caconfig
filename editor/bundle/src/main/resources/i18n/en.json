@@ -21,20 +21,30 @@
       "inherited": "Inherited",
       "overridden": "Overridden",
       "description": "Description",
-      "group": "Group",
       "inheritance": {
         "property": "Enable property inheritance",
         "collection": "Enable collection inheritance"
       },
     },
     "modal": {
-      "addTitle": "Add Configuration",
+      "addConfig": {
+        "title": "Add Configuration"
+      },
+      "addCollectionItem": {
+        "title": "Add Configuration"
+      },
       "close": "Close",
-      "deleteTitle": "Delete Configuration",
-      "deleteMessage": "This configuration will be deleted.",
-      "errorMessage": "An internal error occurred. Please try again.",
-      "saveTitle": "Save Configuration",
-      "saveMessage": "Your current changes will be lost. Would you like to save them?",
+      "deleteConfig": {
+        "title": "Delete Configuration",
+        "message": "This configuration will be deleted."
+      },
+      "error": {
+        "message": "An internal error occurred. Please try again."
+      },
+      "saveConfig": {
+        "title": "Save Configuration",
+        "message": "Your current changes will be lost. Would you like to save them?"
+      },
       "tooltip": {
         "allowed": "Allowed characters: A-Z a-z 0-9 - _",
         "unique": "This name is already in use."

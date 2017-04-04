@@ -37,6 +37,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -64,7 +65,12 @@ public class ToolsConfigPagePersistenceStrategyTest {
         "contextPathRegex", "^/content(/.+)$",
         "configPathPatterns", new String[] { "/conf$1", "/content$1/tools/config/jcr:content" });
     context.registerInjectActivateService(new ToolsConfigPagePersistenceStrategy(),
-        "enabled", true);
+        "enabled", true,
+        "configPageTemplate", "/apps/app1/templates/configEditor",
+        "structurePageTemplate", "/apps/app1/templates/structurePage");
+
+    context.create().resource("/apps/app1/templates/configEditor/jcr:content",
+        "sling:resourceType", "app1/components/page/configEditor");
 
     context.create().page("/content/region1");
     context.create().page("/content/region1/site1");
@@ -73,7 +79,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
   }
 
   @Test
-  public void testGetResource() throws Exception {
+  public void testSimpleConfig() throws Exception {
     // write config
     writeConfiguration(context, contentPage.getPath(), SimpleConfig.class.getName(),
         "stringParam", "value1",
@@ -85,6 +91,15 @@ public class ToolsConfigPagePersistenceStrategyTest {
     ValueMap props = configPage.getContentResource("sling:configs/" + SimpleConfig.class.getName()).getValueMap();
     assertEquals("value1", props.get("stringParam", String.class));
     assertEquals((Integer)123, props.get("intParam", Integer.class));
+    assertEquals("/apps/app1/templates/configEditor", configPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
+    assertEquals("config", configPage.getTitle());
+    assertEquals("app1/components/page/configEditor", configPage.getProperties().get("sling:resourceType", String.class));
+
+    Page toolsPage = context.pageManager().getPage("/content/region1/site1/en/tools");
+    assertNotNull(toolsPage);
+    assertEquals("/apps/app1/templates/structurePage", toolsPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
+    assertEquals("tools", toolsPage.getTitle());
+    assertNull(toolsPage.getProperties().get("sling:resourceType", String.class));
 
     // read config
     SimpleConfig config = contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).as(SimpleConfig.class);
@@ -115,6 +130,15 @@ public class ToolsConfigPagePersistenceStrategyTest {
     ValueMap props2 = configPage.getContentResource("sling:configs/" + ListConfig.class.getName() + "/item1").getValueMap();
     assertEquals("value2", props2.get("stringParam", String.class));
     assertEquals((Integer)234, props2.get("intParam", Integer.class));
+    assertEquals("/apps/app1/templates/configEditor", configPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
+    assertEquals("config", configPage.getTitle());
+    assertEquals("app1/components/page/configEditor", configPage.getProperties().get("sling:resourceType", String.class));
+
+    Page toolsPage = context.pageManager().getPage("/content/region1/site1/en/tools");
+    assertNotNull(toolsPage);
+    assertEquals("/apps/app1/templates/structurePage", toolsPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
+    assertEquals("tools", toolsPage.getTitle());
+    assertNull(toolsPage.getProperties().get("sling:resourceType", String.class));
 
     // read config
     List<ListConfig> configs = ImmutableList.copyOf(contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).asCollection(ListConfig.class));

@@ -44,6 +44,7 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceAccessDeniedException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
@@ -52,6 +53,8 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Persist configuration data.
@@ -76,10 +79,12 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
   @Reference
   private EditorConfig editorConfig;
 
+  private static Logger log = LoggerFactory.getLogger(ConfigPersistServlet.class);
+
   @Override
   protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
     if (!editorConfig.isEnabled()) {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      sendForbiddenWithMessage(response, "Configuration editor is disabled.");
       return;
     }
 
@@ -124,8 +129,16 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
         configManager.persistConfiguration(request.getResource(), configName, persistData);
       }
     }
+    catch (ConfigurationPersistenceAccessDeniedException ex) {
+      sendForbiddenWithMessage(response, ex.getMessage());
+    }
     catch (ConfigurationPersistenceException ex) {
+      log.warn("Unable to persist data for " + configName + (collection ? "[col]" : ""), ex);
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to persist data: " + ex.getMessage());
+    }
+    /*CHECKSTYLE:OFF*/ catch (Exception ex) { /*CHECKSTYLE:ON*/
+      log.error("Error getting configuration for " + configName + (collection ? "[col]" : ""), ex);
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
     }
   }
 
@@ -184,7 +197,6 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
             props.put(propertyName, ArrayUtils.EMPTY_STRING_ARRAY);
           }
           else {
-            propertyType = String.class;
             if (values.get(0) instanceof Integer) {
               props.put(propertyName, toArray(properties, propertyName, int.class));
             }
@@ -300,9 +312,23 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
     try {
       configManager.deleteConfiguration(request.getResource(), configName);
     }
+    catch (ConfigurationPersistenceAccessDeniedException ex) {
+      sendForbiddenWithMessage(response, ex.getMessage());
+    }
     catch (ConfigurationPersistenceException ex) {
+      log.warn("Unable to delete data for " + configName, ex);
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to delete data: " + ex.getMessage());
     }
+    /*CHECKSTYLE:OFF*/ catch (Exception ex) { /*CHECKSTYLE:ON*/
+      log.error("Error deleting configuration for " + configName, ex);
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+  }
+
+  private void sendForbiddenWithMessage(SlingHttpServletResponse response, String message) throws IOException {
+    response.setContentType("text/plain;charset=" + CharEncoding.UTF_8);
+    response.getWriter().write(message);
+    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
   }
 
 }

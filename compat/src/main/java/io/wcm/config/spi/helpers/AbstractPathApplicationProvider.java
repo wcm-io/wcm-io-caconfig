@@ -29,7 +29,7 @@ import io.wcm.config.spi.ApplicationProvider;
 /**
  * Abstract implementation of {@link ApplicationProvider} that supports detecting an application based
  * on one or multiple fixed paths subtrees.
- * @deprecated Please use {@link io.wcm.caconfig.application.impl.PathApplicationProvider}
+ * @deprecated Please use {@link io.wcm.config.core.impl.PathApplicationProvider}
  */
 @Deprecated
 @ConsumerType

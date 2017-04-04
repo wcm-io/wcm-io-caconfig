@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caconfig.application.impl;
+package io.wcm.config.core.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -37,8 +37,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.osgi.framework.Constants;
 
-import io.wcm.caconfig.application.ApplicationInfo;
-import io.wcm.caconfig.application.spi.ApplicationProvider;
+import io.wcm.config.core.management.Application;
+import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
@@ -88,7 +88,7 @@ public class ApplicationFinderImplTest {
 
   @Test
   public void testFind() {
-    ApplicationInfo app = underTest.find(resource);
+    Application app = underTest.find(resource);
     assertNotNull(app);
     assertEquals(APPLICATION_ID_1, app.getApplicationId());
     assertEquals(APPLICATION_LABEL_1, app.getLabel());
@@ -98,8 +98,8 @@ public class ApplicationFinderImplTest {
 
   @Test
   public void testGetAll() {
-    Set<ApplicationInfo> allApps = underTest.getAll();
-    ApplicationInfo[] apps = allApps.toArray(new ApplicationInfo[allApps.size()]);
+    Set<Application> allApps = underTest.getAll();
+    Application[] apps = allApps.toArray(new Application[allApps.size()]);
     assertEquals(2, apps.length);
     assertEquals(APPLICATION_ID_1, apps[0].getApplicationId());
     assertEquals(APPLICATION_ID_2, apps[1].getApplicationId());

@@ -65,32 +65,31 @@ public class AbsoluteParentContextPathStrategyTest {
         "levels", new int[] { 1, 3 });
 
     assertResult(underTest.findContextResources(level4),
-        "/content/region1/site1/en", "/conf/content/region1/site1/en",
-        "/content/region1", "/conf/content/region1");
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1", "/conf/region1");
 
     assertResult(underTest.findContextResources(level3),
-        "/content/region1/site1/en", "/conf/content/region1/site1/en",
-        "/content/region1", "/conf/content/region1");
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1", "/conf/region1");
 
     assertResult(underTest.findContextResources(level2),
-        "/content/region1", "/conf/content/region1");
+        "/content/region1", "/conf/region1");
 
     assertResult(underTest.findContextResources(level1),
-        "/content/region1", "/conf/content/region1");
+        "/content/region1", "/conf/region1");
   }
 
   @Test
   public void testWithAlternativePatterns() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
         "levels", new int[] { 1, 3 },
-        "contextPathRegex", "^/content(/.+)$",
+        "contextPathRegex", "^(/content/.+)$",
+        "contextPathBlacklistRegex", "^.*/region\\d+?$",
         "configPathPatterns", new String[] { "/conf/test1$1", "/conf/test2$1" });
 
     assertResult(underTest.findContextResources(level4),
-        "/content/region1/site1/en", "/conf/test2/region1/site1/en",
-        "/content/region1/site1/en", "/conf/test1/region1/site1/en",
-        "/content/region1", "/conf/test2/region1",
-        "/content/region1", "/conf/test1/region1");
+        "/content/region1/site1/en", "/conf/test2/content/region1/site1/en",
+        "/content/region1/site1/en", "/conf/test1/content/region1/site1/en");
   }
 
 }

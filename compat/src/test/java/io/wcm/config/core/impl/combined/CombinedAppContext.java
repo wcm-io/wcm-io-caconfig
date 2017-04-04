@@ -21,9 +21,9 @@ package io.wcm.config.core.impl.combined;
 
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
-import io.wcm.caconfig.application.impl.ApplicationAdapterFactory;
-import io.wcm.caconfig.application.impl.ApplicationFinderImpl;
-import io.wcm.caconfig.application.impl.ApplicationImplementationPicker;
+import io.wcm.config.core.impl.ApplicationAdapterFactory;
+import io.wcm.config.core.impl.ApplicationFinderImpl;
+import io.wcm.config.core.impl.ApplicationImplementationPicker;
 import io.wcm.config.core.impl.ConfigurationAdapterFactory;
 import io.wcm.config.core.impl.ConfigurationFinderStrategyBridge;
 import io.wcm.config.core.impl.ParameterOverrideProviderBridge;
@@ -67,7 +67,6 @@ public final class CombinedAppContext {
       context.registerInjectActivateService(new ApplicationFinderImpl());
       context.registerInjectActivateService(new ApplicationAdapterFactory());
       context.registerInjectActivateService(new ApplicationImplementationPicker());
-      context.registerInjectActivateService(new io.wcm.config.core.impl.application.ApplicationImplementationPicker());
 
       // bridge services
       context.registerInjectActivateService(new ConfigurationFinderStrategyBridge());

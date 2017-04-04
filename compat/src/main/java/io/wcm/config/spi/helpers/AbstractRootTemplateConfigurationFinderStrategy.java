@@ -34,7 +34,6 @@ import com.day.cq.wcm.api.PageManager;
 import com.google.common.collect.ImmutableSet;
 
 import io.wcm.config.spi.ConfigurationFinderStrategy;
-import io.wcm.sling.commons.adapter.AdaptTo;
 
 /**
  * Abstract implementation of {@link ConfigurationFinderStrategy} based on that detects the configuration scope
@@ -77,7 +76,7 @@ public abstract class AbstractRootTemplateConfigurationFinderStrategy implements
   public final Iterator<String> findConfigurationIds(Resource resource) {
     List<String> configurationIds = new ArrayList<>();
 
-    PageManager pageManager = AdaptTo.notNull(resource.getResourceResolver(), PageManager.class);
+    PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
     Page page = pageManager.getContainingPage(resource);
     if (page != null) {
       for (int level = minLevel; level <= maxLevel; level++) {

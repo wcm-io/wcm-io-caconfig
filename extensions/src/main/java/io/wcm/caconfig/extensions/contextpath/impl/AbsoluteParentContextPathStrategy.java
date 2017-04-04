@@ -58,10 +58,15 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         required = true)
     int[] levels();
 
-    @AttributeDefinition(name = "Context path expression",
-        description = "Expression to match context paths. Only context paths matching this expression are allowed.",
+    @AttributeDefinition(name = "Context path whitelist",
+        description = "Expression to match context paths. Context paths matching this expression are allowed. Use groups to reference them in configPathPatterns.",
         required = true)
-    String contextPathRegex() default "^(/content/.+)$";
+    String contextPathRegex() default "^/content(/.+)$";
+
+    @AttributeDefinition(name = "Context path blacklist",
+        description = "Expression to match context paths. Context paths matching this expression are not allowed.",
+        required = true)
+    String contextPathBlacklistRegex() default "^.*/tools(/config)?$";
 
     @AttributeDefinition(name = "Config path patterns",
         description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.",
@@ -69,7 +74,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     String[] configPathPatterns() default "/conf$1";
 
     @AttributeDefinition(name = "Service Ranking",
-        description = "Priority of configuration override providers (higher = higher priority).")
+        description = "Priority of context path strategy (higher = higher priority).")
     int service_ranking() default 2000;
 
     String webconsole_configurationFactory_nameHint() default "{applicationId} levels={levels}";
@@ -78,6 +83,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
 
   private Set<Integer> levels;
   private Pattern contextPathRegex;
+  private Pattern contextPathBlacklistRegex;
   private String[] configPathPatterns;
 
   private static final Logger log = LoggerFactory.getLogger(AbsoluteParentContextPathStrategy.class);
@@ -95,6 +101,14 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     }
     catch (PatternSyntaxException ex) {
       log.warn("Invalid context path regex: " + config.contextPathRegex(), ex);
+    }
+    if (StringUtils.isNotEmpty(config.contextPathBlacklistRegex())) {
+      try {
+        contextPathBlacklistRegex = Pattern.compile(config.contextPathBlacklistRegex());
+      }
+      catch (PatternSyntaxException ex) {
+        log.warn("Invalid context path blacklist regex: " + config.contextPathBlacklistRegex(), ex);
+      }
     }
     configPathPatterns = config.configPathPatterns();
   }
@@ -137,7 +151,11 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
 
   private String deriveConfigRef(String contextPath, String configPathPattern) {
     Matcher matcher = contextPathRegex.matcher(contextPath);
-    if (matcher.matches()) {
+    Matcher blacklistMatcher = null;
+    if (contextPathBlacklistRegex != null) {
+      blacklistMatcher = contextPathBlacklistRegex.matcher(contextPath);
+    }
+    if (matcher.matches() && (blacklistMatcher == null || !blacklistMatcher.matches())) {
       return matcher.replaceAll(configPathPattern);
     }
     else {

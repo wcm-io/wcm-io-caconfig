@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caconfig.application.impl;
+package io.wcm.config.core.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -27,7 +27,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.wcm.caconfig.application.spi.ApplicationProvider;
+import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 public class PathApplicationProviderTest {

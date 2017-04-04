@@ -17,9 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.impl.application;
+package io.wcm.config.core.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
@@ -30,43 +31,53 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.google.common.collect.ImmutableSortedSet;
-
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.config.core.management.Application;
+import io.wcm.config.core.management.ApplicationFinder;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("deprecation")
-public class ApplicationFinderBridgeTest {
-
-  private static final ApplicationInfo APP_1 = new ApplicationInfo("/apps/app1", "app1");
-  private static final ApplicationInfo APP_2 = new ApplicationInfo("/apps/app2", "app2");
+public class ApplicationAdapterFactoryTest {
 
   @Rule
   public AemContext context = new AemContext();
 
   @Mock
   private ApplicationFinder applicationFinder;
-  @Mock
+  private Application application;
   private Resource resource;
 
-  private io.wcm.config.core.management.ApplicationFinder underTest;
+  private ApplicationAdapterFactory underTest;
 
   @Before
   public void setUp() {
-    when(applicationFinder.find(resource)).thenReturn(APP_1);
-    when(applicationFinder.getAll()).thenReturn(ImmutableSortedSet.of(APP_1, APP_2));
+    resource = context.create().resource("/content/test");
+    context.currentResource(resource);
+
+    application = new Application("app1", null);
+    when(applicationFinder.find(resource)).thenReturn(application);
 
     context.registerService(ApplicationFinder.class, applicationFinder);
-    underTest = context.registerInjectActivateService(new ApplicationFinderBridge());
+    underTest = context.registerInjectActivateService(new ApplicationAdapterFactory());
   }
 
   @Test
-  public void testDelegation() {
-    assertEquals(new Application("/apps/app1", "app1"), underTest.find(resource));
-    assertEquals(ImmutableSortedSet.of(new Application("/apps/app1", "app1"), new Application("/apps/app2", "app2")), underTest.getAll());
+  public void testApplicationResource() {
+    assertSame(application, underTest.getAdapter(resource, Application.class));
+    assertNull(underTest.getAdapter(resource, ApplicationFinder.class));
+    assertNull(underTest.getAdapter(this, Application.class));
+  }
+
+  @Test
+  public void testApplicationRequest() {
+    assertSame(application, underTest.getAdapter(context.request(), Application.class));
+
+    context.currentResource((Resource)null);
+    assertNull(underTest.getAdapter(context.request(), Application.class));
+  }
+
+  @Test
+  public void testApplicationInvalid() {
+    assertNull(underTest.getAdapter(this, Application.class));
   }
 
 }

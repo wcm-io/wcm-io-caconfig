@@ -45,44 +45,47 @@
      * Create instance of UI component
      *
      * @param {String} componentType
-     * @param {String} name
+     * @param {String} componentName
      * @param {Object=} options
      */
-    that.addUI = function (componentType, name, options) {
+    that.addUI = function (componentType, componentName, options) {
       ui[componentType] = ui[componentType] || {};
-      ui[componentType][name] = new CUI[componentType](options);
+      ui[componentType][componentName] = new CUI[componentType](options);
     };
 
     /**
      * Attach event listener to UI instance
      *
      * @param {String}   componentType
-     * @param {String}   name
+     * @param {String}   componentName
      * @param {String}   eventName
      * @param {Function} callback
      */
-    that.onEvent = function (componentType, name, eventName, callback) {
-      ui[componentType][name].on(eventName, callback);
+    that.onEvent = function (componentType, componentName, eventName, callback) {
+      ui[componentType][componentName].on(eventName, callback);
     };
 
     /**
-     * @param {String}   componentType
-     * @param {String}   name
-     * @param {String}   eventName
+     * @param {String}  componentType
+     * @param {String}  componentName
+     * @param {String}  eventName
+     * @param {Object=} data
      */
-    that.triggerEvent = function (componentType, name, eventName) {
-      ui[componentType][name].$element.trigger(eventName);
+    that.triggerEvent = function (componentType, componentName, eventName, data) {
+      data = data || {};
+      ui[componentType][componentName].$element.trigger(eventName, data);
     };
 
     /**
      * @param  {String} componentType
-     * @param  {String} name
+     * @param  {String} componentName
      * @param  {String} methodName
      * @return {*}
      */
-    that.callMethod = function (componentType, name, methodName) {
-      if (ui[componentType] && ui[componentType][name] && angular.isFunction(ui[componentType][name][methodName])) {
-        return ui[componentType][name][methodName]();
+    that.callMethod = function (componentType, componentName, methodName) {
+      if (ui[componentType] && ui[componentType][componentName]
+          && angular.isFunction(ui[componentType][componentName][methodName])) {
+        return ui[componentType][componentName][methodName]();
       }
       return null;
     };

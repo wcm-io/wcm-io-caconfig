@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.config.core.impl.application;
+package io.wcm.config.core.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
@@ -26,19 +26,20 @@ import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
-import io.wcm.config.core.impl.util.AdaptableUtil;
-import io.wcm.config.spi.annotations.Application;
+import io.wcm.config.core.management.Application;
+import io.wcm.config.core.management.ApplicationFinder;
 
 /**
- * Same as {@link io.wcm.caconfig.application.impl.ApplicationImplementationPicker},
- * but with support for the deprecated Application annotation.
+ * Sling Models {@link ImplementationPicker} implementation that checks if an application is associated
+ * with the given adaptable, and then chooses the implementation that is annotated for this application.
+ * <p>
+ * If no application is associated with the adaptable, or no implementation for the detected application exists, the
+ * first implementation without @Application annotation is used.
+ * </p>
  */
 @Component(immediate = true, service = ImplementationPicker.class, property = {
-    Constants.SERVICE_RANKING + ":Integer=900"
+    Constants.SERVICE_RANKING + ":Integer=1000"
 })
-@SuppressWarnings("deprecation")
 public class ApplicationImplementationPicker implements ImplementationPicker {
 
   @Reference
@@ -50,14 +51,14 @@ public class ApplicationImplementationPicker implements ImplementationPicker {
     if (classMatchingApplication != null) {
       return classMatchingApplication;
     }
-    return null;
+    return pickFirstWithoutApplication(implementationsTypes);
   }
 
   private Class<?> pickMatchingApplication(Class<?>[] implementationsTypes, Object adaptable) {
     String applicationId = getApplicationId(adaptable);
     if (applicationId != null) {
       for (Class<?> clazz : implementationsTypes) {
-        Application applicationAnnotation = clazz.getAnnotation(Application.class);
+        io.wcm.config.spi.annotations.Application applicationAnnotation = clazz.getAnnotation(io.wcm.config.spi.annotations.Application.class);
         if (applicationAnnotation != null
             && StringUtils.equals(applicationId, applicationAnnotation.value())) {
           return clazz;
@@ -70,9 +71,18 @@ public class ApplicationImplementationPicker implements ImplementationPicker {
   private String getApplicationId(Object adaptable) {
     Resource resource = AdaptableUtil.getResource(adaptable);
     if (resource != null) {
-      ApplicationInfo application = applicationFinder.find(resource);
+      Application application = applicationFinder.find(resource);
       if (application != null) {
         return application.getApplicationId();
+      }
+    }
+    return null;
+  }
+
+  private Class<?> pickFirstWithoutApplication(Class<?>[] implementationsTypes) {
+    for (Class<?> clazz : implementationsTypes) {
+      if (!clazz.isAnnotationPresent(io.wcm.config.spi.annotations.Application.class)) {
+        return clazz;
       }
     }
     return null;

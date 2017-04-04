@@ -43,14 +43,16 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
-import org.apache.sling.caconfig.management.ContextPathStrategyMultiplexer;
+import org.apache.sling.caconfig.management.multiplexer.ContextPathStrategyMultiplexer;
 import org.apache.sling.caconfig.resource.spi.ConfigurationResourceResolvingStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationInheritanceStrategy;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceAccessDeniedException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
-import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy2;
+import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -60,9 +62,8 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.NameConstants;
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMException;
 
 import io.wcm.config.core.impl.ParameterProviderBridge;
 
@@ -74,11 +75,12 @@ import io.wcm.config.core.impl.ParameterProviderBridge;
  * - No other config names and no config resource collections are supported
  */
 @Component(immediate = true, service = {
-    ConfigurationResourceResolvingStrategy.class, ConfigurationInheritanceStrategy.class, ConfigurationPersistenceStrategy.class
-})
+    ConfigurationResourceResolvingStrategy.class, ConfigurationInheritanceStrategy.class, ConfigurationPersistenceStrategy2.class
+},
+    property = Constants.SERVICE_RANKING + ":Integer=2000")
 @Designate(ocd = ToolsConfigPagePersistenceProvider.Config.class)
 public final class ToolsConfigPagePersistenceProvider implements ConfigurationResourceResolvingStrategy,
-    ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy {
+    ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy2 {
 
   private static final String RELATIVE_CONFIG_PATH = "/tools/config";
   private static final Pattern CONFIG_PATH_PATTERN = Pattern.compile("^.*" + RELATIVE_CONFIG_PATH + "(/.*)?$");
@@ -289,11 +291,54 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
   }
 
   @Override
+  public Resource getCollectionParentResource(Resource resource) {
+    return getResource(resource);
+  }
+
+
+  @Override
+  public Resource getCollectionItemResource(Resource resource) {
+    return getResource(resource);
+  }
+
+  @Override
   public String getResourcePath(String resourcePath) {
     if (!config.enabled() || !isConfigPagePath(resourcePath)) {
       return null;
     }
     return resourcePath;
+  }
+
+  @Override
+  public String getCollectionParentResourcePath(String resourcePath) {
+    return getResourcePath(resourcePath);
+  }
+
+
+  @Override
+  public String getCollectionItemResourcePath(String resourcePath) {
+    return getResourcePath(resourcePath);
+  }
+
+
+  @Override
+  public String getConfigName(String configName, String relatedConfigPath) {
+    if (!config.enabled() || (relatedConfigPath != null && !isConfigPagePath(relatedConfigPath))) {
+      return null;
+    }
+    return configName;
+  }
+
+
+  @Override
+  public String getCollectionParentConfigName(String configName, String relatedConfigPath) {
+    return getResourcePath(configName);
+  }
+
+
+  @Override
+  public String getCollectionItemConfigName(String configName, String relatedConfigPath) {
+    return getResourcePath(configName);
   }
 
   @Override
@@ -312,7 +357,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     // store config data
     getOrCreateResource(resourceResolver, configResourcePath, data.getProperties());
     updatePageLastMod(resourceResolver, configPagePath);
-    commit(resourceResolver);
+    commit(resourceResolver, configResourcePath);
     return false;
   }
 
@@ -341,11 +386,11 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
         resourceResolver.delete(resource);
       }
       catch (PersistenceException ex) {
-        throw new ConfigurationPersistenceException("Unable to delete configuration at " + configResourcePath, ex);
+        throw convertPersistenceException("Unable to delete configuration at " + configResourcePath, ex);
       }
     }
     updatePageLastMod(resourceResolver, configPagePath);
-    commit(resourceResolver);
+    commit(resourceResolver, configResourcePath);
     return true;
   }
 
@@ -365,17 +410,27 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     if (resource != null) {
       return;
     }
+
+    String parentPath = ResourceUtil.getParent(pagePath);
+    String pageName = ResourceUtil.getName(pagePath);
     ensurePage(resourceResolver, ResourceUtil.getParent(pagePath), config.structurePageTemplate());
+    Resource parentResource = resourceResolver.getResource(parentPath);
     try {
       if (log.isTraceEnabled()) {
         log.trace("! Create cq:Page node at {}", pagePath);
       }
-      PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
-      pageManager.create(ResourceUtil.getParent(pagePath), ResourceUtil.getName(pagePath),
-          template, ResourceUtil.getName(pagePath), false);
+      // create page directly via Sling API instead of PageManager because page name may contain dots (.)
+      Map<String, Object> props = new HashMap<>();
+      props.put(JcrConstants.JCR_PRIMARYTYPE, NameConstants.NT_PAGE);
+      Resource pageResource = resourceResolver.create(parentResource, pageName, props);
+      props = new HashMap<String, Object>();
+      props.put(JcrConstants.JCR_PRIMARYTYPE, "cq:PageContent");
+      props.put(JcrConstants.JCR_TITLE, pageName);
+      props.put(NameConstants.PN_TEMPLATE, template);
+      resourceResolver.create(pageResource, JcrConstants.JCR_CONTENT, props);
     }
-    catch (WCMException ex) {
-      throw new ConfigurationPersistenceException("Unable to create config page at " + pagePath, ex);
+    catch (PersistenceException ex) {
+      throw convertPersistenceException("Unable to create config page at " + pagePath, ex);
     }
   }
 
@@ -388,7 +443,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
       return resource;
     }
     catch (PersistenceException ex) {
-      throw new ConfigurationPersistenceException("Unable to persist configuration to " + path, ex);
+      throw convertPersistenceException("Unable to persist configuration to " + path, ex);
     }
   }
 
@@ -397,6 +452,9 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
       log.trace("! Store properties for resource {}: {}", resource.getPath(), MapUtil.traceOutput(properties));
     }
     ModifiableValueMap modValueMap = resource.adaptTo(ModifiableValueMap.class);
+    if (modValueMap == null) {
+      throw new ConfigurationPersistenceAccessDeniedException("No write access: Unable to store configuration data to " + resource.getPath() + ".");
+    }
     // remove all existing properties that are not filtered
     Set<String> propertyNamesToRemove = new HashSet<>(modValueMap.keySet());
     PropertiesFilterUtil.removeIgnoredProperties(propertyNamesToRemove);
@@ -410,17 +468,20 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     Resource contentResource = resourceResolver.getResource(configPagePath + "/jcr:content");
     if (contentResource != null) {
       ModifiableValueMap contentProps = contentResource.adaptTo(ModifiableValueMap.class);
+      if (contentProps == null) {
+        throw new ConfigurationPersistenceAccessDeniedException("No write access: Unable to update page " + configPagePath + ".");
+      }
       contentProps.put(NameConstants.PN_LAST_MOD, Calendar.getInstance());
       contentProps.put(NameConstants.PN_LAST_MOD_BY, resourceResolver.getAttribute(ResourceResolverFactory.USER));
     }
   }
 
-  private void commit(ResourceResolver resourceResolver) {
+  private void commit(ResourceResolver resourceResolver, String relatedResourcePath) {
     try {
       resourceResolver.commit();
     }
     catch (PersistenceException ex) {
-      throw new ConfigurationPersistenceException("Unable to save configuration: " + ex.getMessage(), ex);
+      throw convertPersistenceException("Unable to persist configuration changes to " + relatedResourcePath, ex);
     }
   }
 
@@ -433,6 +494,14 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
 
   private boolean isConfigPagePath(String configPath) {
     return CONFIG_PATH_PATTERN.matcher(configPath).matches();
+  }
+
+  private ConfigurationPersistenceException convertPersistenceException(String message, PersistenceException ex) {
+    if (StringUtils.equals(ex.getCause().getClass().getName(), "javax.jcr.AccessDeniedException")) {
+      // detect if commit failed due to read-only access to repository
+      return new ConfigurationPersistenceAccessDeniedException("No write access: " + message, ex);
+    }
+    return new ConfigurationPersistenceException(message, ex);
   }
 
 }

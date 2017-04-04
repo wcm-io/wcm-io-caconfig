@@ -22,6 +22,7 @@ package io.wcm.caconfig.extensions.persistence.impl;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -34,13 +35,13 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ResourceUtil;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceAccessDeniedException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.NameConstants;
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMException;
 
 final class PersistenceUtils {
 
@@ -55,32 +56,82 @@ final class PersistenceUtils {
   }
 
   public static boolean containsJcrContent(String path) {
+    if (path == null) {
+      return false;
+    }
     return JCR_CONTENT_PATTERN.matcher(path).matches();
   }
 
-  public static void ensurePage(ResourceResolver resolver, String configResourcePath) {
+  public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath) {
+    ensureContainingPage(resolver, configResourcePath, null, null);
+  }
+
+  public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath, String template, String parentTemplate) {
     Matcher matcher = PAGE_PATH_PATTERN.matcher(configResourcePath);
     if (!matcher.matches()) {
       return;
     }
     String pagePath = matcher.group(1);
+    ensurePage(resolver, pagePath, template, parentTemplate);
+  }
+
+  private static Resource ensurePage(ResourceResolver resolver, String pagePath, String template, String parentTemplate) {
+    // check if page or resource already exists
     Resource resource = resolver.getResource(pagePath);
     if (resource != null) {
-      return;
+      return resource;
     }
-    // ensure parent folders exist
+
+    // ensure parent page or resource exists
     String parentPath = ResourceUtil.getParent(pagePath);
-    getOrCreateResource(resolver, parentPath, DEFAULT_FOLDER_NODE_TYPE, null);
-    try {
-      if (log.isTraceEnabled()) {
-        log.trace("! Create cq:Page node at {}", pagePath);
-      }
-      PageManager pageManager = resolver.adaptTo(PageManager.class);
-      pageManager.create(ResourceUtil.getParent(pagePath), ResourceUtil.getName(pagePath),
-          null, ResourceUtil.getName(pagePath), false);
+    String pageName = ResourceUtil.getName(pagePath);
+    Resource parentResource;
+    if (StringUtils.isNotEmpty(parentTemplate)) {
+      parentResource = ensurePage(resolver, parentPath, parentTemplate, parentTemplate);
     }
-    catch (WCMException ex) {
-      throw new ConfigurationPersistenceException("Unable to create config page at " + pagePath, ex);
+    else {
+      parentResource = getOrCreateResource(resolver, parentPath, DEFAULT_FOLDER_NODE_TYPE, null);
+    }
+
+    // create page
+    return createPage(resolver, parentResource, pageName, template);
+  }
+
+  private static Resource createPage(ResourceResolver resolver, Resource parentResource, String pageName, String template) {
+    String pagePath = parentResource.getPath() + "/" + pageName;
+    log.trace("! Create cq:Page node at {}", pagePath);
+    try {
+      // create page directly via Sling API instead of PageManager because page name may contain dots (.)
+      Map<String, Object> props = new HashMap<>();
+      props.put(JcrConstants.JCR_PRIMARYTYPE, NameConstants.NT_PAGE);
+      Resource pageResource = resolver.create(parentResource, pageName, props);
+
+      // create jcr:content node
+      props = new HashMap<>();
+      props.put(JcrConstants.JCR_PRIMARYTYPE, "cq:PageContent");
+      if (StringUtils.isNotEmpty(template)) {
+        applyPageTemplate(resolver, props, pageName, template);
+      }
+      resolver.create(pageResource, JCR_CONTENT, props);
+
+      return pageResource;
+    }
+    catch (PersistenceException ex) {
+      throw convertPersistenceException("Unable to create config page at " + pagePath, ex);
+    }
+  }
+
+  private static void applyPageTemplate(ResourceResolver resolver, Map<String, Object> props, String pageName, String template) {
+    // set template
+    props.put(NameConstants.PN_TEMPLATE, template);
+
+    // also set title for author when template is set
+    props.put(JcrConstants.JCR_TITLE, pageName);
+
+    // get sling:resourceType from template definition
+    Resource templateContentResource = resolver.getResource(template + "/" + JCR_CONTENT);
+    if (templateContentResource != null) {
+      props.put("sling:resourceType", templateContentResource.getValueMap().get("sling:resourceType", String.class));
     }
   }
 
@@ -93,7 +144,7 @@ final class PersistenceUtils {
       return resource;
     }
     catch (PersistenceException ex) {
-      throw new ConfigurationPersistenceException("Unable to create resource at " + path, ex);
+      throw convertPersistenceException("Unable to create resource at " + path, ex);
     }
   }
 
@@ -105,7 +156,7 @@ final class PersistenceUtils {
       }
     }
     catch (PersistenceException ex) {
-      throw new ConfigurationPersistenceException("Unable to remove children from " + resource.getPath(), ex);
+      throw convertPersistenceException("Unable to remove children from " + resource.getPath(), ex);
     }
   }
 
@@ -114,6 +165,9 @@ final class PersistenceUtils {
       log.trace("! Store properties for resource {}: {}", resource.getPath(), properties);
     }
     ModifiableValueMap modValueMap = resource.adaptTo(ModifiableValueMap.class);
+    if (modValueMap == null) {
+      throw new ConfigurationPersistenceAccessDeniedException("No write access: Unable to store configuration data to " + resource.getPath() + ".");
+    }
     // remove all existing properties that do not have jcr: namespace
     for (String propertyName : new HashSet<>(modValueMap.keySet())) {
       if (StringUtils.startsWith(propertyName, "jcr:")) {
@@ -133,18 +187,29 @@ final class PersistenceUtils {
     Resource contentResource = resolver.getResource(pagePath + "/" + JCR_CONTENT);
     if (contentResource != null) {
       ModifiableValueMap contentProps = contentResource.adaptTo(ModifiableValueMap.class);
+      if (contentProps == null) {
+        throw new ConfigurationPersistenceAccessDeniedException("No write access: Unable to update page " + configResourcePath + ".");
+      }
       contentProps.put(NameConstants.PN_LAST_MOD, Calendar.getInstance());
       contentProps.put(NameConstants.PN_LAST_MOD_BY, resolver.getAttribute(ResourceResolverFactory.USER));
     }
   }
 
-  public static void commit(ResourceResolver resolver) {
+  public static void commit(ResourceResolver resourceResolver, String relatedResourcePath) {
     try {
-      resolver.commit();
+      resourceResolver.commit();
     }
     catch (PersistenceException ex) {
-      throw new ConfigurationPersistenceException("Unable to save configuration: " + ex.getMessage(), ex);
+      throw convertPersistenceException("Unable to persist configuration changes to " + relatedResourcePath, ex);
     }
+  }
+
+  public static ConfigurationPersistenceException convertPersistenceException(String message, PersistenceException ex) {
+    if (StringUtils.equals(ex.getCause().getClass().getName(), "javax.jcr.AccessDeniedException")) {
+      // detect if commit failed due to read-only access to repository
+      return new ConfigurationPersistenceAccessDeniedException("No write access: " + message, ex);
+    }
+    return new ConfigurationPersistenceException(message, ex);
   }
 
 }
