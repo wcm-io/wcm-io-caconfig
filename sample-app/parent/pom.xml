@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm.maven</groupId>
     <artifactId>io.wcm.maven.aem-global-parent</artifactId>
-    <version>1.1.6</version>
+    <version>1.1.8</version>
     <relativePath/>
   </parent>
 
@@ -89,7 +89,7 @@
       <dependency>
         <groupId>io.wcm</groupId>
         <artifactId>io.wcm.caconfig.editor</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.1.1-SNAPSHOT</version>
       </dependency>
 
       <!-- Import AEM dependencies -->
@@ -125,7 +125,7 @@
       <dependency>
         <groupId>io.wcm</groupId>
         <artifactId>io.wcm.testing.aem-mock</artifactId>
-        <version>1.9.0</version>
+        <version>1.9.2</version>
       </dependency>
       <!-- Overwrite osgi-mock for OSGi R6 support -->
       <dependency>
