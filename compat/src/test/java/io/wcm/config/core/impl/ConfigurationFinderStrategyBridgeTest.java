@@ -37,8 +37,8 @@ import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
+import io.wcm.config.core.management.Application;
+import io.wcm.config.core.management.ApplicationFinder;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
@@ -72,7 +72,7 @@ public class ConfigurationFinderStrategyBridgeTest {
     resourceApp1 = context.create().resource("/content/app1/site1/page1");
     resourceNoApp = context.create().resource("/content/other/page1");
 
-    when(applicationFinder.find(resourceApp1)).thenReturn(new ApplicationInfo(APP_1, APP_1));
+    when(applicationFinder.find(resourceApp1)).thenReturn(new Application(APP_1, APP_1));
 
     when(configurationFinderStrategy1.findConfigurationIds(any(Resource.class)))
     .thenReturn(ImmutableList.of("/content/app1/site1", "/content/app1").iterator());

@@ -136,7 +136,7 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
       log.warn("Unable to persist data for " + configName + (collection ? "[col]" : ""), ex);
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to persist data: " + ex.getMessage());
     }
-    catch (Throwable ex) {
+    /*CHECKSTYLE:OFF*/ catch (Exception ex) { /*CHECKSTYLE:ON*/
       log.error("Error getting configuration for " + configName + (collection ? "[col]" : ""), ex);
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
     }
@@ -197,7 +197,6 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
             props.put(propertyName, ArrayUtils.EMPTY_STRING_ARRAY);
           }
           else {
-            propertyType = String.class;
             if (values.get(0) instanceof Integer) {
               props.put(propertyName, toArray(properties, propertyName, int.class));
             }
@@ -320,7 +319,7 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
       log.warn("Unable to delete data for " + configName, ex);
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to delete data: " + ex.getMessage());
     }
-    catch (Throwable ex) {
+    /*CHECKSTYLE:OFF*/ catch (Exception ex) { /*CHECKSTYLE:ON*/
       log.error("Error deleting configuration for " + configName, ex);
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
     }

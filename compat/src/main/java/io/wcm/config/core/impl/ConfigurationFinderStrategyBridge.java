@@ -38,18 +38,19 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
+import io.wcm.config.core.management.Application;
+import io.wcm.config.core.management.ApplicationFinder;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 
 /**
  * Bridges configuration finder strategies to a caconfig context path strategy.
  */
-@Component(service = ContextPathStrategy.class, immediate = true)
+@Component(service = ContextPathStrategy.class, immediate = true, reference = {
+    @Reference(service = ConfigurationFinderStrategy.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+        name = "configurationFinderStrategy", bind = "bindConfigurationFinderStrategy", unbind = "unbindConfigurationFinderStrategy")
+})
 public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
 
-  @Reference(service = ConfigurationFinderStrategy.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-      bind = "bindConfigurationFinderStrategy", unbind = "unbindConfigurationFinderStrategy")
   private RankedServices<ConfigurationFinderStrategy> configurationFinderStrategies = new RankedServices<>(Order.ASCENDING);
 
   @Reference
@@ -81,7 +82,7 @@ public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
   }
 
   private String findApplicationId(Resource resource) {
-    ApplicationInfo application = applicationFinder.find(resource);
+    Application application = applicationFinder.find(resource);
     if (application != null) {
       return application.getApplicationId();
     }

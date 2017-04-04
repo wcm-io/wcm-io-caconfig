@@ -22,7 +22,6 @@
       "inherited": "Inherited",
       "overridden": "Overridden",
       "description": "Description",
-      "group": "Group",
       "inheritance": {
         "property": "Enable property inheritance",
         "collection": "Enable collection inheritance"

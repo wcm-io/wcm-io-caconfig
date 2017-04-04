@@ -112,7 +112,7 @@ final class PersistenceUtils {
       if (StringUtils.isNotEmpty(template)) {
         applyPageTemplate(resolver, props, pageName, template);
       }
-      resolver.create(pageResource, JcrConstants.JCR_CONTENT, props);
+      resolver.create(pageResource, JCR_CONTENT, props);
 
       return pageResource;
     }
@@ -129,7 +129,7 @@ final class PersistenceUtils {
     props.put(JcrConstants.JCR_TITLE, pageName);
 
     // get sling:resourceType from template definition
-    Resource templateContentResource = resolver.getResource(template + "/" + JcrConstants.JCR_CONTENT);
+    Resource templateContentResource = resolver.getResource(template + "/" + JCR_CONTENT);
     if (templateContentResource != null) {
       props.put("sling:resourceType", templateContentResource.getValueMap().get("sling:resourceType", String.class));
     }

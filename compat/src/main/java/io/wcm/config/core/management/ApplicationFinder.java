@@ -26,9 +26,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Find associated application for a resource.
- * @deprecated Use {@link io.wcm.caconfig.application.ApplicationFinder} instead.
  */
-@Deprecated
 @ProviderType
 public interface ApplicationFinder {
 

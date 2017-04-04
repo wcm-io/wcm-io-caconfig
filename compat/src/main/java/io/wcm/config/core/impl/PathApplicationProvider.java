@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caconfig.application.impl;
+package io.wcm.config.core.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.wcm.caconfig.application.spi.ApplicationProvider;
+import io.wcm.config.spi.ApplicationProvider;
 
 /**
  * {@link ApplicationProvider} that supports detecting an application based paths subtrees.

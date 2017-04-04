@@ -49,11 +49,12 @@ import io.wcm.config.spi.ParameterOverrideProvider;
 /**
  * Bridges parameter override provider to configuration override providers.
  */
-@Component(service = ConfigurationOverrideProvider.class, immediate = true)
+@Component(service = ConfigurationOverrideProvider.class, immediate = true, reference = {
+    @Reference(service = ParameterOverrideProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+        name = "parameterOverrideProvider", bind = "bindParameterOverrideProvider", unbind = "unbindParameterOverrideProvider")
+})
 public class ParameterOverrideProviderBridge implements ConfigurationOverrideProvider, ChangeListener {
 
-  @Reference(service = ParameterOverrideProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-      bind = "bindParameterOverrideProvider", unbind = "unbindParameterOverrideProvider")
   private RankedServices<ParameterOverrideProvider> parameterOverrideProviders = new RankedServices<>(Order.ASCENDING, this);
 
   private volatile List<String> overrideStrings = ImmutableList.of();

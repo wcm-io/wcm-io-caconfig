@@ -70,7 +70,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
         "structurePageTemplate", "/apps/app1/templates/structurePage");
 
     context.create().resource("/apps/app1/templates/configEditor/jcr:content",
-        "sling:resourceType", "/apps/app1/components/page/configEditor");
+        "sling:resourceType", "app1/components/page/configEditor");
 
     context.create().page("/content/region1");
     context.create().page("/content/region1/site1");
@@ -93,7 +93,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
     assertEquals((Integer)123, props.get("intParam", Integer.class));
     assertEquals("/apps/app1/templates/configEditor", configPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
     assertEquals("config", configPage.getTitle());
-    assertEquals("/apps/app1/components/page/configEditor", configPage.getProperties().get("sling:resourceType", String.class));
+    assertEquals("app1/components/page/configEditor", configPage.getProperties().get("sling:resourceType", String.class));
 
     Page toolsPage = context.pageManager().getPage("/content/region1/site1/en/tools");
     assertNotNull(toolsPage);
@@ -132,7 +132,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
     assertEquals((Integer)234, props2.get("intParam", Integer.class));
     assertEquals("/apps/app1/templates/configEditor", configPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
     assertEquals("config", configPage.getTitle());
-    assertEquals("/apps/app1/components/page/configEditor", configPage.getProperties().get("sling:resourceType", String.class));
+    assertEquals("app1/components/page/configEditor", configPage.getProperties().get("sling:resourceType", String.class));
 
     Page toolsPage = context.pageManager().getPage("/content/region1/site1/en/tools");
     assertNotNull(toolsPage);
