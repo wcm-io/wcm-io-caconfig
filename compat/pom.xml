@@ -87,6 +87,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.sling.commons</artifactId>
+      <!-- Stick with version 0.6.4 to support both old 0.x and 1.x wcm.io versions -->
       <version>0.6.4</version>
       <scope>compile</scope>
       <optional>true</optional>
