@@ -61,7 +61,8 @@
       else if (scope.parameter.metadata && scope.parameter.metadata.multivalue) {
         scope.type = "multivalue";
       }
-      else if (scope.parameter.metadata && scope.parameter.metadata.properties && scope.parameter.metadata.properties.widgetType === "pathbrowser") {
+      else if (scope.parameter.metadata && scope.parameter.metadata.properties
+            && scope.parameter.metadata.properties.widgetType === "pathbrowser") {
         scope.type = "pathbrowser";
       }
       else if (scope.parameter.metadata && scope.parameter.metadata.type) {

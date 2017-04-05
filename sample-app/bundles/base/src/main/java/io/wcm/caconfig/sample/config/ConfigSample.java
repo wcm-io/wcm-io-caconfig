@@ -58,7 +58,7 @@ public @interface ConfigSample {
   /**
    * @return String array parameter with default value
    */
-  @Property(label = "String Array Param", order = 4)
+  @Property(label = "String Array Param", order = 5)
   String[] stringArrayParam() default {
     "value1", "value2"
   };
