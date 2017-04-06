@@ -33,7 +33,11 @@
       parameterValue: "parameterValue.html",
       popupContainer: "popupContainer.html",
       popupContent: "popupContent.html",
-      multifield: "multifield.html"
+      multifield: "multifield.html",
+      pathbrowser: "pathbrowser.html"
+    })
+    .constant("directivePropertyPrefixes", {
+      pathbrowser: "pathbrowser"
     })
     .constant("inputMap", {
       Boolean: {

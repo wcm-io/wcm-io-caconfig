@@ -12,7 +12,8 @@
       "discard": "Discard Changes",
       "edit": "Edit",
       "ok": "OK",
-      "save": "Save"
+      "save": "Save",
+      "browse": "Browse"
     },
     "config": {
       "name": "Configuration Name",

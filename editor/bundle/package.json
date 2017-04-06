@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "eslint": "^3.12.2",
-    "eslint-config-pv": "^1.0.5",
+    "eslint-config-pv": "^1.0.7",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.13",
     "grunt-contrib-clean": "~0.4.1",
