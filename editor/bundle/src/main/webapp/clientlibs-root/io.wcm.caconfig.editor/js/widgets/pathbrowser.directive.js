@@ -22,9 +22,9 @@
   angular.module("io.wcm.caconfig.widgets")
       .directive("caconfigPathbrowser", pathbrowser);
 
-  pathbrowser.$inject = ["templateUrlList", "inputMap", "directivePropertyPrefixes", "$rootScope"];
+  pathbrowser.$inject = ["templateUrlList", "inputMap", "directivePropertyPrefixes", "$rootScope", "configService"];
 
-  function pathbrowser(templateList, inputMap, directivePropertyPrefixes, $rootScope) {
+  function pathbrowser(templateList, inputMap, directivePropertyPrefixes, $rootScope, configService) {
     var directive = {
       restrict: "E",
       replace: true,
@@ -49,16 +49,24 @@
       scope.pattern = input.pattern;
       scope.i18n = $rootScope.i18n;
 
-      angular.forEach(props, function (prop) {
+      angular.forEach(props, function (value, prop) {
         var propName;
         // if the property starts with the prefix "pathbrowser" followed by a pathbrowser property name
+        // remove the "pathbrowser" prefix and use the remaining part as option name
         if (prop && prop.length > prefix.length && prop.substring(0, prefix.length) !== -1) {
           propName = prop.substring(prefix.length);
           options[propName.charAt(0).toLowerCase() + propName.slice(1)] = props[prop];
         }
       });
 
+      // get root path from config
       options.rootPath = options.rootPath || "/content";
+      // if rootPathContext is set set root path to current context path
+      if (options.rootPathContext == "true") {
+        options.rootPath = configService.getState().contextPath || options.rootPath;
+        delete options.rootPathContext;
+      }
+
       options.predicate = options.predicate || "hierarchyNotFile";
       options.pickerSrc = options.pickerSrc || "/libs/wcm/core/content/common/pathbrowser/column.html"
         + options.rootPath + "?predicate=" + options.predicate;
