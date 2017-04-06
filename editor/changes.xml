@@ -27,6 +27,9 @@
       <action type="add" dev="rbrouns" issue="WCON-24">
         Add support for pathbrowser widget.
       </action>
+      <action type="update" dev="sseifert">
+        Keep compatible with Sling Models versions available in AEM 6.1 OOTB.
+      </action>
     </release>
 
     <release version="1.1.0" date="2017-04-04">
