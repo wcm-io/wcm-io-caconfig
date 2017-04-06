@@ -68,6 +68,31 @@ For a configuration collection all existing collection items are displayed, and 
 The editor is based on AngularJS and CoralUI.
 
 
+### Using custom edit widgets
+
+For each data type (string, number, boolean) the fitting edit widget is chosen automatically. Alternatively you can define custom widgets via extra properties on the `@Property` annotation. Currently only `pathbrowser` is supported.
+
+Define a path browser widget for a string parameter with fixed path:
+
+```java
+@Property(label = "DAM Path", description = "Browse DAM assets.", property = {
+    "widgetType=pathbrowser",
+    "pathbrowserRootPath=/content/dam"
+})
+String damPath();
+```
+
+Define a path browser widget for a string parameter with the current configuration context path as root path:
+
+```java
+@Property(label = "Context Path", description = "Browse pages in the current site.", property = {
+    "widgetType=pathbrowser",
+    "pathbrowserRootPathContext=true"
+})
+String contextPath();
+```
+
+
 ### Disable Editor on Publish
 
 You should disable the configuration editor on publish by applying an OSGi configuration like this:
