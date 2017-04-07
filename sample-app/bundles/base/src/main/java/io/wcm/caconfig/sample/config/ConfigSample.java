@@ -47,9 +47,27 @@ public @interface ConfigSample {
   boolean boolParam();
 
   /**
+   * @return Path parameter
+   */
+  @Property(label = "DAM Path", description = "Browse DAM assets.", order = 4, property = {
+      "widgetType=pathbrowser",
+      "pathbrowserRootPath=/content/dam"
+  })
+  String damPath();
+
+  /**
+   * @return Path parameter
+   */
+  @Property(label = "Context Path", description = "Browse pages in the current configuration context path.", order = 5, property = {
+      "widgetType=pathbrowser",
+      "pathbrowserRootPathContext=true"
+  })
+  String contextPath();
+
+  /**
    * @return String array parameter with default value
    */
-  @Property(label = "String Array Param", order = 4)
+  @Property(label = "String Array Param", order = 6)
   String[] stringArrayParam() default {
     "value1", "value2"
   };

@@ -22,6 +22,7 @@ Features:
 * Display all configuration metadata and default values
 * Support all data types and arrays of values
 * Control collection and property inheritance and support overridden values
+* Allows to define custom widgets for configuration properties like pathbrowser
 
 See [Usage][usage] for further details, installation instructions and some screenshots.
 

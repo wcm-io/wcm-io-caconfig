@@ -89,7 +89,7 @@
       <dependency>
         <groupId>io.wcm</groupId>
         <artifactId>io.wcm.caconfig.editor</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.1.1-SNAPSHOT</version>
       </dependency>
 
       <!-- Import AEM dependencies -->

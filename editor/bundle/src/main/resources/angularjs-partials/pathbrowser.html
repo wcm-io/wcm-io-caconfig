@@ -1,0 +1,33 @@
+<div class="caconfig-pathbrowser">
+  <span class="coral-PathBrowser--disabled"
+        ng-show="parameter.overridden || parameter.inherited">
+    <span class="coral-InputGroup coral-InputGroup--block">
+      <input class="coral-InputGroup-input coral-Textfield"
+             type="text" autocomplete="off"
+             ng-disabled="true"
+             ng-readonly="true"
+             ng-model="parameter.effectiveValue" />
+      <span class="coral-InputGroup-button">
+        <button class="coral-Button coral-Button--square caconfig-disabled-button"
+                type="button" title="{{i18n.button.browse}}"
+                ng-disabled="true">
+          <i class="coral-Icon coral-Icon--sizeS coral-Icon--folderSearch"></i>
+        </button>
+      </span>
+    </span>
+  </span>
+  <span class="coral-PathBrowser"
+        ng-hide="parameter.overridden || parameter.inherited">
+    <span class="coral-InputGroup coral-InputGroup--block">
+      <input class="coral-InputGroup-input coral-Textfield js-coral-pathbrowser-input"
+             type="text" autocomplete="off"
+             ng-model="parameter.value" />
+      <span class="coral-InputGroup-button">
+        <button class="coral-Button coral-Button--square js-coral-pathbrowser-button"
+                type="button" title="{{i18n.button.browse}}">
+          <i class="coral-Icon coral-Icon--sizeS coral-Icon--folderSearch"></i>
+        </button>
+      </span>
+    </span>
+  </span>
+</div>
