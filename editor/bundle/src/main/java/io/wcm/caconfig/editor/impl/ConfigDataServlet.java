@@ -43,6 +43,7 @@ import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.management.ValueInfo;
 import org.apache.sling.caconfig.management.multiplexer.ConfigurationPersistenceStrategyMultiplexer;
+import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
@@ -113,8 +114,11 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private JSONObject getConfiguration(Resource contextResource, String configName, boolean collection) throws JSONException {
     JSONObject result;
     if (collection) {
-      result = toJson(configManager.getConfigurationCollection(contextResource, configName),
-          configManager.newCollectionItem(contextResource, configName));
+      ConfigurationData newItem = configManager.newCollectionItem(contextResource, configName);
+      if (newItem == null) {
+        throw new ConfigurationPersistenceException("Invalid configuration name: " + configName);
+      }
+      result = toJson(configManager.getConfigurationCollection(contextResource, configName), newItem);
     }
     else {
       ConfigurationData configData = configManager.getConfiguration(contextResource, configName);
