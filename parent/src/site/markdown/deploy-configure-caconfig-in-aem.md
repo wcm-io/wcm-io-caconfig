@@ -11,6 +11,7 @@ Links to the latest versions of Apache Sling Context-Aware Configuration bundles
 | [Apache Sling Context-Aware Configuration API](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.api) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.api/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.api) |
 | [Apache Sling Context-Aware Configuration SPI](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.spi) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.spi/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.spi) |
 | [Apache Sling Context-Aware Configuration Implementation](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.impl) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.impl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.caconfig.impl) |
+| [Apache Johnzon Wrapper Library](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.commons.johnzon) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.commons.johnzon/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.commons.johnzon) |
 
 
 ### Deploying Sling Context-Aware Configuration to AEM 6.1 or AEM 6.2
@@ -20,12 +21,19 @@ In AEM 6.1 or AEM 6.2 you need to deploy the latest version of these Sling bundl
 * `org.apache.sling:org.apache.sling.caconfig.api`
 * `org.apache.sling:org.apache.sling.caconfig.spi`
 * `org.apache.sling:org.apache.sling.caconfig.impl`
+* `org.apache.sling:org.apache.sling.commons.johnzon`
 
 The Default Context Path Strategy needs an additional configuration to support `sling:configRef` properties stored in `jcr:content` subnodes of AEM content pages:
 
 ```
   org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy
     configRefResourceNames=["jcr:content"]
+```
+You should also extend the filter settings for ignoring property names when reading and writing configuration data to also exclude properties with the `cq:` namespace:
+
+```
+  org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
+    ignorePropertyNameRegex=["^(jcr|cq):.+$"]
 ```
 
 If you want to use the Web Console plugin for Sling Context-Aware configuration you also need to create a system user which has read access to `/conf` and `/content` and add an service user mapping for this user (named `sling-caconfig` in this example):
@@ -42,9 +50,14 @@ In AEM 6.3 you should check which versions of the bundles mentioned above are al
 
 * `org.apache.sling:org.apache.sling.caconfig.spi`
 * `org.apache.sling:org.apache.sling.caconfig.impl`
+* `org.apache.sling:org.apache.sling.commons.johnzon`
 
-The additional configuration steps for AEM 6.1 and 6.2 are not required for AEM 6.3 because they are already included.
+The additional configuration steps for AEM 6.1 and 6.2 are not required for AEM 6.3 because they are already included, except this one:
 
+```
+  org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
+    ignorePropertyNameRegex=["^(jcr|cq):.+$"]
+```
 
 
 
