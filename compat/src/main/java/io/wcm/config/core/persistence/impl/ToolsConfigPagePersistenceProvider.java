@@ -43,6 +43,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
+import org.apache.sling.caconfig.management.ConfigurationManagementSettings;
 import org.apache.sling.caconfig.management.multiplexer.ContextPathStrategyMultiplexer;
 import org.apache.sling.caconfig.resource.spi.ConfigurationResourceResolvingStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
@@ -107,6 +108,8 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
 
   @Reference
   private ContextPathStrategyMultiplexer contextPathStrategy;
+  @Reference
+  private ConfigurationManagementSettings configurationManagementSettings;
 
   private volatile Config config;
 
@@ -457,7 +460,7 @@ public final class ToolsConfigPagePersistenceProvider implements ConfigurationRe
     }
     // remove all existing properties that are not filtered
     Set<String> propertyNamesToRemove = new HashSet<>(modValueMap.keySet());
-    PropertiesFilterUtil.removeIgnoredProperties(propertyNamesToRemove);
+    PropertiesFilterUtil.removeIgnoredProperties(propertyNamesToRemove, configurationManagementSettings);
     for (String propertyName : propertyNamesToRemove) {
       modValueMap.remove(propertyName);
     }
