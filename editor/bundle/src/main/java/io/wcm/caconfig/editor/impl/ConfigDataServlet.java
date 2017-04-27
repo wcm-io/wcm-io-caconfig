@@ -182,9 +182,14 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
           ConfigurationData[] configDatas = (ConfigurationData[])item.getValue();
           if (configDatas != null) {
             JSONObject nestedConfigCollection = new JSONObject();
-            String collectionConfigName = configurationPersistenceStrategy.getCollectionParentConfigName(config.getConfigName(), config.getResourcePath())
-                + "/" + itemMetadata.getConfigurationMetadata().getName();
-            nestedConfigCollection.put("configName", collectionConfigName);
+            StringBuilder collectionConfigName = new StringBuilder();
+            collectionConfigName.append(configurationPersistenceStrategy.getCollectionParentConfigName(config.getConfigName(), config.getResourcePath()));
+            if (config.getCollectionItemName() != null) {
+              collectionConfigName.append("/")
+                  .append(configurationPersistenceStrategy.getCollectionItemConfigName(config.getCollectionItemName(), config.getResourcePath()));
+            }
+            collectionConfigName.append("/").append(itemMetadata.getConfigurationMetadata().getName());
+            nestedConfigCollection.put("configName", collectionConfigName.toString());
             JSONArray items = new JSONArray();
             for (ConfigurationData configData : configDatas) {
               items.put(toJson(configData));
