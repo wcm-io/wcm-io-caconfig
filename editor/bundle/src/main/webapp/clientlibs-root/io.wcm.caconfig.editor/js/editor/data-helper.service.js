@@ -97,13 +97,12 @@
     for (i = 0; (config.properties && i < config.properties.length); i++) {
       property = config.properties[i];
 
-      if (!property.overridden && !property.inherited
+      if (property.name === "sling:configPropertyInherit") {
+        properties[property.name] = Boolean(property.value);
+      }
+      else if (!property.overridden && !property.inherited
           && !property.nestedConfig && !property.nestedConfigCollection) {
-
-        if (property.name === "sling:configPropertyInherit") {
-          properties[property.name] = Boolean(property.value);
-        }
-        else if (angular.isUndefined(property.value) || property.value === "") {
+        if (angular.isUndefined(property.value) || property.value === "") {
           properties[property.name] = null;
         }
         else if (angular.isArray(property.value)) {
