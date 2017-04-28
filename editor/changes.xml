@@ -27,6 +27,9 @@
       <action type="fix" dev="sseifert" issue="WCON-27">
         Fix config name path building for nested config collection inside config collection item.
       </action>
+      <action type="fix" dev="dding" issue="WCON-30">
+        Fix handling of collection items inherited via collection inheritance.
+      </action>
     </release>
 
     <release version="1.2.0" date="2017-04-07">

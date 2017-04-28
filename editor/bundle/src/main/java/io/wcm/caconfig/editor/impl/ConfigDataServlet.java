@@ -123,7 +123,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     else {
       ConfigurationData configData = configManager.getConfiguration(contextResource, configName);
       if (configData != null) {
-        result = toJson(configData);
+        result = toJson(configData, null);
       }
       else {
         result = null;
@@ -146,21 +146,24 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
     JSONArray items = new JSONArray();
     for (ConfigurationData configData : configCollection.getItems()) {
-      items.put(toJson(configData));
+      items.put(toJson(configData, isConfigurationCollectionItemInherited(configCollection, configData)));
     }
     result.put("items", items);
 
-    result.put("newItem", toJson(newItem));
+    result.put("newItem", toJson(newItem, null));
 
     return result;
   }
 
-  private JSONObject toJson(ConfigurationData config) throws JSONException {
+  private JSONObject toJson(ConfigurationData config, Boolean inherited) throws JSONException {
     JSONObject result = new JSONObject();
 
     result.putOpt("configName", config.getConfigName());
     result.putOpt("collectionItemName", config.getCollectionItemName());
     result.putOpt("overridden", config.isOverridden());
+    if (inherited != null) {
+      result.put("inherited", inherited.booleanValue());
+    }
 
     JSONArray props = new JSONArray();
     for (String propertyName : config.getPropertyNames()) {
@@ -192,7 +195,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
             nestedConfigCollection.put("configName", collectionConfigName.toString());
             JSONArray items = new JSONArray();
             for (ConfigurationData configData : configDatas) {
-              items.put(toJson(configData));
+              items.put(toJson(configData, false));
             }
             nestedConfigCollection.put("items", items);
             prop.put("nestedConfigCollection", nestedConfigCollection);
@@ -201,7 +204,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         else {
           ConfigurationData configData = (ConfigurationData)item.getValue();
           if (configData != null) {
-            prop.put("nestedConfig", toJson(configData));
+            prop.put("nestedConfig", toJson(configData, null));
           }
         }
       }
@@ -265,6 +268,11 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     else {
       return value;
     }
+  }
+
+  private boolean isConfigurationCollectionItemInherited(ConfigurationCollectionData configCollection, ConfigurationData item) {
+    // detect if item was inherited by collection inheritance
+    return !StringUtils.startsWith(item.getResourcePath(), configCollection.getResourcePath());
   }
 
 }

@@ -96,7 +96,7 @@ public class ConfigDataServletTest {
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
-    String expectedJson = buildConfigDataJson("name1", 0);
+    String expectedJson = buildConfigDataJson("name1");
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
@@ -118,9 +118,9 @@ public class ConfigDataServletTest {
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
     String expectedJson = "{configName:'name1',properties:{colProp1:true},items:["
-        + buildConfigDataJson("name1", 1) + ","
-        + buildConfigDataJson("name1", 2)
-        + "],newItem:" + buildConfigDataJson("new", 0) + "}";
+        + buildConfigDataJson("name1", 1, false) + ","
+        + buildConfigDataJson("name1", 2, false)
+        + "],newItem:" + buildConfigDataJson("new") + "}";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
@@ -168,11 +168,11 @@ public class ConfigDataServletTest {
 
     String expectedJson = "{configName:'nestedConfig',overridden:false,properties:["
         + "{name:'param1',default:false,inherited:false,overridden:false},"
-        + "{name:'subConfig',metadata:{label:'subConfig-label',description:'subConfig-desc'},nestedConfig:" + buildConfigDataJson("nestedConfig/subConfig", 0)
+        + "{name:'subConfig',metadata:{label:'subConfig-label',description:'subConfig-desc'},nestedConfig:" + buildConfigDataJson("nestedConfig/subConfig")
         + "},"
         + "{name:'subConfigList',metadata:{label:'subConfigList-label',description:'subConfigList-desc'},nestedConfigCollection:{configName:'nestedConfig/subConfigList',items:["
-        + buildConfigDataJson("nestedConfig/subConfigList", 1) + ","
-        + buildConfigDataJson("nestedConfig/subConfigList", 2)
+        + buildConfigDataJson("nestedConfig/subConfigList", 1, false) + ","
+        + buildConfigDataJson("nestedConfig/subConfigList", 2, false)
         + "]}}"
         + "]}";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
@@ -221,9 +221,14 @@ public class ConfigDataServletTest {
     return valueInfo;
   }
 
-  private String buildConfigDataJson(String configName, int index) {
+  private String buildConfigDataJson(String configName) {
+    return buildConfigDataJson(configName, 0, null);
+  }
+
+  private String buildConfigDataJson(String configName, int index, Boolean inherited) {
     return "{configName:'" + configName + "',overridden:false,"
         + (index > 0 ? "collectionItemName:'item" + index + "'," : "")
+        + (inherited != null ? "inherited:" + inherited.booleanValue() + "," : "")
         + "properties:["
         + "{name:'param1',value:['v1'],effectiveValue:['v1','v2'],default:false,inherited:true,overridden:false,"
         + "metadata:{type:'String',multivalue:true,defaultValue:[],label='param1-label',description:'param1-desc',properties:{custom:'param1-custom'}}},"
@@ -232,5 +237,6 @@ public class ConfigDataServletTest {
         + "{name:'param3',value:true,effectiveValue:false,default:false,inherited:true,overridden:false}"
         + "]}";
   }
+
 
 }
