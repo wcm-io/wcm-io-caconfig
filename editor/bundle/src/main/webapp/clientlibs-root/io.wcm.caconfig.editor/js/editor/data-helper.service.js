@@ -68,7 +68,11 @@
         configData.items = [];
 
         angular.forEach(current.configs, function (config) {
-          var item = {
+          var item;
+          if (config.inherited) {
+            return;
+          }
+          item = {
             collectionItemName: config.collectionItemName,
             properties: buildProperties(config)
           };

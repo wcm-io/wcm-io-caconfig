@@ -24,7 +24,9 @@
       "description": "Description",
       "inheritance": {
         "property": "Enable property inheritance",
-        "collection": "Enable collection inheritance"
+        "collection": "Enable collection inheritance",
+        "collectionItem": "This configuration is inherited via collection inheritance.",
+        "break": "Click here to break inheritance."
       },
     },
     "modal": {

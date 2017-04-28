@@ -33,6 +33,7 @@
     var CONFIG_PROPERTY_INHERIT = "sling:configPropertyInherit";
     var CONFIG_COLLECTION_INHERIT = "sling:configCollectionInherit";
     var that = this;
+    var forceFormModified = false;
 
     that.current = {
       configName: $route.current.params.configName,
@@ -57,10 +58,10 @@
     };
 
     that.saveConfig = function () {
-      if (that.current.configs.length === 0 && Boolean(that.current.collectionProperties[CONFIG_COLLECTION_INHERIT])) {
-        that.removeConfig();
-      }
-      else {
+      // if (that.current.configs.length === 0 && Boolean(that.current.collectionProperties[CONFIG_COLLECTION_INHERIT])) {
+      //   that.removeConfig();
+      // }
+      // else {
         configService.saveCurrentConfig()
           .then(function (redirect) {
             if (redirect) {
@@ -70,7 +71,7 @@
               $rootScope.go(that.current.parent ? that.current.parent.configName : "");
             }
           });
-      }
+      // }
     };
 
     that.removeConfig = function() {
@@ -98,7 +99,8 @@
     };
 
     that.isModified = function (formPristine) {
-      return !formPristine || that.current.originalLength !== that.current.configs.length;
+      return !formPristine || forceFormModified
+        || that.current.originalLength !== that.current.configs.length;
     };
 
     that.handleInheritedChange = function (property) {
@@ -128,6 +130,12 @@
       return configPropertyInherit;
     };
 
+    that.setConfigPropertyInherit = function (config, value) {
+      var configPropertyInherit = that.getConfigPropertyInherit(config);
+      configPropertyInherit.value = value;
+      that.handleConfigPropertyInheritChange(config);
+    };
+
     that.handleConfigPropertyInheritChange = function (config) {
       var configPropertyInherit = that.getConfigPropertyInherit(config);
       if (configPropertyInherit.value) {
@@ -140,6 +148,12 @@
           that.handleInheritedChange(property);
         }
       });
+    };
+
+    that.breakCollectionInheritance = function (config) {
+      config.inherited = false;
+      that.setConfigPropertyInherit(config, true);
+      forceFormModified = true;
     };
 
     /**

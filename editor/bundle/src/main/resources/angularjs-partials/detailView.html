@@ -53,19 +53,24 @@
           <h3 ng-show="detail.current.isCollection">{{config.collectionItemName}}</h3>
         </th>
         <th class="coral-Table-headerCell">
-          <label class="caconfig-propertyInheritance coral-Checkbox">
+          <label class="caconfig-propertyInheritance coral-Checkbox" ng-hide="config.inherited">
             <input class="coral-Checkbox-input" type="checkbox"
+                   ng-disabled="config.inherited"
                    ng-model="detail.getConfigPropertyInherit(config).value"
                    ng-change="detail.handleConfigPropertyInheritChange(config)" />
             <span class="coral-Checkbox-checkmark"></span>
             <span class="coral-Checkbox-description">{{i18n.config.inheritance.property}}</span>
           </label>
+          <p ng-show="config.inherited">
+            {{i18n.config.inheritance.collectionItem}}
+            <span ng-click="detail.breakCollectionInheritance(config)" class="caconfig-link coral-Link">{{i18n.config.inheritance.break}}</span>
+          </p>
         </th>
         <th class="coral-Table-headerCell" style="width: 1%;"></th>
         <th class="coral-Table-headerCell" style="width: 1%;"></th>
         <th class="coral-Table-headerCell" style="width: 1%;">
           <i class="coral-Icon coral-Icon--delete caconfig-delete-item" title="{{i18n.button.deleteItem}}"
-             ng-show="detail.current.isCollection"
+             ng-show="detail.current.isCollection && !config.inherited"
              ng-click="detail.removeCollectionItem($index)"></i>
         </th>
       </tr>
@@ -97,7 +102,8 @@
           <label class="coral-Checkbox">
             <input class="coral-Checkbox-input" type="checkbox"
               ng-model="property.inherited"
-              ng-disabled="!detail.getConfigPropertyInherit(config).value
+              ng-disabled="config.inherited
+                           || !detail.getConfigPropertyInherit(config).value
                            || property.overridden || property.nestedConfig
                            || property.nestedConfigCollection"
               ng-change="detail.handleInheritedChange(property)">

@@ -94,6 +94,7 @@ span.wcm-io-editor.endor-Brand {
   display: inline-block;
 }
 
-.caconfig-breadcrumb .caconfig-breadcrumb-link {
+.caconfig-breadcrumb .caconfig-breadcrumb-link,
+.caconfig-link {
   cursor: pointer;
 }
