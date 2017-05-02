@@ -271,6 +271,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
   }
 
   private boolean isConfigurationCollectionItemInherited(ConfigurationCollectionData configCollection, ConfigurationData item) {
+    // TODO: switch to ConfigurationData#isInherited once updated to org.apache.sling.caconfig.impl 1.4
     // detect if item was inherited by collection inheritance
     return !StringUtils.startsWith(item.getResourcePath(), configCollection.getResourcePath());
   }
