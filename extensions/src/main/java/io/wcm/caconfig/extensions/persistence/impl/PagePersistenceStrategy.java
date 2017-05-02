@@ -34,12 +34,14 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.caconfig.management.ConfigurationManagementSettings;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy2;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
@@ -71,6 +73,9 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
   private static final String DEFAULT_CONFIG_NODE_TYPE = NT_UNSTRUCTURED;
 
   private static final Logger log = LoggerFactory.getLogger(PagePersistenceStrategy.class);
+
+  @Reference
+  private ConfigurationManagementSettings configurationManagementSettings;
 
   private boolean enabled;
 
@@ -157,9 +162,9 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       return false;
     }
     String path = getResourcePath(configResourcePath);
-    ensureContainingPage(resolver, path);
+    ensureContainingPage(resolver, path, configurationManagementSettings);
 
-    getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties());
+    getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties(), configurationManagementSettings);
 
     updatePageLastMod(resolver, path);
     commit(resolver, configResourcePath);
@@ -172,20 +177,20 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       return false;
     }
     String parentPath = getCollectionParentResourcePath(configResourceCollectionParentPath);
-    Resource configResourceParent = getOrCreateResource(resolver, parentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY);
+    Resource configResourceParent = getOrCreateResource(resolver, parentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY, configurationManagementSettings);
 
     // delete existing children and create new ones
     deleteChildren(configResourceParent);
     for (ConfigurationPersistData item : data.getItems()) {
       String path = getCollectionItemResourcePath(parentPath + "/" + item.getCollectionItemName());
-      ensureContainingPage(resolver, path);
-      getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties());
+      ensureContainingPage(resolver, path, configurationManagementSettings);
+      getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties(), configurationManagementSettings);
       updatePageLastMod(resolver, path);
     }
 
     // if resource collection parent properties are given replace them as well
     if (data.getProperties() != null) {
-      replaceProperties(configResourceParent, data.getProperties());
+      replaceProperties(configResourceParent, data.getProperties(), configurationManagementSettings);
     }
 
     commit(resolver, configResourceCollectionParentPath);

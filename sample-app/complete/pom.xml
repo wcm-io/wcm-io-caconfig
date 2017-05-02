@@ -43,7 +43,8 @@
     <dependency-includeArtifactIds>
       org.apache.sling.caconfig.api,
       org.apache.sling.caconfig.spi,
-      org.apache.sling.caconfig.impl
+      org.apache.sling.caconfig.impl,
+      org.apache.sling.commons.johnzon
     </dependency-includeArtifactIds>
   </properties>
 
@@ -69,6 +70,11 @@
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.caconfig.impl</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.commons.johnzon</artifactId>
       <scope>compile</scope>
     </dependency>
 

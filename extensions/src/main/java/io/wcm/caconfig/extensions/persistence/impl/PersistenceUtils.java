@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +36,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ResourceUtil;
+import org.apache.sling.caconfig.management.ConfigurationManagementSettings;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceAccessDeniedException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.slf4j.Logger;
@@ -62,20 +64,23 @@ final class PersistenceUtils {
     return JCR_CONTENT_PATTERN.matcher(path).matches();
   }
 
-  public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath) {
-    ensureContainingPage(resolver, configResourcePath, null, null);
+  public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath,
+      ConfigurationManagementSettings configurationManagementSettings) {
+    ensureContainingPage(resolver, configResourcePath, null, null, configurationManagementSettings);
   }
 
-  public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath, String template, String parentTemplate) {
+  public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath, String template, String parentTemplate,
+      ConfigurationManagementSettings configurationManagementSettings) {
     Matcher matcher = PAGE_PATH_PATTERN.matcher(configResourcePath);
     if (!matcher.matches()) {
       return;
     }
     String pagePath = matcher.group(1);
-    ensurePage(resolver, pagePath, template, parentTemplate);
+    ensurePage(resolver, pagePath, template, parentTemplate, configurationManagementSettings);
   }
 
-  private static Resource ensurePage(ResourceResolver resolver, String pagePath, String template, String parentTemplate) {
+  private static Resource ensurePage(ResourceResolver resolver, String pagePath, String template, String parentTemplate,
+      ConfigurationManagementSettings configurationManagementSettings) {
     // check if page or resource already exists
     Resource resource = resolver.getResource(pagePath);
     if (resource != null) {
@@ -87,10 +92,10 @@ final class PersistenceUtils {
     String pageName = ResourceUtil.getName(pagePath);
     Resource parentResource;
     if (StringUtils.isNotEmpty(parentTemplate)) {
-      parentResource = ensurePage(resolver, parentPath, parentTemplate, parentTemplate);
+      parentResource = ensurePage(resolver, parentPath, parentTemplate, parentTemplate, configurationManagementSettings);
     }
     else {
-      parentResource = getOrCreateResource(resolver, parentPath, DEFAULT_FOLDER_NODE_TYPE, null);
+      parentResource = getOrCreateResource(resolver, parentPath, DEFAULT_FOLDER_NODE_TYPE, null, configurationManagementSettings);
     }
 
     // create page
@@ -135,11 +140,12 @@ final class PersistenceUtils {
     }
   }
 
-  public static Resource getOrCreateResource(ResourceResolver resolver, String path, String defaultNodeType, Map<String, Object> properties) {
+  public static Resource getOrCreateResource(ResourceResolver resolver, String path, String defaultNodeType, Map<String, Object> properties,
+      ConfigurationManagementSettings configurationManagementSettings) {
     try {
       Resource resource = ResourceUtil.getOrCreateResource(resolver, path, defaultNodeType, defaultNodeType, false);
       if (properties != null) {
-        replaceProperties(resource, properties);
+        replaceProperties(resource, properties, configurationManagementSettings);
       }
       return resource;
     }
@@ -160,7 +166,8 @@ final class PersistenceUtils {
     }
   }
 
-  public static void replaceProperties(Resource resource, Map<String, Object> properties) {
+  public static void replaceProperties(Resource resource, Map<String, Object> properties,
+      ConfigurationManagementSettings configurationManagementSettings) {
     if (log.isTraceEnabled()) {
       log.trace("! Store properties for resource {}: {}", resource.getPath(), properties);
     }
@@ -168,13 +175,14 @@ final class PersistenceUtils {
     if (modValueMap == null) {
       throw new ConfigurationPersistenceAccessDeniedException("No write access: Unable to store configuration data to " + resource.getPath() + ".");
     }
-    // remove all existing properties that do not have jcr: namespace
-    for (String propertyName : new HashSet<>(modValueMap.keySet())) {
-      if (StringUtils.startsWith(propertyName, "jcr:")) {
-        continue;
-      }
+
+    // remove all existing properties that are not filtered
+    Set<String> propertyNamesToRemove = new HashSet<>(modValueMap.keySet());
+    PropertiesFilterUtil.removeIgnoredProperties(propertyNamesToRemove, configurationManagementSettings);
+    for (String propertyName : propertyNamesToRemove) {
       modValueMap.remove(propertyName);
     }
+
     modValueMap.putAll(properties);
   }
 

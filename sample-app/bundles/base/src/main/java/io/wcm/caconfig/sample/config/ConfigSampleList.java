@@ -34,4 +34,16 @@ public @interface ConfigSampleList {
   @Property(label = "String Param", description = "This is a string parameter within the configuration list.")
   String stringParam();
 
+  /**
+   * @return String parameter
+   */
+  @Property(label = "String Param 2", description = "This is a string parameter within the configuration list.")
+  String stringParam2();
+
+  /**
+   * @return String parameter
+   */
+  @Property(label = "String Param 3", description = "This is a string parameter within the configuration list.")
+  String stringParam3();
+
 }

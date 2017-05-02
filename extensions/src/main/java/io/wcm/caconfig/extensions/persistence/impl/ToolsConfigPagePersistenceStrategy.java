@@ -48,6 +48,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.caconfig.management.ConfigurationManagementSettings;
 import org.apache.sling.caconfig.management.multiplexer.ContextPathStrategyMultiplexer;
 import org.apache.sling.caconfig.resource.spi.ConfigurationResourceResolvingStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
@@ -104,6 +105,8 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
 
   @Reference
   private ContextPathStrategyMultiplexer contextPathStrategy;
+  @Reference
+  private ConfigurationManagementSettings configurationManagementSettings;
 
 
   // --- ConfigurationPersitenceStrategy ---
@@ -174,9 +177,9 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
       return false;
     }
     String path = getResourcePath(configResourcePath);
-    ensureContainingPage(resolver, path, config.configPageTemplate(), config.structurePageTemplate());
+    ensureContainingPage(resolver, path, config.configPageTemplate(), config.structurePageTemplate(), configurationManagementSettings);
 
-    getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties());
+    getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties(), configurationManagementSettings);
 
     updatePageLastMod(resolver, path);
     commit(resolver, configResourcePath);
@@ -188,19 +191,21 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     if (!enabled || !isConfigPagePath(configResourceCollectionParentPath)) {
       return false;
     }
-    ensureContainingPage(resolver, configResourceCollectionParentPath, config.configPageTemplate(), config.structurePageTemplate());
-    Resource configResourceParent = getOrCreateResource(resolver, configResourceCollectionParentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY);
+    ensureContainingPage(resolver, configResourceCollectionParentPath, config.configPageTemplate(), config.structurePageTemplate(),
+        configurationManagementSettings);
+    Resource configResourceParent = getOrCreateResource(resolver, configResourceCollectionParentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY,
+        configurationManagementSettings);
 
     // delete existing children and create new ones
     deleteChildren(configResourceParent);
     for (ConfigurationPersistData item : data.getItems()) {
       String path = configResourceParent.getPath() + "/" + item.getCollectionItemName();
-      getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties());
+      getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties(), configurationManagementSettings);
     }
 
     // if resource collection parent properties are given replace them as well
     if (data.getProperties() != null) {
-      replaceProperties(configResourceParent, data.getProperties());
+      replaceProperties(configResourceParent, data.getProperties(), configurationManagementSettings);
     }
 
     updatePageLastMod(resolver, configResourceCollectionParentPath);

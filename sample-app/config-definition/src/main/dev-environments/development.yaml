@@ -8,6 +8,13 @@ nodes:
     variant: aem-author
   - role: sample-aem-cms
     variant: aem-author
+#  config:
+#    replication.author.publishTargets:
+#    - name: publish1
+#      url: http://localhost:4503
+#      transportUser: admin
+#      # Has to be encrypted with the correct key, see http://www.wemblog.com/2012/03/how-to-use-crypto-support-in-cq55.html
+#      transportPassword: "{44704fe8b2e168e63bf1453db0c32b06d2f41be1ed7264c53ffecc5dcdf44e83}"
 
 - node: aem-publish
   roles:

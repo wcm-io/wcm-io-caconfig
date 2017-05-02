@@ -38,4 +38,10 @@ public @interface ConfigSampleSub2 {
   @Property(label = "Sub Config", description = "Nested configuration")
   ConfigSampleSub sub();
 
+  /**
+   * @return Sub Config list
+   */
+  @Property(label = "Sub Config List", description = "Nested configuration")
+  ConfigSampleSub[] subList();
+
 }
