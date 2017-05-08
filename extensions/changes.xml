@@ -23,9 +23,9 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.0.2" date="not released">
+    <release version="1.0.2" date="2017-05-08">
       <action type="update" dev="sseifert">
-        Apply property filter for configuration persistence provied by Apache Sling Context-Aware Configuration Management Settings.
+        Apply property filter for configuration persistence provided by Apache Sling Context-Aware Configuration Management Settings.
       </action>
     </release>
 

@@ -146,7 +146,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
     JSONArray items = new JSONArray();
     for (ConfigurationData configData : configCollection.getItems()) {
-      items.put(toJson(configData, isConfigurationCollectionItemInherited(configCollection, configData)));
+      items.put(toJson(configData, configData.isInherited()));
     }
     result.put("items", items);
 
@@ -268,12 +268,6 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     else {
       return value;
     }
-  }
-
-  private boolean isConfigurationCollectionItemInherited(ConfigurationCollectionData configCollection, ConfigurationData item) {
-    // TODO: switch to ConfigurationData#isInherited once updated to org.apache.sling.caconfig.impl 1.4
-    // detect if item was inherited by collection inheritance
-    return !StringUtils.startsWith(item.getResourcePath(), configCollection.getResourcePath());
   }
 
 }
