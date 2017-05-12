@@ -66,7 +66,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     @AttributeDefinition(name = "Context path blacklist",
         description = "Expression to match context paths. Context paths matching this expression are not allowed.",
         required = true)
-    String contextPathBlacklistRegex() default "^.*/tools(/config)?$";
+    String contextPathBlacklistRegex() default "^.*/tools(/config(/.+)?)?$";
 
     @AttributeDefinition(name = "Config path patterns",
         description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.",
