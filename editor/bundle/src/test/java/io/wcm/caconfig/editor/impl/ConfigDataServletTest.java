@@ -96,7 +96,7 @@ public class ConfigDataServletTest {
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
-    String expectedJson = buildConfigDataJson("name1");
+    String expectedJson = buildConfigDataJson("name1", false);
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
@@ -120,7 +120,7 @@ public class ConfigDataServletTest {
     String expectedJson = "{configName:'name1',properties:{colProp1:true},items:["
         + buildConfigDataJson("name1", 1, false) + ","
         + buildConfigDataJson("name1", 2, false)
-        + "],newItem:" + buildConfigDataJson("new") + "}";
+        + "],newItem:" + buildConfigDataJson("new", null) + "}";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
@@ -166,9 +166,10 @@ public class ConfigDataServletTest {
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
-    String expectedJson = "{configName:'nestedConfig',overridden:false,properties:["
+    String expectedJson = "{configName:'nestedConfig',overridden:false,inherited:false,properties:["
         + "{name:'param1',default:false,inherited:false,overridden:false},"
-        + "{name:'subConfig',metadata:{label:'subConfig-label',description:'subConfig-desc'},nestedConfig:" + buildConfigDataJson("nestedConfig/subConfig")
+        + "{name:'subConfig',metadata:{label:'subConfig-label',description:'subConfig-desc'},nestedConfig:"
+        + buildConfigDataJson("nestedConfig/subConfig", null)
         + "},"
         + "{name:'subConfigList',metadata:{label:'subConfigList-label',description:'subConfigList-desc'},nestedConfigCollection:{configName:'nestedConfig/subConfigList',items:["
         + buildConfigDataJson("nestedConfig/subConfigList", 1, false) + ","
@@ -221,8 +222,8 @@ public class ConfigDataServletTest {
     return valueInfo;
   }
 
-  private String buildConfigDataJson(String configName) {
-    return buildConfigDataJson(configName, 0, null);
+  private String buildConfigDataJson(String configName, Boolean inherited) {
+    return buildConfigDataJson(configName, 0, inherited);
   }
 
   private String buildConfigDataJson(String configName, int index, Boolean inherited) {
