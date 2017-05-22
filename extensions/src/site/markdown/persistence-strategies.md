@@ -4,9 +4,9 @@
 
 By default Sling Context-Aware Configuration stores configuration in a hierarchy of nodes below `/conf` using `nt:unstructured` node types. This is simple enough, but it makes it difficult to apply operations like replication on it in AEM.
 
-Thus it would be good when configuration can be stored in `cq:Page` nodes as it is done by the "AEM ConfMgr" for AEM. AEM 6.3 ships with such an Persistence Strategy, but it only supports read access to configuration, not write access.
+Thus it would be good when configuration can be stored in `cq:Page` nodes as it is done by the "AEM ConfMgr" for AEM. AEM 6.3 ships with such an Persistence Strategy, but it only supports read access to configuration, no write access.
 
-wcm.io Extensions for AEM provide additionally persistence strategy implementations
+wcm.io Context-Aware Configuration Extensions for AEM provides additional persistence strategy implementations.
 
 
 ### Persistence Strategy: AEM Page

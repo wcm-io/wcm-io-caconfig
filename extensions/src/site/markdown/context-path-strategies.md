@@ -6,7 +6,7 @@ To provide context-aware configuration you have to define the context first. In 
 
 But when you have a lot of contexts (e.g. 1,000 sites worldwide), and all your context/config path mappings follow the same schema, it is tedious to define all these `@sling:configRef` properties and keeping them in sync when the content moves.
 
-wcm.io Configuration Extensions for AEM provides two alternatives for defining contexts without the need to set such properties. Both are configured via OSGi and support filtering by context path. You can define different strategies for different content areas by adding multiple factory configurations.
+wcm.io Context-Aware Configuration Extensions for AEM provides two alternatives for defining contexts without the need to set such properties. Both are configured via OSGi and support filtering by context path. You can define different strategies for different content areas by adding multiple factory configurations.
 
 ### Context Path Strategy: Absolute Parents
 
