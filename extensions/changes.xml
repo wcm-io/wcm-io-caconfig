@@ -33,6 +33,9 @@
       <action type="update" dev="sseifert">
         Persistence strategies: Make service ranking configurable.
       </action>
+      <action type="update" dev="sseifert">
+        Context path strategies: Pass configured service ranking to context resource.
+      </action>
     </release>
 
     <release version="1.0.2" date="2017-05-08">

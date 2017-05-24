@@ -96,6 +96,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
   private int maxLevel;
   private Pattern contextPathRegex;
   private String[] configPathPatterns;
+  private int serviceRanking;
 
   private static final Logger log = LoggerFactory.getLogger(RootTemplateContextPathStrategy.class);
 
@@ -111,6 +112,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
       log.warn("Invalid context path regex: " + config.contextPathRegex(), ex);
     }
     configPathPatterns = config.configPathPatterns();
+    serviceRanking = config.service_ranking();
   }
 
   @Override
@@ -127,7 +129,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
         for (String configPathPattern : configPathPatterns) {
           String configRef = deriveConfigRef(contextPath, configPathPattern);
           if (configRef != null) {
-            contextResources.add(new ContextResource(contextResource, configRef));
+            contextResources.add(new ContextResource(contextResource, configRef, serviceRanking));
           }
         }
       }

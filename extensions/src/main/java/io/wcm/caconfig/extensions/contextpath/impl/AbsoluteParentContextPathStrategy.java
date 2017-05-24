@@ -85,6 +85,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
   private Pattern contextPathRegex;
   private Pattern contextPathBlacklistRegex;
   private String[] configPathPatterns;
+  private int serviceRanking;
 
   private static final Logger log = LoggerFactory.getLogger(AbsoluteParentContextPathStrategy.class);
 
@@ -111,6 +112,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
       }
     }
     configPathPatterns = config.configPathPatterns();
+    serviceRanking = config.service_ranking();
   }
 
   @Override
@@ -128,7 +130,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
           for (String configPathPattern : configPathPatterns) {
             String configRef = deriveConfigRef(contextPath, configPathPattern);
             if (configRef != null) {
-              contextResources.add(new ContextResource(contextResource, configRef));
+              contextResources.add(new ContextResource(contextResource, configRef, serviceRanking));
             }
           }
         }
