@@ -38,7 +38,6 @@ import org.apache.sling.caconfig.management.ConfigurationManagementSettings;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy2;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -56,8 +55,7 @@ import org.slf4j.LoggerFactory;
  * node. Unlike the persistence strategy in AEM 6.3 this also supports writing configuration to /conf.
  * </p>
  */
-@Component(service = ConfigurationPersistenceStrategy2.class,
-    property = Constants.SERVICE_RANKING + ":Integer=500")
+@Component(service = ConfigurationPersistenceStrategy2.class)
 @Designate(ocd = PagePersistenceStrategy.Config.class)
 public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy2 {
 
@@ -68,6 +66,11 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     @AttributeDefinition(name = "Enabled",
         description = "Enable this persistence strategy.")
     boolean enabled() default false;
+
+    @AttributeDefinition(name = "Service Ranking",
+        description = "Priority of persistence strategy (higher = higher priority).")
+    int service_ranking() default 1500;
+
   }
 
   private static final String DEFAULT_CONFIG_NODE_TYPE = NT_UNSTRUCTURED;

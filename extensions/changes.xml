@@ -30,6 +30,9 @@
       <action type="update" dev="sseifert">
         Absolute Parents Context Path Strategy: Include all resources below tools/config in blacklist pattern.
       </action>
+      <action type="update" dev="sseifert">
+        Persistence strategies: Make service ranking configurable.
+      </action>
     </release>
 
     <release version="1.0.2" date="2017-05-08">
