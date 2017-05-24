@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.0.4" date="not released">
+      <action type="fix" dev="sseifert">
+        ToolsConfigPagePersistenceStrategy: Fix resource collection resolving when multiple bucket names are configured.
+      </action>
       <action type="update" dev="sseifert">
         Absolute Parents Context Path Strategy: Include all resources below tools/config in blacklist pattern.
       </action>

@@ -361,7 +361,10 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
         String name = bucketName + "/" + configName;
         String configPath = buildResourcePath(path, name);
         item = resourceResolver.getResource(configPath);
-        if (item == null) {
+        if (item != null) {
+          break;
+        }
+        else {
           log.trace("- No collection parent resource found: {}", configPath);
         }
       }
