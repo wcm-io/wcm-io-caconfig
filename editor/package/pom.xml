@@ -55,11 +55,27 @@
 
   <build>
     <finalName>${content-package-name}-${project.version}</finalName>
+
+    <resources>
+      <!-- Include all files from jcr_root in content package -->
+      <resource>
+        <directory>jcr_root</directory>
+      </resource>
+      <!-- custom package thumbnail -->
+      <resource>
+        <directory>src/main/resources/META-INF/vault/definition</directory>
+        <targetPath>../vault-work/META-INF/vault/definition</targetPath>
+      </resource>
+    </resources>
+
     <plugins>
 
       <plugin>
-        <groupId>com.day.jcr.vault</groupId>
-        <artifactId>content-package-maven-plugin</artifactId>
+        <groupId>io.wcm.maven.plugins</groupId>
+        <artifactId>wcmio-content-package-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <!-- TODO: remove once updated to aem-global-parent 1.2.0 or higher -->
+        <version>1.4.3-SNAPSHOT</version>
         <configuration>
           <name>${content-package-name}</name>
           <group>${content-package-group}</group>
