@@ -6,7 +6,7 @@ To provide context-aware configuration you have to define the context first. In 
 
 But when you have a lot of contexts (e.g. 1,000 sites worldwide), and all your context/config path mappings follow the same schema, it is tedious to define all these `@sling:configRef` properties and keeping them in sync when the content moves.
 
-wcm.io Configuration Extensions for AEM provides two alternatives for defining contexts without the need to set such properties. Both are configured via OSGi and support filtering by context path. You can define different strategies for different content areas by adding multiple factory configurations.
+wcm.io Context-Aware Configuration Extensions for AEM provides two alternatives for defining contexts without the need to set such properties. Both are configured via OSGi and support filtering by context path. You can define different strategies for different content areas by adding multiple factory configurations.
 
 ### Context Path Strategy: Absolute Parents
 
@@ -41,14 +41,18 @@ OSGi factory configuration: "wcm.io Context-Aware Configuration Context Path Str
 * **Config path patterns**: Expression to derive the config path from the context path. Regex group references like `$1` can be used.
 * **Service Ranking**: Priority of context path strategy
 
+
+Detects context paths by matching parent pages against a list of allowed templates for context root. All page between min and max level up to a page with a page matching the templates are defined as context paths.
+
 Example:
 
 ```
   io.wcm.caconfig.extensions.contextpath.impl.RootTemplateContextPathStrategy-example
     templatePaths=["/apps/app1/templates/homepage"]
+    minLevel=I"1"
     maxLevel=I"4"
     contextPathRegex="^/content(/.+)$"
     configPathPatterns=["/conf$1"]
 ```
 
-With this configuration all content pages with the template `/apps/app1/templates/homepage` and a maximum absolute parent level of 4 would be detected as contexts. For a homepage with path `/content/example/en` the configuration would be stored in `/conf/example/en`.
+If a page with the configured template exists at level 3 (e.g. `/content/tenant/country/en`), the levels 1, 2, 3 would be considered as context paths (e.g. `/content/tenant`, `/content/tenant/country`, `/content/tenant/country/en`).

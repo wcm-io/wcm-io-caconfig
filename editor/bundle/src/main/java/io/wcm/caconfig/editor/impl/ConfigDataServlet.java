@@ -123,7 +123,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     else {
       ConfigurationData configData = configManager.getConfiguration(contextResource, configName);
       if (configData != null) {
-        result = toJson(configData, null);
+        result = toJson(configData, configData.isInherited());
       }
       else {
         result = null;

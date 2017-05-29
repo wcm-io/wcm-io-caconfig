@@ -55,7 +55,6 @@ import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy2;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -71,8 +70,7 @@ import org.slf4j.LoggerFactory;
  * In this case the configuration date is stored in a single page at /tools/config which can be easily activated by
  * editors via the authoring GUI, and the configuration can neatly be packaged together with the content.
  */
-@Component(service = { ConfigurationPersistenceStrategy2.class, ConfigurationResourceResolvingStrategy.class },
-    property = Constants.SERVICE_RANKING + ":Integer=2000")
+@Component(service = { ConfigurationPersistenceStrategy2.class, ConfigurationResourceResolvingStrategy.class })
 @Designate(ocd = ToolsConfigPagePersistenceStrategy.Config.class)
 public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersistenceStrategy2, ConfigurationResourceResolvingStrategy {
 
@@ -91,6 +89,11 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     @AttributeDefinition(name = "Structure Template",
         description = "Template that is used for the tools page.")
     String structurePageTemplate();
+
+    @AttributeDefinition(name = "Service Ranking",
+        description = "Priority of persistence strategy (higher = higher priority).")
+    int service_ranking() default 2000;
+
   }
 
   private static final String RELATIVE_CONFIG_PATH = "/tools/config/jcr:content";
@@ -361,7 +364,10 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
         String name = bucketName + "/" + configName;
         String configPath = buildResourcePath(path, name);
         item = resourceResolver.getResource(configPath);
-        if (item == null) {
+        if (item != null) {
+          break;
+        }
+        else {
           log.trace("- No collection parent resource found: {}", configPath);
         }
       }

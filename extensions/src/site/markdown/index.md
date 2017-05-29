@@ -1,4 +1,4 @@
-## About Configuration Extensions for AEM
+## About Context-Aware Configuration Extensions for AEM
 
 AEM-specific extensions for Apache Sling Context-Aware Configuration.
 
