@@ -70,7 +70,7 @@
         <artifactId>wcmio-content-package-maven-plugin</artifactId>
         <extensions>true</extensions>
         <!-- TODO: remove once updated to aem-global-parent 1.2.0 or higher -->
-        <version>1.4.3-SNAPSHOT</version>
+        <version>1.5.0</version>
         <configuration>
           <name>${content-package-name}</name>
           <group>${content-package-group}</group>
