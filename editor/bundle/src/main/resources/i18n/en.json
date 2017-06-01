@@ -2,6 +2,7 @@
   "io.wcm.caconfig.editor": {
     "title": "Configuration Editor",
     "contextPath": "Context Path",
+    "noContextPath": "No context path detected.",
     "button": {
       "add": "Add",
       "addItem": "Add Item",
