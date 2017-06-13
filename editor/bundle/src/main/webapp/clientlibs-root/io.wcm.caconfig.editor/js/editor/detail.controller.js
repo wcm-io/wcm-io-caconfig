@@ -150,7 +150,7 @@
       });
     };
 
-    that.breakCollectionInheritance = function (config) {
+    that.breakInheritance = function (config) {
       config.inherited = false;
       that.setConfigPropertyInherit(config, true);
       forceFormModified = true;

@@ -62,8 +62,8 @@
             <span class="coral-Checkbox-description">{{i18n.config.inheritance.property}}</span>
           </label>
           <p ng-show="config.inherited">
-            {{i18n.config.inheritance.collectionItem}}
-            <span ng-click="detail.breakCollectionInheritance(config)" class="caconfig-link coral-Link">{{i18n.config.inheritance.break}}</span>
+            {{detail.current.isCollection ? i18n.config.inheritance.collectionItem : i18n.config.inheritance.config}}
+            <span ng-click="detail.breakInheritance(config)" class="caconfig-link coral-Link">{{i18n.config.inheritance.break}}</span>
           </p>
         </th>
         <th class="coral-Table-headerCell" style="width: 1%;"></th>
@@ -89,7 +89,10 @@
         <td class="coral-Table-cell">
           {{property.metadata.label || property.name}}
         </td>
-        <td class="coral-Table-cell" caconfig-parameter-value="property" caconfig-is-new-item="config.isNewItem">
+        <td class="coral-Table-cell"
+            caconfig-parameter-value="property"
+            caconfig-is-new-item="config.isNewItem"
+            caconfig-is-config-inherited="config.inherited">
         </td>
         <td class="coral-Table-cell">
           <caconfig-description-popup ng-show="property.metadata.description">

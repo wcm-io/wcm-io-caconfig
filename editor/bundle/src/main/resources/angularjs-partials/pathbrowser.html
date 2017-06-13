@@ -8,7 +8,7 @@
              ng-readonly="true"
              ng-model="parameter.effectiveValue" />
       <span class="coral-InputGroup-button">
-        <button class="coral-Button coral-Button--square caconfig-disabled-button"
+        <button class="coral-Button coral-Button--square caconfig-disableable-button"
                 type="button" title="{{i18n.button.browse}}"
                 ng-disabled="true">
           <i class="coral-Icon coral-Icon--sizeS coral-Icon--folderSearch"></i>
@@ -21,10 +21,13 @@
     <span class="coral-InputGroup coral-InputGroup--block">
       <input class="coral-InputGroup-input coral-Textfield js-coral-pathbrowser-input"
              type="text" autocomplete="off"
+             ng-disabled="isConfigInherited"
+             ng-readonly="isConfigInherited"
              ng-model="parameter.value" />
       <span class="coral-InputGroup-button">
-        <button class="coral-Button coral-Button--square js-coral-pathbrowser-button"
-                type="button" title="{{i18n.button.browse}}">
+        <button class="coral-Button coral-Button--square js-coral-pathbrowser-button caconfig-disableable-button"
+                type="button" title="{{i18n.button.browse}}"
+                ng-disabled="isConfigInherited">
           <i class="coral-Icon coral-Icon--sizeS coral-Icon--folderSearch"></i>
         </button>
       </span>

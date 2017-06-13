@@ -11,11 +11,12 @@
            ng-hide="type==='checkbox'"
            ng-disabled="true" />
     <div class="coral-ButtonGroup">
-      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary"
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
+              ng-disabled="isConfigInherited"
               ng-click="addNewValue(0)">
         <i class="coral-Icon coral-Icon--add"></i>
       </button>
-      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disabled-button"
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
               ng-disabled="true">
         <i class="coral-Icon coral-Icon--minus"></i>
       </button>
@@ -37,11 +38,11 @@
            ng-readonly="true"
            ng-model="effectiveValue.value" />
     <div class="coral-ButtonGroup">
-      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disabled-button"
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
               ng-disabled="true">
         <i class="coral-Icon coral-Icon--add"></i>
       </button>
-      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disabled-button"
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
               ng-disabled="true">
         <i class="coral-Icon coral-Icon--minus"></i>
       </button>
@@ -52,19 +53,25 @@
     <label class="coral-Checkbox"
            ng-show="type==='checkbox'">
       <input class="coral-Checkbox-input" type="checkbox"
+             ng-disabled="isConfigInherited"
+             ng-readonly="isConfigInherited"
              ng-model="value.value" />
       <span class="coral-Checkbox-checkmark"></span>
     </label>
     <input class="coral-Textfield" type="type"
            ng-hide="type==='checkbox'"
+           ng-disabled="isConfigInherited"
+           ng-readonly="isConfigInherited"
            ng-model="value.value"
            ng-pattern="pattern" />
     <div class="coral-ButtonGroup">
-      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary"
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
+              ng-disabled="isConfigInherited"
               ng-click="addNewValue($index)">
         <i class="coral-Icon coral-Icon--add"></i>
       </button>
-      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary"
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
+              ng-disabled="isConfigInherited"
               ng-click="removeValue($index)">
         <i class="coral-Icon coral-Icon--minus"></i>
       </button>

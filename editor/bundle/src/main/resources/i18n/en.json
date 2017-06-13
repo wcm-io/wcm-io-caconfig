@@ -24,6 +24,7 @@
       "description": "Description",
       "inheritance": {
         "property": "Enable property inheritance",
+        "config": "This configuration is inherited.",
         "collection": "Enable collection inheritance",
         "collectionItem": "This configuration is inherited via collection inheritance.",
         "break": "Click here to break inheritance."
