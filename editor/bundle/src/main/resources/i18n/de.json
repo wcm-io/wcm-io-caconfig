@@ -2,7 +2,7 @@
   "io.wcm.caconfig.editor": {
     "title": "Konfiguration bearbeiten",
     "contextPath": "Kontext-Pfad",
-    "noContextPath": "Kontext-Pfad nicht erkennbar.",
+    "noContextPath": "Der Kontext-Pfad konnte nicht ermittelt werden.",
     "button": {
       "add": "Hinzufügen",
       "addItem": "Element hinzufügen",
