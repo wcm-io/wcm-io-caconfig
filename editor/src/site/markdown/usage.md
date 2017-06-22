@@ -15,16 +15,21 @@ See [Apache Sling Context-Aware Configuration documentation][sling-caconfig] for
 
 In most cases you will deploy the configuration editor bundle `io.wcm.caconfig.editor` together with your application. In this case you should define your own template definition for it which controls where editor config pages can created (see next section).
 
-Alternatively you can deploy this AEM package which contains the config editor bundle together with a template definitions which allows all paths below `/content`:
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package)
+Alternatively you can deploy this AEM package which contains the config editor bundle together with a template definition which allows all paths below `/content`:
 
-When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles (API, SPI, Impl) to AEM.
+|---|---|---|
+| [wcm.io Context-Aware Configuration Editor AEM Package with Template Definition](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package) |
+
+
+When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles (API, SPI, Impl) to AEM. In AEM 6.3 you have to update the Apache Sling Context-Aware Configuration SPI and Impl version to the latest version if you want to use Editor version 1.1 and upwards. See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-caconfig-in-aem] for details.
+
+In most cases the default persistence implementation provided by Apache Sling or AEM 6.3 is not enough for the needs of AEM applications. [wcm.io Context-Aware Configuration Extensions][wcmio-caconfig-extensions] provide additional implementations and features.
 
 
 ### Defining the editor template
 
 The editor application contains an AEM template definition, but it is deactivated by default. Each application
-has to define it's own editor template with fitting `allowedPaths`-Definitions and title depending
+has to define it's own editor template with a fitting `allowedPaths` definition and title depending
 on the needs of the application.
 
 Only the template has to be defined, the page component resource type can be referenced. Example:
@@ -63,6 +68,31 @@ For a configuration collection all existing collection items are displayed, and 
 The editor is based on AngularJS and CoralUI.
 
 
+### Using custom edit widgets
+
+For each data type (string, number, boolean) the fitting edit widget is chosen automatically. Alternatively you can define custom widgets via extra properties on the `@Property` annotation. Currently only `pathbrowser` is supported.
+
+Define a path browser widget for a string parameter with fixed path:
+
+```java
+@Property(label = "DAM Path", description = "Browse DAM assets.", property = {
+    "widgetType=pathbrowser",
+    "pathbrowserRootPath=/content/dam"
+})
+String damPath();
+```
+
+Define a path browser widget for a string parameter with the current configuration context path as root path:
+
+```java
+@Property(label = "Context Path", description = "Browse pages in the current site.", property = {
+    "widgetType=pathbrowser",
+    "pathbrowserRootPathContext=true"
+})
+String contextPath();
+```
+
+
 ### Disable Editor on Publish
 
 You should disable the configuration editor on publish by applying an OSGi configuration like this:
@@ -78,3 +108,5 @@ You should disable the configuration editor on publish by applying an OSGi confi
 
 
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
+[deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
+[wcmio-caconfig-extensions]: http://wcm.io/caconfig/extensions/

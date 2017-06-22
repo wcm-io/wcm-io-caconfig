@@ -36,15 +36,11 @@ import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
 
 /**
  * {@link ContextPathStrategy} that detects context paths by absolute parent levels of a context resource.
@@ -62,35 +58,34 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         required = true)
     int[] levels();
 
-    @AttributeDefinition(name = "Context path expression",
-        description = "Expression to match context paths. Only context paths matching this expression are allowed.",
+    @AttributeDefinition(name = "Context path whitelist",
+        description = "Expression to match context paths. Context paths matching this expression are allowed. Use groups to reference them in configPathPatterns.",
         required = true)
-    String contextPathRegex() default "^(/content/.+)$";
+    String contextPathRegex() default "^/content(/.+)$";
 
-    @AttributeDefinition(name = "Config path pattern",
+    @AttributeDefinition(name = "Context path blacklist",
+        description = "Expression to match context paths. Context paths matching this expression are not allowed.",
+        required = true)
+    String contextPathBlacklistRegex() default "^.*/tools(/config(/.+)?)?$";
+
+    @AttributeDefinition(name = "Config path patterns",
         description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.",
         required = true)
-    String configPathPattern() default "/conf$1";
-
-    @AttributeDefinition(name = "Application ID",
-        description = "Optional: Apply context path strategy only for context resources associated with the given Application ID.")
-    String applicationId() default "";
+    String[] configPathPatterns() default "/conf$1";
 
     @AttributeDefinition(name = "Service Ranking",
-        description = "Priority of configuration override providers (higher = higher priority).")
-    int service_ranking() default 0;
+        description = "Priority of context path strategy (higher = higher priority).")
+    int service_ranking() default 2000;
 
     String webconsole_configurationFactory_nameHint() default "{applicationId} levels={levels}";
 
   }
 
-  @Reference
-  private ApplicationFinder applicationFinder;
-
   private Set<Integer> levels;
   private Pattern contextPathRegex;
-  private String configPathPattern;
-  private String applicationId;
+  private Pattern contextPathBlacklistRegex;
+  private String[] configPathPatterns;
+  private int serviceRanking;
 
   private static final Logger log = LoggerFactory.getLogger(AbsoluteParentContextPathStrategy.class);
 
@@ -108,13 +103,21 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     catch (PatternSyntaxException ex) {
       log.warn("Invalid context path regex: " + config.contextPathRegex(), ex);
     }
-    configPathPattern = config.configPathPattern();
-    applicationId = config.applicationId();
+    if (StringUtils.isNotEmpty(config.contextPathBlacklistRegex())) {
+      try {
+        contextPathBlacklistRegex = Pattern.compile(config.contextPathBlacklistRegex());
+      }
+      catch (PatternSyntaxException ex) {
+        log.warn("Invalid context path blacklist regex: " + config.contextPathBlacklistRegex(), ex);
+      }
+    }
+    configPathPatterns = config.configPathPatterns();
+    serviceRanking = config.service_ranking();
   }
 
   @Override
   public Iterator<ContextResource> findContextResources(Resource resource) {
-    if (!isValidConfig() || !matchesApplication(resource)) {
+    if (!isValidConfig()) {
       return Collections.emptyIterator();
     }
 
@@ -124,9 +127,11 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
       if (StringUtils.isNotEmpty(contextPath)) {
         Resource contextResource = resource.getResourceResolver().getResource(contextPath);
         if (contextResource != null) {
-          String configRef = deriveConfigRef(contextPath);
-          if (configRef != null) {
-            contextResources.add(new ContextResource(contextResource, configRef));
+          for (String configPathPattern : configPathPatterns) {
+            String configRef = deriveConfigRef(contextPath, configPathPattern);
+            if (configRef != null) {
+              contextResources.add(new ContextResource(contextResource, configRef, serviceRanking));
+            }
           }
         }
       }
@@ -138,24 +143,21 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
   private boolean isValidConfig() {
     return !levels.isEmpty()
         && contextPathRegex != null
-        && StringUtils.isNotBlank(configPathPattern);
-  }
-
-  private boolean matchesApplication(Resource resource) {
-    if (StringUtils.isBlank(applicationId)) {
-      return true;
-    }
-    ApplicationInfo appInfo = applicationFinder.find(resource);
-    return (appInfo != null && StringUtils.equals(appInfo.getApplicationId(), this.applicationId));
+        && configPathPatterns != null
+        && configPathPatterns.length > 0;
   }
 
   private String getAbsoluteParent(Resource resource, int absoluteParent) {
     return Text.getAbsoluteParent(resource.getPath(), absoluteParent);
   }
 
-  private String deriveConfigRef(String contextPath) {
+  private String deriveConfigRef(String contextPath, String configPathPattern) {
     Matcher matcher = contextPathRegex.matcher(contextPath);
-    if (matcher.matches()) {
+    Matcher blacklistMatcher = null;
+    if (contextPathBlacklistRegex != null) {
+      blacklistMatcher = contextPathBlacklistRegex.matcher(contextPath);
+    }
+    if (matcher.matches() && (blacklistMatcher == null || !blacklistMatcher.matches())) {
       return matcher.replaceAll(configPathPattern);
     }
     else {

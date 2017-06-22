@@ -23,6 +23,7 @@ import static io.wcm.caconfig.editor.impl.NameConstants.RP_COLLECTION;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +33,7 @@ import org.apache.sling.caconfig.management.ConfigurationCollectionData;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.management.ValueInfo;
+import org.apache.sling.caconfig.management.multiplexer.ConfigurationPersistenceStrategyMultiplexer;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
 import org.junit.Before;
@@ -58,12 +60,14 @@ public class ConfigDataServletTest {
 
   @Mock
   private ConfigurationManager configManager;
+  @Mock
+  private ConfigurationPersistenceStrategyMultiplexer configurationPersistenceStrategy;
 
   private ConfigDataServlet underTest;
 
   @Before
   public void setUp() {
-    when(configManager.getPersistenceResourcePath(anyString())).then(new Answer<String>() {
+    when(configurationPersistenceStrategy.getCollectionParentConfigName(anyString(), nullable(String.class))).then(new Answer<String>() {
       @Override
       public String answer(InvocationOnMock invocation) {
         return (String)invocation.getArgument(0);
@@ -71,6 +75,7 @@ public class ConfigDataServletTest {
     });
 
     context.registerService(ConfigurationManager.class, configManager);
+    context.registerService(ConfigurationPersistenceStrategyMultiplexer.class, configurationPersistenceStrategy);
     context.registerInjectActivateService(new EditorConfig());
     underTest = context.registerInjectActivateService(new ConfigDataServlet());
   }
@@ -91,7 +96,7 @@ public class ConfigDataServletTest {
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
-    String expectedJson = buildConfigDataJson("name1", 0);
+    String expectedJson = buildConfigDataJson("name1", false);
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
@@ -113,9 +118,9 @@ public class ConfigDataServletTest {
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
     String expectedJson = "{configName:'name1',properties:{colProp1:true},items:["
-        + buildConfigDataJson("name1", 1) + ","
-        + buildConfigDataJson("name1", 2)
-        + "],newItem:" + buildConfigDataJson("new", 0) + "}";
+        + buildConfigDataJson("name1", 1, false) + ","
+        + buildConfigDataJson("name1", 2, false)
+        + "],newItem:" + buildConfigDataJson("new", null) + "}";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
@@ -161,13 +166,14 @@ public class ConfigDataServletTest {
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
-    String expectedJson = "{configName:'nestedConfig',overridden:false,properties:["
+    String expectedJson = "{configName:'nestedConfig',overridden:false,inherited:false,properties:["
         + "{name:'param1',default:false,inherited:false,overridden:false},"
-        + "{name:'subConfig',metadata:{label:'subConfig-label',description:'subConfig-desc'},nestedConfig:" + buildConfigDataJson("nestedConfig/subConfig", 0)
+        + "{name:'subConfig',metadata:{label:'subConfig-label',description:'subConfig-desc'},nestedConfig:"
+        + buildConfigDataJson("nestedConfig/subConfig", null)
         + "},"
         + "{name:'subConfigList',metadata:{label:'subConfigList-label',description:'subConfigList-desc'},nestedConfigCollection:{configName:'nestedConfig/subConfigList',items:["
-        + buildConfigDataJson("nestedConfig/subConfigList", 1) + ","
-        + buildConfigDataJson("nestedConfig/subConfigList", 2)
+        + buildConfigDataJson("nestedConfig/subConfigList", 1, false) + ","
+        + buildConfigDataJson("nestedConfig/subConfigList", 2, false)
         + "]}}"
         + "]}";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
@@ -216,9 +222,14 @@ public class ConfigDataServletTest {
     return valueInfo;
   }
 
-  private String buildConfigDataJson(String configName, int index) {
+  private String buildConfigDataJson(String configName, Boolean inherited) {
+    return buildConfigDataJson(configName, 0, inherited);
+  }
+
+  private String buildConfigDataJson(String configName, int index, Boolean inherited) {
     return "{configName:'" + configName + "',overridden:false,"
         + (index > 0 ? "collectionItemName:'item" + index + "'," : "")
+        + (inherited != null ? "inherited:" + inherited.booleanValue() + "," : "")
         + "properties:["
         + "{name:'param1',value:['v1'],effectiveValue:['v1','v2'],default:false,inherited:true,overridden:false,"
         + "metadata:{type:'String',multivalue:true,defaultValue:[],label='param1-label',description:'param1-desc',properties:{custom:'param1-custom'}}},"
@@ -227,5 +238,6 @@ public class ConfigDataServletTest {
         + "{name:'param3',value:true,effectiveValue:false,default:false,inherited:true,overridden:false}"
         + "]}";
   }
+
 
 }

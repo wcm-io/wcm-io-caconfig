@@ -37,6 +37,7 @@
       templateUrl: templateList.parameterValue,
       scope: {
         parameter: "=caconfigParameterValue",
+        isConfigInherited: "=caconfigIsConfigInherited",
         isNewItem: "=caconfigIsNewItem"
       },
       link: link
@@ -60,6 +61,10 @@
       }
       else if (scope.parameter.metadata && scope.parameter.metadata.multivalue) {
         scope.type = "multivalue";
+      }
+      else if (scope.parameter.metadata && scope.parameter.metadata.properties
+            && scope.parameter.metadata.properties.widgetType === "pathbrowser") {
+        scope.type = "pathbrowser";
       }
       else if (scope.parameter.metadata && scope.parameter.metadata.type) {
         input = inputMap[scope.parameter.metadata.type];

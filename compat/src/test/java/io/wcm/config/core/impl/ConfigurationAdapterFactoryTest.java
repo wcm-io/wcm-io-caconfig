@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
@@ -37,7 +38,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.adobe.cq.commerce.common.ValueMapDecorator;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.config.api.Configuration;

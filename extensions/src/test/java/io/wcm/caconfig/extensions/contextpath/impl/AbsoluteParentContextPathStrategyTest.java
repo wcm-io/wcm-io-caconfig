@@ -21,7 +21,6 @@ package io.wcm.caconfig.extensions.contextpath.impl;
 
 import static io.wcm.caconfig.extensions.contextpath.impl.TestUtils.assertNoResult;
 import static io.wcm.caconfig.extensions.contextpath.impl.TestUtils.assertResult;
-import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
@@ -29,23 +28,16 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbsoluteParentContextPathStrategyTest {
 
-  private static final String APP_ID = "/apps/app1";
-
   @Rule
   public AemContext context = new AemContext();
 
-  @Mock
-  private ApplicationFinder applicationFinder;
 
   private Resource level1;
   private Resource level2;
@@ -54,8 +46,6 @@ public class AbsoluteParentContextPathStrategyTest {
 
   @Before
   public void setUp() {
-    context.registerService(ApplicationFinder.class, applicationFinder);
-
     level1 = context.create().page("/content/region1").adaptTo(Resource.class);
     level2 = context.create().page("/content/region1/site1").adaptTo(Resource.class);
     level3 = context.create().page("/content/region1/site1/en").adaptTo(Resource.class);
@@ -75,51 +65,31 @@ public class AbsoluteParentContextPathStrategyTest {
         "levels", new int[] { 1, 3 });
 
     assertResult(underTest.findContextResources(level4),
-        "/content/region1/site1/en", "/conf/content/region1/site1/en",
-        "/content/region1", "/conf/content/region1");
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1", "/conf/region1");
 
     assertResult(underTest.findContextResources(level3),
-        "/content/region1/site1/en", "/conf/content/region1/site1/en",
-        "/content/region1", "/conf/content/region1");
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1", "/conf/region1");
 
     assertResult(underTest.findContextResources(level2),
-        "/content/region1", "/conf/content/region1");
+        "/content/region1", "/conf/region1");
 
     assertResult(underTest.findContextResources(level1),
-        "/content/region1", "/conf/content/region1");
-  }
-
-  @Test
-  public void testWithNoMatchingApplication() {
-    ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
-        "levels", new int[] { 1, 3 },
-        "applicationId", APP_ID);
-
-    assertNoResult(underTest.findContextResources(level4));
-  }
-
-  @Test
-  public void testWithMatchingApplication() {
-    ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
-        "levels", new int[] { 1, 3 },
-        "applicationId", APP_ID);
-    when(applicationFinder.find(level4)).thenReturn(new ApplicationInfo(APP_ID));
-
-    assertResult(underTest.findContextResources(level4),
-        "/content/region1/site1/en", "/conf/content/region1/site1/en",
-        "/content/region1", "/conf/content/region1");
+        "/content/region1", "/conf/region1");
   }
 
   @Test
   public void testWithAlternativePatterns() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
         "levels", new int[] { 1, 3 },
-        "contextPathRegex", "^/content(/.+)$",
-        "configPathPattern", "/conf/test$1");
+        "contextPathRegex", "^(/content/.+)$",
+        "contextPathBlacklistRegex", "^.*/region\\d+?$",
+        "configPathPatterns", new String[] { "/conf/test1$1", "/conf/test2$1" });
 
     assertResult(underTest.findContextResources(level4),
-        "/content/region1/site1/en", "/conf/test/region1/site1/en",
-        "/content/region1", "/conf/test/region1");
+        "/content/region1/site1/en", "/conf/test2/content/region1/site1/en",
+        "/content/region1/site1/en", "/conf/test1/content/region1/site1/en");
   }
 
 }

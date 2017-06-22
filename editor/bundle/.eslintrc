@@ -11,7 +11,9 @@
     "getJSONFixture": false
   },
   "rules": {
+    "dot-notation": ["warn", { "allowKeywords": false }],
     "func-style": ["error", "declaration"],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^e$" }],
     "no-use-before-define": ["error", { "functions": false }]
   }
 }

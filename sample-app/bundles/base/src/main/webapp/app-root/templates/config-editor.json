@@ -6,6 +6,6 @@
 
   "jcr:content": {
     "jcr:primaryType": "cq:PageContent",
-    "sling:resourceType": "/apps/wcm-io/caconfig/editor/components/page/editor"
+    "sling:resourceType": "wcm-io/caconfig/editor/components/page/editor"
   }
 }

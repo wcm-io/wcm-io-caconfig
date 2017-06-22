@@ -23,9 +23,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Application meta data.
- * @deprecated Use {@link io.wcm.caconfig.application.ApplicationInfo} instead.
  */
-@Deprecated
 @ProviderType
 public final class Application implements Comparable<Application> {
 

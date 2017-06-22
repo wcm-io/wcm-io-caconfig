@@ -1,11 +1,19 @@
 <div class="caconfig-overview" ng-cloak>
-  <button class="coral-Button coral-Button--primary"
-          ng-disabled="!overview.hasNonExistingConfig()"
+  <button class="coral-Button coral-Button--primary" type="button"
+          ng-disabled="!overview.hasNonExistingConfig()
+                       || !overview.state.contextPath"
           ng-click="overview.showNonExistingConfigs()">
     {{i18n.button.add}}
   </button>
 
-  <p class="caconfig-contextPath">{{i18n.contextPath}}: <code>{{overview.state.contextPath}}</code></p>
+  <p class="caconfig-contextPath"
+     ng-show="overview.state.contextPath">
+     {{i18n.contextPath}}: <code>{{overview.state.contextPath}}</code>
+  </p>
+  <p class="caconfig-contextPath"
+     ng-hide="overview.state.contextPath">
+     {{i18n.noContextPath}}
+  </p>
 
   <table class="coral-Table coral-Table--hover"
          ng-show="(overview.state.configNames | filter:{exists:true}).length" ng-cloak>

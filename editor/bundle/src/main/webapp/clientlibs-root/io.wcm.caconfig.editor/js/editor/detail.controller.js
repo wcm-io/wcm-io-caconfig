@@ -33,6 +33,7 @@
     var CONFIG_PROPERTY_INHERIT = "sling:configPropertyInherit";
     var CONFIG_COLLECTION_INHERIT = "sling:configCollectionInherit";
     var that = this;
+    var forceFormModified = false;
 
     that.current = {
       configName: $route.current.params.configName,
@@ -42,9 +43,7 @@
     // If detail view was loaded directly via deeplink, we need to first loadConfigNames
     if (!configService.getState().contextPath || !configService.getState().configNames.length) {
       configService.loadConfigNames()
-        .then(function success() {
-          init();
-        });
+        .then(init);
     }
     else {
       init();
@@ -59,10 +58,10 @@
     };
 
     that.saveConfig = function () {
-      if (that.current.configs.length === 0 && Boolean(that.current.collectionProperties[CONFIG_COLLECTION_INHERIT])) {
-        that.removeConfig();
-      }
-      else {
+      // if (that.current.configs.length === 0 && Boolean(that.current.collectionProperties[CONFIG_COLLECTION_INHERIT])) {
+      //   that.removeConfig();
+      // }
+      // else {
         configService.saveCurrentConfig()
           .then(function (redirect) {
             if (redirect) {
@@ -72,7 +71,7 @@
               $rootScope.go(that.current.parent ? that.current.parent.configName : "");
             }
           });
-      }
+      // }
     };
 
     that.removeConfig = function() {
@@ -100,7 +99,8 @@
     };
 
     that.isModified = function (formPristine) {
-      return !formPristine || that.current.originalLength !== that.current.configs.length;
+      return !formPristine || forceFormModified
+        || that.current.originalLength !== that.current.configs.length;
     };
 
     that.handleInheritedChange = function (property) {
@@ -130,6 +130,12 @@
       return configPropertyInherit;
     };
 
+    that.setConfigPropertyInherit = function (config, value) {
+      var configPropertyInherit = that.getConfigPropertyInherit(config);
+      configPropertyInherit.value = value;
+      that.handleConfigPropertyInheritChange(config);
+    };
+
     that.handleConfigPropertyInheritChange = function (config) {
       var configPropertyInherit = that.getConfigPropertyInherit(config);
       if (configPropertyInherit.value) {
@@ -144,6 +150,12 @@
       });
     };
 
+    that.breakInheritance = function (config) {
+      config.inherited = false;
+      that.setConfigPropertyInherit(config, true);
+      forceFormModified = true;
+    };
+
     /**
      * Loads config data and sets various properties
      */
@@ -151,7 +163,7 @@
       // Load Configuration Details
       configService.loadConfig(that.current.configName)
         .then(function (currentData) {
-          that.current.configs = currentData.configs;
+          that.current.configs = setDefaultValues(currentData.configs);
           that.current.originalLength = currentData.configs.length;
           that.current.isCollection = currentData.isCollection;
           that.current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
@@ -163,6 +175,17 @@
           that.current.contextPath = configService.getState().contextPath;
           $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
         });
+    }
+
+    function setDefaultValues(configs) {
+      angular.forEach(configs, function (config) {
+        angular.forEach(config.properties, function (property) {
+          if (property["default"] && angular.isUndefined(property.value)) {
+            property.value = property.effectiveValue;
+          }
+        });
+      });
+      return configs;
     }
   }
 }(angular));

@@ -24,9 +24,9 @@
 
   <parent>
     <groupId>io.wcm</groupId>
-    <artifactId>io.wcm.parent_toplevel</artifactId>
-    <version>1.1.0</version>
-    <relativePath/>
+    <artifactId>io.wcm.caconfig.parent</artifactId>
+    <version>1.1.2</version>
+    <relativePath>parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
@@ -40,7 +40,6 @@
   <modules>
     <module>parent</module>
     <module>editor</module>
-    <module>application</module>
     <module>extensions</module>
     <module>compat</module>
     <module>sample-app</module>

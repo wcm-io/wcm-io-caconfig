@@ -30,6 +30,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.caconfig.spi.ConfigurationMetadataProvider;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
+import org.apache.sling.commons.osgi.Order;
+import org.apache.sling.commons.osgi.RankedServices;
+import org.apache.sling.commons.osgi.RankedServices.ChangeListener;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -40,13 +43,14 @@ import com.google.common.collect.ImmutableSortedSet;
 import io.wcm.config.api.Parameter;
 import io.wcm.config.editor.EditorProperties;
 import io.wcm.config.spi.ParameterProvider;
-import io.wcm.sling.commons.osgi.RankedServices;
-import io.wcm.sling.commons.osgi.RankedServices.ChangeListener;
 
 /**
  * Bridges parameter provider to configuration metadata providers.
  */
-@Component(service = ConfigurationMetadataProvider.class, immediate = true)
+@Component(service = ConfigurationMetadataProvider.class, immediate = true, reference = {
+    @Reference(service = ParameterProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+        name = "parameterProvider", bind = "bindParameterProvider", unbind = "unbindParameterProvider")
+})
 public class ParameterProviderBridge implements ConfigurationMetadataProvider, ChangeListener {
 
   /**
@@ -54,9 +58,7 @@ public class ParameterProviderBridge implements ConfigurationMetadataProvider, C
    */
   public static final String DEFAULT_CONFIG_NAME = "config";
 
-  @Reference(service = ParameterProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-      bind = "bindParameterProvider", unbind = "unbindParameterProvider")
-  private RankedServices<ParameterProvider> parameterProviders = new RankedServices<>(this);
+  private RankedServices<ParameterProvider> parameterProviders = new RankedServices<>(Order.ASCENDING, this);
 
   private volatile ConfigurationMetadata configMetadata;
 

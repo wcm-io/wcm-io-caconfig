@@ -38,7 +38,6 @@ final class MapUtil {
    */
   public static String traceOutput(Map<String, Object> properties) {
     SortedSet<String> propertyNames = new TreeSet<>(properties.keySet());
-    PropertiesFilterUtil.removeIgnoredProperties(propertyNames);
     StringBuilder sb = new StringBuilder();
     sb.append("{");
     Iterator<String> propertyNameIterator = propertyNames.iterator();

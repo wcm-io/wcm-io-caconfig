@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1.2</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.editor.package</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.2.3-SNAPSHOT</version>
   <packaging>content-package</packaging>
 
   <properties>
@@ -48,18 +48,29 @@
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.caconfig.editor</artifactId>
       <scope>compile</scope>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.2.3-SNAPSHOT</version>
     </dependency>
 
   </dependencies>
 
   <build>
     <finalName>${content-package-name}-${project.version}</finalName>
+
+    <resources>
+      <!-- Include all files from jcr_root in content package -->
+      <resource>
+        <directory>jcr_root</directory>
+      </resource>
+    </resources>
+
     <plugins>
 
       <plugin>
-        <groupId>com.day.jcr.vault</groupId>
-        <artifactId>content-package-maven-plugin</artifactId>
+        <groupId>io.wcm.maven.plugins</groupId>
+        <artifactId>wcmio-content-package-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <!-- TODO: remove once updated to aem-global-parent 1.2.0 or higher -->
+        <version>1.5.0</version>
         <configuration>
           <name>${content-package-name}</name>
           <group>${content-package-group}</group>
