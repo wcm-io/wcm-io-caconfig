@@ -19,4 +19,3 @@
 | Provider Root                            | Filesystem Root                                               |
 | ---------------------------------------- | ------------------------------------------------------------- |
 | `/apps/wcm-io/caconfig/editor`           | `/path/to/repo/editor/bundle/src/main/webapp/app-root`        |
-| `/etc/clientlibs/wcm-io/caconfig/editor` | `/path/to/repo/editor/bundle/src/main/webapp/clientlibs-root` |

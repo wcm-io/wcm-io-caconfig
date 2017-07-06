@@ -1,5 +1,6 @@
 {
   "jcr:primaryType": "cq:ClientLibraryFolder",
+  "allowProxy": true,
   "categories": [
     "io.wcm.caconfig.editor"
   ],
