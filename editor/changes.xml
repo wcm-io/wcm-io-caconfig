@@ -23,9 +23,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.2.4" date="not released">
+    <release version="1.2.4" date="2017-07-19">
       <action type="update" dev="sseifert">
         Update to CAConfig Impl 1.4 to use ConfigurationData.isInherited for collection item inheritance check.
+      </action>
+      <action type="update" dev="dding" issue="WCON-34">
+        Display of inherited singleton configurations without property inheritance misleading.
+      </action>
+      <action type="update" dev="dding" issue="WCON-35">
+        Configuration editor: Disable add/save buttons when no context path detected.
+      </action>
+      <action type="update" dev="sseifert">
+        Editor package: Include bundles for Sling Context-Aware Configuration.
       </action>
     </release>
 

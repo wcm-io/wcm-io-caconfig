@@ -2,6 +2,7 @@
   "io.wcm.caconfig.editor": {
     "title": "Konfiguration bearbeiten",
     "contextPath": "Kontext-Pfad",
+    "noContextPath": "Der Kontext-Pfad konnte nicht ermittelt werden.",
     "button": {
       "add": "Hinzufügen",
       "addItem": "Element hinzufügen",
@@ -24,6 +25,7 @@
       "description": "Beschreibung",
       "inheritance": {
         "property": "Eigenschafts-Vererbung aktivieren",
+        "config": "Diese Konfiguration wird vererbt.",
         "collection": "Sammlungs-Vererbung aktivieren",
         "collectionItem": "Diese Konfiguration wird über Sammlungs-Vererbung vererbt.",
         "break": "Klicken Sie hier, um die Vererbung zu deaktivieren."

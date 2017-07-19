@@ -88,9 +88,9 @@ span.wcm-io-editor.endor-Brand {
   border-top: 1px solid #bbb;
 }
 
-.caconfig-disabled-button,
-.caconfig-disabled-button:disabled,
-.caconfig-disabled-button.is-disabled {
+.caconfig-disableable-button,
+.caconfig-disableable-button:disabled,
+.caconfig-disableable-button.is-disabled {
   display: inline-block;
 }
 

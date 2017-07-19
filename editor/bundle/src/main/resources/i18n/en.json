@@ -2,6 +2,7 @@
   "io.wcm.caconfig.editor": {
     "title": "Configuration Editor",
     "contextPath": "Context Path",
+    "noContextPath": "No context path detected.",
     "button": {
       "add": "Add",
       "addItem": "Add Item",
@@ -24,6 +25,7 @@
       "description": "Description",
       "inheritance": {
         "property": "Enable property inheritance",
+        "config": "This configuration is inherited.",
         "collection": "Enable collection inheritance",
         "collectionItem": "This configuration is inherited via collection inheritance.",
         "break": "Click here to break inheritance."
