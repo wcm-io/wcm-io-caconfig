@@ -23,6 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.0.5" date="2017-07-21">
+      <action type="fix" dev="ptolstych">
+        PersistenceUtils: If config page has cq:lastModified this will be updated with the same value that is set to jcr:lastModified.
+      </action>
+    </release>
+
     <release version="1.0.4" date="2017-05-29">
       <action type="fix" dev="sseifert">
         ToolsConfigPagePersistenceStrategy: Fix resource collection resolving when multiple bucket names are configured.
