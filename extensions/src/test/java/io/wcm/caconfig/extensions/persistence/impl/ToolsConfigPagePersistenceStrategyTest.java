@@ -25,7 +25,9 @@ import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +48,7 @@ import io.wcm.caconfig.extensions.contextpath.impl.AbsoluteParentContextPathStra
 import io.wcm.caconfig.extensions.persistence.example.ListConfig;
 import io.wcm.caconfig.extensions.persistence.example.NestedConfig;
 import io.wcm.caconfig.extensions.persistence.example.SimpleConfig;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 
@@ -204,5 +207,55 @@ public class ToolsConfigPagePersistenceStrategyTest {
     assertEquals(456, subListConfig2.intParam());
   }
 
+  @Test
+  public void testSimpleConfigWithCQLastModified() throws Exception {
+    context.create().page("/content/region2");
+    context.create().page("/content/region2/site2");
+    context.create().page("/content/region2/site2/en");
+    context.create().page("/content/region2/site2/en/tools");
 
+    Page contentPageWithCQLastModified = context.create().page("/content/region2/site2/en/page2");
+
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.HOUR, -1);
+    context.create().page("/content/region2/site2/en/tools/config", "/apps/app1/templates/configEditor", ImmutableValueMap.builder()
+        .put(NameConstants.PN_PAGE_LAST_MOD, cal)
+        .build());
+
+
+    // write config
+    writeConfiguration(context, contentPageWithCQLastModified.getPath(), SimpleConfig.class.getName(),
+        "stringParam", "value1",
+        "intParam", 123);
+
+
+    Page configPage = context.pageManager().getPage("/content/region2/site2/en/tools/config");
+
+    // check that cq:lastModified is updated while saving data
+    ValueMap properties = configPage.getContentResource().getValueMap();
+    assertTrue(properties.containsKey(NameConstants.PN_PAGE_LAST_MOD));
+    Calendar changedDate = properties.get(NameConstants.PN_PAGE_LAST_MOD, Calendar.class);
+    assertTrue(cal.before(changedDate));
+
+    // assert storage in page in /content/*/tools/config
+    assertNotNull(configPage);
+    ValueMap props = configPage.getContentResource("sling:configs/" + SimpleConfig.class.getName()).getValueMap();
+    assertEquals("value1", props.get("stringParam", String.class));
+    assertEquals((Integer)123, props.get("intParam", Integer.class));
+    assertEquals("/apps/app1/templates/configEditor", configPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
+    assertEquals("config", configPage.getTitle());
+    assertEquals("app1/components/page/configEditor", configPage.getProperties().get("sling:resourceType", String.class));
+
+    // read config
+    SimpleConfig config = contentPageWithCQLastModified.getContentResource().adaptTo(ConfigurationBuilder.class).as(SimpleConfig.class);
+    assertEquals("value1", config.stringParam());
+    assertEquals(123, config.intParam());
+
+    // delete
+    ConfigurationManager configManager = context.getService(ConfigurationManager.class);
+    configManager.deleteConfiguration(contentPageWithCQLastModified.getContentResource(), SimpleConfig.class.getName());
+    config = contentPageWithCQLastModified.getContentResource().adaptTo(ConfigurationBuilder.class).as(SimpleConfig.class);
+    assertNull(config.stringParam());
+    assertEquals(5, config.intParam());
+  }
 }
