@@ -198,8 +198,17 @@ final class PersistenceUtils {
       if (contentProps == null) {
         throw new ConfigurationPersistenceAccessDeniedException("No write access: Unable to update page " + configResourcePath + ".");
       }
+
+      Object user = resolver.getAttribute(ResourceResolverFactory.USER);
+
       contentProps.put(NameConstants.PN_LAST_MOD, Calendar.getInstance());
-      contentProps.put(NameConstants.PN_LAST_MOD_BY, resolver.getAttribute(ResourceResolverFactory.USER));
+      contentProps.put(NameConstants.PN_LAST_MOD_BY, user);
+
+      // check if resource has cq:lastModified because it is created in site admin
+      if (contentProps.containsKey(NameConstants.PN_PAGE_LAST_MOD)) {
+        contentProps.put(NameConstants.PN_PAGE_LAST_MOD, Calendar.getInstance());
+        contentProps.put(NameConstants.PN_PAGE_LAST_MOD_BY, user);
+      }
     }
   }
 
