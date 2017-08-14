@@ -1,0 +1,5 @@
+#base=js
+
+textAngular-rangy.min.js
+textAngular-sanitize.min.js
+textAngular.min.js
