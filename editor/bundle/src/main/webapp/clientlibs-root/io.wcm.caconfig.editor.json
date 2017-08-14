@@ -6,6 +6,7 @@
   "dependencies": [
     "coralui2",
     "underscore",
-    "angularjs"
+    "angularjs",
+    "textangular"
   ]
 }

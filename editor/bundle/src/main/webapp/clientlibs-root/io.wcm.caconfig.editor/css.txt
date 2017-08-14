@@ -1,3 +1,5 @@
-#base=css
+css/editor.css
+css/font-awesome.min.css
 
-editor.css
+vendors/textAngular/textAngular.css
+vendors/ui-bootstrap/bootstrap.min.css

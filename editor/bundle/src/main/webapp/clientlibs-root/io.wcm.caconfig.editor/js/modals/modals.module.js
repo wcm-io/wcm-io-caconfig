@@ -22,7 +22,8 @@
 
   angular.module("io.wcm.caconfig.modals", [
     "io.wcm.caconfig.templates",
-    "io.wcm.caconfig.utilities"
+    "io.wcm.caconfig.utilities",
+    "textAngular"
   ])
   .run(initRun);
 
@@ -34,7 +35,8 @@
       addConfig: "addConfigModal.html",
       deleteConfig: "deleteConfigModal.html",
       error: "errorModal.html",
-      saveConfig: "saveConfigModal.html"
+      saveConfig: "saveConfigModal.html",
+      editor: "editorModal.html"
     };
   }
 

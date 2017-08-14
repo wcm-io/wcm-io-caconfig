@@ -40,7 +40,8 @@
       ADD_COLLECTION_ITEM: "addCollectionItem",
       DELETE_CONFIG: "deleteConfig",
       ERROR: "error",
-      SAVE_CONFIG: "saveConfig"
+      SAVE_CONFIG: "saveConfig",
+      EDITOR: "editor"
     };
 
     /**
@@ -51,13 +52,18 @@
       uiService.addUI(uiService.component.MODAL, modalName, options);
     };
 
+    that.getComponent = function (modalName) {
+      return uiService.getComponent(uiService.component.MODAL, modalName);
+    };
+
     /**
      * @param {String} modalName
      * @param {String} eventName
      * @param {Function} callback
      */
     that.onEvent = function (modalName, eventName, callback) {
-      uiService.onEvent(uiService.component.MODAL, modalName, eventName, callback);
+      var component = uiService.getComponent(uiService.component.MODAL, modalName);
+      component.on(eventName, callback);
     };
 
     /**
@@ -74,6 +80,10 @@
      */
     that.show = function (modalName) {
       uiService.callMethod(uiService.component.MODAL, modalName, uiService.method.SHOW);
+    };
+
+    that.set = function (modalName, params) {
+      uiService.callMethod(uiService.component.MODAL, modalName, uiService.method.SET, params);
     };
   }
 

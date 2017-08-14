@@ -38,6 +38,7 @@
 
     that.method = {
       SHOW: "show",
+      SET: "set",
       GET_VALUE: "getValue"
     };
 
@@ -51,6 +52,17 @@
     that.addUI = function (componentType, componentName, options) {
       ui[componentType] = ui[componentType] || {};
       ui[componentType][componentName] = new CUI[componentType](options);
+    };
+
+      /**
+       * Retrieve an already instanced component
+       *
+       * @param componentType
+       * @param componentName
+       * @returns {*}
+       */
+    that.getComponent = function(componentType, componentName) {
+      return ui[componentType][componentName];
     };
 
     /**
@@ -83,9 +95,10 @@
      * @return {*}
      */
     that.callMethod = function (componentType, componentName, methodName) {
+      var bound_args = [].slice.call(arguments, 3);
       if (ui[componentType] && ui[componentType][componentName]
           && angular.isFunction(ui[componentType][componentName][methodName])) {
-        return ui[componentType][componentName][methodName]();
+        return ui[componentType][componentName][methodName].apply(ui[componentType][componentName], bound_args);
       }
       return null;
     };

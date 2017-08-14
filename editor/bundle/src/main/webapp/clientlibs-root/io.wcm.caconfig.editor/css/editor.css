@@ -66,6 +66,10 @@ span.caconfig-pathbrowser {
   width: 100%;
 }
 
+.caconfig-richtexteditor .coral-richtexteditor {
+  width: 100%;
+}
+
 .wcm-io-editor.endor-Brand {
   display: inline-block;
   background-color: transparent;

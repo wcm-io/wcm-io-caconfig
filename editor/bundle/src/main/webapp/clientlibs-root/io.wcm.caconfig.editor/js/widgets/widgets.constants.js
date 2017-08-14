@@ -34,10 +34,12 @@
       popupContainer: "popupContainer.html",
       popupContent: "popupContent.html",
       multifield: "multifield.html",
-      pathbrowser: "pathbrowser.html"
+      pathbrowser: "pathbrowser.html",
+      richtexteditor: "richtexteditor.html"
     })
     .constant("directivePropertyPrefixes", {
-      pathbrowser: "pathbrowser"
+      pathbrowser: "pathbrowser",
+      richtexteditor: "richtexteditor"
     })
     .constant("inputMap", {
       Boolean: {
