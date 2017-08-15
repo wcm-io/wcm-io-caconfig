@@ -52,6 +52,12 @@
       uiService.addUI(uiService.component.MODAL, modalName, options);
     };
 
+    /**
+     * Retrieves a modal component
+     *
+     * @param {String} modalName
+     * @returns {CUI.Modal}
+     */
     that.getComponent = function (modalName) {
       return uiService.getComponent(uiService.component.MODAL, modalName);
     };
@@ -80,10 +86,6 @@
      */
     that.show = function (modalName) {
       uiService.callMethod(uiService.component.MODAL, modalName, uiService.method.SHOW);
-    };
-
-    that.set = function (modalName, params) {
-      uiService.callMethod(uiService.component.MODAL, modalName, uiService.method.SET, params);
     };
   }
 

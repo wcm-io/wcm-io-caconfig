@@ -26,42 +26,30 @@
   EditorController.$inject = ["modalService", "$element", "$compile", "$scope"];
 
   function EditorController(modalService, $element, $compile, $scope) {
-    var that = this;
+    var that = this,
+      init = function () {
+        // modal creation
+        modalService.addModal(modalService.modal.EDITOR, {
+          element: "#caconfig-editorModal",
+          visible: false
+        });
 
+        // re-compile the modal content after show, to render the richtext editor propertly
+        modalService.onEvent(modalService.modal.EDITOR, 'show', function () {
+          $compile($element.contents())($scope);
+        });
+      };
+
+    /**
+     * Triggers some 'saved' event so that the modal opener can handle data
+     */
     that.save = function () {
-      console.log('this: ', this.richContent);
-      console.log('$scope: ',  $scope.richContent);
-
       modalService.triggerEvent(modalService.modal.EDITOR, 'saved', {content: $scope.richContent});
     };
 
-    modalService.addModal(modalService.modal.EDITOR, {
-      element: "#caconfig-editorModal",
-      visible: false
-    });
-
-    modalService.onEvent(modalService.modal.EDITOR, 'beforeChange', function (e) {
-      console.log("ALLLOO");
-      console.log(e);
-
-      e.preventDefault();
-      return false;
-    });
-    modalService.onEvent(modalService.modal.EDITOR, 'change', function (e) {
-      console.log("ALLLOO2");
-      console.log(e);
-
-      e.preventDefault();
-      return false;
-    });
-    modalService.onEvent(modalService.modal.EDITOR, 'show', function (e) {
-      console.log($element);
-
-      $compile($element.contents())($scope);
-    });
-    modalService.onEvent(modalService.modal.EDITOR, 'hide', function (e) {
-      console.log("ALLLOO4");
-      console.log(e);
-    });
+    /**
+     * Initialisation
+     */
+    init();
   }
 }(angular));

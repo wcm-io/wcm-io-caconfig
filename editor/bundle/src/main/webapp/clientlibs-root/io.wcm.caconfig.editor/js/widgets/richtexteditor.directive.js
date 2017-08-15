@@ -20,7 +20,7 @@
 (function (angular) {
   "use strict";
   angular.module("io.wcm.caconfig.widgets")
-      .directive("caconfigRichtexteditor", richtexteditor);
+    .directive("caconfigRichtexteditor", richtexteditor);
 
   richtexteditor.$inject = ["templateUrlList", "modalService"];
 
@@ -39,14 +39,14 @@
 
     return directive;
 
-    function link(scope, element) {
+    function link(scope, element, attr, form) {
       scope.openPopup = function () {
         var modal_instance = modalService.getComponent(modalService.modal.EDITOR);
         modal_instance.set({content: '<text-angular ng-model="richContent">' + (scope.parameter.value !== undefined ? scope.parameter.value : '') + '</text-angular>'});
         modal_instance.show();
 
         modal_instance.on('saved', function(e, data) {
-          console.log("Here is the rich content: ", data.content);
+          form.$setDirty(true);
           scope.parameter.value = data.content;
         });
       };
