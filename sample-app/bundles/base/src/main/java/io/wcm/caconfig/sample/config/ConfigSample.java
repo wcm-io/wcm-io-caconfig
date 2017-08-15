@@ -59,8 +59,7 @@ public @interface ConfigSample {
    * @return Path parameter
    */
   @Property(label = "Context Path", description = "Browse pages in the current configuration context path.", order = 5, property = {
-      "widgetType=pathbrowser",
-      "pathbrowserRootPathContext=true"
+      "widgetType=richtexteditor"
   })
   String contextPath();
 
