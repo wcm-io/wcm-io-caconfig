@@ -70,7 +70,9 @@ The editor is based on AngularJS and CoralUI.
 
 ### Using custom edit widgets
 
-For each data type (string, number, boolean) the fitting edit widget is chosen automatically. Alternatively you can define custom widgets via extra properties on the `@Property` annotation. Currently only `pathbrowser` is supported.
+For each data type (string, number, boolean) the fitting edit widget is chosen automatically. Alternatively you can define custom widgets via extra properties on the `@Property` annotation.
+
+#### pathbrowser
 
 Define a path browser widget for a string parameter with fixed path:
 
@@ -90,6 +92,17 @@ Define a path browser widget for a string parameter with the current configurati
     "pathbrowserRootPathContext=true"
 })
 String contextPath();
+```
+
+#### richtexteditor
+
+Enable a rich text editor in modal popup for a string parameter:
+
+```java
+@Property(label = "Rich Text Param", description = "String parameter with rich text editor.", property = {
+    "widgetType=richtexteditor"
+})
+String richTextParam();
 ```
 
 

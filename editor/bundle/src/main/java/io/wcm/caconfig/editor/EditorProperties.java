@@ -39,6 +39,11 @@ public final class EditorProperties {
   public static final String WIDGET_TYPE_PATHBROWSER = "pathbrowser";
 
   /**
+   * Widget type to add a rich text editor in model popup to a string parameter.
+   */
+  public static final String WIDGET_TYPE_RICHTEXTEDITOR = "richtexteditor";
+
+  /**
    * With this additional property the root path for the path browser widget can be set:
    * The root path is passed as string value of the property.
    */

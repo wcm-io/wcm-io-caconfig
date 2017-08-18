@@ -59,6 +59,7 @@ public @interface ConfigSample {
    * @return Path parameter
    */
   @Property(label = "Context Path", description = "Browse pages in the current configuration context path.", order = 5, property = {
+      "widgetType=pathbrowser",
       "widgetType=richtexteditor"
   })
   String contextPath();
@@ -70,5 +71,13 @@ public @interface ConfigSample {
   String[] stringArrayParam() default {
     "value1", "value2"
   };
+
+  /**
+   * @return Rich text parameter
+   */
+  @Property(label = "Rich Text Param", description = "String parameter with rich text editor.", order = 7, property = {
+      "widgetType=richtexteditor"
+  })
+  String richTextParam();
 
 }
