@@ -96,4 +96,24 @@ public class RootTemplateContextPathStrategyTest {
         "/content/region1", "/conf/test1/content/region1");
   }
 
+  @Test
+  public void testWithTemplate_TemplatMatchAllLevels() {
+    ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy(),
+        "templatePaths", new String[] { TEMPLATE_1, TEMPLATE_2 },
+        "templateMatchAllLevels", true);
+
+    assertResult(underTest.findContextResources(level4),
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1/site1", "/conf/region1/site1");
+
+    assertResult(underTest.findContextResources(level3),
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1/site1", "/conf/region1/site1");
+
+    assertResult(underTest.findContextResources(level2),
+        "/content/region1/site1", "/conf/region1/site1");
+
+    assertResult(underTest.findContextResources(level1));
+  }
+
 }

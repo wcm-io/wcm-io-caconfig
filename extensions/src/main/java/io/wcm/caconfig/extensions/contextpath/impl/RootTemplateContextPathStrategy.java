@@ -63,6 +63,11 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
         required = true)
     String[] templatePaths();
 
+    @AttributeDefinition(name = "Match All Levels",
+        description = "If set to true, all pages between min and max level have to match with one of the given template paths. "
+            + "Otherwise only the template of the first (deepest) parent page is evaluated.")
+    boolean templateMatchAllLevels();
+
     @AttributeDefinition(name = "Min. Level",
         description = "Minimum allowed absolute parent level. Example: Absolute parent level 1 of '/foo/bar/test' is '/foo/bar'.",
         required = true)
@@ -92,6 +97,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
   }
 
   private Set<String> templatePaths;
+  private boolean templatMatchAllLevels;
   private int minLevel;
   private int maxLevel;
   private Pattern contextPathRegex;
@@ -103,6 +109,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
   @Activate
   void activate(Config config) {
     templatePaths = config.templatePaths() != null ? ImmutableSet.copyOf(config.templatePaths()) : Collections.<String>emptySet();
+    templatMatchAllLevels = config.templateMatchAllLevels();
     minLevel = config.minLevel();
     maxLevel = config.maxLevel();
     try {
@@ -121,7 +128,16 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
       return Collections.emptyIterator();
     }
 
-    List<String> contextPathCandidats = getContextPathCandidates(resource);
+    PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
+    Page page = pageManager.getContainingPage(resource);
+    List<String> contextPathCandidats;
+    if (templatMatchAllLevels) {
+      contextPathCandidats = getContextPathCandidatesMatchAll(page);
+    }
+    else {
+      contextPathCandidats = getContextPathCandidatesMatchInnermost(page);
+    }
+
     List<ContextResource> contextResources = new ArrayList<>();
     for (String contextPath : contextPathCandidats) {
       Resource contextResource = resource.getResourceResolver().getResource(contextPath);
@@ -145,10 +161,8 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
         && configPathPatterns.length > 0;
   }
 
-  private List<String> getContextPathCandidates(Resource resource) {
+  private List<String> getContextPathCandidatesMatchInnermost(Page page) {
     List<String> candidates = new ArrayList<>();
-    PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
-    Page page = pageManager.getContainingPage(resource);
     if (page != null) {
       for (int level = minLevel; level <= maxLevel; level++) {
         Page rootPage = page.getAbsoluteParent(level);
@@ -159,6 +173,22 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
             if (templatePaths.contains(templatePath)) {
               break;
             }
+          }
+        }
+      }
+    }
+    return candidates;
+  }
+
+  private List<String> getContextPathCandidatesMatchAll(Page page) {
+    List<String> candidates = new ArrayList<>();
+    if (page != null) {
+      for (int level = minLevel; level <= maxLevel; level++) {
+        Page rootPage = page.getAbsoluteParent(level);
+        if (rootPage != null) {
+          String templatePath = rootPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
+          if (templatePath != null && templatePaths.contains(templatePath)) {
+            candidates.add(rootPage.getPath());
           }
         }
       }

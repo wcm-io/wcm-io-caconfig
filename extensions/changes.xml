@@ -23,6 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.1.0" date="not released">
+      <action type="add" dev="sseifert" issue="WCON-37">
+        RootTemplateContextPathStrategy: Add flag templateMatchAllLevels to match all parent pages against the given template paths.
+      </action>
+    </release>
+
     <release version="1.0.6" date="2017-08-08">
       <action type="fix" dev="ptolstych" issue="WCON-36">
         PersistenceUtils: If config page has cq:lastModified this will be updated with the same value that is set to jcr:lastModified.
