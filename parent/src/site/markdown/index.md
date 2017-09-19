@@ -26,6 +26,10 @@ See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-c
 Sources: https://github.com/wcm-io/wcm-io-caconfig
 
 
+### Training Material
+
+* [wcm.io AEM Context-Aware Configuration Training](http://training.wcm.io/caconfig/)
+
 
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
 [config-deprecated]: http://wcm.io/config/
