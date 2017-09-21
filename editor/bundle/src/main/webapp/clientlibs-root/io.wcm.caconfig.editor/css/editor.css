@@ -29,6 +29,10 @@
   width: 100%;
 }
 
+html {
+    font-size: 100%;
+}
+
 form.ng-dirty textarea.ng-dirty.ng-invalid,
 form.ng-dirty input.ng-dirty.ng-invalid {
   border: 1px solid #f00;
