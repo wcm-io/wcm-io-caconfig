@@ -38,20 +38,12 @@
         modalService.onEvent(modalService.modal.EDITOR, 'show', function () {
           $compile($element.contents())($scope);
         });
-          // remove sco
-        // modalService.onEvent(modalService.modal.EDITOR, 'hide', function () {
-        //   var html = $element.html();
-        //   $element.contents().remove();
-        //   $element.html(html);
-        // });
-
       };
 
     /**
      * Triggers some 'saved' event so that the modal opener can handle data
      */
     that.save = function () {
-      console.log('EditorController.save');
       var content = $scope.richContent;
       delete $scope.richContent;
       modalService.triggerEvent(modalService.modal.EDITOR, 'saved', { content: content });

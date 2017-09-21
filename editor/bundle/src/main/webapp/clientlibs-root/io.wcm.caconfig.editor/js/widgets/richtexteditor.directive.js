@@ -40,11 +40,6 @@
     return directive;
 
     function link(scope, element, attr, form) {
-      // scope.save = function(e, data) {
-      //   form.$setDirty(true);
-      //   scope.parameter.value = data.content;
-      //   scope.modal_instance.off('saved', scope.save);
-      // },
       scope.openPopup = function () {
         var modal_instance = modalService.getComponent(modalService.modal.EDITOR);
         modal_instance.set({content: '<text-angular ng-model="richContent">' + (scope.parameter.value !== undefined ? scope.parameter.value : '') + '</text-angular>'});
