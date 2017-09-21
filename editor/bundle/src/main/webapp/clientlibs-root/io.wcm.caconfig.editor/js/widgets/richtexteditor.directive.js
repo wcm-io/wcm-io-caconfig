@@ -40,14 +40,18 @@
     return directive;
 
     function link(scope, element, attr, form) {
+
       scope.openPopup = function () {
+
         var modal_instance = modalService.getComponent(modalService.modal.EDITOR);
         modalService.setEditorValue(scope.parameter.value);
+
         var save = function(e, data) {
                 form.$setDirty(true);
                 scope.parameter.value = data.content;
                 modal_instance.off('saved', scope.save);
         };
+
         modal_instance.show();
         modal_instance.on('saved', save);
       };

@@ -28,14 +28,12 @@
   function EditorController(modalService, $element, $compile, $scope) {
     var that = this,
       init = function () {
+
         // modal creation
         modalService.addModal(modalService.modal.EDITOR, {
           element: "#caconfig-editorModal",
           visible: false
         });
-
-        var modal_instance = modalService.getComponent(modalService.modal.EDITOR);
-        modal_instance.set({content: '<text-angular ng-model="richContent"></text-angular>'});
 
         $compile($element.contents())($scope);
 

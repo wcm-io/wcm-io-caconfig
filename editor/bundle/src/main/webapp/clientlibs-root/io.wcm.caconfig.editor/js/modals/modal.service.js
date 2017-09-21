@@ -47,10 +47,20 @@
       EDITOR: "editor"
     };
 
+    /**
+     * Sets the editor value
+     *
+     * @param {String} value
+     */
     that.setEditorValue = function (value) {
         that.editorValue = value;
     };
 
+    /**
+     * Retrieves the editor value
+     *
+     * @returns {CUI.Modal}
+     */
     that.getEditorValue = function () {
         return that.editorValue;
     };
