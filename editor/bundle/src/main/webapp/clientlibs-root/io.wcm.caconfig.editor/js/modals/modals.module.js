@@ -22,8 +22,21 @@
 
   angular.module("io.wcm.caconfig.modals", [
     "io.wcm.caconfig.templates",
-    "io.wcm.caconfig.utilities"
+    "io.wcm.caconfig.utilities",
+    "textAngular"
   ])
+  .config(['$provide', function ($provide) {
+    $provide.decorator('taOptions', ['$delegate', function (taOptions) {
+      taOptions.toolbar = [
+        ['h1', 'h2', 'h3', 'h4', 'p', 'pre', 'quote'],
+        ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+        ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
+        ['html','insertLink', 'wordcount', 'charcount']
+      ];
+      return taOptions;
+    }]);
+
+  }])
   .run(initRun);
 
   initRun.$inject = ["$rootScope"];
@@ -34,7 +47,8 @@
       addConfig: "addConfigModal.html",
       deleteConfig: "deleteConfigModal.html",
       error: "errorModal.html",
-      saveConfig: "saveConfigModal.html"
+      saveConfig: "saveConfigModal.html",
+      editor: "editorModal.html"
     };
   }
 

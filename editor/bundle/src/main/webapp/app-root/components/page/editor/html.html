@@ -25,6 +25,7 @@
       <ng-include src="modalTemplates.deleteConfig"></ng-include>
       <ng-include src="modalTemplates.error"></ng-include>
       <ng-include src="modalTemplates.saveConfig"></ng-include>
+      <ng-include src="modalTemplates.editor"></ng-include>
 
       <meta data-sly-call="${clientLib.js @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
       <script type="text/javascript">
@@ -84,6 +85,9 @@
                 tooltip: {
                   allowed: "${'io.wcm.caconfig.editor.modal.tooltip.allowed' @ i18n, context='text'}",
                   unique: "${'io.wcm.caconfig.editor.modal.tooltip.unique' @ i18n, context='text'}"
+                },
+                editor: {
+                  title: "${'io.wcm.caconfig.editor.modal.editor.title' @ i18n, context='text'}"
                 }
               }
             };

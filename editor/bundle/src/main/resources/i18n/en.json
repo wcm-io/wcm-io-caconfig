@@ -29,7 +29,7 @@
         "collection": "Enable collection inheritance",
         "collectionItem": "This configuration is inherited via collection inheritance.",
         "break": "Click here to break inheritance."
-      },
+      }
     },
     "modal": {
       "addConfig": {
@@ -53,6 +53,9 @@
       "tooltip": {
         "allowed": "Allowed characters: A-Z a-z 0-9 - _",
         "unique": "This name is already in use."
+      },
+      "editor": {
+        "title": "Richtext editor"
       }
     }
   }

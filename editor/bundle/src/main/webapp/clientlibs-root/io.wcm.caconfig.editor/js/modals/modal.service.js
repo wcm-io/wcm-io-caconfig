@@ -31,6 +31,9 @@
   function ModalService(uiService) {
     var that = this;
 
+    // Shared editor value
+    that.editorValue;
+
     that.event = {
       CUSTOM_MESSAGE: "caconfig-customMessage"
     };
@@ -40,7 +43,26 @@
       ADD_COLLECTION_ITEM: "addCollectionItem",
       DELETE_CONFIG: "deleteConfig",
       ERROR: "error",
-      SAVE_CONFIG: "saveConfig"
+      SAVE_CONFIG: "saveConfig",
+      EDITOR: "editor"
+    };
+
+    /**
+     * Sets the editor value
+     *
+     * @param {String} value
+     */
+    that.setEditorValue = function (value) {
+        that.editorValue = value;
+    };
+
+    /**
+     * Retrieves the editor value
+     *
+     * @returns {CUI.Modal}
+     */
+    that.getEditorValue = function () {
+        return that.editorValue;
     };
 
     /**
@@ -52,12 +74,23 @@
     };
 
     /**
+     * Retrieves a modal component
+     *
+     * @param {String} modalName
+     * @returns {CUI.Modal}
+     */
+    that.getComponent = function (modalName) {
+      return uiService.getComponent(uiService.component.MODAL, modalName);
+    };
+
+    /**
      * @param {String} modalName
      * @param {String} eventName
      * @param {Function} callback
      */
     that.onEvent = function (modalName, eventName, callback) {
-      uiService.onEvent(uiService.component.MODAL, modalName, eventName, callback);
+      var component = uiService.getComponent(uiService.component.MODAL, modalName);
+      component.on(eventName, callback);
     };
 
     /**

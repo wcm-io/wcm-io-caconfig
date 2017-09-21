@@ -59,10 +59,14 @@ public @interface ConfigSample {
    * @return Path parameter
    */
   @Property(label = "Context Path", description = "Browse pages in the current configuration context path.", order = 5, property = {
-      "widgetType=pathbrowser",
-      "pathbrowserRootPathContext=true"
+      "widgetType=richtexteditor"
   })
   String contextPath();
+
+  @Property(label = "Context Path 2", description = "Browse pages in the current configuration context path.", order = 5, property = {
+          "widgetType=richtexteditor"
+  })
+  String repeatedpath();
 
   /**
    * @return String array parameter with default value

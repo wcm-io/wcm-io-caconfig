@@ -66,6 +66,10 @@
             && scope.parameter.metadata.properties.widgetType === "pathbrowser") {
         scope.type = "pathbrowser";
       }
+      else if (scope.parameter.metadata && scope.parameter.metadata.properties
+                && scope.parameter.metadata.properties.widgetType === "richtexteditor") {
+          scope.type = "richtexteditor";
+      }
       else if (scope.parameter.metadata && scope.parameter.metadata.type) {
         input = inputMap[scope.parameter.metadata.type];
         scope.type = input.type || scope.parameter.metadata.type;

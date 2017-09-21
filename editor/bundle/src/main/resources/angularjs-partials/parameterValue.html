@@ -15,6 +15,11 @@
                           caconfig-is-config-inherited="isConfigInherited" />
   </div>
 
+  <div ng-switch-when="richtexteditor">
+    <caconfig-richtexteditor caconfig-parameter="parameter"
+                          caconfig-is-config-inherited="isConfigInherited" />
+  </div>
+
   <div ng-switch-when="number">
     <input class="coral-Textfield" type="text"
            ng-hide="parameter.overridden || parameter.inherited"
