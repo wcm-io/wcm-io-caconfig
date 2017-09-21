@@ -31,6 +31,9 @@
   function ModalService(uiService) {
     var that = this;
 
+    // Shared editor value
+    that.editorValue;
+
     that.event = {
       CUSTOM_MESSAGE: "caconfig-customMessage"
     };
@@ -42,6 +45,14 @@
       ERROR: "error",
       SAVE_CONFIG: "saveConfig",
       EDITOR: "editor"
+    };
+
+    that.setEditorValue = function (value) {
+        that.editorValue = value;
+    };
+
+    that.getEditorValue = function () {
+        return that.editorValue;
     };
 
     /**

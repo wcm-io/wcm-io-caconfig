@@ -34,9 +34,13 @@
           visible: false
         });
 
-        // re-compile the modal content after show, to render the richtext editor propertly
+        var modal_instance = modalService.getComponent(modalService.modal.EDITOR);
+        modal_instance.set({content: '<text-angular ng-model="richContent"></text-angular>'});
+
+        $compile($element.contents())($scope);
+
         modalService.onEvent(modalService.modal.EDITOR, 'show', function () {
-          $compile($element.contents())($scope);
+            $scope.richContent = modalService.getEditorValue();
         });
       };
 
@@ -44,9 +48,7 @@
      * Triggers some 'saved' event so that the modal opener can handle data
      */
     that.save = function () {
-      var content = $scope.richContent;
-      delete $scope.richContent;
-      modalService.triggerEvent(modalService.modal.EDITOR, 'saved', { content: content });
+      modalService.triggerEvent(modalService.modal.EDITOR, 'saved', { content: $scope.richContent });
     };
 
     /**

@@ -42,7 +42,7 @@
     function link(scope, element, attr, form) {
       scope.openPopup = function () {
         var modal_instance = modalService.getComponent(modalService.modal.EDITOR);
-        modal_instance.set({content: '<text-angular ng-model="richContent">' + (scope.parameter.value !== undefined ? scope.parameter.value : '') + '</text-angular>'});
+        modalService.setEditorValue(scope.parameter.value);
         var save = function(e, data) {
                 form.$setDirty(true);
                 scope.parameter.value = data.content;
