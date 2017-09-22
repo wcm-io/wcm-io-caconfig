@@ -36,7 +36,9 @@ You should also extend the filter settings for ignoring property names when read
     ignorePropertyNameRegex=["^(jcr|cq):.+$"]
 ```
 
-If you want to use the Web Console plugin for Sling Context-Aware configuration you also need to create a system user which has read access to `/conf` and `/content` and add an service user mapping for this user (named `sling-caconfig` in this example):
+#### Optional: System user for web console
+
+By default, the web console plugin for Sling Context-Aware Configuration used the user that is logged into the web console for accessing the repository. Alternatively you can create a system user which has read access to `/conf` and `/content` and add an service user mapping for this user (named `sling-caconfig` in this example):
 
 ```
   org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-sling-caconfig
@@ -46,7 +48,7 @@ If you want to use the Web Console plugin for Sling Context-Aware configuration 
 
 ### Updating Sling Context-Aware Configuration in AEM 6.3
 
-In AEM 6.3 you should check which versions of the bundles mentioned above are already installed. If you have no service pack installed you need to update at least the SPI and Impl bundle to the latest version:
+In AEM 6.3 you should check which versions of the bundles mentioned above are already installed. You should update at least the SPI and Impl bundle to the latest version:
 
 * `org.apache.sling:org.apache.sling.caconfig.spi`
 * `org.apache.sling:org.apache.sling.caconfig.impl`

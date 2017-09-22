@@ -21,14 +21,6 @@
   padding: 15px;
 }
 
-.coral-Table .coral-Textfield {
-  width: 100%;
-}
-
-.coral-Table .coral-Select {
-  width: 100%;
-}
-
 form.ng-dirty textarea.ng-dirty.ng-invalid,
 form.ng-dirty input.ng-dirty.ng-invalid {
   border: 1px solid #f00;
