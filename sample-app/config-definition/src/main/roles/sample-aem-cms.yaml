@@ -1,5 +1,4 @@
-# Adobe Experience Manager (AEM) Instance.
-# AEM quickstart runs directly from command line with embedded Jetty Servlet Container.
+# Context-Aware Configuration Sample Application
 
 variants:
 - variant: aem-author
