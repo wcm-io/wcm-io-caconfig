@@ -23,9 +23,9 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("EditorController", EditorController);
 
-  EditorController.$inject = ["modalService", "$element", "$compile", "$scope"];
+  EditorController.$inject = ["modalService", "$scope"];
 
-  function EditorController(modalService, $element, $compile, $scope) {
+  function EditorController(modalService, $scope) {
     var that = this,
       init = function () {
 
@@ -34,8 +34,6 @@
           element: "#caconfig-editorModal",
           visible: false
         });
-
-        $compile($element.contents())($scope);
 
         modalService.onEvent(modalService.modal.EDITOR, 'show', function () {
             $scope.richContent = modalService.getEditorValue();
