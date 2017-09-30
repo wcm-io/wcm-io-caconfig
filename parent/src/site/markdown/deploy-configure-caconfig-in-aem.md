@@ -23,12 +23,18 @@ In AEM 6.1 or AEM 6.2 you need to deploy the latest version of these Sling bundl
 * `org.apache.sling:org.apache.sling.caconfig.impl`
 * `org.apache.sling:org.apache.sling.commons.johnzon`
 
-The Default Context Path Strategy needs an additional configuration to support `sling:configRef` properties stored in `jcr:content` subnodes of AEM content pages:
+You should apply the same configuration to the Sling Context-Aware Configuration bundles that is present in AEM 6.3 (e.g. for support reading `sling:configRef` property stored in `jcr:content` subnodes of AEM content pages):
 
 ```
   org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy
-    configRefResourceNames=["jcr:content"]
+    configRefResourceNames=["jcr:content","."]
+    configRefPropertyNames=["cq:conf"]
+
+  org.apache.sling.caconfig.resource.impl.def.DefaultConfigurationResourceResolvingStrategy
+    fallbackPaths=["/conf/global","/apps","/libs"]
+    configCollectionInheritancePropertyNames=["jcr:content/mergeList","mergeList"]
 ```
+
 You should also extend the filter settings for ignoring property names when reading and writing configuration data to also exclude properties with the `cq:` namespace:
 
 ```
@@ -54,14 +60,19 @@ In AEM 6.3 you should check which versions of the bundles mentioned above are al
 * `org.apache.sling:org.apache.sling.caconfig.impl`
 * `org.apache.sling:org.apache.sling.commons.johnzon`
 
-The additional configuration steps for AEM 6.1 and 6.2 are not required for AEM 6.3 because they are already included, except this one:
+The additional configuration steps for AEM 6.1 and 6.2 are not required for AEM 6.3 because these configurations are already included.
+
+You only have to add this configuration, which is no yet present in AEM 6.3:
 
 ```
   org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
     ignorePropertyNameRegex=["^(jcr|cq):.+$"]
 ```
 
+If you are using AEM 6.3 and want to write configuration by the Configuration Editor or the Context-Aware Configuration Management API you should also install the [wcm.io Context-Aware Configuration Extensions][wcmio-caconfig-extensions] and activate the ["AEM Page" persistence strategy][wcmio-caconfig-extensions-persistence-aempage] - otherwise you may get subtle problems e.g. when using nested configuration collections.
 
 
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
 [wcmio-caconfig]: http://wcm.io/caconfig/
+[wcmio-caconfig-extensions]: http://wcm.io/caconfig/extensions/
+[wcmio-caconfig-extensions-persistence-aempage]: http://wcm.io/caconfig/extensions/persistence-strategies.html

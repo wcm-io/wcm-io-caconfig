@@ -24,7 +24,7 @@ import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.commit;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.containsJcrContent;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.convertPersistenceException;
-import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildren;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildrenNotInCollection;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensureContainingPage;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.getOrCreateResource;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.replaceProperties;
@@ -183,7 +183,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     Resource configResourceParent = getOrCreateResource(resolver, parentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY, configurationManagementSettings);
 
     // delete existing children and create new ones
-    deleteChildren(configResourceParent);
+    deleteChildrenNotInCollection(configResourceParent, data);
     for (ConfigurationPersistData item : data.getItems()) {
       String path = getCollectionItemResourcePath(parentPath + "/" + item.getCollectionItemName());
       ensureContainingPage(resolver, path, configurationManagementSettings);

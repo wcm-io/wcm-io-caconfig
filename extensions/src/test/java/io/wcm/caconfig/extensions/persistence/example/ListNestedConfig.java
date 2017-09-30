@@ -21,12 +21,12 @@ package io.wcm.caconfig.extensions.persistence.example;
 
 import org.apache.sling.caconfig.annotation.Configuration;
 
-@Configuration
-public @interface NestedConfig {
+@Configuration(collection = true)
+public @interface ListNestedConfig {
 
   String stringParam();
 
-  SimpleConfig subConfig();
+  int intParam();
 
   ListConfig[] subListConfig();
 
