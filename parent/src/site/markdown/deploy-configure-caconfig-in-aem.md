@@ -69,7 +69,10 @@ You only have to add this configuration, which is no yet present in AEM 6.3:
     ignorePropertyNameRegex=["^(jcr|cq):.+$"]
 ```
 
+If you are using AEM 6.3 and want to write configuration by the Configuration Editor or the Context-Aware Configuration Management API you should also install the [wcm.io Context-Aware Configuration Extensions][wcmio-caconfig-extensions] and activate the ["AEM Page" persistence strategy][wcmio-caconfig-extensions-persistence-aempage] - otherwise you may get subtle problems e.g. when using nested configuration collections.
 
 
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
 [wcmio-caconfig]: http://wcm.io/caconfig/
+[wcmio-caconfig-extensions]: http://wcm.io/caconfig/extensions/
+[wcmio-caconfig-extensions-persistence-aempage]: http://wcm.io/caconfig/extensions/persistence-strategies.html

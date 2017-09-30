@@ -1,5 +1,9 @@
 # Context-Aware Configuration Sample Application
 
+# Inherit default AEM functionality from "AEM Definitions", see http://devops.wcm.io/conga/definitions/aem/
+inherits:
+- role: aem-cms
+
 variants:
 - variant: aem-author
 - variant: aem-publish
@@ -57,6 +61,7 @@ config:
 
   app:
     sampleContent: false
+    caconfigAemPagePersistence: false
 
 
   # Example for config override configuration

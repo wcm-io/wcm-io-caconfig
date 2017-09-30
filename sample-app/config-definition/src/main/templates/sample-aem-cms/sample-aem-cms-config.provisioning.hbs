@@ -3,13 +3,6 @@
 
 [configurations]
 
-  # Enable GZIP and Minification for Clientlibs
-  com.adobe.granite.ui.clientlibs.impl.HtmlLibraryManagerImpl
-    htmllibmanager.debug=B"false"
-    htmllibmanager.timing=B"false"
-    htmllibmanager.minify=B"true"
-    htmllibmanager.gzip=B"true"
-
   # Default LogManager configuration
   org.apache.sling.commons.log.LogManager
     org.apache.sling.commons.log.pattern="{0,date,dd.MM.yyyy\ HH:mm:ss.SSS}\ *{4}*\ [{2}]\ {3}\ {5}"
@@ -32,6 +25,13 @@
 
   org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-sling-caconfig
     user.mapping=["org.apache.sling.caconfig.impl\=sling-caconfig"]
+
+{{#if app.caconfigAemPagePersistence}}
+  # Enable wcm.io CAConfig Extensions AEM Page Persistence
+  io.wcm.caconfig.extensions.persistence.impl.PagePersistenceStrategy
+    enabled=B"true"
+{{/if}}
+
 
   # Example for config override
   org.apache.sling.caconfig.impl.override.OsgiConfigurationOverrideProvider-caconfig-sample
@@ -59,17 +59,6 @@
 
 [configurations runModes=publish]
   
-  # Disable built-in JSON and XML access features for resources
-  org.apache.sling.servlets.get.DefaultGetServlet
-    enable.html=B"false"
-    enable.json=B"false"
-    enable.txt=B"false"
-    enable.xml=B"false"
-    index=B"false"
-    index.files="[index,index.html]"
-    aliases="xml:pdf"
-    json.maximumresults=I"1000"
-
   # Disable Configuration Editor on publish
   io.wcm.caconfig.editor.impl.EditorConfig
     enabled=B"false"

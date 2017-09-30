@@ -90,11 +90,16 @@
         <version>1.0.0</version>
       </dependency>
       
-      <!-- wcm.io Context-Aware Config Editor -->
+      <!-- wcm.io Context-Aware Config -->
       <dependency>
         <groupId>io.wcm</groupId>
         <artifactId>io.wcm.caconfig.editor</artifactId>
         <version>1.2.7-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.wcm</groupId>
+        <artifactId>io.wcm.caconfig.extensions</artifactId>
+        <version>1.1.1-SNAPSHOT</version>
       </dependency>
 
       <!-- Import AEM dependencies -->
