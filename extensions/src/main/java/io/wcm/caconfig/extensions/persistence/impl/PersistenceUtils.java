@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ModifiableValueMap;
@@ -37,6 +38,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.caconfig.management.ConfigurationManagementSettings;
+import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceAccessDeniedException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.slf4j.Logger;
@@ -154,11 +156,24 @@ final class PersistenceUtils {
     }
   }
 
-  public static void deleteChildren(Resource resource) {
-    ResourceResolver resolver = resource.getResourceResolver();
+  /**
+   * Delete children that are no longer contained in list of collection items.
+   * @param resource Parent resource
+   * @param data List of collection items
+   */
+  public static void deleteChildrenNotInCollection(Resource resource, ConfigurationCollectionPersistData data) {
+    ResourceResolver resourceResolver = resource.getResourceResolver();
+
+    Set<String> collectionItemNames = data.getItems().stream()
+        .map(item -> item.getCollectionItemName())
+        .collect(Collectors.toSet());
+
     try {
       for (Resource child : resource.getChildren()) {
-        resolver.delete(child);
+        if (!collectionItemNames.contains(child.getName())) {
+          log.trace("! Delete resource {}", child.getPath());
+          resourceResolver.delete(child);
+        }
       }
     }
     catch (PersistenceException ex) {
