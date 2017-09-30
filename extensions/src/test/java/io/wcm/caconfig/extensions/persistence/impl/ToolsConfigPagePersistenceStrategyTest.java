@@ -23,18 +23,18 @@ import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigu
 import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigurationCollection;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.ConfigurationBuilder;
 import org.apache.sling.caconfig.management.ConfigurationManager;
+import org.apache.sling.hamcrest.ResourceMatchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -90,19 +90,19 @@ public class ToolsConfigPagePersistenceStrategyTest {
 
     // assert storage in page in /content/*/tools/config
     Page configPage = context.pageManager().getPage("/content/region1/site1/en/tools/config");
-    assertNotNull(configPage);
-    ValueMap props = configPage.getContentResource("sling:configs/" + SimpleConfig.class.getName()).getValueMap();
-    assertEquals("value1", props.get("stringParam", String.class));
-    assertEquals((Integer)123, props.get("intParam", Integer.class));
-    assertEquals("/apps/app1/templates/configEditor", configPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
-    assertEquals("config", configPage.getTitle());
-    assertEquals("app1/components/page/configEditor", configPage.getProperties().get("sling:resourceType", String.class));
+    assertThat(configPage.getContentResource(), ResourceMatchers.props(
+        NameConstants.PN_TEMPLATE, "/apps/app1/templates/configEditor",
+        NameConstants.PN_TITLE, "config",
+        "sling:resourceType", "app1/components/page/configEditor"));
+    assertThat(configPage.getContentResource("sling:configs/" + SimpleConfig.class.getName()), ResourceMatchers.props(
+        "stringParam", "value1",
+        "intParam", 123));
 
     Page toolsPage = context.pageManager().getPage("/content/region1/site1/en/tools");
-    assertNotNull(toolsPage);
-    assertEquals("/apps/app1/templates/structurePage", toolsPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
-    assertEquals("tools", toolsPage.getTitle());
-    assertNull(toolsPage.getProperties().get("sling:resourceType", String.class));
+    assertThat(toolsPage.getContentResource(), ResourceMatchers.props(
+        NameConstants.PN_TEMPLATE, "/apps/app1/templates/structurePage",
+        NameConstants.PN_TITLE, "tools",
+        "sling:resourceType", null));
 
     // read config
     SimpleConfig config = contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).as(SimpleConfig.class);
@@ -126,22 +126,22 @@ public class ToolsConfigPagePersistenceStrategyTest {
 
     // assert storage in page in /conf
     Page configPage = context.pageManager().getPage("/content/region1/site1/en/tools/config");
-    assertNotNull(configPage);
-    ValueMap props1 = configPage.getContentResource("sling:configs/" + ListConfig.class.getName() + "/item0").getValueMap();
-    assertEquals("value1", props1.get("stringParam", String.class));
-    assertEquals((Integer)123, props1.get("intParam", Integer.class));
-    ValueMap props2 = configPage.getContentResource("sling:configs/" + ListConfig.class.getName() + "/item1").getValueMap();
-    assertEquals("value2", props2.get("stringParam", String.class));
-    assertEquals((Integer)234, props2.get("intParam", Integer.class));
-    assertEquals("/apps/app1/templates/configEditor", configPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
-    assertEquals("config", configPage.getTitle());
-    assertEquals("app1/components/page/configEditor", configPage.getProperties().get("sling:resourceType", String.class));
+    assertThat(configPage.getContentResource(), ResourceMatchers.props(
+        NameConstants.PN_TEMPLATE, "/apps/app1/templates/configEditor",
+        NameConstants.PN_TITLE, "config",
+        "sling:resourceType", "app1/components/page/configEditor"));
+    assertThat(configPage.getContentResource("sling:configs/" + ListConfig.class.getName() + "/item0"), ResourceMatchers.props(
+        "stringParam", "value1",
+        "intParam", 123));
+    assertThat(configPage.getContentResource("sling:configs/" + ListConfig.class.getName() + "/item1"), ResourceMatchers.props(
+        "stringParam", "value2",
+        "intParam", 234));
 
     Page toolsPage = context.pageManager().getPage("/content/region1/site1/en/tools");
-    assertNotNull(toolsPage);
-    assertEquals("/apps/app1/templates/structurePage", toolsPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
-    assertEquals("tools", toolsPage.getTitle());
-    assertNull(toolsPage.getProperties().get("sling:resourceType", String.class));
+    assertThat(toolsPage.getContentResource(), ResourceMatchers.props(
+        NameConstants.PN_TEMPLATE, "/apps/app1/templates/structurePage",
+        NameConstants.PN_TITLE, "tools",
+        "sling:resourceType", null));
 
     // read config
     List<ListConfig> configs = ImmutableList.copyOf(contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).asCollection(ListConfig.class));
@@ -168,26 +168,17 @@ public class ToolsConfigPagePersistenceStrategyTest {
 
     // assert storage in page in /conf
     Page configPage = context.pageManager().getPage("/content/region1/site1/en/tools/config");
-    assertNotNull(configPage);
-    ValueMap props = configPage.getContentResource("sling:configs/" + NestedConfig.class.getName()).getValueMap();
-    assertEquals("value1", props.get("stringParam", String.class));
-
-    Resource subConfigResource = configPage.getContentResource("sling:configs/" + NestedConfig.class.getName() + "/subConfig");
-    assertNotNull(subConfigResource);
-    ValueMap subConifgProps = subConfigResource.getValueMap();
-    assertEquals("value2", subConifgProps.get("stringParam", String.class));
-    assertEquals((Integer)234, subConifgProps.get("intParam", Integer.class));
-
-    Resource subListConfigResource1 = configPage.getContentResource("sling:configs/" + NestedConfig.class.getName() + "/subListConfig/item0");
-    assertNotNull(subListConfigResource1);
-    ValueMap subListConfigProps1 = subListConfigResource1.getValueMap();
-    assertEquals("value3", subListConfigProps1.get("stringParam", String.class));
-    assertEquals((Integer)345, subListConfigProps1.get("intParam", Integer.class));
-    Resource subListConfigResource2 = configPage.getContentResource("sling:configs/" + NestedConfig.class.getName() + "/subListConfig/item1");
-    assertNotNull(subListConfigResource2);
-    ValueMap subListConfigProps2 = subListConfigResource2.getValueMap();
-    assertEquals("value4", subListConfigProps2.get("stringParam", String.class));
-    assertEquals((Integer)456, subListConfigProps2.get("intParam", Integer.class));
+    assertThat(configPage.getContentResource("sling:configs/" + NestedConfig.class.getName()), ResourceMatchers.props(
+        "stringParam", "value1"));
+    assertThat(configPage.getContentResource("sling:configs/" + NestedConfig.class.getName() + "/subConfig"), ResourceMatchers.props(
+        "stringParam", "value2",
+        "intParam", 234));
+    assertThat(configPage.getContentResource("sling:configs/" + NestedConfig.class.getName() + "/subListConfig/item0"), ResourceMatchers.props(
+        "stringParam", "value3",
+        "intParam", 345));
+    assertThat(configPage.getContentResource("sling:configs/" + NestedConfig.class.getName() + "/subListConfig/item1"), ResourceMatchers.props(
+        "stringParam", "value4",
+        "intParam", 456));
 
     // read config
     NestedConfig config = contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).as(NestedConfig.class);
@@ -222,12 +213,10 @@ public class ToolsConfigPagePersistenceStrategyTest {
         .put(NameConstants.PN_PAGE_LAST_MOD, cal)
         .build());
 
-
     // write config
     writeConfiguration(context, contentPageWithCQLastModified.getPath(), SimpleConfig.class.getName(),
         "stringParam", "value1",
         "intParam", 123);
-
 
     Page configPage = context.pageManager().getPage("/content/region2/site2/en/tools/config");
 
@@ -238,13 +227,9 @@ public class ToolsConfigPagePersistenceStrategyTest {
     assertTrue(cal.before(changedDate));
 
     // assert storage in page in /content/*/tools/config
-    assertNotNull(configPage);
-    ValueMap props = configPage.getContentResource("sling:configs/" + SimpleConfig.class.getName()).getValueMap();
-    assertEquals("value1", props.get("stringParam", String.class));
-    assertEquals((Integer)123, props.get("intParam", Integer.class));
-    assertEquals("/apps/app1/templates/configEditor", configPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class));
-    assertEquals("config", configPage.getTitle());
-    assertEquals("app1/components/page/configEditor", configPage.getProperties().get("sling:resourceType", String.class));
+    assertThat(configPage.getContentResource("sling:configs/" + SimpleConfig.class.getName()), ResourceMatchers.props(
+        "stringParam", "value1",
+        "intParam", 123));
 
     // read config
     SimpleConfig config = contentPageWithCQLastModified.getContentResource().adaptTo(ConfigurationBuilder.class).as(SimpleConfig.class);
@@ -258,4 +243,5 @@ public class ToolsConfigPagePersistenceStrategyTest {
     assertNull(config.stringParam());
     assertEquals(5, config.intParam());
   }
+
 }
