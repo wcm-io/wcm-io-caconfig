@@ -18,9 +18,14 @@
     org.apache.sling.commons.log.file.size="'.'yyyy-MM-dd"
     org.apache.sling.commons.log.file.number=I"15"
 
-  # Configure Sling Context-Aware Configuration for AEM - add lookup in jcr:content subnodes, ignore cq:* properties
+  # Configure Sling Context-Aware Configuration for AEM
   org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy
-    configRefResourceNames=["jcr:content"]
+    configRefResourceNames=["jcr:content","."]
+    configRefPropertyNames=["cq:conf"]
+
+  org.apache.sling.caconfig.resource.impl.def.DefaultConfigurationResourceResolvingStrategy
+    fallbackPaths=["/conf/global","/apps","/libs"]
+    configCollectionInheritancePropertyNames=["jcr:content/mergeList","mergeList"]
   
   org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
     ignorePropertyNameRegex=["^(jcr|cq):.+$"]
