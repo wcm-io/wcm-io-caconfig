@@ -5,6 +5,7 @@ sling_url="http://localhost:4502"
 sling_user="admin"
 sling_password="admin"
 sling_params=""
+conga_node="aem-author"
 
 # set parameter variables before run
 init()
@@ -69,7 +70,7 @@ echo "*** Deploy AEM packages  ***"
 echo ""
 
 cd config-definition
-mvn -B $sling_params -Pdeploy-packages conga-aem:package-install
+mvn -B $sling_params -Dconga.nodeDirectory=target/configuration/development/$conga_node conga-aem:package-install
 
 if [ "$?" -ne "0" ]; then
   error_exit "*** Deploying config packages FAILED ***"
