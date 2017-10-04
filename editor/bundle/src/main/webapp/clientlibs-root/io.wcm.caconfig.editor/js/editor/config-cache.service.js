@@ -219,7 +219,9 @@
       if (parent.collection) {
         parent.itemName = configName.replace(parent.configName, "")
           .replace(configNameObject.name, "")
-          .replace(/\//g, "");
+          .replace(/^\//, "")     // remove slash at start
+          .replace(/\/$/, "")     // remove slash at end
+          .replace(/\//g, " / "); // add spaces around remaining slashes, for view
       }
 
       breadcrumbs.push(parent);
