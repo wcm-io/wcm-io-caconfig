@@ -21,27 +21,33 @@
   "use strict";
 
   /**
-   * Renders the wrapping elements for the Coral ui popover.
-   * The content itself is transcluded. The content can also contain markup.
-   *
-   * @example
-   * <caconfig-popup-content content="Description Text"></caconfig-popup-content>
+   * Directive for a link to a nested configuration
    */
   angular.module("io.wcm.caconfig.widgets")
-    .directive("caconfigPopupContent", popupContent);
+    .directive("caconfigPropertyEditLink", propertyEditLink);
 
-  popupContent.$inject = ["templateUrlList"];
+  propertyEditLink.$inject = ["templateUrlList", "$rootScope"];
 
-  function popupContent(templateList) {
+  function propertyEditLink(templateList, $rootScope) {
 
     var directive = {
+      require: "^form",
+      templateUrl: templateList.propertyEditLink,
       scope: {
-        content: "="
+        configName: "@",
+        linkText: "@"
       },
-      restrict: "E",
-      templateUrl: templateList.popupContent
+      replace: true,
+      link: link
     };
 
     return directive;
+
+    function link(scope, element, attrs, form) {
+      scope.form = form;
+      scope.go = $rootScope.go;
+      scope.saveWarning = $rootScope.saveWarning;
+      scope.linkText = $rootScope.i18n.button.edit;
+    }
   }
 }(angular));

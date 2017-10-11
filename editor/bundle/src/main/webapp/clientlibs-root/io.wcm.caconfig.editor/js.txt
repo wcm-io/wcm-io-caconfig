@@ -1,5 +1,7 @@
 #base=js
 
+lib/bindonce.min.js
+
 app.module.js
 templates.module.js
 utilities.module.js
@@ -25,8 +27,13 @@ modals/save-config.controller.js
 
 widgets/widgets.module.js
 widgets/widgets.constants.js
+widgets/config-table.directive.js
 widgets/description-popup.directive.js
 widgets/multifield.directive.js
-widgets/pathbrowser.directive.js
 widgets/parameter-value.directive.js
+widgets/pathbrowser.directive.js
 widgets/popup-content.directive.js
+widgets/property-edit-link.directive.js
+widgets/property-input-checkbox.directive.js
+widgets/property-input-text.directive.js
+widgets/property-row.directive.js

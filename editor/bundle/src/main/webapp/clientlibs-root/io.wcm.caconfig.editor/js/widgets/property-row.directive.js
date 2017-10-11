@@ -21,27 +21,33 @@
   "use strict";
 
   /**
-   * Renders the wrapping elements for the Coral ui popover.
-   * The content itself is transcluded. The content can also contain markup.
-   *
-   * @example
-   * <caconfig-popup-content content="Description Text"></caconfig-popup-content>
+   * General directive for the widget column to edit the parameters value.
    */
   angular.module("io.wcm.caconfig.widgets")
-    .directive("caconfigPopupContent", popupContent);
+    .directive("caconfigPropertyRow", propertyRow);
 
-  popupContent.$inject = ["templateUrlList"];
+  propertyRow.$inject = ["templateUrlList", "currentConfigService"];
 
-  function popupContent(templateList) {
+  function propertyRow(templateList, currentConfigService) {
 
     var directive = {
+      restrict: "A",
+      templateUrl: templateList.propertyRow,
       scope: {
-        content: "="
+        property: "=caconfigPropertyRow",
+        propertyInheritanceEnabled: "=caconfigPropertyInheritanceEnabled"
       },
-      restrict: "E",
-      templateUrl: templateList.popupContent
+      transclude: true,
+      replace: true,
+      link: link
     };
 
     return directive;
+
+    function link(scope) {
+      scope.propertyRow = {
+        handleInheritedChange: currentConfigService.handleInheritedChange
+      };
+    }
   }
 }(angular));

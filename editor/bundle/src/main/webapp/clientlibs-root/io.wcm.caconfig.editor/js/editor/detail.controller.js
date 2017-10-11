@@ -27,13 +27,12 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("DetailController", DetailController);
 
-  DetailController.$inject = ["$rootScope", "$route", "configService", "currentConfigService", "modalService"];
+  DetailController.$inject = ["$rootScope", "$scope", "$route", "$compile", "configService", "modalService"];
 
-  function DetailController($rootScope, $route, configService, currentConfigService, modalService) {
-    var CONFIG_PROPERTY_INHERIT = "sling:configPropertyInherit";
-    var CONFIG_COLLECTION_INHERIT = "sling:configCollectionInherit";
+  /* eslint-disable max-params */
+  function DetailController($rootScope, $scope, $route, $compile, configService, modalService) {
+  /* eslint-enable max-params */
     var that = this;
-    var forceFormModified = false;
 
     that.current = {
       configName: $route.current.params.configName,
@@ -58,20 +57,15 @@
     };
 
     that.saveConfig = function () {
-      // if (that.current.configs.length === 0 && Boolean(that.current.collectionProperties[CONFIG_COLLECTION_INHERIT])) {
-      //   that.removeConfig();
-      // }
-      // else {
-        configService.saveCurrentConfig()
-          .then(function (redirect) {
-            if (redirect) {
-              $rootScope.go(redirect.configName || "");
-            }
-            else {
-              $rootScope.go(that.current.parent ? that.current.parent.configName : "");
-            }
-          });
-      // }
+      configService.saveCurrentConfig()
+        .then(function (redirect) {
+          if (redirect) {
+            $rootScope.go(redirect.configName || "");
+          }
+          else {
+            $rootScope.go(that.current.parent ? that.current.parent.configName : "");
+          }
+        });
     };
 
     that.removeConfig = function() {
@@ -92,68 +86,7 @@
 
     that.addCollectionItem = function () {
       modalService.show(modalService.modal.ADD_COLLECTION_ITEM);
-    };
-
-    that.removeCollectionItem = function (index) {
-      currentConfigService.removeItemFromCurrentCollection(index);
-    };
-
-    that.isModified = function (formPristine) {
-      return !formPristine || forceFormModified
-        || that.current.originalLength !== that.current.configs.length;
-    };
-
-    that.handleInheritedChange = function (property) {
-      if (!property.metadata.multivalue
-          && !property.inherited && angular.isUndefined(property.value)) {
-        property.value = property.effectiveValue;
-      }
-      else {
-        property.effectiveValue = "(" + $rootScope.i18n.config.inherited + ")";
-        if (angular.isUndefined(property.value)) {
-          property.value = null;
-        }
-      }
-    };
-
-    that.getConfigPropertyInherit = function (config) {
-      var configPropertyInherit = _.find(config.properties, {
-        name: CONFIG_PROPERTY_INHERIT
-      });
-      if (!configPropertyInherit) {
-        configPropertyInherit = {
-          name: CONFIG_PROPERTY_INHERIT,
-          value: false
-        };
-        config.properties.push(configPropertyInherit);
-      }
-      return configPropertyInherit;
-    };
-
-    that.setConfigPropertyInherit = function (config, value) {
-      var configPropertyInherit = that.getConfigPropertyInherit(config);
-      configPropertyInherit.value = value;
-      that.handleConfigPropertyInheritChange(config);
-    };
-
-    that.handleConfigPropertyInheritChange = function (config) {
-      var configPropertyInherit = that.getConfigPropertyInherit(config);
-      if (configPropertyInherit.value) {
-        return;
-      }
-      angular.forEach(config.properties, function (property) {
-        if (property.name !== CONFIG_PROPERTY_INHERIT && !property.overridden
-            && !property.nestedConfig && !property.nestedConfigCollection) {
-          property.inherited = false;
-          that.handleInheritedChange(property);
-        }
-      });
-    };
-
-    that.breakInheritance = function (config) {
-      config.inherited = false;
-      that.setConfigPropertyInherit(config, true);
-      forceFormModified = true;
+      that.configForm.$setDirty();
     };
 
     /**
@@ -163,29 +96,19 @@
       // Load Configuration Details
       configService.loadConfig(that.current.configName)
         .then(function (currentData) {
-          that.current.configs = setDefaultValues(currentData.configs);
-          that.current.originalLength = currentData.configs.length;
-          that.current.isCollection = currentData.isCollection;
-          that.current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
-          that.current.collectionProperties = currentData.collectionProperties;
-          that.current.label = currentData.configNameObject.label || that.current.configName;
-          that.current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
-          that.current.parent = that.current.breadcrumbs[that.current.breadcrumbs.length - 1];
-          that.current.description = currentData.configNameObject.description;
-          that.current.contextPath = configService.getState().contextPath;
-          $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
-        });
-    }
-
-    function setDefaultValues(configs) {
-      angular.forEach(configs, function (config) {
-        angular.forEach(config.properties, function (property) {
-          if (property["default"] && angular.isUndefined(property.value)) {
-            property.value = property.effectiveValue;
+          if (!angular.isUndefined(currentData)) {
+            that.current.configs = currentData.configs;
+            that.current.isCollection = currentData.isCollection;
+            that.current.collectionProperties = currentData.collectionProperties;
+            that.current.label = currentData.configNameObject.label || that.current.configName;
+            that.current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
+            that.current.parent = that.current.breadcrumbs[that.current.breadcrumbs.length - 1];
+            that.current.description = currentData.configNameObject.description;
+            that.current.contextPath = configService.getState().contextPath;
+            $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
           }
+          that.dvReady = true;
         });
-      });
-      return configs;
     }
   }
 }(angular));

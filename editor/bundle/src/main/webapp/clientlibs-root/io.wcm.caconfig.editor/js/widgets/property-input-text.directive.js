@@ -20,11 +20,30 @@
 (function (angular) {
   "use strict";
 
-  angular.module("io.wcm.caconfig.app", [
-    "pasvaz.bindonce",
-    "io.wcm.caconfig.widgets",
-    "io.wcm.caconfig.modals",
-    "io.wcm.caconfig.editor"
-  ]);
+  /**
+   * Directive for text field input, used for string and numeric properties.
+   */
+  angular.module("io.wcm.caconfig.widgets")
+    .directive("caconfigPropertyInputText", propertyInputText);
 
+  propertyInputText.$inject = ["templateUrlList", "inputMap"];
+
+  function propertyInputText(templateList, inputMap) {
+
+    var directive = {
+      templateUrl: templateList.propertyInputText,
+      scope: {
+        property: "="
+      },
+      replace: true,
+      link: link
+    };
+
+    return directive;
+
+    function link(scope) {
+      var input = inputMap[scope.property.metadata.type];
+      scope.pattern = input.pattern;
+    }
+  }
 }(angular));

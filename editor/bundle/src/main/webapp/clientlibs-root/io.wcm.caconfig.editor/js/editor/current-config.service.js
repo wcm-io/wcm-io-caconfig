@@ -26,17 +26,19 @@
   angular.module("io.wcm.caconfig.editor")
     .service("currentConfigService", CurrentConfigService);
 
-  CurrentConfigService.$inject = [];
+  CurrentConfigService.$inject = ["$rootScope"];
 
-  function CurrentConfigService() {
+  function CurrentConfigService($rootScope) {
     var that = this;
 
+    var CONFIG_PROPERTY_INHERIT = "sling:configPropertyInherit";
     var collectionItemTemplates = {};
     var current = {
       configName: null,
       isCollection: false,
       configs: [],
-      configNameObject: {}
+      configNameObject: {},
+      propertyTypes: {}
     };
 
     that.setCollectionItemTemplate = function (configName, newItem) {
@@ -68,6 +70,7 @@
       current.configs = data.configs;
       current.configNameObject = data.configNameObject;
       current.collectionProperties = data.collectionProperties;
+      current.propertyTypes = data.propertyTypes;
     };
 
     /**
@@ -77,6 +80,7 @@
     that.addItemToCurrentCollection = function (collectionItemName) {
       var configName = current.configName;
       var itemTemplate = getCollectionItemTemplate(configName);
+      var newIndex = current.configs.length;
       current.configs.push({
         collectionItemName: collectionItemName,
         configName: configName,
@@ -84,12 +88,62 @@
         properties: itemTemplate.properties,
         isNewItem: true
       });
+
+      that.getConfigPropertyInherit(newIndex);
     };
 
     that.removeItemFromCurrentCollection = function (index) {
       current.configs.splice(index, 1);
     };
 
+    that.handleInheritedChange = function (property) {
+      if (!property.metadata.multivalue
+          && !property.inherited && angular.isUndefined(property.value)) {
+        property.value = property.effectiveValue;
+      }
+      else {
+        property.effectiveValue = "(" + $rootScope.i18n.config.inherited + ")";
+        if (angular.isUndefined(property.value)) {
+          property.value = null;
+        }
+      }
+    };
+
+    that.getConfigPropertyInherit = function (index) {
+      var config = current.configs[index];
+      var configPropertyInherit = _.find(config.properties, {
+        name: CONFIG_PROPERTY_INHERIT
+      });
+      if (!configPropertyInherit) {
+        configPropertyInherit = {
+          name: CONFIG_PROPERTY_INHERIT,
+          value: false
+        };
+        config.properties.push(configPropertyInherit);
+      }
+      return configPropertyInherit;
+    };
+
+    that.setConfigPropertyInherit = function (index, value) {
+      var configPropertyInherit = that.getConfigPropertyInherit(index);
+      configPropertyInherit.value = value;
+      that.handleConfigPropertyInheritChange(index);
+    };
+
+    that.handleConfigPropertyInheritChange = function (index) {
+      var config = current.configs[index];
+      var configPropertyInherit = that.getConfigPropertyInherit(index);
+      if (configPropertyInherit.value) {
+        return;
+      }
+      angular.forEach(config.properties, function (property) {
+        if (property.name !== CONFIG_PROPERTY_INHERIT && !property.overridden
+            && !property.nestedConfig && !property.nestedConfigCollection) {
+          property.inherited = false;
+          that.handleInheritedChange(property);
+        }
+      });
+    };
   }
 
 }(angular, _));

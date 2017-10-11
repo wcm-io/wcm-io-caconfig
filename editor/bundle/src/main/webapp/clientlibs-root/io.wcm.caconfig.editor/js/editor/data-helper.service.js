@@ -50,11 +50,35 @@
         configs.push(configData);
       }
       return {
-        configs: configs,
-        newItem: newItem,
+        configs: setDefaultValues(configs),
+        newItem: newItem !== null ? setDefaultValues([newItem])[0] : null,
         collectionProperties: collectionProperties
       };
     };
+
+    /**
+     * Checks configs' properties and sets default values where appropriate
+     * @param {Array} configs
+     * @returns {Array} configs
+     */
+    function setDefaultValues(configs) {
+      var propsWithDefault = [];
+      angular.forEach(configs[0].properties, function (property, ix) {
+        if (property["default"]) {
+          propsWithDefault.push(ix);
+        }
+      });
+
+      angular.forEach(propsWithDefault, function (ix) {
+        angular.forEach(configs, function (config) {
+          var property = config.properties[ix];
+          if (angular.isUndefined(property.value)) {
+            property.value = property.effectiveValue;
+          }
+        });
+      });
+      return configs;
+    }
 
     /**
      * @param {Object} current

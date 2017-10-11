@@ -21,14 +21,13 @@
   "use strict";
 
   /**
-   * Directive to render the "i" button with a popover for the decription of the parameter.
+   * Directive to render the "i" button with a popover for the decription of the property.
    * Wraps a Coral UI Button and CUI.Popover widget.
    * This directive transcludes the popup content elements.
    *
    * @example
    * <caconfig-description-popup>
-   *   <caconfig-popup-content>
-   *     Description Text
+   *   <caconfig-popup-content content="Description Text">
    *   </caconfig-popup-content>
    * </caconfig-description-popup>
    */

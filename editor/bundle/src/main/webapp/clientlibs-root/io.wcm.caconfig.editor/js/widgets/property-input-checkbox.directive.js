@@ -20,11 +20,24 @@
 (function (angular) {
   "use strict";
 
-  angular.module("io.wcm.caconfig.app", [
-    "pasvaz.bindonce",
-    "io.wcm.caconfig.widgets",
-    "io.wcm.caconfig.modals",
-    "io.wcm.caconfig.editor"
-  ]);
+  /**
+   * Directive for checkbox input, used for boolean properties.
+   */
+  angular.module("io.wcm.caconfig.widgets")
+    .directive("caconfigPropertyInputCheckbox", propertyInputCheckbox);
 
+  propertyInputCheckbox.$inject = ["templateUrlList"];
+
+  function propertyInputCheckbox(templateList) {
+
+    var directive = {
+      templateUrl: templateList.propertyInputCheckbox,
+      scope: {
+        property: "="
+      },
+      replace: true
+    };
+
+    return directive;
+  }
 }(angular));

@@ -30,11 +30,15 @@
    */
   angular.module("io.wcm.caconfig.widgets")
     .constant("templateUrlList", {
-      parameterValue: "parameterValue.html",
+      configTable: "configTable.html",
+      multifield: "multifield.html",
+      pathbrowser: "pathbrowser.html",
       popupContainer: "popupContainer.html",
       popupContent: "popupContent.html",
-      multifield: "multifield.html",
-      pathbrowser: "pathbrowser.html"
+      propertyEditLink: "propertyEditLink.html",
+      propertyInputCheckbox: "propertyInputCheckbox.html",
+      propertyInputText: "propertyInputText.html",
+      propertyRow: "propertyRow.html"
     })
     .constant("directivePropertyPrefixes", {
       pathbrowser: "pathbrowser"

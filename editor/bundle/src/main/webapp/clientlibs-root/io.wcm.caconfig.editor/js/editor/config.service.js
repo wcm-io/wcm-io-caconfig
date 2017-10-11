@@ -83,7 +83,8 @@
               isCollection: isCollection,
               configs: response.data.configs,
               configNameObject: configNameObject,
-              collectionProperties: response.data.collectionProperties
+              collectionProperties: response.data.collectionProperties,
+              propertyTypes: configCacheService.getPropertyTypes(configName)
             };
             currentConfigService.setCurrent(current);
             return current;

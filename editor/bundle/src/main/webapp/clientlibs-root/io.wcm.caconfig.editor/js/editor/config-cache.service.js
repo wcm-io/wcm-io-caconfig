@@ -30,11 +30,12 @@
   angular.module("io.wcm.caconfig.editor")
     .service("configCacheService", ConfigCacheService);
 
-  ConfigCacheService.$inject = ["$window"];
+  ConfigCacheService.$inject = ["$window", "inputMap"];
 
-  function ConfigCacheService($window) {
+  function ConfigCacheService($window, inputMap) {
     var that = this;
     var configCache = {};
+    var propertyTypeCache = {};
 
     /**
      * Gets "configNameObject" for a config,
@@ -61,6 +62,57 @@
 
       return {};
     };
+
+    that.getPropertyType = function(configName, propertyName) {
+      return propertyTypeCache[configName][propertyName] || {};
+    };
+
+    that.getPropertyTypes = function(configName) {
+      return propertyTypeCache[configName] || {};
+    };
+
+    function addPropertyTypes(configName, properties) {
+      propertyTypeCache = propertyTypeCache || {};
+
+      if (!properties.length) {
+        return;
+      }
+
+      if (!angular.isUndefined(propertyTypeCache[configName])) {
+        return;
+      }
+
+      propertyTypeCache[configName] = propertyTypeCache[configName] || {};
+
+      angular.forEach(properties, function (property) {
+        var propertyName = property.name;
+        if (propertyName && angular.isUndefined(propertyTypeCache[configName][propertyName])) {
+          propertyTypeCache[configName][propertyName] = determinePropertyType(property);
+        }
+      });
+    }
+
+    function determinePropertyType(property) {
+      var input;
+      if (property.nestedConfig) {
+        return "nestedConfig";
+      }
+      if (property.nestedConfigCollection) {
+        return "nestedConfigCollection";
+      }
+      if (property.metadata && property.metadata.multivalue) {
+        return "multivalue";
+      }
+      if (property.metadata && property.metadata.properties
+            && property.metadata.properties.widgetType === "pathbrowser") {
+        return "pathbrowser";
+      }
+      if (property.metadata && property.metadata.type) {
+        input = inputMap[property.metadata.type];
+        return input.type || property.metadata.type;
+      }
+      return "";
+    }
 
     that.plantConfigCache = function (data) {
       configCache = configCache || {};
@@ -145,6 +197,7 @@
       }
 
       properties = getConfigProperties(configData, isNested, isCollection);
+      addPropertyTypes(configName, properties);
       children = getChildren(properties);
 
       if (children.length) {

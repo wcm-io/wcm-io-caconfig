@@ -1,0 +1,39 @@
+<tr bindonce
+    class="coral-Table-row"
+    ng-class="property.inherited ? 'caconfig-property-inherited' : 'caconfig-property-not-inherited'"
+    bo-class="[property.overridden ? 'caconfig-property-overridden' : 'caconfig-property-not-overridden',
+              (property.nestedConfig || property.nestedConfigCollection) ? 'caconfig-is-nested' : 'caconfig-not-nested']"
+    bo-title="property.name" ng-cloak>
+  <td class="coral-Table-cell" bo-text="property.metadata.label || property.name"></td>
+
+  <td class="coral-Table-cell" ng-transclude>
+    <!-- caconfig-property-input dynamically added here -->
+  </td>
+
+  <td class="coral-Table-cell">
+    <div bo-if="property.metadata.description">
+      <caconfig-description-popup>
+        <caconfig-popup-content content="property.metadata.description">
+        </caconfig-popup-content>
+      </caconfig-description-popup>
+    </div>
+  </td>
+  <td class="coral-Table-cell">
+    <label class="coral-Checkbox">
+      <input class="coral-Checkbox-input" type="checkbox"
+        ng-model="property.inherited"
+        ng-disabled="!propertyInheritanceEnabled
+                     || property.overridden || property.nestedConfig
+                     || property.nestedConfigCollection"
+        ng-change="propertyRow.handleInheritedChange(property)">
+      <span class="coral-Checkbox-checkmark"></span>
+    </label>
+  </td>
+  <td class="coral-Table-cell">
+    <label class="coral-Checkbox">
+      <input class="coral-Checkbox-input" type="checkbox"
+        ng-model="property.overridden" disabled readonly>
+      <span class="coral-Checkbox-checkmark"></span>
+    </label>
+  </td>
+</tr>

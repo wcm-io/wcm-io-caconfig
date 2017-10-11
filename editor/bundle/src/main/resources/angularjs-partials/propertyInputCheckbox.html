@@ -1,0 +1,19 @@
+<div>
+  <label class="coral-Checkbox caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-not-inherited">
+    <input class="coral-Checkbox-input" type="checkbox"
+           ng-model="property.value" />
+    <span class="coral-Checkbox-checkmark"></span>
+  </label>
+  <label class="coral-Checkbox caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-inherited">
+    <input class="coral-Checkbox-input" type="checkbox"
+           ng-model="property.value"
+           disabled readonly />
+    <span class="coral-Checkbox-checkmark"></span>
+  </label>
+  <label class="coral-Checkbox caconfig-if-property-overridden-or-inherited">
+    <input class="coral-Checkbox-input" type="checkbox"
+           ng-model="property.effectiveValue"
+           disabled readonly />
+    <span class="coral-Checkbox-checkmark"></span>
+  </label>
+</div>
