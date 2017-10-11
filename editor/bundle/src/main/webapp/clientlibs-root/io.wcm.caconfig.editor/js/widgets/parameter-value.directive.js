@@ -37,7 +37,6 @@
       templateUrl: templateList.parameterValue,
       scope: {
         parameter: "=caconfigParameterValue",
-        isConfigInherited: "=caconfigIsConfigInherited",
         isNewItem: "=caconfigIsNewItem"
       },
       link: link
@@ -75,6 +74,8 @@
       else {
         scope.type = null;
       }
+
+      scope.directiveReady = true;
     }
   }
 }(angular));

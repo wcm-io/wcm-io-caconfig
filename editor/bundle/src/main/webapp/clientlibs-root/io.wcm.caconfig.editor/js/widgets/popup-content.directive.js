@@ -38,9 +38,10 @@
   function popupContent(templateList) {
 
     var directive = {
+      scope: {
+        content: "=caconfigContent"
+      },
       restrict: "E",
-      replace: true,
-      transclude: true,
       templateUrl: templateList.popupContent
     };
 

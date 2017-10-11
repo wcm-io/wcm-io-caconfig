@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, _) {
   "use strict";
 
   /**
@@ -27,11 +27,16 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("DetailController", DetailController);
 
-  DetailController.$inject = ["$rootScope", "$route", "configService", "currentConfigService", "modalService"];
+  DetailController.$inject = ["$rootScope", "$scope", "$route", "configService", "currentConfigService", "modalService"];
 
-  function DetailController($rootScope, $route, configService, currentConfigService, modalService) {
+  /* eslint-disable max-params */
+  function DetailController($rootScope, $scope, $route, configService, currentConfigService, modalService) {
+  /* eslint-enable max-params */
     var CONFIG_PROPERTY_INHERIT = "sling:configPropertyInherit";
-    var CONFIG_COLLECTION_INHERIT = "sling:configCollectionInherit";
+    // var MAX_CONFIGS = Number.POSITIVE_INFINITY;
+    // var MAX_CONFIGS_PER_PAGE = 15;
+    // var BOTTOM_OF_PAGE_THRESHOLD = 100;
+    // var CONFIG_COLLECTION_INHERIT = "sling:configCollectionInherit";
     var that = this;
     var forceFormModified = false;
 
@@ -58,20 +63,15 @@
     };
 
     that.saveConfig = function () {
-      // if (that.current.configs.length === 0 && Boolean(that.current.collectionProperties[CONFIG_COLLECTION_INHERIT])) {
-      //   that.removeConfig();
-      // }
-      // else {
-        configService.saveCurrentConfig()
-          .then(function (redirect) {
-            if (redirect) {
-              $rootScope.go(redirect.configName || "");
-            }
-            else {
-              $rootScope.go(that.current.parent ? that.current.parent.configName : "");
-            }
-          });
-      // }
+      configService.saveCurrentConfig()
+        .then(function (redirect) {
+          if (redirect) {
+            $rootScope.go(redirect.configName || "");
+          }
+          else {
+            $rootScope.go(that.current.parent ? that.current.parent.configName : "");
+          }
+        });
     };
 
     that.removeConfig = function() {
@@ -163,17 +163,37 @@
       // Load Configuration Details
       configService.loadConfig(that.current.configName)
         .then(function (currentData) {
-          that.current.configs = setDefaultValues(currentData.configs);
-          that.current.originalLength = currentData.configs.length;
-          that.current.isCollection = currentData.isCollection;
-          that.current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
-          that.current.collectionProperties = currentData.collectionProperties;
-          that.current.label = currentData.configNameObject.label || that.current.configName;
-          that.current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
-          that.current.parent = that.current.breadcrumbs[that.current.breadcrumbs.length - 1];
-          that.current.description = currentData.configNameObject.description;
-          that.current.contextPath = configService.getState().contextPath;
-          $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
+          if (!angular.isUndefined(currentData)) {
+            that.current.configs = setDefaultValues(currentData.configs);
+            that.current.originalLength = currentData.configs.length;
+            that.current.isCollection = currentData.isCollection;
+            that.current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
+            that.current.collectionProperties = currentData.collectionProperties;
+            that.current.label = currentData.configNameObject.label || that.current.configName;
+            that.current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
+            that.current.parent = that.current.breadcrumbs[that.current.breadcrumbs.length - 1];
+            that.current.description = currentData.configNameObject.description;
+            that.current.contextPath = configService.getState().contextPath;
+            $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
+          }
+
+          // that.configLimit = MAX_CONFIGS;
+          that.allConfigsVisible = true;
+
+          that.viewReady = true;
+
+          // Infinite Scroll
+          //
+          // if (that.current.isCollection && (MAX_CONFIGS_PER_PAGE < that.current.originalLength)) {
+          //   that.configLimit = MAX_CONFIGS_PER_PAGE;
+          //   setTimeout(function() {
+          //     $scope.$apply(showConfigs);
+          //   }, 1);
+          // }
+          // else {
+          //   that.configLimit = MAX_CONFIGS;
+          //   that.allConfigsVisible = true;
+          // }
         });
     }
 
@@ -187,5 +207,49 @@
       });
       return configs;
     }
+
+    // function addInfiniteScrollListener() {
+    //   $(window).on("scroll", infiniteScroll);
+    // }
+
+
+    // function removeInfiniteScrollListener() {
+    //   $(window).off("scroll", infiniteScroll);
+    // }
+
+    // function showConfigs() {
+    //   if (that.allConfigsVisible) {
+    //     return;
+    //   }
+    //   // If MAX_CONFIGS_PER_PAGE do not go beyond the height of the window,
+    //   // the user will not be able to trigger the scroll - so we must explicitly increase the amount
+    //   if ((document.body.offsetHeight - BOTTOM_OF_PAGE_THRESHOLD) < window.innerHeight) {
+    //     increaseVisibleConfigs();
+    //     setTimeout(function() {
+    //       $scope.$apply(showConfigs);
+    //     }, 1);
+    //   }
+    //   else {
+    //     addInfiniteScrollListener();
+    //   }
+    // }
+
+    // function infiniteScroll() {
+    //   var windowHeight = window.innerHeight;
+    //   var documentHeight = document.body.offsetHeight - BOTTOM_OF_PAGE_THRESHOLD;
+    //   if ((windowHeight + window.pageYOffset) >= documentHeight) {
+    //     $scope.$apply(increaseVisibleConfigs);
+    //   }
+    // }
+
+    // function increaseVisibleConfigs() {
+    //   that.configLimit += MAX_CONFIGS_PER_PAGE;
+
+    //   if (that.configLimit >= that.current.configs.length) {
+    //     that.configLimit = MAX_CONFIGS;
+    //     that.allConfigsVisible = true;
+    //     removeInfiniteScrollListener();
+    //   }
+    // }
   }
-}(angular));
+}(angular, _));
