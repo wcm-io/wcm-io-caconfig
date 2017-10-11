@@ -143,8 +143,9 @@
 
   <p class="caconfig-if-is-collection">
     <button class="coral-Button coral-Button--primary" type="button"
-            ng-show="detail.allConfigsVisible"
-            ng-click="detail.addCollectionItem()" bo-text="i18n.button.addItem"></button>
+            ng-click="detail.addCollectionItem()"
+            bo-if="i18n.button.addItem"
+            bo-text="i18n.button.addItem"></button>
   </p>
 
 </form>

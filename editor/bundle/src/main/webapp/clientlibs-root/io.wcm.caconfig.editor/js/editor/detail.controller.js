@@ -33,9 +33,6 @@
   function DetailController($rootScope, $scope, $route, configService, currentConfigService, modalService) {
   /* eslint-enable max-params */
     var CONFIG_PROPERTY_INHERIT = "sling:configPropertyInherit";
-    // var MAX_CONFIGS = Number.POSITIVE_INFINITY;
-    // var MAX_CONFIGS_PER_PAGE = 15;
-    // var BOTTOM_OF_PAGE_THRESHOLD = 100;
     // var CONFIG_COLLECTION_INHERIT = "sling:configCollectionInherit";
     var that = this;
     var forceFormModified = false;
@@ -177,23 +174,7 @@
             $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
           }
 
-          // that.configLimit = MAX_CONFIGS;
-          that.allConfigsVisible = true;
-
           that.viewReady = true;
-
-          // Infinite Scroll
-          //
-          // if (that.current.isCollection && (MAX_CONFIGS_PER_PAGE < that.current.originalLength)) {
-          //   that.configLimit = MAX_CONFIGS_PER_PAGE;
-          //   setTimeout(function() {
-          //     $scope.$apply(showConfigs);
-          //   }, 1);
-          // }
-          // else {
-          //   that.configLimit = MAX_CONFIGS;
-          //   that.allConfigsVisible = true;
-          // }
         });
     }
 
@@ -207,49 +188,5 @@
       });
       return configs;
     }
-
-    // function addInfiniteScrollListener() {
-    //   $(window).on("scroll", infiniteScroll);
-    // }
-
-
-    // function removeInfiniteScrollListener() {
-    //   $(window).off("scroll", infiniteScroll);
-    // }
-
-    // function showConfigs() {
-    //   if (that.allConfigsVisible) {
-    //     return;
-    //   }
-    //   // If MAX_CONFIGS_PER_PAGE do not go beyond the height of the window,
-    //   // the user will not be able to trigger the scroll - so we must explicitly increase the amount
-    //   if ((document.body.offsetHeight - BOTTOM_OF_PAGE_THRESHOLD) < window.innerHeight) {
-    //     increaseVisibleConfigs();
-    //     setTimeout(function() {
-    //       $scope.$apply(showConfigs);
-    //     }, 1);
-    //   }
-    //   else {
-    //     addInfiniteScrollListener();
-    //   }
-    // }
-
-    // function infiniteScroll() {
-    //   var windowHeight = window.innerHeight;
-    //   var documentHeight = document.body.offsetHeight - BOTTOM_OF_PAGE_THRESHOLD;
-    //   if ((windowHeight + window.pageYOffset) >= documentHeight) {
-    //     $scope.$apply(increaseVisibleConfigs);
-    //   }
-    // }
-
-    // function increaseVisibleConfigs() {
-    //   that.configLimit += MAX_CONFIGS_PER_PAGE;
-
-    //   if (that.configLimit >= that.current.configs.length) {
-    //     that.configLimit = MAX_CONFIGS;
-    //     that.allConfigsVisible = true;
-    //     removeInfiniteScrollListener();
-    //   }
-    // }
   }
 }(angular, _));
