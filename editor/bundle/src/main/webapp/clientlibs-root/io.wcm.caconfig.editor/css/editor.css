@@ -90,3 +90,33 @@ span.wcm-io-editor.endor-Brand {
 .caconfig-link {
   cursor: pointer;
 }
+
+.caconfig-is-collection .caconfig-if-not-collection,
+.caconfig-not-collection .caconfig-if-is-collection {
+  display: none;
+}
+
+.caconfig-is-new-item .caconfig-if-not-new-item,
+.caconfig-not-new-item .caconfig-if-new-item,
+.caconfig-config-inherited .caconfig-if-config-not-inherited,
+.caconfig-config-not-inherited .caconfig-if-config-inherited {
+  display: none;
+}
+
+.caconfig-config-not-inherited.caconfig-not-new-item .caconfig-if-config-inherited-or-new-item {
+  display: none;
+}
+
+.caconfig-config-inherited .caconfig-if-config-not-inherited-and-not-new-item,
+.caconfig-is-new-item .caconfig-if-config-not-inherited-and-not-new-item {
+  display: none;
+}
+
+.caconfig-property-not-overridden.caconfig-property-not-inherited .caconfig-if-property-overridden-or-inherited {
+  display: none;
+}
+
+.caconfig-property-overridden .caconfig-if-property-not-overridden-and-not-inherited,
+.caconfig-property-inherited .caconfig-if-property-not-overridden-and-not-inherited {
+  display: none;
+}

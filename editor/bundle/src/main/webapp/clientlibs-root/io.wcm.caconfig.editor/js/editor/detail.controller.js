@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, _) {
   "use strict";
 
   /**
@@ -27,11 +27,13 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("DetailController", DetailController);
 
-  DetailController.$inject = ["$rootScope", "$route", "configService", "currentConfigService", "modalService"];
+  DetailController.$inject = ["$rootScope", "$scope", "$route", "configService", "currentConfigService", "modalService"];
 
-  function DetailController($rootScope, $route, configService, currentConfigService, modalService) {
+  /* eslint-disable max-params */
+  function DetailController($rootScope, $scope, $route, configService, currentConfigService, modalService) {
+  /* eslint-enable max-params */
     var CONFIG_PROPERTY_INHERIT = "sling:configPropertyInherit";
-    var CONFIG_COLLECTION_INHERIT = "sling:configCollectionInherit";
+    // var CONFIG_COLLECTION_INHERIT = "sling:configCollectionInherit";
     var that = this;
     var forceFormModified = false;
 
@@ -58,20 +60,15 @@
     };
 
     that.saveConfig = function () {
-      // if (that.current.configs.length === 0 && Boolean(that.current.collectionProperties[CONFIG_COLLECTION_INHERIT])) {
-      //   that.removeConfig();
-      // }
-      // else {
-        configService.saveCurrentConfig()
-          .then(function (redirect) {
-            if (redirect) {
-              $rootScope.go(redirect.configName || "");
-            }
-            else {
-              $rootScope.go(that.current.parent ? that.current.parent.configName : "");
-            }
-          });
-      // }
+      configService.saveCurrentConfig()
+        .then(function (redirect) {
+          if (redirect) {
+            $rootScope.go(redirect.configName || "");
+          }
+          else {
+            $rootScope.go(that.current.parent ? that.current.parent.configName : "");
+          }
+        });
     };
 
     that.removeConfig = function() {
@@ -163,17 +160,21 @@
       // Load Configuration Details
       configService.loadConfig(that.current.configName)
         .then(function (currentData) {
-          that.current.configs = setDefaultValues(currentData.configs);
-          that.current.originalLength = currentData.configs.length;
-          that.current.isCollection = currentData.isCollection;
-          that.current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
-          that.current.collectionProperties = currentData.collectionProperties;
-          that.current.label = currentData.configNameObject.label || that.current.configName;
-          that.current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
-          that.current.parent = that.current.breadcrumbs[that.current.breadcrumbs.length - 1];
-          that.current.description = currentData.configNameObject.description;
-          that.current.contextPath = configService.getState().contextPath;
-          $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
+          if (!angular.isUndefined(currentData)) {
+            that.current.configs = setDefaultValues(currentData.configs);
+            that.current.originalLength = currentData.configs.length;
+            that.current.isCollection = currentData.isCollection;
+            that.current.isNewCollection = currentData.isCollection && currentData.configs.length === 0;
+            that.current.collectionProperties = currentData.collectionProperties;
+            that.current.label = currentData.configNameObject.label || that.current.configName;
+            that.current.breadcrumbs = currentData.configNameObject.breadcrumbs || [];
+            that.current.parent = that.current.breadcrumbs[that.current.breadcrumbs.length - 1];
+            that.current.description = currentData.configNameObject.description;
+            that.current.contextPath = configService.getState().contextPath;
+            $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
+          }
+
+          that.viewReady = true;
         });
     }
 
@@ -188,4 +189,4 @@
       return configs;
     }
   }
-}(angular));
+}(angular, _));

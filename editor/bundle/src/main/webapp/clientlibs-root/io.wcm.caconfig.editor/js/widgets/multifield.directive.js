@@ -32,8 +32,7 @@
       require: "^form",
       templateUrl: templateList.multifield,
       scope: {
-        parameter: "=caconfigParameter",
-        isConfigInherited: "=caconfigIsConfigInherited"
+        parameter: "=caconfigParameter"
       },
       controller: MultifieldController,
       link: link

@@ -31,8 +31,7 @@
       require: "^form",
       templateUrl: templateList.pathbrowser,
       scope: {
-        parameter: "=caconfigParameter",
-        isConfigInherited: "=caconfigIsConfigInherited"
+        parameter: "=caconfigParameter"
       },
       link: link
     };

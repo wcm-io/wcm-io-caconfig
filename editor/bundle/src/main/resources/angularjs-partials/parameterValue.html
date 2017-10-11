@@ -1,76 +1,93 @@
-<div ng-switch on="type">
-  <div ng-switch-when="text">
-    <input class="coral-Textfield" type="text"
-           ng-hide="parameter.overridden || parameter.inherited"
-           ng-model="parameter.value"
-           ng-disabled="isConfigInherited" ng-readonly="isConfigInherited" />
-    <input class="coral-Textfield" type="text"
-           ng-show="parameter.overridden || parameter.inherited"
-           ng-model="parameter.effectiveValue"
-           ng-disabled="true" ng-readonly="true" />
-  </div>
-
-  <div ng-switch-when="pathbrowser">
-    <caconfig-pathbrowser caconfig-parameter="parameter"
-                          caconfig-is-config-inherited="isConfigInherited" />
-  </div>
-
-  <div ng-switch-when="number">
-    <input class="coral-Textfield" type="text"
-           ng-hide="parameter.overridden || parameter.inherited"
-           ng-model="parameter.value"
-           ng-pattern="pattern"
-           ng-disabled="isConfigInherited"
-           ng-readonly="isConfigInherited" />
-    <input class="coral-Textfield" type="text"
-           ng-show="parameter.overridden || parameter.inherited"
-           ng-model="parameter.effectiveValue"
-           ng-disabled="true" ng-readonly="true" />
-  </div>
-
-  <div ng-switch-when="checkbox">
-    <label class="coral-Checkbox"
-           ng-hide="parameter.overridden || parameter.inherited">
-      <input class="coral-Checkbox-input" type="checkbox"
+<div bindonce="directiveReady"
+     bo-switch="type">
+  <div bo-switch-when="text">
+    <div class="caconfig-if-property-not-overridden-and-not-inherited">
+      <input class="coral-Textfield caconfig-if-config-not-inherited" type="text"
+             ng-model="parameter.value" />
+      <input class="coral-Textfield caconfig-if-config-inherited" type="text"
              ng-model="parameter.value"
-             ng-disabled="isConfigInherited"
-             ng-readonly="isConfigInherited" />
-      <span class="coral-Checkbox-checkmark"></span>
-    </label>
-    <label class="coral-Checkbox"
-           ng-show="parameter.overridden || parameter.inherited">
-      <input class="coral-Checkbox-input" type="checkbox"
+             disabled readonly />
+    </div>
+    <div class="caconfig-if-property-overridden-or-inherited">
+      <input class="coral-Textfield" type="text"
              ng-model="parameter.effectiveValue"
-             ng-disabled="true" ng-readonly="true" />
-      <span class="coral-Checkbox-checkmark"></span>
-    </label>
+             disabled readonly />
+    </div>
   </div>
 
-  <div ng-switch-when="multivalue">
-    <caconfig-multifield caconfig-parameter="parameter"
-                         caconfig-is-config-inherited="isConfigInherited" />
+  <div bo-switch-when="pathbrowser">
+    <caconfig-pathbrowser caconfig-parameter="parameter" />
   </div>
 
-  <div ng-switch-when="nestedConfig">
-    <button class="coral-Button coral-Button--block coral-Button--default"
-            ng-disabled="isNewItem || isConfigInherited"
+  <div bo-switch-when="number">
+    <div class="caconfig-if-property-not-overridden-and-not-inherited">
+      <input class="coral-Textfield caconfig-if-config-not-inherited" type="text"
+             ng-model="parameter.value"
+             ng-pattern="pattern" />
+      <input class="coral-Textfield caconfig-if-config-inherited" type="text"
+             ng-model="parameter.value"
+             ng-pattern="pattern"
+             disabled readonly />
+    </div>
+    <div class="caconfig-if-property-overridden-or-inherited">
+      <input class="coral-Textfield" type="text"
+             ng-model="parameter.effectiveValue"
+             disabled readonly />
+    </div>
+  </div>
+
+  <div bo-switch-when="checkbox">
+    <div class="caconfig-if-property-not-overridden-and-not-inherited">
+      <label class="coral-Checkbox caconfig-if-config-not-inherited">
+        <input class="coral-Checkbox-input" type="checkbox"
+               ng-model="parameter.value" />
+        <span class="coral-Checkbox-checkmark"></span>
+      </label>
+      <label class="coral-Checkbox caconfig-if-config-inherited">
+        <input class="coral-Checkbox-input" type="checkbox"
+               ng-model="parameter.value"
+               disabled readonly />
+        <span class="coral-Checkbox-checkmark"></span>
+      </label>
+    </div>
+    <div class="caconfig-if-property-overridden-or-inherited">
+      <label class="coral-Checkbox">
+        <input class="coral-Checkbox-input" type="checkbox"
+               ng-model="parameter.effectiveValue"
+               disabled readonly />
+        <span class="coral-Checkbox-checkmark"></span>
+      </label>
+    </div>
+  </div>
+
+  <div bo-switch-when="multivalue">
+    <caconfig-multifield caconfig-parameter="parameter" />
+  </div>
+
+  <div bo-switch-when="nestedConfig">
+    <button class="coral-Button coral-Button--block coral-Button--default caconfig-if-config-inherited-or-new-item"
+            disabled
+            bo-text="i18n.button.edit">
+    </button>
+    <button class="coral-Button coral-Button--block coral-Button--default caconfig-if-config-not-inherited-and-not-new-item"
             ng-click="form.$pristine ? go(parameter.nestedConfig.configName)
-                      : saveWarning(parameter.nestedConfig.configName)">
-      {{i18n.button.edit}}
+                      : saveWarning(parameter.nestedConfig.configName)"
+            bo-text="i18n.button.edit">
     </button>
   </div>
 
-  <div ng-switch-when="nestedConfigCollection">
-    <button class="coral-Button coral-Button--block coral-Button--default"
-            ng-disabled="isNewItem || isConfigInherited"
+  <div bo-switch-when="nestedConfigCollection">
+    <button class="coral-Button coral-Button--block coral-Button--default caconfig-if-config-inherited-or-new-item"
+            disabled
+            bo-text="i18n.button.edit">
+    </button>
+    <button class="coral-Button coral-Button--block coral-Button--default caconfig-if-config-not-inherited-and-not-new-item"
             ng-click="form.$pristine ? go(parameter.nestedConfigCollection.configName)
-                      : saveWarning(parameter.nestedConfigCollection.configName)">
-      {{i18n.button.edit}}
-    </button>
+                      : saveWarning(parameter.nestedConfigCollection.configName)"
+            bo-text="i18n.button.edit">
   </div>
 
-  <div ng-switch-default>
-    <span>{{parameter.value}}</span>
+  <div bo-switch-default>
+    <span bo-text="parameter.value"></span>
   </div>
-
 </div>
