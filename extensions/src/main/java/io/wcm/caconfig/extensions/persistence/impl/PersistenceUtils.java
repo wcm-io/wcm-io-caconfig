@@ -45,7 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.day.cq.commons.jcr.JcrConstants;
+import com.day.cq.replication.AccessDeniedException;
 import com.day.cq.wcm.api.NameConstants;
+import com.day.cq.wcm.api.WCMException;
 
 final class PersistenceUtils {
 
@@ -234,6 +236,15 @@ final class PersistenceUtils {
     catch (PersistenceException ex) {
       throw convertPersistenceException("Unable to persist configuration changes to " + relatedResourcePath, ex);
     }
+  }
+
+  public static ConfigurationPersistenceException convertWCMException(String message, WCMException ex) {
+    String causeClsName = ex.getCause().getClass().getName();
+    if (StringUtils.equals(causeClsName, "com.day.cq.replication.AccessDeniedException")
+            || StringUtils.equals(causeClsName, "javax.jcr.AccessDeniedException")) {
+      return new ConfigurationPersistenceAccessDeniedException("No write access: " + message, ex);
+    }
+    return new ConfigurationPersistenceException(message, ex);
   }
 
   public static ConfigurationPersistenceException convertPersistenceException(String message, PersistenceException ex) {
