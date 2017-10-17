@@ -22,6 +22,8 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.PageManagerFactory;
 import com.day.cq.wcm.api.reference.Reference;
 import com.day.cq.wcm.api.reference.ReferenceProvider;
 
@@ -53,6 +55,9 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
     @org.osgi.service.component.annotations.Reference
     private ConfigurationManager configurationManager;
+
+    @org.osgi.service.component.annotations.Reference
+    private PageManagerFactory pageManagerFactory;
 
     private boolean enabled = false;
 
@@ -90,10 +95,14 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
         return references;
     }
 
-    private static long getLastModifiedOf(Resource configurationResource) {
+    private long getLastModifiedOf(Resource configurationResource) {
         Page configurationPage = configurationResource.adaptTo(Page.class);
 
-        if (configurationPage != null) {
+        if (configurationPage == null && StringUtils.equals(configurationResource.getName(), JcrConstants.JCR_CONTENT)) {
+            configurationPage = configurationResource.getParent().adaptTo(Page.class);
+        }
+
+        if (configurationPage != null && configurationPage.getLastModified() != null) {
             return configurationPage.getLastModified().getTimeInMillis();
         } else {
             ValueMap properties = configurationResource.getValueMap();
