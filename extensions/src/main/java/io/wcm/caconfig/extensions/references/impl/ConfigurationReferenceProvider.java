@@ -21,7 +21,9 @@ package io.wcm.caconfig.extensions.references.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -29,8 +31,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.caconfig.impl.ConfigurationResourceResolverConfig;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
+import org.apache.sling.caconfig.resource.spi.ConfigurationResourceResolvingStrategy;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -76,7 +80,10 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
   private ConfigurationManager configurationManager;
 
   @org.osgi.service.component.annotations.Reference
-  private PageManagerFactory pageManagerFactory;
+  private ConfigurationResourceResolvingStrategy configurationResourceResolvingStrategy;
+
+  @org.osgi.service.component.annotations.Reference
+  private ConfigurationResourceResolverConfig configurationResourceResolverConfig;
 
   private boolean enabled;
 
@@ -98,14 +105,14 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
     Set<String> configurationNames = configurationManager.getConfigurationNames();
     List<Reference> references = new ArrayList<>(configurationNames.size());
-    ResourceResolver resourceResolver = resource.getResourceResolver();
+    Collection<String> configurationBuckets = configurationResourceResolverConfig.configBucketNames();
 
     for (String configurationName : configurationNames) {
-      ConfigurationData configurationData = configurationManager.getConfiguration(resource, configurationName);
       ConfigurationMetadata configurationMetadata = configurationManager.getConfigurationMetadata(configurationName);
-      Resource configurationResource = resourceResolver.getResource(configurationData.getResourcePath());
+      Iterator<Resource> configurationInheritanceChain = configurationResourceResolvingStrategy.getResourceInheritanceChain(resource, configurationBuckets, configurationName);
 
-      if (configurationResource != null) {
+      while(configurationInheritanceChain != null && configurationInheritanceChain.hasNext()) {
+        Resource configurationResource = configurationInheritanceChain.next();
         references.add(new Reference(getType(), StringUtils.defaultIfEmpty(configurationMetadata.getLabel(),
             configurationMetadata.getName()), configurationResource, getLastModifiedOf(configurationResource)));
       }
@@ -121,13 +128,16 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
       configurationPage = configurationResource.getParent().adaptTo(Page.class);
     }
 
+    Calendar lastModified;
     if (configurationPage != null && configurationPage.getLastModified() != null) {
-      return configurationPage.getLastModified().getTimeInMillis();
+      lastModified = configurationPage.getLastModified();
     }
     else {
       ValueMap properties = configurationResource.getValueMap();
-      return properties.get(JcrConstants.JCR_LASTMODIFIED, Calendar.class).getTimeInMillis();
+      lastModified = properties.get(JcrConstants.JCR_LASTMODIFIED, Calendar.class);
     }
+
+    return lastModified != null ? lastModified.getTimeInMillis() : 0;
   }
 
   private static String getType() {

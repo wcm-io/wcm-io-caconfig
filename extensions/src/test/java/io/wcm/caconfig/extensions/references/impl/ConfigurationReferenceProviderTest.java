@@ -87,13 +87,6 @@ public class ConfigurationReferenceProviderTest {
     metadataProvider.addConfigurationClass(ConfigurationB.class);
 
     aemContext.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
-    aemContext.registerService(PageManagerFactory.class, new PageManagerFactory() {
-
-      @Override
-      public PageManager getPageManager(ResourceResolver resourceResolver) {
-        return aemContext.pageManager();
-      }
-    });
     aemContext.registerService(ConfigurationMetadataProvider.class, metadataProvider);
 
     applyConfig(page1, "configA", CONFIGURATION_A); // 1 config on page1
