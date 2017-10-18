@@ -72,8 +72,8 @@ public class ConfigurationReferenceProviderTest {
       .plugin(CACONFIG)
       .build();
 
-  private static final ValueMap configurationA = new ValueMapDecorator(ImmutableMap.of("key", "foo"));
-  private static final ValueMap configurationB = new ValueMapDecorator(ImmutableMap.of("key", "bar"));
+  private static final ValueMap CONFIGURATION_A = new ValueMapDecorator(ImmutableMap.of("key", "foo"));
+  private static final ValueMap CONFIGURATION_B = new ValueMapDecorator(ImmutableMap.of("key", "bar"));
 
 
   @Before
@@ -96,9 +96,9 @@ public class ConfigurationReferenceProviderTest {
     });
     aemContext.registerService(ConfigurationMetadataProvider.class, metadataProvider);
 
-    applyConfig(page1, "configA", configurationA); // 1 config on page1
-    applyConfig(page2, "configA", configurationA); // 2 configs on page2
-    applyConfig(page2, "configB", configurationB);
+    applyConfig(page1, "configA", CONFIGURATION_A); // 1 config on page1
+    applyConfig(page2, "configA", CONFIGURATION_A); // 2 configs on page2
+    applyConfig(page2, "configB", CONFIGURATION_B);
   }
 
   @Test

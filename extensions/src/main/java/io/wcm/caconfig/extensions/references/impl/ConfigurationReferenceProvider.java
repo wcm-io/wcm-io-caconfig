@@ -78,7 +78,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
   @org.osgi.service.component.annotations.Reference
   private PageManagerFactory pageManagerFactory;
 
-  private boolean enabled = false;
+  private boolean enabled;
 
   @Activate
   protected void activate(Config config) {
