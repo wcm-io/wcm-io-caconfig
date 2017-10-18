@@ -215,16 +215,20 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       Page configPage = configResource.adaptTo(Page.class);
       if (configPage != null) {
         try {
+          log.trace("! Delete page {}", configPage.getPath());
           PageManager pageManager = configPage.getPageManager();
           pageManager.delete(configPage, false);
-        } catch (WCMException ex) {
+        }
+        catch (WCMException ex) {
           throw convertWCMException("Unable to delete configuration page at " + configResourcePath, ex);
         }
-      } else {
+      }
+      else {
         try {
           log.trace("! Delete resource {}", configResource.getPath());
           resolver.delete(configResource);
-        } catch (PersistenceException ex) {
+        }
+        catch (PersistenceException ex) {
           throw convertPersistenceException("Unable to delete configuration resource at " + configResourcePath, ex);
         }
       }

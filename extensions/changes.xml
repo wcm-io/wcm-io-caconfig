@@ -25,7 +25,10 @@
 
     <release version="1.1.2" date="not released">
       <action type="fix" dev="sseifert" issue="WCON-39">
-        Fix data loss issue when using multiple nested list configurations.
+        PagePersistenceStrategy: Fix data loss issue when using multiple nested list configurations.
+      </action>
+      <action type="update" dev="sseifert" issue="WCON-43">
+        PagePersistenceStrategy: Use PageManager API to delete configuration pages.
       </action>
     </release>
 
