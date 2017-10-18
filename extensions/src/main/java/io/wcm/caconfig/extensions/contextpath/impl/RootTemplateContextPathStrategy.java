@@ -168,11 +168,8 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
         Page rootPage = page.getAbsoluteParent(level);
         if (rootPage != null) {
           String templatePath = rootPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
-          if (templatePath != null) {
+          if (templatePath != null && templatePaths.contains(templatePath)) {
             candidates.add(rootPage.getPath());
-            if (templatePaths.contains(templatePath)) {
-              break;
-            }
           }
         }
       }
