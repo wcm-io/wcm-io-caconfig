@@ -14,7 +14,7 @@ Links to the latest versions of Apache Sling Context-Aware Configuration bundles
 | [Apache Johnzon Wrapper Library](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.commons.johnzon) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.commons.johnzon/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.sling/org.apache.sling.commons.johnzon) |
 
 
-### Deploying Sling Context-Aware Configuration to AEM 6.1 or AEM 6.2
+### Deploy Sling Context-Aware Configuration to AEM 6.1/6.2
 
 In AEM 6.1 or AEM 6.2 you need to deploy the latest version of these Sling bundles:
 
@@ -41,6 +41,8 @@ You should also extend the filter settings for ignoring property names when read
   org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
     ignorePropertyNameRegex=["^(jcr|cq):.+$"]
 ```
+
+If you are using AEM 6.1, make sure to install the latest service pack as well (e.g. AEM 6.1 SP2).
 
 #### Optional: System user for web console
 
