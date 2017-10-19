@@ -24,8 +24,8 @@ import org.apache.sling.caconfig.annotation.Configuration;
 @Configuration(collection = true)
 public @interface ListConfig {
 
-    String stringParam();
+  String stringParam();
 
-    int intParam();
+  int intParam();
 
 }

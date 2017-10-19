@@ -23,6 +23,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.2.0" date="2017-10-19">
+      <action type="fix" dev="sseifert" issue="WCON-39">
+        PagePersistenceStrategy: Fix data loss issue when using multiple nested list configurations.
+      </action>
+      <action type="update" dev="sseifert" issue="WCON-43">
+        PagePersistenceStrategy: Use PageManager API to delete configuration pages.
+      </action>
+      <action type="add" dev="drudolph" issue="WCON-42">
+        Add Referencer Provider for Context-Aware Configuration pages.
+      </action>
+    </release>
+
     <release version="1.1.0" date="2017-09-12">
       <action type="add" dev="sseifert" issue="WCON-37">
         RootTemplateContextPathStrategy: Add flag templateMatchAllLevels to match all parent pages against the given template paths.

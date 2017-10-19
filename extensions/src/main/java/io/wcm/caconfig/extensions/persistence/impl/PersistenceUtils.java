@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ModifiableValueMap;
@@ -37,13 +38,16 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.caconfig.management.ConfigurationManagementSettings;
+import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceAccessDeniedException;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.day.cq.commons.jcr.JcrConstants;
+import com.day.cq.replication.AccessDeniedException;
 import com.day.cq.wcm.api.NameConstants;
+import com.day.cq.wcm.api.WCMException;
 
 final class PersistenceUtils {
 
@@ -154,11 +158,24 @@ final class PersistenceUtils {
     }
   }
 
-  public static void deleteChildren(Resource resource) {
-    ResourceResolver resolver = resource.getResourceResolver();
+  /**
+   * Delete children that are no longer contained in list of collection items.
+   * @param resource Parent resource
+   * @param data List of collection items
+   */
+  public static void deleteChildrenNotInCollection(Resource resource, ConfigurationCollectionPersistData data) {
+    ResourceResolver resourceResolver = resource.getResourceResolver();
+
+    Set<String> collectionItemNames = data.getItems().stream()
+        .map(item -> item.getCollectionItemName())
+        .collect(Collectors.toSet());
+
     try {
       for (Resource child : resource.getChildren()) {
-        resolver.delete(child);
+        if (!collectionItemNames.contains(child.getName())) {
+          log.trace("! Delete resource {}", child.getPath());
+          resourceResolver.delete(child);
+        }
       }
     }
     catch (PersistenceException ex) {
@@ -219,6 +236,15 @@ final class PersistenceUtils {
     catch (PersistenceException ex) {
       throw convertPersistenceException("Unable to persist configuration changes to " + relatedResourcePath, ex);
     }
+  }
+
+  public static ConfigurationPersistenceException convertWCMException(String message, WCMException ex) {
+    String causeClsName = ex.getCause().getClass().getName();
+    if (StringUtils.equals(causeClsName, "com.day.cq.replication.AccessDeniedException")
+            || StringUtils.equals(causeClsName, "javax.jcr.AccessDeniedException")) {
+      return new ConfigurationPersistenceAccessDeniedException("No write access: " + message, ex);
+    }
+    return new ConfigurationPersistenceException(message, ex);
   }
 
   public static ConfigurationPersistenceException convertPersistenceException(String message, PersistenceException ex) {

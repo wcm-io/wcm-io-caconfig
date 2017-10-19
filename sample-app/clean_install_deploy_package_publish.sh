@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # defaultconfig
-sling_url="http://localhost:4502"
+sling_url="http://localhost:4503"
 sling_user="admin"
 sling_password="admin"
 sling_params=""
-conga_node="aem-author"
+conga_node="aem-publish"
 
 # set parameter variables before run
 init()

@@ -17,17 +17,13 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caconfig.extensions.persistence.example;
+package io.wcm.caconfig.extensions.references.impl;
 
 import org.apache.sling.caconfig.annotation.Configuration;
 
-@Configuration
-public @interface NestedConfig {
+@Configuration(name = "configB", label = "Configuration B")
+@interface ConfigurationB {
 
-  String stringParam();
-
-  SimpleConfig subConfig();
-
-  ListConfig[] subListConfig();
+  String key() default "";
 
 }

@@ -22,7 +22,7 @@ package io.wcm.caconfig.extensions.persistence.impl;
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.commit;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.convertPersistenceException;
-import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildren;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildrenNotInCollection;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensureContainingPage;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.getOrCreateResource;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.replaceProperties;
@@ -200,7 +200,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
         configurationManagementSettings);
 
     // delete existing children and create new ones
-    deleteChildren(configResourceParent);
+    deleteChildrenNotInCollection(configResourceParent, data);
     for (ConfigurationPersistData item : data.getItems()) {
       String path = configResourceParent.getPath() + "/" + item.getCollectionItemName();
       getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties(), configurationManagementSettings);

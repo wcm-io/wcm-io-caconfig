@@ -18,6 +18,7 @@ The following extensions are provided:
 * Configure [Context Path Strategies][context-path-strategies]: without the need for `sling:configRef` attributes based on hierarchy levels or root templates
 * AEM-specific [Persistence Strategies][persistence-strategies] to store configuration in `cq:Page` nodes either in `/conf` or in `tools/config` pages together with the content
 * Configuration [Override Provider][override-providers] based on request headers (e.g. for QA instances - disabled by default)
+* A `ReferenceProvider` implementation for context-aware configurations
 
 
 ### Supported AEM versions
