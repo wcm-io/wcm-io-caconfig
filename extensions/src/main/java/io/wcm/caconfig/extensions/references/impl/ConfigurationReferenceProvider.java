@@ -40,6 +40,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.Page;
@@ -84,6 +86,8 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
   private boolean enabled;
 
+  private static final Logger log = LoggerFactory.getLogger(ConfigurationReferenceProvider.class);
+
   @Activate
   protected void activate(Config config) {
     enabled = config.enabled();
@@ -110,15 +114,22 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
       while (configurationInheritanceChain != null && configurationInheritanceChain.hasNext()) {
         Resource configurationResource = configurationInheritanceChain.next();
-        references.add(new Reference(getType(), StringUtils.defaultIfEmpty(configurationMetadata.getLabel(),
-            configurationMetadata.getName()), configurationResource, getLastModifiedOf(configurationResource)));
+        log.trace("Found reference {} for configuration {} and resource {}", configurationResource.getPath(), configurationName, resource.getPath());
+        references.add(new Reference(getType(), getReferenceName(configurationMetadata), configurationResource,
+            getLastModifiedOf(configurationResource)));
       }
     }
+
+    log.debug("Found {} references for resource {}", references.size(), resource.getPath());
 
     return references;
   }
 
-  private long getLastModifiedOf(Resource configurationResource) {
+  private static String getReferenceName(ConfigurationMetadata configurationMetadata) {
+    return StringUtils.defaultIfEmpty(configurationMetadata.getLabel(), configurationMetadata.getName());
+  }
+
+  private static long getLastModifiedOf(Resource configurationResource) {
     Page configurationPage = configurationResource.adaptTo(Page.class);
 
     if (configurationPage == null && StringUtils.equals(configurationResource.getName(), JcrConstants.JCR_CONTENT)) {

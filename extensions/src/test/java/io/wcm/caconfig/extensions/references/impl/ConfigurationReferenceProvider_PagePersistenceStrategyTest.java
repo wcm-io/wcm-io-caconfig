@@ -40,19 +40,19 @@ import com.day.cq.wcm.api.reference.Reference;
 import com.day.cq.wcm.api.reference.ReferenceProvider;
 import com.google.common.collect.ImmutableMap;
 
+import io.wcm.caconfig.extensions.persistence.impl.PagePersistenceStrategy;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 
 /**
- * Test the {@link ConfigurationReferenceProvider} with the Sling CAConfig default persistence.
+ * Test the {@link ConfigurationReferenceProvider} with the {@link PagePersistenceStrategy}.
  */
-public class ConfigurationReferenceProviderTest {
+public class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
 
   @Rule
   public AemContext context = new AemContextBuilder()
       .beforeSetUp(new AemContextCallback() {
-
         @Override
         public void execute(AemContext ctx) {
           // also find sling:configRef props in cq:Page/jcr:content nodes
@@ -71,6 +71,10 @@ public class ConfigurationReferenceProviderTest {
 
   @Before
   public void setup() {
+
+    // enable AEM page persistence strategy
+    context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
+
     context.create().resource("/conf");
 
     context.create().page("/content/region1", null, ImmutableMap.of("sling:configRef", "/conf/region1"));
@@ -86,7 +90,7 @@ public class ConfigurationReferenceProviderTest {
     registerConfigurations(context, ConfigurationA.class, ConfigurationB.class);
 
     // store fallback config
-    context.create().resource("/conf/global/sling:configs/configB", CONFIGURATION_B);
+    context.create().page("/conf/global/sling:configs/configB", null, CONFIGURATION_B);
 
     applyConfig(context, region1Page, "configA", CONFIGURATION_A); // 1 config for region
     applyConfig(context, site1Page, "configA", CONFIGURATION_A); // 1 config on page1 (+1 from region +1 from fallback)
