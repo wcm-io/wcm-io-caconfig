@@ -30,7 +30,7 @@
       <action type="update" dev="sseifert" issue="WCON-43">
         PagePersistenceStrategy: Use PageManager API to delete configuration pages.
       </action>
-      <action type="add" dev="sseifert" issue="WCON-42">
+      <action type="add" dev="drudolph" issue="WCON-42">
         Add Referencer Provider for Context-Aware Configuration pages.
       </action>
     </release>

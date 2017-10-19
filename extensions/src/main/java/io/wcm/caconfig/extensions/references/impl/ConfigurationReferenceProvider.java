@@ -29,10 +29,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.impl.ConfigurationResourceResolverConfig;
-import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.resource.spi.ConfigurationResourceResolvingStrategy;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
@@ -45,7 +43,6 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.Page;
-import com.day.cq.wcm.api.PageManagerFactory;
 import com.day.cq.wcm.api.reference.Reference;
 import com.day.cq.wcm.api.reference.ReferenceProvider;
 
@@ -111,7 +108,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
       ConfigurationMetadata configurationMetadata = configurationManager.getConfigurationMetadata(configurationName);
       Iterator<Resource> configurationInheritanceChain = configurationResourceResolvingStrategy.getResourceInheritanceChain(resource, configurationBuckets, configurationName);
 
-      while(configurationInheritanceChain != null && configurationInheritanceChain.hasNext()) {
+      while (configurationInheritanceChain != null && configurationInheritanceChain.hasNext()) {
         Resource configurationResource = configurationInheritanceChain.next();
         references.add(new Reference(getType(), StringUtils.defaultIfEmpty(configurationMetadata.getLabel(),
             configurationMetadata.getName()), configurationResource, getLastModifiedOf(configurationResource)));
