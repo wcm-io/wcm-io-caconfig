@@ -19,7 +19,9 @@
  */
 package io.wcm.caconfig.extensions.references.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,10 +32,12 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.caconfig.impl.ConfigurationResourceResolverConfig;
 import org.apache.sling.caconfig.management.ConfigurationManager;
-import org.apache.sling.caconfig.resource.spi.ConfigurationResourceResolvingStrategy;
+import org.apache.sling.caconfig.management.multiplexer.ConfigurationResourceResolvingStrategyMultiplexer;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
+import org.apache.sling.commons.osgi.PropertiesUtil;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -79,10 +83,10 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
   private ConfigurationManager configurationManager;
 
   @org.osgi.service.component.annotations.Reference
-  private ConfigurationResourceResolvingStrategy configurationResourceResolvingStrategy;
+  private ConfigurationResourceResolvingStrategyMultiplexer configurationResourceResolvingStrategy;
 
   @org.osgi.service.component.annotations.Reference
-  private ConfigurationResourceResolverConfig configurationResourceResolverConfig;
+  private ConfigurationAdmin configAdmin;
 
   private boolean enabled;
 
@@ -106,7 +110,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
     Set<String> configurationNames = configurationManager.getConfigurationNames();
     List<Reference> references = new ArrayList<>(configurationNames.size());
-    Collection<String> configurationBuckets = configurationResourceResolverConfig.configBucketNames();
+    Collection<String> configurationBuckets = getBucketNames();
 
     for (String configurationName : configurationNames) {
       ConfigurationMetadata configurationMetadata = configurationManager.getConfigurationMetadata(configurationName);
@@ -150,6 +154,27 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
   private static String getType() {
     return "caconfig";
+  }
+
+  private Collection<String> getBucketNames() {
+    // TODO: this is only a temporary workaround to collect the list of bucket names until https://issues.apache.org/jira/browse/SLING-7208 is available
+    List<String> bucketNames = new ArrayList<>();
+    bucketNames.add("sling:configs");
+
+    try {
+      Configuration configResolverConfig = configAdmin.getConfiguration("org.apache.sling.caconfig.impl.ConfigurationResolverImpl");
+      if (configResolverConfig != null) {
+        String[] addtlBucketNames = PropertiesUtil.toStringArray(configResolverConfig.getProperties().get("configBucketNames"));
+        if (addtlBucketNames != null && addtlBucketNames.length > 0) {
+          bucketNames.addAll(Arrays.asList(addtlBucketNames));
+        }
+      }
+    }
+    catch (IOException ex) {
+      log.warn("Error accessing OSGi config.", ex);
+    }
+
+    return bucketNames;
   }
 
 }
