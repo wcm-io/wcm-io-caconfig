@@ -165,7 +165,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
     try {
       Configuration configResolverConfig = configAdmin.getConfiguration("org.apache.sling.caconfig.impl.ConfigurationResolverImpl");
-      if (configResolverConfig != null) {
+      if (configResolverConfig != null && configResolverConfig.getProperties() != null) {
         String[] addtlBucketNames = PropertiesUtil.toStringArray(configResolverConfig.getProperties().get("configBucketNames"));
         if (addtlBucketNames != null && addtlBucketNames.length > 0) {
           bucketNames.addAll(Arrays.asList(addtlBucketNames));
