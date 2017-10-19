@@ -79,6 +79,8 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
     boolean enabled() default true;
   }
 
+  static final String REFERENCE_TYPE = "caconfig";
+
   @org.osgi.service.component.annotations.Reference
   private ConfigurationManager configurationManager;
 
@@ -153,7 +155,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
   }
 
   private static String getType() {
-    return "caconfig";
+    return REFERENCE_TYPE;
   }
 
   private Collection<String> getBucketNames() {

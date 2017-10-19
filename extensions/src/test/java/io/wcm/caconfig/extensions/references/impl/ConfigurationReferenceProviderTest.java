@@ -23,8 +23,10 @@ import static io.wcm.caconfig.extensions.references.impl.TestUtils.applyConfig;
 import static io.wcm.caconfig.extensions.references.impl.TestUtils.assetReferences;
 import static io.wcm.caconfig.extensions.references.impl.TestUtils.registerConfigurations;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
@@ -35,6 +37,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.reference.Reference;
 import com.day.cq.wcm.api.reference.ReferenceProvider;
@@ -65,6 +68,7 @@ public class ConfigurationReferenceProviderTest {
 
   private static final ValueMap CONFIGURATION_A = new ValueMapDecorator(ImmutableMap.of("key", "foo"));
   private static final ValueMap CONFIGURATION_B = new ValueMapDecorator(ImmutableMap.of("key", "bar"));
+  private static final Calendar TIMESTAMP = Calendar.getInstance();
 
   private Resource site1PageResource;
   private Resource site2PageResource;
@@ -86,7 +90,8 @@ public class ConfigurationReferenceProviderTest {
     registerConfigurations(context, ConfigurationA.class, ConfigurationB.class);
 
     // store fallback config
-    context.create().resource("/conf/global/sling:configs/configB", CONFIGURATION_B);
+    context.create().resource("/conf/global/sling:configs/configB",
+        "key", "fallback", JcrConstants.JCR_LASTMODIFIED, TIMESTAMP);
 
     applyConfig(context, region1Page, "configA", CONFIGURATION_A); // 1 config for region
     applyConfig(context, site1Page, "configA", CONFIGURATION_A); // 1 config on page1 (+1 from region +1 from fallback)
@@ -115,6 +120,20 @@ public class ConfigurationReferenceProviderTest {
         "/conf/region1/sling:configs/configA",
         "/conf/region1/site2/sling:configs/configB",
         "/conf/global/sling:configs/configB");
+  }
+
+  @Test
+  public void testReferencesProperties() {
+    ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
+    context.registerInjectActivateService(referenceProvider);
+    List<Reference> references = referenceProvider.findReferences(site1PageResource);
+
+    // validate props of fallback config reference
+    Reference ref = references.get(references.size() - 1);
+    assertEquals("/conf/global/sling:configs/configB", ref.getResource().getPath());
+    assertEquals(ConfigurationReferenceProvider.REFERENCE_TYPE, ref.getType());
+    assertEquals("Configuration B", ref.getName());
+    assertEquals(TIMESTAMP.getTimeInMillis(), ref.getLastModified());
   }
 
   @Test
