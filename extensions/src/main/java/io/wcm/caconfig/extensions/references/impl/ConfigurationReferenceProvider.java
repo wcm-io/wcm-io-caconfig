@@ -120,7 +120,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
       while (configurationInheritanceChain != null && configurationInheritanceChain.hasNext()) {
         Resource configurationResource = configurationInheritanceChain.next();
-        log.trace("Found configuration reference {} for resource {}", configurationResource.getPath(), configurationName, resource.getPath());
+        log.trace("Found configuration reference {} for resource {}", configurationResource.getPath(), resource.getPath());
         references.add(new Reference(getType(), getReferenceName(configurationMetadata), configurationResource,
             getLastModifiedOf(configurationResource)));
       }
