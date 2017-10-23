@@ -19,16 +19,16 @@
  */
 (function (angular, _) {
   "use strict";
+
   angular.module("io.wcm.caconfig.widgets")
       .directive("caconfigMultifield", multifield);
 
-  multifield.$inject = ["templateUrlList", "inputMap"];
+  multifield.$inject = ["templateUrlList", "inputMap", "$rootScope"];
 
-  function multifield(templateList, inputMap) {
+  function multifield(templateList, inputMap, $rootScope) {
 
     var directive = {
       replace: true,
-      require: "^form",
       templateUrl: templateList.multifield,
       scope: {
         property: "="
@@ -39,7 +39,7 @@
 
     return directive;
 
-    function link(scope, element, attrs, form) {
+    function link(scope) {
       var input = inputMap[scope.property.metadata.type];
       var inheritedStateChanged = false;
 
@@ -57,7 +57,7 @@
         });
         scope.property.value = valueArray;
         if (newValues.length !== oldValues.length) {
-          form.$setDirty();
+          $rootScope.configForm.$setDirty();
         }
       }, true);
 
@@ -84,7 +84,7 @@
         }
 
         inheritedStateChanged = true;
-        form.$setDirty();
+        $rootScope.configForm.$setDirty();
       });
     }
 

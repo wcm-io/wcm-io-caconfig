@@ -43,8 +43,9 @@
     };
 
     /**
-     * [loadConfigNames description]
-     * @return {Promise} [description]
+     * Loads configNames from REST url.
+     * Sets up configCache.
+     * @return {Promise}
      */
     that.loadConfigNames = function () {
       return dataService.getConfigNames().then(
@@ -60,8 +61,9 @@
     };
 
     /**
-     * Loads config from REST url
-     * Triggers update of configCache
+     * Loads config from REST url.
+     * Triggers update of configCache.
+     * Sets config as current.
      * @param  {String}  configName
      * @param  {Boolean} isCollection
      * @return {Promise}
@@ -77,7 +79,14 @@
             if (isCollection) {
               currentConfigService.setCollectionItemTemplate(configName, response.data.newItem);
             }
-            configCacheService.updateConfigCache(response.data.configs);
+            // if collection, but no items, use newItem "template" to cache properties
+            if (isCollection && !(response.data.configs && response.data.configs.length)) {
+              configCacheService.updateConfigCache([response.data.newItem]);
+            }
+            else {
+              configCacheService.updateConfigCache(response.data.configs);
+            }
+
             current = {
               configName: configName,
               isCollection: isCollection,
@@ -95,9 +104,13 @@
         );
     };
 
+    /**
+     * Triggers POST of updated config to REST service.
+     * @return {Object|null} parent config, if any - otherwise null.
+     */
     that.saveCurrentConfig = function () {
       var current = currentConfigService.getCurrent();
-      var parent = current.configNameObject.parent || "";
+      var parent = current.configNameObject.parent || null;
       return dataService.saveConfigData(current)
         .then(
           function success() {
@@ -110,9 +123,13 @@
         );
     };
 
+    /**
+     * Triggers DELETE of current config.
+     * @return {Object|null} parent config, if any - otherwise null.
+     */
     that.deleteCurrentConfig = function () {
       var current = currentConfigService.getCurrent();
-      var parent = current.configNameObject.parent || "";
+      var parent = current.configNameObject.parent || null;
       return dataService.deleteConfigData(current.configName).then(
         function success() {
           configCacheService.removeStoredConfigCache();

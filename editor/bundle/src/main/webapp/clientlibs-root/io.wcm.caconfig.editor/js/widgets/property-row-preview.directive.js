@@ -20,10 +20,26 @@
 (function (angular) {
   "use strict";
 
-  angular.module("io.wcm.caconfig.app", [
-    "pasvaz.bindonce",
-    "io.wcm.caconfig.widgets",
-    "io.wcm.caconfig.modals",
-    "io.wcm.caconfig.editor"
-  ]);
+  /**
+   * General directive for the widget column to edit the parameters value.
+   */
+  angular.module("io.wcm.caconfig.widgets")
+    .directive("caconfigPropertyRowPreview", propertyRowPreview);
+
+  propertyRowPreview.$inject = ["templateUrlList"];
+
+  function propertyRowPreview(templateList) {
+
+    var directive = {
+      restrict: "A",
+      templateUrl: templateList.propertyRowPreview,
+      scope: {
+        property: "=caconfigPropertyRowPreview"
+      },
+      transclude: true,
+      replace: true
+    };
+
+    return directive;
+  }
 }(angular));

@@ -4,7 +4,7 @@
       bo-class="detail.current.isCollection ? 'caconfig-is-collection' : 'caconfig-not-collection'">
   <button class="coral-Button coral-Button--square coral-Button--default" type="button"
           bo-title="i18n.button.home"
-          ng-click="(configForm.$dirty && detail.current.contextPath) ? saveWarning() : go()">
+          ng-click="(detail.configForm.$dirty && detail.current.contextPath) ? saveWarning() : go()">
     <i class="coral-Icon coral-Icon--home"></i>
   </button>
   <button class="coral-Button coral-Button--primary caconfig-if-form-valid-and-dirty" type="button"
@@ -41,7 +41,7 @@
   <h2>
     <span class="caconfig-breadcrumb" ng-repeat="breadcrumb in detail.current.breadcrumbs">
       <span class="coral-Link caconfig-breadcrumb-link"
-            ng-click="configForm.$pristine ? saveWarning(breadcrumb.configName) : go(breadcrumb.configName)"
+            ng-click="detail.configForm.$dirty ? saveWarning(breadcrumb.configName) : go(breadcrumb.configName)"
             bo-text="breadcrumb.label">
       </span> /
       <span bo-if="breadcrumb.itemName" bo-text="breadcrumb.itemName + ' / '"></span>
@@ -63,19 +63,20 @@
   <div class="caconfig-configurationDetails"
      bo-class="[
        config.inherited ? 'caconfig-config-inherited' : 'caconfig-config-not-inherited',
-       config.isNewItem ? 'caconfig-is-new-item' : 'caconfig-not-new-item'
+       config.isNewItem ? 'caconfig-is-new-item' : 'caconfig-not-new-item',
+       detail.current.isLargeList ?  'caconfig-is-preview' : 'caconfig-not-preview'
      ]"
-     ng-repeat="config in detail.current.configs track by config.collectionItemName"
-     i18n="i18n"
+     ng-repeat="config in detail.current.configs | limitTo:detail.configLimit track by config.collectionItemName"
      caconfig-config-table="config"
-     collection-item-name="config.collectionItemName"
      index="$index"
+     is-preview="detail.current.isLargeList"
      ng-cloak>
   </div>
 
   <p bo-if="detail.current.isCollection">
-    <button class="coral-Button coral-Button--primary" type="button"
+    <button class="caconfig-addCollectionItemButton coral-Button coral-Button--primary" type="button"
             ng-click="detail.addCollectionItem()"
+            bo-show="detail.allConfigsVisible"
             bo-if="i18n.button.addItem"
             bo-text="i18n.button.addItem"></button>
   </p>

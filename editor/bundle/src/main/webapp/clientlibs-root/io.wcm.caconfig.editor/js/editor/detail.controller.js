@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, $) {
   "use strict";
 
   /**
@@ -27,12 +27,15 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("DetailController", DetailController);
 
-  DetailController.$inject = ["$rootScope", "$scope", "$route", "$compile", "configService", "modalService"];
+  DetailController.$inject = ["$window", "$rootScope", "$scope", "$timeout", "$route", "$compile", "configService", "modalService"];
 
   /* eslint-disable max-params */
-  function DetailController($rootScope, $scope, $route, $compile, configService, modalService) {
+  function DetailController($window, $rootScope, $scope, $timeout, $route, $compile, configService, modalService) {
   /* eslint-enable max-params */
     var that = this;
+    var MAX_CONFIGS = Number.POSITIVE_INFINITY;
+    var MAX_CONFIGS_PER_PAGE = 32;
+    var BOTTOM_OF_PAGE_THRESHOLD = 600;
 
     that.current = {
       configName: $route.current.params.configName,
@@ -84,13 +87,66 @@
         });
     };
 
+    /**
+     * Show Add Collection Item button (when all collection items visible)
+     */
+    function showAddCollectionItemButton() {
+      $(".caconfig-addCollectionItemButton").show();
+    }
+
     that.addCollectionItem = function () {
       modalService.show(modalService.modal.ADD_COLLECTION_ITEM);
       that.configForm.$setDirty();
     };
 
+    function addScrollListener() {
+      $($window).on("scroll", onScrollToBottom);
+    }
+
+    function removeScrollListener() {
+      $($window).off("scroll", onScrollToBottom);
+    }
+
     /**
-     * Loads config data and sets various properties
+     * Triggers showMoreConfigs if user has scrolled to the bottom of page.
+     */
+    function onScrollToBottom() {
+      var windowHeight = $window.innerHeight;
+      var documentHeight = $window.document.body.offsetHeight - BOTTOM_OF_PAGE_THRESHOLD;
+      if ((windowHeight + $window.pageYOffset) >= documentHeight) {
+        $timeout(showMoreConfigs, false);
+      }
+    }
+
+    function showConfigs() {
+      if (that.allConfigsVisible) {
+        return;
+      }
+      // If MAX_CONFIGS_PER_PAGE do not go beyond the height of the window,
+      // the user will not be able to trigger the scroll - so we must explicitly increase the amount
+      if (($window.document.body.offsetHeight - BOTTOM_OF_PAGE_THRESHOLD) < $window.innerHeight) {
+        showMoreConfigs();
+        $timeout(showConfigs, false);
+      }
+      else {
+        addScrollListener();
+      }
+    }
+
+    function showMoreConfigs() {
+      that.configLimit += MAX_CONFIGS_PER_PAGE;
+
+      if (that.configLimit >= that.current.configs.length) {
+        that.configLimit = MAX_CONFIGS;
+        that.allConfigsVisible = true;
+        showAddCollectionItemButton();
+        removeScrollListener();
+      }
+    }
+
+    /**
+     * Loads config data and sets various scope properties.
+     * Sets up "infinite" scroll loading, if this is a large collection.
      */
     function init() {
       // Load Configuration Details
@@ -98,6 +154,7 @@
         .then(function (currentData) {
           if (!angular.isUndefined(currentData)) {
             that.current.configs = currentData.configs;
+            that.current.originalLength = currentData.configs.length;
             that.current.isCollection = currentData.isCollection;
             that.current.collectionProperties = currentData.collectionProperties;
             that.current.label = currentData.configNameObject.label || that.current.configName;
@@ -106,9 +163,22 @@
             that.current.description = currentData.configNameObject.description;
             that.current.contextPath = configService.getState().contextPath;
             $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
+            $rootScope.configForm = that.configForm;
+            that.configLimit = MAX_CONFIGS_PER_PAGE;
+            that.current.isLargeList = that.current.isCollection && (that.current.originalLength > MAX_CONFIGS_PER_PAGE);
           }
           that.dvReady = true;
+
+          // Setup "Infinite" Scroll
+          if (that.current.isLargeList) {
+            $timeout(showConfigs, false);
+          }
+          else {
+            that.configLimit = MAX_CONFIGS;
+            that.allConfigsVisible = true;
+            showAddCollectionItemButton();
+          }
         });
     }
   }
-}(angular));
+}(angular, jQuery));

@@ -19,6 +19,7 @@
  */
 (function (angular) {
   "use strict";
+
   angular.module("io.wcm.caconfig.widgets")
       .directive("caconfigPathbrowser", pathbrowser);
 
@@ -29,7 +30,6 @@
   /* eslint-enable max-params */
     var directive = {
       replace: true,
-      require: "^form",
       templateUrl: templateList.pathbrowser,
       scope: {
         property: "="

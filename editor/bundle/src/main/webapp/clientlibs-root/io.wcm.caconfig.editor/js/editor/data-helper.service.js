@@ -27,7 +27,9 @@
   angular.module("io.wcm.caconfig.editor")
     .service("dataHelperService", DataHelperService);
 
-  function DataHelperService() {
+  DataHelperService.$inject = ["propertyNames"];
+
+  function DataHelperService(propertyNames) {
     var that = this;
 
     /**
@@ -63,20 +65,22 @@
      */
     function setDefaultValues(configs) {
       var propsWithDefault = [];
-      angular.forEach(configs[0].properties, function (property, ix) {
-        if (property["default"]) {
-          propsWithDefault.push(ix);
-        }
-      });
-
-      angular.forEach(propsWithDefault, function (ix) {
-        angular.forEach(configs, function (config) {
-          var property = config.properties[ix];
-          if (angular.isUndefined(property.value)) {
-            property.value = property.effectiveValue;
+      if (configs.length) {
+        angular.forEach(configs[0].properties, function (property, ix) {
+          if (property["default"]) {
+            propsWithDefault.push(ix);
           }
         });
-      });
+
+        angular.forEach(propsWithDefault, function (ix) {
+          angular.forEach(configs, function (config) {
+            var property = config.properties[ix];
+            if (angular.isUndefined(property.value)) {
+              property.value = property.effectiveValue;
+            }
+          });
+        });
+      }
       return configs;
     }
 
@@ -110,43 +114,43 @@
       }
       return angular.toJson(configData);
     };
-  }
 
-  /**
-   * Gets properties from config object
-   * @param {Object} config
-   * @returns {Object}
-   */
-  function buildProperties(config) {
-    var properties = {};
-    var i,
-        property,
-        tempArray;
-    for (i = 0; (config.properties && i < config.properties.length); i++) {
-      property = config.properties[i];
+    /**
+     * Gets properties from config object
+     * @param {Object} config
+     * @returns {Object}
+     */
+    function buildProperties(config) {
+      var properties = {};
+      var i,
+          property,
+          tempArray;
+      for (i = 0; (config.properties && i < config.properties.length); i++) {
+        property = config.properties[i];
 
-      if (property.name === "sling:configPropertyInherit") {
-        properties[property.name] = Boolean(property.value);
+        if (property.name === propertyNames.CONFIG_PROPERTY_INHERIT) {
+          properties[property.name] = Boolean(property.value);
+        }
+        else if (!property.overridden && !property.inherited
+            && !property.nestedConfig && !property.nestedConfigCollection) {
+          if (angular.isUndefined(property.value) || property.value === "") {
+            properties[property.name] = null;
+          }
+          else if (angular.isArray(property.value)) {
+            tempArray = _.reject(property.value, function (element) {
+              return angular.isUndefined(element) || element === null || element === "";
+            });
+            properties[property.name] = tempArray.length ? _.clone(tempArray) : null;
+          }
+          else {
+            properties[property.name] = property.value;
+          }
+
+        }
+
       }
-      else if (!property.overridden && !property.inherited
-          && !property.nestedConfig && !property.nestedConfigCollection) {
-        if (angular.isUndefined(property.value) || property.value === "") {
-          properties[property.name] = null;
-        }
-        else if (angular.isArray(property.value)) {
-          tempArray = _.reject(property.value, function (element) {
-            return angular.isUndefined(element) || element === null || element === "";
-          });
-          properties[property.name] = tempArray.length ? _.clone(tempArray) : null;
-        }
-        else {
-          properties[property.name] = property.value;
-        }
-
-      }
-
+      return properties;
     }
-    return properties;
   }
 
 }(angular, _));

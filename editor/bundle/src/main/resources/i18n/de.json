@@ -31,6 +31,7 @@
         "collectionItem": "Diese Konfiguration wird über Sammlungs-Vererbung vererbt.",
         "break": "Klicken Sie hier, um die Vererbung zu deaktivieren."
       },
+      "edit": "Klicken Sie hier, um die Konfiguration zu bearbeiten.",
     },
     "modal": {
       "addConfig": {

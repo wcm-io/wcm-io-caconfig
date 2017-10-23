@@ -26,12 +26,11 @@
   angular.module("io.wcm.caconfig.editor")
     .service("currentConfigService", CurrentConfigService);
 
-  CurrentConfigService.$inject = ["$rootScope"];
+  CurrentConfigService.$inject = ["$rootScope", "propertyNames"];
 
-  function CurrentConfigService($rootScope) {
+  function CurrentConfigService($rootScope, propertyNames) {
     var that = this;
 
-    var CONFIG_PROPERTY_INHERIT = "sling:configPropertyInherit";
     var collectionItemTemplates = {};
     var current = {
       configName: null,
@@ -97,7 +96,7 @@
     };
 
     that.handleInheritedChange = function (property) {
-      if (!property.metadata.multivalue
+      if (!(property.metadata && property.metadata.multivalue)
           && !property.inherited && angular.isUndefined(property.value)) {
         property.value = property.effectiveValue;
       }
@@ -112,11 +111,11 @@
     that.getConfigPropertyInherit = function (index) {
       var config = current.configs[index];
       var configPropertyInherit = _.find(config.properties, {
-        name: CONFIG_PROPERTY_INHERIT
+        name: propertyNames.CONFIG_PROPERTY_INHERIT
       });
       if (!configPropertyInherit) {
         configPropertyInherit = {
-          name: CONFIG_PROPERTY_INHERIT,
+          name: propertyNames.CONFIG_PROPERTY_INHERIT,
           value: false
         };
         config.properties.push(configPropertyInherit);
@@ -137,7 +136,7 @@
         return;
       }
       angular.forEach(config.properties, function (property) {
-        if (property.name !== CONFIG_PROPERTY_INHERIT && !property.overridden
+        if (property.name !== propertyNames.CONFIG_PROPERTY_INHERIT && !property.overridden
             && !property.nestedConfig && !property.nestedConfigCollection) {
           property.inherited = false;
           that.handleInheritedChange(property);

@@ -95,6 +95,10 @@ span.wcm-io-editor.endor-Brand {
   float: right;
 }
 
+.caconfig-configEdit {
+  font-style: italic;
+}
+
 .caconfig-disableable-button,
 .caconfig-disableable-button:disabled,
 .caconfig-disableable-button.is-disabled {
@@ -104,6 +108,11 @@ span.wcm-io-editor.endor-Brand {
 .caconfig-breadcrumb .caconfig-breadcrumb-link,
 .caconfig-link {
   cursor: pointer;
+}
+
+.caconfig-is-preview .caconfig-if-not-preview,
+.caconfig-not-preview .caconfig-if-is-preview {
+  display: none;
 }
 
 .caconfig-is-collection .caconfig-if-not-collection,

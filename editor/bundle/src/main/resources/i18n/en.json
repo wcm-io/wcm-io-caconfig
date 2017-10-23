@@ -31,6 +31,7 @@
         "collectionItem": "This configuration is inherited via collection inheritance.",
         "break": "Click here to break inheritance."
       },
+      "edit": "Click to edit config."
     },
     "modal": {
       "addConfig": {

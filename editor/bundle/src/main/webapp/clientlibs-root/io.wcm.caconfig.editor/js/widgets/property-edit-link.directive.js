@@ -31,7 +31,6 @@
   function propertyEditLink(templateList, $rootScope) {
 
     var directive = {
-      require: "^form",
       templateUrl: templateList.propertyEditLink,
       scope: {
         configName: "@",
@@ -43,8 +42,8 @@
 
     return directive;
 
-    function link(scope, element, attrs, form) {
-      scope.form = form;
+    function link(scope) {
+      scope.configForm = $rootScope.configForm;
       scope.go = $rootScope.go;
       scope.saveWarning = $rootScope.saveWarning;
       scope.linkText = $rootScope.i18n.button.edit;
