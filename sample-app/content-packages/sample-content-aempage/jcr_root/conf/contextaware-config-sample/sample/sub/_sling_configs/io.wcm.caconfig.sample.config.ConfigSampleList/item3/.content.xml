@@ -2,9 +2,9 @@
 <jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
     jcr:primaryType="cq:Page">
     <jcr:content
-        cq:template="/apps/contextaware-config-sample/templates/sample"
         jcr:primaryType="cq:PageContent"
-        jcr:title="Sub Page Override"
-        sling:resourceType="/apps/contextaware-config-sample/components/page/sample"/>
-    <config/>
+        sling:configPropertyInherit="{Boolean}false"
+        stringParam="Value 1 of item3 from sub"
+        stringParam2="Value 2 of item3 from sub"
+        stringParam3="Value 3 of item3 from sub"/>
 </jcr:root>
