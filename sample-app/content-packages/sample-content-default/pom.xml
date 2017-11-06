@@ -26,16 +26,18 @@
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.sample-app.parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../parent/pom.xml</relativePath>
+    <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
-  <artifactId>io.wcm.caconfig.sample-app.sample-content</artifactId>
+  <artifactId>io.wcm.caconfig.sample-app.sample-content-default</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>content-package</packaging>
+  
+  <description>Sample content for Sling Context-Aware Configuration Default Persistence Strategy.</description>
 
   <properties>
-    <content-package-name>contextaware-config-sample-samplecontent</content-package-name>
+    <content-package-name>contextaware-config-sample-samplecontent-default</content-package-name>
     <content-package-group>wcm-io-sample</content-package-group>
   </properties>
 

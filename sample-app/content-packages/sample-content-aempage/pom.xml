@@ -3,7 +3,7 @@
   #%L
   wcm.io
   %%
-  Copyright (C) 2016 wcm.io
+  Copyright (C) 2017 wcm.io
   %%
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,71 +26,46 @@
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.sample-app.parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../parent/pom.xml</relativePath>
+    <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
-  <artifactId>io.wcm.caconfig.sample-app.complete.config-definition</artifactId>
+  <artifactId>io.wcm.caconfig.sample-app.sample-content-aempage</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <packaging>config-definition</packaging>
+  <packaging>content-package</packaging>
+
+  <description>Sample content for wcm.io Context-Aware Configuration Extensions AEM Page Persistence Strategy.</description>
 
   <properties>
-    <config.environment>development</config.environment>
+    <content-package-name>contextaware-config-sample-samplecontent-aempage</content-package-name>
+    <content-package-group>wcm-io-sample</content-package-group>
   </properties>
 
-  <dependencies>
-
-    <!-- Use generic AEM CMS and Dispatcher roles -->
-    <dependency>
-      <groupId>io.wcm.devops.conga.definitions</groupId>
-      <artifactId>io.wcm.devops.conga.definitions.aem</artifactId>
-      <version>0.9.0</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <!-- Application packages -->
-    <dependency>
-      <groupId>io.wcm</groupId>
-      <artifactId>io.wcm.caconfig.sample-app.complete</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>zip</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.wcm</groupId>
-      <artifactId>io.wcm.caconfig.sample-app.sample-content-default</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <type>zip</type>
-      <scope>compile</scope>
-    </dependency>
-
-  </dependencies>
-
   <build>
-
+    <finalName>${content-package-name}-${project.version}</finalName>
+    <resources>
+      <!-- Include all files from jcr_root in content package -->
+      <resource>
+        <directory>jcr_root</directory>
+      </resource>
+    </resources>
     <plugins>
-
       <plugin>
-        <groupId>io.wcm.devops.conga</groupId>
-        <artifactId>conga-maven-plugin</artifactId>
-        <executions>
-
-          <!-- Generate configuration for local development AEM instance -->
-          <execution>
-            <id>lauchpad-configuration-generate</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <environmentDir>${basedir}/src/main/dev-environments</environmentDir>
-              <environments>
-                <environment>${config.environment}</environment>
-              </environments>
-            </configuration>
-          </execution>
-
-        </executions>
+        <groupId>io.wcm.maven.plugins</groupId>
+        <artifactId>wcmio-content-package-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <name>${content-package-name}</name>
+          <group>${content-package-group}</group>
+          <filters>
+            <filter>
+              <root>/content/contextaware-config-sample</root>
+            </filter>
+            <filter>
+              <root>/conf/contextaware-config-sample</root>
+            </filter>
+          </filters>
+        </configuration>
       </plugin>
 
       <!-- Do not generate eclipse project files -->
@@ -100,6 +75,15 @@
         <inherited>true</inherited>
         <configuration>
           <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <!-- Do not deploy sources to repository -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <configuration>
+          <attach>false</attach>
         </configuration>
       </plugin>
 

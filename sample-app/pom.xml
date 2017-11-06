@@ -42,8 +42,9 @@
     <module>parent</module>
     <module>bundles/base</module>
     <module>config-definition</module>
-    <module>complete</module>
-    <module>sample-content</module>
+    <module>content-packages/complete</module>
+    <module>content-packages/sample-content-default</module>
+    <module>content-packages/sample-content-aempage</module>
   </modules>
 
   <build>

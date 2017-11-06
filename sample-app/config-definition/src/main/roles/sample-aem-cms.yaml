@@ -48,7 +48,7 @@ files:
   dir: packages
 
 # Application sample content package
-- url: mvn:io.wcm/io.wcm.caconfig.sample-app.sample-content//zip
+- url: mvn:io.wcm/io.wcm.caconfig.sample-app.sample-content-default//zip
   dir: packages
   condition: ${app.sampleContent}
 
