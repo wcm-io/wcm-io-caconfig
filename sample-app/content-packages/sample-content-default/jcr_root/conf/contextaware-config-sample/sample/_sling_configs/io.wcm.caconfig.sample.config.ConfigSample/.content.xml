@@ -3,4 +3,4 @@
     jcr:primaryType="nt:unstructured"
     boolParam="{Boolean}true"
     intParam="{Long}12345"
-    stringParam="This is an example string value" />
+    stringParam="This is an example string value"/>
