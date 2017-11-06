@@ -231,12 +231,12 @@ final class PersistenceUtils {
   }
 
   public static void updatePageLastMod(ResourceResolver resolver, String configResourcePath) {
-    Matcher matcher = PAGE_PATH_PATTERN.matcher(configResourcePath);
-    if (!matcher.matches()) {
+    PageManager pageManager = resolver.adaptTo(PageManager.class);
+    Page page = pageManager.getContainingPage(configResourcePath);
+    if (page == null) {
       return;
     }
-    String pagePath = matcher.group(1);
-    Resource contentResource = resolver.getResource(pagePath + "/" + JCR_CONTENT);
+    Resource contentResource = page.getContentResource();
     if (contentResource != null) {
       ModifiableValueMap contentProps = contentResource.adaptTo(ModifiableValueMap.class);
       if (contentProps == null) {
@@ -244,13 +244,14 @@ final class PersistenceUtils {
       }
 
       Object user = resolver.getAttribute(ResourceResolverFactory.USER);
+      Calendar now = Calendar.getInstance();
 
-      contentProps.put(NameConstants.PN_LAST_MOD, Calendar.getInstance());
+      contentProps.put(NameConstants.PN_LAST_MOD, now);
       contentProps.put(NameConstants.PN_LAST_MOD_BY, user);
 
       // check if resource has cq:lastModified because it is created in site admin
       if (contentProps.containsKey(NameConstants.PN_PAGE_LAST_MOD)) {
-        contentProps.put(NameConstants.PN_PAGE_LAST_MOD, Calendar.getInstance());
+        contentProps.put(NameConstants.PN_PAGE_LAST_MOD, now);
         contentProps.put(NameConstants.PN_PAGE_LAST_MOD_BY, user);
       }
     }
