@@ -23,15 +23,14 @@ import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.commit;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.containsJcrContent;
-import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.convertPersistenceException;
-import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.convertWCMException;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildrenNotInCollection;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deletePageOrResource;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensureContainingPage;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensurePageIfNotContainingPage;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.getOrCreateResource;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.replaceProperties;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.updatePageLastMod;
 
-import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
@@ -45,12 +44,6 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.day.cq.wcm.api.Page;
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMException;
 
 /**
  * AEM-specific persistence strategy that has higher precedence than the default strategy from Sling,
@@ -79,8 +72,6 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
   }
 
   private static final String DEFAULT_CONFIG_NODE_TYPE = NT_UNSTRUCTURED;
-
-  private static final Logger log = LoggerFactory.getLogger(PagePersistenceStrategy.class);
 
   @Reference
   private ConfigurationManagementSettings configurationManagementSettings;
@@ -184,11 +175,17 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     if (!enabled) {
       return false;
     }
-    String parentPath = getCollectionParentResourcePath(configResourceCollectionParentPath);
-    Resource configResourceParent = getOrCreateResource(resolver, parentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY, configurationManagementSettings);
 
-    // delete existing children and create new ones
+    // create page for collection parent
+    String parentPath = getCollectionParentResourcePath(configResourceCollectionParentPath);
+    ensurePageIfNotContainingPage(resolver, parentPath, configurationManagementSettings);
+    Resource configResourceParent = getOrCreateResource(resolver, parentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY, configurationManagementSettings);
+    updatePageLastMod(resolver, parentPath);
+
+    // delete existing children no longer in the list
     deleteChildrenNotInCollection(configResourceParent, data);
+
+    // create new or overwrite existing children
     for (ConfigurationPersistData item : data.getItems()) {
       String path = getCollectionItemResourcePath(parentPath + "/" + item.getCollectionItemName());
       ensureContainingPage(resolver, path, configurationManagementSettings);
@@ -212,26 +209,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     }
     Resource configResource = resolver.getResource(configResourcePath);
     if (configResource != null) {
-      Page configPage = configResource.adaptTo(Page.class);
-      if (configPage != null) {
-        try {
-          log.trace("! Delete page {}", configPage.getPath());
-          PageManager pageManager = configPage.getPageManager();
-          pageManager.delete(configPage, false);
-        }
-        catch (WCMException ex) {
-          throw convertWCMException("Unable to delete configuration page at " + configResourcePath, ex);
-        }
-      }
-      else {
-        try {
-          log.trace("! Delete resource {}", configResource.getPath());
-          resolver.delete(configResource);
-        }
-        catch (PersistenceException ex) {
-          throw convertPersistenceException("Unable to delete configuration resource at " + configResourcePath, ex);
-        }
-      }
+      deletePageOrResource(configResource);
     }
     updatePageLastMod(resolver, configResourcePath);
     commit(resolver, configResourcePath);

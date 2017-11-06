@@ -21,8 +21,8 @@ package io.wcm.caconfig.extensions.persistence.impl;
 
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.commit;
-import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.convertPersistenceException;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deleteChildrenNotInCollection;
+import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.deletePageOrResource;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.ensureContainingPage;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.getOrCreateResource;
 import static io.wcm.caconfig.extensions.persistence.impl.PersistenceUtils.replaceProperties;
@@ -43,7 +43,6 @@ import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.collections.iterators.TransformIterator;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
@@ -199,7 +198,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     Resource configResourceParent = getOrCreateResource(resolver, configResourceCollectionParentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY,
         configurationManagementSettings);
 
-    // delete existing children and create new ones
+    // delete existing children no longer in the list
     deleteChildrenNotInCollection(configResourceParent, data);
     for (ConfigurationPersistData item : data.getItems()) {
       String path = configResourceParent.getPath() + "/" + item.getCollectionItemName();
@@ -223,13 +222,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     }
     Resource resource = resolver.getResource(configResourcePath);
     if (resource != null) {
-      try {
-        log.trace("! Delete resource {}", resource.getPath());
-        resolver.delete(resource);
-      }
-      catch (PersistenceException ex) {
-        throw convertPersistenceException("Unable to delete configuration at " + configResourcePath, ex);
-      }
+      deletePageOrResource(resource);
     }
     updatePageLastMod(resolver, configResourcePath);
     commit(resolver, configResourcePath);

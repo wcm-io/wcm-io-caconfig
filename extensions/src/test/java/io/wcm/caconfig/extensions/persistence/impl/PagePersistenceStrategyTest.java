@@ -23,6 +23,7 @@ import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigu
 import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigurationCollection;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
@@ -129,6 +130,8 @@ public class PagePersistenceStrategyTest {
         ));
 
     // assert storage in page in /conf
+    assertNotNull(context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName()));
+
     Page configPage1 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName() + "/item0");
     assertThat(configPage1.getContentResource(), ResourceMatchers.props("stringParam", "value1", "intParam", 123));
 
@@ -161,10 +164,13 @@ public class PagePersistenceStrategyTest {
         (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value21")));
 
     // assert storage in page in /conf
+    assertNotNull(context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListNestedConfig.class.getName()));
+
     Page configPage1 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListNestedConfig.class.getName() + "/item0");
     assertThat(configPage1.getContentResource(), ResourceMatchers.props("stringParam", "value1", "intParam", 123));
     assertThat(configPage1.getContentResource("subListConfig/item0"), ResourceMatchers.props("stringParam", "value11"));
     assertThat(configPage1.getContentResource("subListConfig/item1"), ResourceMatchers.props("stringParam", "value12"));
+    assertNull(context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListNestedConfig.class.getName() + "/item0/jcr:content/subListConfig"));
 
     Page configPage2 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListNestedConfig.class.getName() + "/item1");
     assertThat(configPage2.getContentResource(), ResourceMatchers.props("stringParam", "value2", "intParam", 234));
