@@ -23,7 +23,7 @@ In AEM 6.1 or AEM 6.2 you need to deploy the latest version of these Sling bundl
 * `org.apache.sling:org.apache.sling.caconfig.impl`
 * `org.apache.sling:org.apache.sling.commons.johnzon`
 
-You should apply the same configuration to the Sling Context-Aware Configuration bundles that is present in AEM 6.3 (e.g. for support reading `sling:configRef` property stored in `jcr:content` subnodes of AEM content pages):
+You should apply the same configuration to the Sling Context-Aware Configuration bundles that is present in AEM 6.3 (e.g. for support reading `sling:configRef` property stored in `jcr:content` subnodes of AEM content pages and ignoring properties with `cq:` namespace):
 
 ```
   org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy
@@ -32,12 +32,8 @@ You should apply the same configuration to the Sling Context-Aware Configuration
 
   org.apache.sling.caconfig.resource.impl.def.DefaultConfigurationResourceResolvingStrategy
     fallbackPaths=["/conf/global","/apps","/libs"]
-    configCollectionInheritancePropertyNames=["jcr:content/mergeList","mergeList"]
-```
+    configCollectionInheritancePropertyNames=["jcr:content/sling:configCollectionInherit", "jcr:content/mergeList","mergeList"]
 
-You should also extend the filter settings for ignoring property names when reading and writing configuration data to also exclude properties with the `cq:` namespace:
-
-```
   org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
     ignorePropertyNameRegex=["^(jcr|cq):.+$"]
 ```
@@ -62,11 +58,13 @@ In AEM 6.3 you should check which versions of the bundles mentioned above are al
 * `org.apache.sling:org.apache.sling.caconfig.impl`
 * `org.apache.sling:org.apache.sling.commons.johnzon`
 
-The additional configuration steps for AEM 6.1 and 6.2 are not required for AEM 6.3 because these configurations are already included.
-
-You only have to add this configuration, which is no yet present in AEM 6.3:
+Some configuration for Sling Context-Aware configuration already ships with AEM 6.3, but you should add this additional configuration:
 
 ```
+  org.apache.sling.caconfig.resource.impl.def.DefaultConfigurationResourceResolvingStrategy
+    fallbackPaths=["/conf/global","/apps","/libs"]
+    configCollectionInheritancePropertyNames=["jcr:content/sling:configCollectionInherit", "jcr:content/mergeList","mergeList"]
+
   org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
     ignorePropertyNameRegex=["^(jcr|cq):.+$"]
 ```
