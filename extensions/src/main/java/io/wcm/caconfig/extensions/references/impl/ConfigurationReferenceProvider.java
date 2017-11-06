@@ -20,12 +20,17 @@
 package io.wcm.caconfig.extensions.references.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
@@ -107,13 +112,14 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
     }
 
     PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
-    Set<String> configurationNames = configurationManager.getConfigurationNames();
-    List<com.day.cq.wcm.api.reference.Reference> references = new ArrayList<>(configurationNames.size());
-    Collection<String> configurationBuckets = configurationResourceResolverConfig.configBucketNames();
+    Map<String, ConfigurationMetadata> configurationMetadatas = new TreeMap<>(configurationManager.getConfigurationNames().stream()
+        .collect(Collectors.toMap(configName -> configName, configName -> configurationManager.getConfigurationMetadata(configName))));
+    List<com.day.cq.wcm.api.reference.Reference> references = new ArrayList<>();
+    Set<String> configurationBuckets = new LinkedHashSet<>(configurationResourceResolverConfig.configBucketNames());
 
-    for (String configurationName : configurationNames) {
-      ConfigurationMetadata configurationMetadata = configurationManager.getConfigurationMetadata(configurationName);
+    for (String configurationName : configurationMetadatas.keySet()) {
       Iterator<Resource> configurationInheritanceChain = configurationResourceResolvingStrategy.getResourceInheritanceChain(resource, configurationBuckets, configurationName);
+      Map<String, Page> referencePages = new LinkedHashMap<>();
 
       while (configurationInheritanceChain != null && configurationInheritanceChain.hasNext()) {
         Resource configurationResource = configurationInheritanceChain.next();
@@ -121,31 +127,51 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
         // get page for configuration resource - and all children (e.g. for config collections)
         Page configPage = pageManager.getContainingPage(configurationResource);
         if (configPage != null) {
-          processReference(resource, configPage, configurationMetadata, references);
+          referencePages.put(configPage.getPath(), configPage);
           Iterator<Page> deepChildren = configPage.listChildren(new PageFilter(false, true), true);
           while (deepChildren.hasNext()) {
-            processReference(resource, deepChildren.next(), configurationMetadata, references);
+            Page configChildPage = deepChildren.next();
+            referencePages.put(configChildPage.getPath(), configChildPage);
           }
         }
       }
+
+      referencePages.values().forEach(item -> references.add(toReference(resource, item, configurationMetadatas, configurationBuckets)));
     }
 
     log.debug("Found {} references for resource {}", references.size(), resource.getPath());
-
     return references;
   }
 
-  private void processReference(Resource resource, Page configPage, ConfigurationMetadata configurationMetadata,
-      List<com.day.cq.wcm.api.reference.Reference> references) {
+  private com.day.cq.wcm.api.reference.Reference toReference(Resource resource, Page configPage,
+      Map<String, ConfigurationMetadata> configurationMetadatas, Set<String> configurationBuckets) {
     log.trace("Found configuration reference {} for resource {}", configPage.getPath(), resource.getPath());
-    references.add(new com.day.cq.wcm.api.reference.Reference(getType(),
-        getReferenceName(configurationMetadata),
+    return new com.day.cq.wcm.api.reference.Reference(getType(),
+        getReferenceName(configPage, configurationMetadatas, configurationBuckets),
         configPage.adaptTo(Resource.class),
-        getLastModifiedOf(configPage)));
+        getLastModifiedOf(configPage));
   }
 
-  private static String getReferenceName(ConfigurationMetadata configurationMetadata) {
-    return StringUtils.defaultIfEmpty(configurationMetadata.getLabel(), configurationMetadata.getName());
+  /**
+   * Build reference display name from path with:
+   * - translating configuration names to labels
+   * - omitting configuration bucket names
+   */
+  private static String getReferenceName(Page configPage,
+      Map<String, ConfigurationMetadata> configurationMetadatas, Set<String> configurationBuckets) {
+    List<String> pathParts = Arrays.asList(StringUtils.split(configPage.getPath(), "/"));
+    return pathParts.stream()
+        .filter(name -> !configurationBuckets.contains(name))
+        .map(name -> {
+          ConfigurationMetadata configMetadata = configurationMetadatas.get(name);
+          if (configMetadata != null && configMetadata.getLabel() != null) {
+            return configMetadata.getLabel();
+          }
+          else {
+            return name;
+          }
+        })
+        .collect(Collectors.joining(" / "));
   }
 
   private static long getLastModifiedOf(Page page) {

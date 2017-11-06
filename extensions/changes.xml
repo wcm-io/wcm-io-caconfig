@@ -30,6 +30,9 @@
       <action type="fix" dev="sseifert" issue="WCON-45">
         ReferenceProvider: Return only cq:Page nodes, handle collection items correctly.
       </action>
+      <action type="update" dev="sseifert" issue="WCON-46">
+        ReferenceProvider: Derive reference display name from config page path.
+      </action>
     </release>
 
     <release version="1.2.0" date="2017-10-19">

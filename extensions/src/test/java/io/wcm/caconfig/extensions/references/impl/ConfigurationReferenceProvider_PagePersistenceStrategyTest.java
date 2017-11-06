@@ -136,7 +136,7 @@ public class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
     Reference ref = references.get(references.size() - 1);
     assertEquals("/conf/global/sling:configs/configB", ref.getResource().getPath());
     assertEquals(ConfigurationReferenceProvider.REFERENCE_TYPE, ref.getType());
-    assertEquals("Configuration B", ref.getName());
+    assertEquals("conf / global / Configuration B", ref.getName());
     assertEquals(TIMESTAMP.getTimeInMillis(), ref.getLastModified());
   }
 
