@@ -27,6 +27,9 @@
       <action type="fix" dev="sseifert" issue="WCON-44">
         PagePersistenceStrategy: Use Page for configuration collection root resource.
       </action>
+      <action type="fix" dev="sseifert" issue="WCON-45">
+        ReferenceProvider: Return only cq:Page nodes, handle collection items correctly.
+      </action>
     </release>
 
     <release version="1.2.0" date="2017-10-19">

@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.management.ConfigurationResourceResolverConfig;
 import org.apache.sling.caconfig.management.multiplexer.ConfigurationResourceResolvingStrategyMultiplexer;
@@ -44,8 +43,9 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageFilter;
+import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.reference.ReferenceProvider;
 
 /**
@@ -106,6 +106,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
       return Collections.emptyList();
     }
 
+    PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
     Set<String> configurationNames = configurationManager.getConfigurationNames();
     List<com.day.cq.wcm.api.reference.Reference> references = new ArrayList<>(configurationNames.size());
     Collection<String> configurationBuckets = configurationResourceResolverConfig.configBucketNames();
@@ -116,9 +117,16 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
       while (configurationInheritanceChain != null && configurationInheritanceChain.hasNext()) {
         Resource configurationResource = configurationInheritanceChain.next();
-        log.trace("Found configuration reference {} for resource {}", configurationResource.getPath(), resource.getPath());
-        references.add(new com.day.cq.wcm.api.reference.Reference(getType(), getReferenceName(configurationMetadata), configurationResource,
-            getLastModifiedOf(configurationResource)));
+
+        // get page for configuration resource - and all children (e.g. for config collections)
+        Page configPage = pageManager.getContainingPage(configurationResource);
+        if (configPage != null) {
+          processReference(resource, configPage, configurationMetadata, references);
+          Iterator<Page> deepChildren = configPage.listChildren(new PageFilter(false, true), true);
+          while (deepChildren.hasNext()) {
+            processReference(resource, deepChildren.next(), configurationMetadata, references);
+          }
+        }
       }
     }
 
@@ -127,26 +135,21 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
     return references;
   }
 
+  private void processReference(Resource resource, Page configPage, ConfigurationMetadata configurationMetadata,
+      List<com.day.cq.wcm.api.reference.Reference> references) {
+    log.trace("Found configuration reference {} for resource {}", configPage.getPath(), resource.getPath());
+    references.add(new com.day.cq.wcm.api.reference.Reference(getType(),
+        getReferenceName(configurationMetadata),
+        configPage.adaptTo(Resource.class),
+        getLastModifiedOf(configPage)));
+  }
+
   private static String getReferenceName(ConfigurationMetadata configurationMetadata) {
     return StringUtils.defaultIfEmpty(configurationMetadata.getLabel(), configurationMetadata.getName());
   }
 
-  private static long getLastModifiedOf(Resource configurationResource) {
-    Page configurationPage = configurationResource.adaptTo(Page.class);
-
-    if (configurationPage == null && StringUtils.equals(configurationResource.getName(), JcrConstants.JCR_CONTENT)) {
-      configurationPage = configurationResource.getParent().adaptTo(Page.class);
-    }
-
-    Calendar lastModified;
-    if (configurationPage != null && configurationPage.getLastModified() != null) {
-      lastModified = configurationPage.getLastModified();
-    }
-    else {
-      ValueMap properties = configurationResource.getValueMap();
-      lastModified = properties.get(JcrConstants.JCR_LASTMODIFIED, Calendar.class);
-    }
-
+  private static long getLastModifiedOf(Page page) {
+    Calendar lastModified = page.getLastModified();
     return lastModified != null ? lastModified.getTimeInMillis() : 0;
   }
 
