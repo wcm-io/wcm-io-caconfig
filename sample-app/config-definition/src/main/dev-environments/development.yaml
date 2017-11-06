@@ -2,10 +2,12 @@
 
 nodes:
 
-- node: aem-author
+- node: aem-author-default-persistence-strategy
   roles:
   - role: sample-aem-cms
-    variant: aem-author
+    variants:
+    - aem-author
+    - default-persistence-strategy
   config:
     replication.author.publishTargets:
     - name: publish1
@@ -14,19 +16,22 @@ nodes:
       # Has should be encrypted with the correct key, see http://www.wemblog.com/2012/03/how-to-use-crypto-support-in-cq55.html
       transportPassword: admin
 
-- node: aem-publish
+- node: aem-publish-default-persistence-strategy
   roles:
   - role: sample-aem-cms
-    variant: aem-publish
+    variants:
+    - aem-publish
+    - default-persistence-strategy
 
 
 # --- Separate roles for AEM 6.3 including wcm.io CAConfig Extension AEM Page Persistence Strategy ---
-- node: aem-author-aem63
+- node: aem-author-aempage-persistence-strategy
   roles:
   - role: sample-aem-cms
-    variant: aem-author
+    variants:
+    - aem-author
+    - aempage-persistence-strategy
   config:
-    app.caconfigAemPagePersistence: true
     replication.author.publishTargets:
     - name: publish1
       url: http://localhost:4503
@@ -34,12 +39,12 @@ nodes:
       # Has should be encrypted with the correct key, see http://www.wemblog.com/2012/03/how-to-use-crypto-support-in-cq55.html
       transportPassword: admin
 
-- node: aem-publish-aem63
+- node: aem-publish-aempage-persistence-strategy
   roles:
   - role: sample-aem-cms
-    variant: aem-publish
-  config:
-    app.caconfigAemPagePersistence: true
+    variants:
+    - aem-publish
+    - aempage-persistence-strategy
 
 config:
   contentPackage.group: wcm-io-sample

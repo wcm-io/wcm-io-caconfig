@@ -49,6 +49,11 @@ final class TestUtils {
   }
 
   public static void writeConfigurationCollection(AemContext context, String contextPath, String configName, Collection<Map<String, Object>> values) {
+    writeConfigurationCollection(context, contextPath, configName, values, null);
+  }
+
+  public static void writeConfigurationCollection(AemContext context, String contextPath, String configName, Collection<Map<String, Object>> values,
+      Map<String, Object> collectionProperties) {
     ConfigurationManager configManager = context.getService(ConfigurationManager.class);
     Resource contextResource = context.resourceResolver().getResource(contextPath);
     List<ConfigurationPersistData> items = new ArrayList<>();
@@ -56,7 +61,8 @@ final class TestUtils {
     for (Map<String, Object> map : values) {
       items.add(new ConfigurationPersistData(map).collectionItemName("item" + (index++)));
     }
-    configManager.persistConfigurationCollection(contextResource, configName, new ConfigurationCollectionPersistData(items));
+    configManager.persistConfigurationCollection(contextResource, configName,
+        new ConfigurationCollectionPersistData(items).properties(collectionProperties));
   }
 
 }

@@ -5,7 +5,7 @@ sling_url="http://localhost:4503"
 sling_user="admin"
 sling_password="admin"
 sling_params=""
-conga_node="aem-publish"
+conga_node="aem-publish-aempage-persistence-strategy"
 
 # set parameter variables before run
 init()

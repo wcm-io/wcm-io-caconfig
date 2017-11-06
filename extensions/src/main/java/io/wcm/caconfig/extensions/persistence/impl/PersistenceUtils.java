@@ -45,8 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.day.cq.commons.jcr.JcrConstants;
-import com.day.cq.replication.AccessDeniedException;
 import com.day.cq.wcm.api.NameConstants;
+import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMException;
 
 final class PersistenceUtils {
@@ -68,11 +69,29 @@ final class PersistenceUtils {
     return JCR_CONTENT_PATTERN.matcher(path).matches();
   }
 
+  /**
+   * Ensure that a containing page exists for the given path inside a content page.
+   * If no containing page exists a page is created with the path before /jcr:content/*.
+   * If the path does not contain /jcr:content nothing is done.
+   * @param resolver Resource resolver
+   * @param configResourcePath Configuration resource path
+   * @param configurationManagementSettings
+   */
   public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath,
       ConfigurationManagementSettings configurationManagementSettings) {
     ensureContainingPage(resolver, configResourcePath, null, null, configurationManagementSettings);
   }
 
+  /**
+   * Ensure that a containing page exists for the given path inside a content page.
+   * If no containing page exists a page is created with the path before /jcr:content/*.
+   * If the path does not contain /jcr:content nothing is done.
+   * @param resolver Resource resolver
+   * @param configResourcePath Configuration resource path
+   * @param template Template for page
+   * @param parentTemplate Template for parent/intermediate pages
+   * @param configurationManagementSettings
+   */
   public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath, String template, String parentTemplate,
       ConfigurationManagementSettings configurationManagementSettings) {
     Matcher matcher = PAGE_PATH_PATTERN.matcher(configResourcePath);
@@ -81,6 +100,22 @@ final class PersistenceUtils {
     }
     String pagePath = matcher.group(1);
     ensurePage(resolver, pagePath, template, parentTemplate, configurationManagementSettings);
+  }
+
+  /**
+   * Ensure that a page at the given path exists, if the path is not already contained in a page.
+   * @param resolver Resource resolver
+   * @param pagePath Page path
+   * @param configurationManagementSettings
+   * @return Resource for AEM page or resource inside a page.
+   */
+  public static Resource ensurePageIfNotContainingPage(ResourceResolver resolver, String pagePath,
+      ConfigurationManagementSettings configurationManagementSettings) {
+    Matcher matcher = PAGE_PATH_PATTERN.matcher(pagePath);
+    if (matcher.matches()) {
+      return getOrCreateResource(resolver, pagePath, DEFAULT_FOLDER_NODE_TYPE, null, configurationManagementSettings);
+    }
+    return ensurePage(resolver, pagePath, null, null, configurationManagementSettings);
   }
 
   private static Resource ensurePage(ResourceResolver resolver, String pagePath, String template, String parentTemplate,
@@ -164,22 +199,14 @@ final class PersistenceUtils {
    * @param data List of collection items
    */
   public static void deleteChildrenNotInCollection(Resource resource, ConfigurationCollectionPersistData data) {
-    ResourceResolver resourceResolver = resource.getResourceResolver();
-
     Set<String> collectionItemNames = data.getItems().stream()
         .map(item -> item.getCollectionItemName())
         .collect(Collectors.toSet());
 
-    try {
-      for (Resource child : resource.getChildren()) {
-        if (!collectionItemNames.contains(child.getName())) {
-          log.trace("! Delete resource {}", child.getPath());
-          resourceResolver.delete(child);
-        }
+    for (Resource child : resource.getChildren()) {
+      if (!collectionItemNames.contains(child.getName()) && !StringUtils.equals(JCR_CONTENT, child.getName())) {
+        deletePageOrResource(child);
       }
-    }
-    catch (PersistenceException ex) {
-      throw convertPersistenceException("Unable to remove children from " + resource.getPath(), ex);
     }
   }
 
@@ -204,12 +231,12 @@ final class PersistenceUtils {
   }
 
   public static void updatePageLastMod(ResourceResolver resolver, String configResourcePath) {
-    Matcher matcher = PAGE_PATH_PATTERN.matcher(configResourcePath);
-    if (!matcher.matches()) {
+    PageManager pageManager = resolver.adaptTo(PageManager.class);
+    Page page = pageManager.getContainingPage(configResourcePath);
+    if (page == null) {
       return;
     }
-    String pagePath = matcher.group(1);
-    Resource contentResource = resolver.getResource(pagePath + "/" + JCR_CONTENT);
+    Resource contentResource = page.getContentResource();
     if (contentResource != null) {
       ModifiableValueMap contentProps = contentResource.adaptTo(ModifiableValueMap.class);
       if (contentProps == null) {
@@ -217,13 +244,14 @@ final class PersistenceUtils {
       }
 
       Object user = resolver.getAttribute(ResourceResolverFactory.USER);
+      Calendar now = Calendar.getInstance();
 
-      contentProps.put(NameConstants.PN_LAST_MOD, Calendar.getInstance());
+      contentProps.put(NameConstants.PN_LAST_MOD, now);
       contentProps.put(NameConstants.PN_LAST_MOD_BY, user);
 
       // check if resource has cq:lastModified because it is created in site admin
       if (contentProps.containsKey(NameConstants.PN_PAGE_LAST_MOD)) {
-        contentProps.put(NameConstants.PN_PAGE_LAST_MOD, Calendar.getInstance());
+        contentProps.put(NameConstants.PN_PAGE_LAST_MOD, now);
         contentProps.put(NameConstants.PN_PAGE_LAST_MOD_BY, user);
       }
     }
@@ -238,16 +266,44 @@ final class PersistenceUtils {
     }
   }
 
-  public static ConfigurationPersistenceException convertWCMException(String message, WCMException ex) {
+  /**
+   * If the given resource points to an AEM page, delete the page using PageManager.
+   * Otherwise delete the resource using ResourceResolver.
+   * @param resource Resource to delete
+   */
+  public static void deletePageOrResource(Resource resource) {
+    Page configPage = resource.adaptTo(Page.class);
+    if (configPage != null) {
+      try {
+        log.trace("! Delete page {}", configPage.getPath());
+        PageManager pageManager = configPage.getPageManager();
+        pageManager.delete(configPage, false);
+      }
+      catch (WCMException ex) {
+        throw convertWCMException("Unable to delete configuration page at " + resource.getPath(), ex);
+      }
+    }
+    else {
+      try {
+        log.trace("! Delete resource {}", resource.getPath());
+        resource.getResourceResolver().delete(resource);
+      }
+      catch (PersistenceException ex) {
+        throw convertPersistenceException("Unable to delete configuration resource at " + resource.getPath(), ex);
+      }
+    }
+  }
+
+  private static ConfigurationPersistenceException convertWCMException(String message, WCMException ex) {
     String causeClsName = ex.getCause().getClass().getName();
     if (StringUtils.equals(causeClsName, "com.day.cq.replication.AccessDeniedException")
-            || StringUtils.equals(causeClsName, "javax.jcr.AccessDeniedException")) {
+        || StringUtils.equals(causeClsName, "javax.jcr.AccessDeniedException")) {
       return new ConfigurationPersistenceAccessDeniedException("No write access: " + message, ex);
     }
     return new ConfigurationPersistenceException(message, ex);
   }
 
-  public static ConfigurationPersistenceException convertPersistenceException(String message, PersistenceException ex) {
+  private static ConfigurationPersistenceException convertPersistenceException(String message, PersistenceException ex) {
     if (StringUtils.equals(ex.getCause().getClass().getName(), "javax.jcr.AccessDeniedException")) {
       // detect if commit failed due to read-only access to repository
       return new ConfigurationPersistenceAccessDeniedException("No write access: " + message, ex);
