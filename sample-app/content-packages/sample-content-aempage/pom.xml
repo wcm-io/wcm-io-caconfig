@@ -57,6 +57,7 @@
         <configuration>
           <name>${content-package-name}</name>
           <group>${content-package-group}</group>
+          <acHandling>merge</acHandling>
           <filters>
             <filter>
               <root>/content/contextaware-config-sample</root>
