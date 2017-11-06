@@ -4,13 +4,17 @@ wcm.io Context-Aware Configuration AEM Sample
 Deploy sample project
 ---------------------
 
-You can use this script for a full deployment (application, sample content, configuration) into a local AEM 6.1 instance running at http://localhost:4502:
+You can use this scripts for a full deployment (application, sample content, configuration) into local AEM 6.1 or higher instances.
 
-```
-clean_install_deploy_package.sh
-```
+Using the **AEM Page Persistence Strategy** from wcm.io Context-Aware Configuration Extensions:
 
-This script also cleans and builds all maven projects and generates eclipse project files.
+* `clean_install_deploy_package.sh` -> deploy to author on port 4502
+* `clean_install_deploy_package.sh` -> deploy to publish on port 4503
+
+Using the **default Persistence Strategy** from Sling Context-Aware Configuration:
+
+* `clean_install_deploy_package_defaultpersistence.sh` -> deploy to author on port 4502
+* `clean_install_deploy_package_defaultpersistence.sh` -> deploy to publish on port 4503
 
 
 Open Configuration Editor

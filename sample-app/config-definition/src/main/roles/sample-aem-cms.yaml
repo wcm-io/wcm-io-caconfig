@@ -7,6 +7,8 @@ inherits:
 variants:
 - variant: aem-author
 - variant: aem-publish
+- variant: default-persistence-strategy 
+- variant: aempage-persistence-strategy
 
 templateDir: sample-aem-cms
 
@@ -24,6 +26,20 @@ files:
       rootPath: /apps/sample-aem-cms-config/config
       filters:
       - filter: /apps/sample-aem-cms-config
+
+- file: sample-aem-cms-config-aempage.provisioning
+  dir: packages
+  template: sample-aem-cms-config-aempage.provisioning.hbs
+  variants:
+  - aempage-persistence-strategy
+  postProcessors:
+  - aem-contentpackage-osgiconfig
+  postProcessorOptions:
+    contentPackage:
+      name: sample-aem-cms-config-aempage
+      rootPath: /apps/sample-aem-cms-config-aempage/config
+      filters:
+      - filter: /apps/sample-aem-cms-config-aempage
 
 # AEM Systems users with ACLs (Author)
 - file: sample-aem-cms-systemusers.json
@@ -50,7 +66,13 @@ files:
 # Application sample content package
 - url: mvn:io.wcm/io.wcm.caconfig.sample-app.sample-content-default//zip
   dir: packages
-  condition: ${app.sampleContent}
+  variants:
+  - default-persistence-strategy 
+
+- url: mvn:io.wcm/io.wcm.caconfig.sample-app.sample-content-aempage//zip
+  dir: packages
+  variants:
+  - aempage-persistence-strategy
 
 
 # Defines configuration parameters and default values

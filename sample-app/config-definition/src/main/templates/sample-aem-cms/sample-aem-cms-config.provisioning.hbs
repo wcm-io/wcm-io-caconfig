@@ -26,12 +26,6 @@
   org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-sling-caconfig
     user.mapping=["org.apache.sling.caconfig.impl\=sling-caconfig"]
 
-{{#if app.caconfigAemPagePersistence}}
-  # Enable wcm.io CAConfig Extensions AEM Page Persistence
-  io.wcm.caconfig.extensions.persistence.impl.PagePersistenceStrategy
-    enabled=B"true"
-{{/if}}
-
 
   # Example for config override
   org.apache.sling.caconfig.impl.override.OsgiConfigurationOverrideProvider-caconfig-sample
