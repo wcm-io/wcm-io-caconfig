@@ -45,6 +45,8 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
+import com.day.cq.wcm.api.Page;
+
 /**
  * AEM-specific persistence strategy that has higher precedence than the default strategy from Sling,
  * but lower precedence that the persistence strategy that is part of AEM since version 6.3.
@@ -195,7 +197,13 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
 
     // if resource collection parent properties are given replace them as well
     if (data.getProperties() != null) {
-      replaceProperties(configResourceParent, data.getProperties(), configurationManagementSettings);
+      Page parentPage = configResourceParent.adaptTo(Page.class);
+      if (parentPage != null) {
+        replaceProperties(parentPage.getContentResource(), data.getProperties(), configurationManagementSettings);
+      }
+      else {
+        replaceProperties(configResourceParent, data.getProperties(), configurationManagementSettings);
+      }
     }
 
     commit(resolver, configResourceCollectionParentPath);

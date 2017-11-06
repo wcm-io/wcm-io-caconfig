@@ -204,7 +204,7 @@ final class PersistenceUtils {
         .collect(Collectors.toSet());
 
     for (Resource child : resource.getChildren()) {
-      if (!collectionItemNames.contains(child.getName())) {
+      if (!collectionItemNames.contains(child.getName()) && !StringUtils.equals(JCR_CONTENT, child.getName())) {
         deletePageOrResource(child);
       }
     }
