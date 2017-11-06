@@ -36,6 +36,7 @@ You should apply the same configuration to the Sling Context-Aware Configuration
 
   org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
     ignorePropertyNameRegex=["^(jcr|cq):.+$"]
+    configCollectionPropertiesResourceNames=["jcr:content","."]
 ```
 
 If you are using AEM 6.1, make sure to install the latest service pack as well (e.g. AEM 6.1 SP2).
@@ -67,6 +68,7 @@ Some configuration for Sling Context-Aware configuration already ships with AEM 
 
   org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
     ignorePropertyNameRegex=["^(jcr|cq):.+$"]
+    configCollectionPropertiesResourceNames=["jcr:content","."]
 ```
 
 If you are using AEM 6.3 and want to write configuration by the Configuration Editor or the Context-Aware Configuration Management API you should also install the [wcm.io Context-Aware Configuration Extensions][wcmio-caconfig-extensions] and activate the ["AEM Page" persistence strategy][wcmio-caconfig-extensions-persistence-aempage] - otherwise you may get subtle problems e.g. when using nested configuration collections.
