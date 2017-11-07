@@ -112,6 +112,11 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
     }
 
     PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
+    Page contextPage = pageManager.getContainingPage(resource);
+    if (contextPage == null) {
+      return Collections.emptyList();
+    }
+
     Map<String, ConfigurationMetadata> configurationMetadatas = new TreeMap<>(configurationManager.getConfigurationNames().stream()
         .collect(Collectors.toMap(configName -> configName, configName -> configurationManager.getConfigurationMetadata(configName))));
     List<com.day.cq.wcm.api.reference.Reference> references = new ArrayList<>();
@@ -125,6 +130,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
         Resource configurationResource = configurationInheritanceChain.next();
 
         // get page for configuration resource - and all children (e.g. for config collections)
+        // collect in map to elimnate duplicate pages
         Page configPage = pageManager.getContainingPage(configurationResource);
         if (configPage != null) {
           referencePages.put(configPage.getPath(), configPage);
@@ -136,7 +142,10 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
         }
       }
 
-      referencePages.values().forEach(item -> references.add(toReference(resource, item, configurationMetadatas, configurationBuckets)));
+      // generate references for each page (but not if the context page itself is included as well)
+      referencePages.values().stream()
+          .filter(item -> !StringUtils.equals(contextPage.getPath(), item.getPath()))
+          .forEach(item -> references.add(toReference(resource, item, configurationMetadatas, configurationBuckets)));
     }
 
     log.debug("Found {} references for resource {}", references.size(), resource.getPath());
@@ -156,6 +165,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
    * Build reference display name from path with:
    * - translating configuration names to labels
    * - omitting configuration bucket names
+   * - insert additional spaces so long paths may wrap on multiple lines
    */
   private static String getReferenceName(Page configPage,
       Map<String, ConfigurationMetadata> configurationMetadatas, Set<String> configurationBuckets) {
