@@ -16,6 +16,7 @@ See the following chapters:
 * [Context Path Strategies][context-path-strategies]
 * [Persistence Strategies][persistence-strategies]
 * [Override Provider][override-providers]
+* [Reference Provider][reference-provider]
 
 
 [deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
@@ -23,3 +24,4 @@ See the following chapters:
 [context-path-strategies]: context-path-strategies.html
 [persistence-strategies]: persistence-strategies.html
 [override-providers]: override-providers.html
+[reference-provider]: reference-provider.html
