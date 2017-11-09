@@ -33,6 +33,12 @@
       },
       "edit": "Click to edit config."
     },
+    "largeCollection": {
+      "numberInCollection": "Total number of items in collection",
+      "numberInEditor": "Number of items visible in editor",
+      "scrollHint": "Scroll down to load more items.",
+      "loadAll": "Click here to load all items. (Your browser may become unresponsive for some time.)"
+    },
     "modal": {
       "addConfig": {
         "title": "Add Configuration"

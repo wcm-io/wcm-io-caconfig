@@ -94,6 +94,10 @@
       $(".caconfig-addCollectionItemButton").show();
     }
 
+    function hideLargeCollectionInfo() {
+      $(".caconfig-largeCollection").hide();
+    }
+
     that.addCollectionItem = function () {
       modalService.show(modalService.modal.ADD_COLLECTION_ITEM);
       that.configForm.$setDirty();
@@ -134,15 +138,27 @@
     }
 
     function showMoreConfigs() {
+      if (that.allConfigsVisible) {
+        return;
+      }
       that.configLimit += MAX_CONFIGS_PER_PAGE;
 
       if (that.configLimit >= that.current.configs.length) {
-        that.configLimit = MAX_CONFIGS;
-        that.allConfigsVisible = true;
-        showAddCollectionItemButton();
-        removeScrollListener();
+        that.showAllConfigs();
       }
     }
+
+    that.showAllConfigs = function() {
+      if (that.allConfigsVisible) {
+        return;
+      }
+
+      that.configLimit = MAX_CONFIGS;
+      showAddCollectionItemButton();
+      hideLargeCollectionInfo();
+      removeScrollListener();
+      that.allConfigsVisible = true;
+    };
 
     /**
      * Loads config data and sets various scope properties.
@@ -165,18 +181,16 @@
             $rootScope.title = $rootScope.i18n.title + ": " + that.current.label;
             $rootScope.configForm = that.configForm;
             that.configLimit = MAX_CONFIGS_PER_PAGE;
-            that.current.isLargeList = that.current.isCollection && (that.current.originalLength > MAX_CONFIGS_PER_PAGE);
+            that.current.isLargeCollection = that.current.isCollection && (that.current.originalLength > MAX_CONFIGS_PER_PAGE);
           }
           that.dvReady = true;
 
           // Setup "Infinite" Scroll
-          if (that.current.isLargeList) {
+          if (that.current.isLargeCollection) {
             $timeout(showConfigs, false);
           }
           else {
-            that.configLimit = MAX_CONFIGS;
-            that.allConfigsVisible = true;
-            showAddCollectionItemButton();
+            that.showAllConfigs();
           }
         });
     }

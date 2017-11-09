@@ -144,3 +144,8 @@ span.wcm-io-editor.endor-Brand {
 .caconfig-property-inherited .caconfig-if-property-not-overridden-and-not-inherited {
   display: none;
 }
+
+.caconfig-largeCollection {
+  position: fixed;
+  bottom: 0;
+}

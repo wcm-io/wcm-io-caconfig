@@ -60,16 +60,35 @@
     </label>
   </p>
 
+  <p class="coral-Well caconfig-largeCollection" bo-if="detail.current.isLargeCollection">
+    <span bo-if="i18n.largeCollection.numberInCollection"
+          bo-text="i18n.largeCollection.numberInCollection"></span>:
+    <strong>{{detail.current.configs.length}}</strong>
+    <br>
+    <span bo-if="i18n.largeCollection.numberInEditor"
+          bo-text="i18n.largeCollection.numberInEditor"></span>:
+    <strong>{{detail.configLimit}}</strong><br>
+    <span bo-if="i18n.largeCollection.scrollHint"
+          bo-text="i18n.largeCollection.scrollHint"></span>
+    <br>
+    <span class="coral-Link caconfig-link"
+          bo-if="true || i18n.button.addItem"
+          ng-click="detail.showAllConfigs()"
+          bo-if="i18n.largeCollection.loadAll"
+          bo-text="i18n.largeCollection.loadAll">
+    </span>
+  </p>
+
   <div class="caconfig-configurationDetails"
      bo-class="[
        config.inherited ? 'caconfig-config-inherited' : 'caconfig-config-not-inherited',
        config.isNewItem ? 'caconfig-is-new-item' : 'caconfig-not-new-item',
-       detail.current.isLargeList ?  'caconfig-is-preview' : 'caconfig-not-preview'
+       detail.current.isLargeCollection ?  'caconfig-is-preview' : 'caconfig-not-preview'
      ]"
      ng-repeat="config in detail.current.configs | limitTo:detail.configLimit track by config.collectionItemName"
      caconfig-config-table="config"
      index="$index"
-     is-preview="detail.current.isLargeList"
+     is-preview="detail.current.isLargeCollection"
      ng-cloak>
   </div>
 
