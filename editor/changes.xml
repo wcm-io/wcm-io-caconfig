@@ -27,6 +27,9 @@
       <action type="fix" dev="dding" issue="WCON-40">
         Fix missing separator in path display.
       </action>
+      <action type="fix" dev="dding">
+        Fix performance problems with very long configuration lists (&gt;&gt;100) esp. in MS IE/Edge.
+      </action>
     </release>
 
     <release version="1.2.6" date="2017-09-22">

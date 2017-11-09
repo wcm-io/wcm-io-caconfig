@@ -1,0 +1,52 @@
+<table bindonce="ctReady"
+       class="caconfig-configTable coral-Table coral-Table--hover"
+       ng-cloak>
+  <thead>
+    <tr class="coral-Table-row">
+      <th class="coral-Table-headerCell"  style="width: 15%;">
+        <h3 bo-text="config.collectionItemName"></h3>
+      </th>
+      <th class="coral-Table-headerCell">
+        <p class="caconfig-if-is-preview">
+          <span class="caconfig-edit-config caconfig-link coral-Link" bo-text="i18n.config.edit" tabindex="0"></span>
+        </p>
+        <label class="coral-Checkbox caconfig-if-not-preview caconfig-if-config-not-inherited">
+          <input class="coral-Checkbox-input" type="checkbox"
+                 ng-model="configPropertyInherit.value"
+                 ng-change="configTable.handleConfigPropertyInheritChange(index)" />
+          <span class="coral-Checkbox-checkmark"></span>
+          <span class="coral-Checkbox-description" bo-text="i18n.config.inheritance.property"></span>
+        </label>
+        <p class="caconfig-if-not-preview caconfig-if-config-inherited">
+          <span class="caconfig-if-is-collection" bo-text="i18n.config.inheritance.collectionItem"></span>
+          <span class="caconfig-if-not-collection" bo-text="i18n.config.inheritance.config"></span>
+          <span ng-click="configTable.breakInheritance(config)" class="caconfig-link coral-Link" bo-text="i18n.config.inheritance.break"></span>
+        </p>
+      </th>
+      <th class="coral-Table-headerCell" style="width: 1%;"></th>
+      <th class="coral-Table-headerCell" style="width: 1%;"></th>
+      <th class="coral-Table-headerCell" style="width: 1%;">
+        <i class="coral-Icon coral-Icon--delete caconfig-delete-item caconfig-if-is-collection caconfig-if-config-not-inherited"
+           bo-title="i18n.button.deleteItem"
+           ng-click="configTable.removeCollectionItem(index)"></i>
+      </th>
+    </tr>
+    <tr class="coral-Table-row">
+      <th class="coral-Table-headerCell" bo-text="i18n.config.property"></th>
+      <th class="coral-Table-headerCell" bo-text="i18n.config.value"></th>
+      <th class="coral-Table-headerCell">
+        <span class="caconfig-if-not-preview" bo-text="i18n.config.description"></span>
+      </th>
+      <th class="coral-Table-headerCell">
+        <span class="caconfig-if-not-preview" bo-text="i18n.config.inherited"></span>
+      </th>
+      <th class="coral-Table-headerCell">
+        <span class="caconfig-if-not-preview" bo-text="i18n.config.overridden"></span>
+      </th>
+    </tr>
+  </thead>
+  <tbody class="caconfig-configTableBody">
+    <!-- caconfig-property-row directives dynamically added here -->
+  </tbody>
+</table>
+

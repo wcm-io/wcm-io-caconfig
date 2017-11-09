@@ -7,6 +7,7 @@
       "add": "Hinzufügen",
       "addItem": "Element hinzufügen",
       "cancel": "Abbrechen",
+      "choose": "Wählen",
       "deleteConfig": "Löschen",
       "deleteCollection": "Sammlung löschen",
       "deleteItem": "Element löschen",
@@ -30,6 +31,13 @@
         "collectionItem": "Diese Konfiguration wird über Sammlungs-Vererbung vererbt.",
         "break": "Klicken Sie hier, um die Vererbung zu deaktivieren."
       },
+      "edit": "Klicken Sie hier, um die Konfiguration zu bearbeiten.",
+    },
+    "largeCollection": {
+      "numberInCollection": "Gesamtzahl der Elemente",
+      "numberInEditor": "Anzahl der sichtbaren Elemente",
+      "scrollHint": "Scrollen Sie nach unten, um mehr Elemente zu laden.",
+      "loadAll": "Klicken Sie hier, um alle Elemente zu laden. (Ihr Browser könnte eine Zeitlang nicht mehr reagieren.)"
     },
     "modal": {
       "addConfig": {

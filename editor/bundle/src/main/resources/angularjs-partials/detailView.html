@@ -1,147 +1,103 @@
-<form class="caconfig-detail" name="configForm" novalidate ng-cloak>
+<form class="caconfig-detail"
+      name="detail.configForm" novalidate ng-cloak
+      bindonce="detail.dvReady"
+      bo-class="detail.current.isCollection ? 'caconfig-is-collection' : 'caconfig-not-collection'">
   <button class="coral-Button coral-Button--square coral-Button--default" type="button"
-          title="{{i18n.button.home}}"
-          ng-click="(detail.isModified(configForm.$pristine)
-                      && detail.current.contextPath) ? saveWarning() : go()">
+          bo-title="i18n.button.home"
+          ng-click="(detail.configForm.$dirty && detail.current.contextPath) ? saveWarning() : go()">
     <i class="coral-Icon coral-Icon--home"></i>
   </button>
-  <button class="coral-Button coral-Button--primary" type="button"
-          ng-disabled="configForm.$invalid
-                       || !detail.isModified(configForm.$pristine)
-                       || !detail.current.contextPath"
-          ng-click="detail.saveConfig()">
-    {{i18n.button.save}}
+  <button class="coral-Button coral-Button--primary caconfig-if-form-valid-and-dirty" type="button"
+          ng-click="detail.saveConfig()"
+          bo-if="i18n.button.save && !!detail.current.contextPath"
+          bo-text="i18n.button.save">
+  </button>
+  <button class="coral-Button coral-Button--primary caconfig-if-form-invalid-or-pristine" type="button"
+          disabled
+          bo-if="i18n.button.save && !!detail.current.contextPath"
+          bo-text="i18n.button.save">
   </button>
   <button class="coral-Button coral-Button--secondary" type="button"
-          ng-click="go(detail.current.parent ? detail.current.parent.configName : '')">
-    {{i18n.button.cancel}}
+          ng-click="go(detail.current.parent ? detail.current.parent.configName : '')"
+          bo-if="i18n.button.cancel"
+          bo-text="i18n.button.cancel">
   </button>
   <button class="coral-Button coral-Button--square coral-Button--default" type="button"
-          title="{{detail.current.isCollection ? i18n.button.deleteCollection : i18n.button.deleteConfig}}"
+          bo-title="detail.current.isCollection ? i18n.button.deleteCollection : i18n.button.deleteConfig"
           ng-show="detail.current.configs.length"
-          ng-disabled="!detail.current.contextPath"
+          bo-if="detail.current.contextPath"
           ng-click="detail.removeConfig()">
     <i class="coral-Icon coral-Icon--delete"></i>
   </button>
 
   <p class="caconfig-contextPath"
-     ng-show="detail.current.contextPath">
-     {{i18n.contextPath}}: <code>{{detail.current.contextPath}}</code>
+     bo-if="detail.current.contextPath">
+     <span bo-text="i18n.contextPath"></span>: <code bo-text="detail.current.contextPath"></code>
   </p>
   <p class="caconfig-contextPath"
-     ng-hide="detail.current.contextPath">
-     {{i18n.noContextPath}}
+     bo-if="!detail.current.contextPath" bo-text="i18n.noContextPath">
   </p>
 
   <h2>
     <span class="caconfig-breadcrumb" ng-repeat="breadcrumb in detail.current.breadcrumbs">
       <span class="coral-Link caconfig-breadcrumb-link"
-            ng-click="detail.isModified(configForm.$pristine)
-              ? saveWarning(breadcrumb.configName) : go(breadcrumb.configName)">
-        {{breadcrumb.label}}
+            ng-click="detail.configForm.$dirty ? saveWarning(breadcrumb.configName) : go(breadcrumb.configName)"
+            bo-text="breadcrumb.label">
       </span> /
-      <span ng-show="breadcrumb.itemName">{{breadcrumb.itemName}} / </span>
+      <span bo-if="breadcrumb.itemName" bo-text="breadcrumb.itemName + ' / '"></span>
     </span>
-    {{detail.current.label}}
+    <span bo-text="detail.current.label"></span>
   </h2>
-  <p>{{detail.current.description}}</p>
+  <p bo-text="detail.current.description"></p>
 
   <p class="caconfig-collectionInheritance coral-Well"
-       ng-show="detail.current.isCollection">
+     bo-if="detail.current.isCollection">
     <label class="coral-Checkbox">
       <input class="coral-Checkbox-input" type="checkbox"
              ng-model="detail.current.collectionProperties['sling:configCollectionInherit']">
       <span class="coral-Checkbox-checkmark"></span>
-      <span class="coral-Checkbox-description">{{i18n.config.inheritance.collection}}</span>
+      <span class="coral-Checkbox-description" bo-text="i18n.config.inheritance.collection"></span>
     </label>
   </p>
 
-  <div class="caconfig-configurationDetails" ng-repeat="config in detail.current.configs" ng-cloak>
-    <table class="coral-Table coral-Table--hover" ng-cloak>
-      <thead>
-      <tr class="coral-Table-row">
-        <th class="coral-Table-headerCell"  style="width: 15%;">
-          <h3 ng-show="detail.current.isCollection">{{config.collectionItemName}}</h3>
-        </th>
-        <th class="coral-Table-headerCell">
-          <label class="caconfig-propertyInheritance coral-Checkbox" ng-hide="config.inherited">
-            <input class="coral-Checkbox-input" type="checkbox"
-                   ng-disabled="config.inherited"
-                   ng-model="detail.getConfigPropertyInherit(config).value"
-                   ng-change="detail.handleConfigPropertyInheritChange(config)" />
-            <span class="coral-Checkbox-checkmark"></span>
-            <span class="coral-Checkbox-description">{{i18n.config.inheritance.property}}</span>
-          </label>
-          <p ng-show="config.inherited">
-            {{detail.current.isCollection ? i18n.config.inheritance.collectionItem : i18n.config.inheritance.config}}
-            <span ng-click="detail.breakInheritance(config)" class="caconfig-link coral-Link">{{i18n.config.inheritance.break}}</span>
-          </p>
-        </th>
-        <th class="coral-Table-headerCell" style="width: 1%;"></th>
-        <th class="coral-Table-headerCell" style="width: 1%;"></th>
-        <th class="coral-Table-headerCell" style="width: 1%;">
-          <i class="coral-Icon coral-Icon--delete caconfig-delete-item" title="{{i18n.button.deleteItem}}"
-             ng-show="detail.current.isCollection && !config.inherited"
-             ng-click="detail.removeCollectionItem($index)"></i>
-        </th>
-      </tr>
-      <tr class="coral-Table-row">
-        <th class="coral-Table-headerCell">{{i18n.config.property}}</th>
-        <th class="coral-Table-headerCell">{{i18n.config.value}}</th>
-        <th class="coral-Table-headerCell">{{i18n.config.description}}</th>
-        <th class="coral-Table-headerCell">{{i18n.config.inherited}}</th>
-        <th class="coral-Table-headerCell">{{i18n.config.overridden}}</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="coral-Table-row"
-          ng-repeat="property in config.properties"
-          ng-hide="property.name==='sling:configPropertyInherit'" ng-cloak>
-        <td class="coral-Table-cell">
-          {{property.metadata.label || property.name}}
-        </td>
-        <td class="coral-Table-cell"
-            caconfig-parameter-value="property"
-            caconfig-is-new-item="config.isNewItem"
-            caconfig-is-config-inherited="config.inherited">
-        </td>
-        <td class="coral-Table-cell">
-          <caconfig-description-popup ng-show="property.metadata.description">
-            <caconfig-popup-content>
-              {{property.metadata.description}}
-            </caconfig-popup-content>
-          </caconfig-description-popup>
-        </td>
-        <td class="coral-Table-cell">
-          <label class="coral-Checkbox">
-            <input class="coral-Checkbox-input" type="checkbox"
-              ng-model="property.inherited"
-              ng-disabled="config.inherited
-                           || !detail.getConfigPropertyInherit(config).value
-                           || property.overridden || property.nestedConfig
-                           || property.nestedConfigCollection"
-              ng-change="detail.handleInheritedChange(property)">
-            <span class="coral-Checkbox-checkmark"></span>
-          </label>
-        </td>
-        <td class="coral-Table-cell">
-          <label class="coral-Checkbox">
-            <input class="coral-Checkbox-input" type="checkbox"
-              ng-model="property.overridden" ng-disabled="true" ng-readonly="true">
-            <span class="coral-Checkbox-checkmark"></span>
-          </label>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <p class="coral-Well caconfig-largeCollection" bo-if="detail.current.isLargeCollection">
+    <span bo-if="i18n.largeCollection.numberInCollection"
+          bo-text="i18n.largeCollection.numberInCollection"></span>:
+    <strong>{{detail.current.configs.length}}</strong>
+    <br>
+    <span bo-if="i18n.largeCollection.numberInEditor"
+          bo-text="i18n.largeCollection.numberInEditor"></span>:
+    <strong>{{detail.configLimit}}</strong><br>
+    <span bo-if="i18n.largeCollection.scrollHint"
+          bo-text="i18n.largeCollection.scrollHint"></span>
+    <br>
+    <span class="coral-Link caconfig-link"
+          bo-if="true || i18n.button.addItem"
+          ng-click="detail.showAllConfigs()"
+          bo-if="i18n.largeCollection.loadAll"
+          bo-text="i18n.largeCollection.loadAll">
+    </span>
+  </p>
+
+  <div class="caconfig-configurationDetails"
+     bo-class="[
+       config.inherited ? 'caconfig-config-inherited' : 'caconfig-config-not-inherited',
+       config.isNewItem ? 'caconfig-is-new-item' : 'caconfig-not-new-item',
+       detail.current.isLargeCollection ?  'caconfig-is-preview' : 'caconfig-not-preview'
+     ]"
+     ng-repeat="config in detail.current.configs | limitTo:detail.configLimit track by config.collectionItemName"
+     caconfig-config-table="config"
+     index="$index"
+     is-preview="detail.current.isLargeCollection"
+     ng-cloak>
   </div>
 
-  <p>
-    <button class="coral-Button coral-Button--primary" type="button"
-            ng-show="detail.current.isCollection"
-            ng-click="detail.addCollectionItem()">
-      {{i18n.button.addItem}}
-    </button>
+  <p bo-if="detail.current.isCollection">
+    <button class="caconfig-addCollectionItemButton coral-Button coral-Button--primary" type="button"
+            ng-click="detail.addCollectionItem()"
+            bo-show="detail.allConfigsVisible"
+            bo-if="i18n.button.addItem"
+            bo-text="i18n.button.addItem"></button>
   </p>
 
 </form>
