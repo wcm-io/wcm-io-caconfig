@@ -145,7 +145,12 @@ span.wcm-io-editor.endor-Brand {
   display: none;
 }
 
+/**
+ * We use a negative margin-left because of .caconfig-page-border padding
+ */
 .caconfig-largeCollection {
   position: fixed;
   bottom: 0;
+  width: calc(100% - 30px);
+  margin: 0 0 0 -15px;
 }
