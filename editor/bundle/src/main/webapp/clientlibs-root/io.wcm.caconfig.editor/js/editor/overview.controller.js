@@ -30,7 +30,10 @@
 
     $rootScope.title = $rootScope.i18n.title;
     that.state = configService.getState();
-    configService.loadConfigNames();
+    configService.loadConfigNames()
+      .then(function() {
+        that.ovReady = true;
+      });
 
     that.hasNonExistingConfig = function () {
       var i;

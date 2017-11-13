@@ -25,10 +25,7 @@
    * The content itself is transcluded. The content can also contain markup.
    *
    * @example
-   * <popup-content>
-   *   Description Text
-   * </popup-content>
-   *
+   * <caconfig-popup-content content="Description Text"></caconfig-popup-content>
    */
   angular.module("io.wcm.caconfig.widgets")
     .directive("caconfigPopupContent", popupContent);
@@ -38,9 +35,10 @@
   function popupContent(templateList) {
 
     var directive = {
+      scope: {
+        content: "="
+      },
       restrict: "E",
-      replace: true,
-      transclude: true,
       templateUrl: templateList.popupContent
     };
 

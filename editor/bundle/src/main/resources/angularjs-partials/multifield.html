@@ -1,77 +1,103 @@
-<div>
- <div class="caconfig-multifield caconfig-multifield--empty"
-      ng-hide="parameter.overridden || parameter.inherited || values.length">
+<div bindonce>
+  <div class="caconfig-multifield caconfig-multifield--empty caconfig-if-property-not-overridden-and-not-inherited"
+      ng-if="!(values.length)">
     <label class="coral-Checkbox"
-           ng-show="type==='checkbox'">
+           bo-if="type==='checkbox'">
       <input class="coral-Checkbox-input" type="checkbox"
-             ng-disabled="true" />
+             disabled />
       <span class="coral-Checkbox-checkmark"></span>
     </label>
     <input class="coral-Textfield" type="type"
-           ng-hide="type==='checkbox'"
-           ng-disabled="true" />
+           bo-if="type!=='checkbox'"
+           disabled />
     <div class="coral-ButtonGroup">
-      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
-              ng-disabled="isConfigInherited"
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button caconfig-if-config-inherited"
+              disabled>
+        <i class="coral-Icon coral-Icon--add"></i>
+      </button>
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button caconfig-if-config-not-inherited"
               ng-click="addNewValue(0)">
         <i class="coral-Icon coral-Icon--add"></i>
       </button>
       <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
-              ng-disabled="true">
+              disabled>
         <i class="coral-Icon coral-Icon--minus"></i>
       </button>
     </div>
   </div>
-  <div class="caconfig-multifield"
-       ng-show="parameter.overridden || parameter.inherited" ng-repeat="effectiveValue in effectiveValues">
+
+  <div class="caconfig-multifield caconfig-if-property-overridden-or-inherited"
+       ng-repeat="effectiveValue in effectiveValues">
     <label class="coral-Checkbox"
-           ng-show="type==='checkbox'">
+           bo-if="type==='checkbox'">
       <input class="coral-Checkbox-input" type="checkbox"
-             ng-disabled="true"
-             ng-readonly="true"
+             disabled
+             readonly
              ng-model="effectiveValue.value" />
       <span class="coral-Checkbox-checkmark"></span>
     </label>
     <input class="coral-Textfield" type="type"
-           ng-hide="type==='checkbox'"
-           ng-disabled="true"
-           ng-readonly="true"
+           bo-if="type!=='checkbox'"
+           disabled
+           readonly
            ng-model="effectiveValue.value" />
     <div class="coral-ButtonGroup">
       <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
-              ng-disabled="true">
+              disabled>
         <i class="coral-Icon coral-Icon--add"></i>
       </button>
       <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
-              ng-disabled="true">
+              disabled>
         <i class="coral-Icon coral-Icon--minus"></i>
       </button>
     </div>
   </div>
-  <div class="caconfig-multifield"
-       ng-hide="parameter.overridden || parameter.inherited" ng-repeat="value in values">
+
+  <div class="caconfig-multifield caconfig-if-config-inherited caconfig-if-property-not-overridden-and-not-inherited"
+       ng-repeat="value in values">
     <label class="coral-Checkbox"
-           ng-show="type==='checkbox'">
+           bo-if="type==='checkbox'">
       <input class="coral-Checkbox-input" type="checkbox"
-             ng-disabled="isConfigInherited"
-             ng-readonly="isConfigInherited"
+             disabled
+             readonly
              ng-model="value.value" />
       <span class="coral-Checkbox-checkmark"></span>
     </label>
     <input class="coral-Textfield" type="type"
-           ng-hide="type==='checkbox'"
-           ng-disabled="isConfigInherited"
-           ng-readonly="isConfigInherited"
+           bo-if="type!=='checkbox'"
+           disabled
+           readonly
+           ng-model="value.value" />
+    <div class="coral-ButtonGroup">
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
+              disabled >
+        <i class="coral-Icon coral-Icon--add"></i>
+      </button>
+      <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
+              disabled>
+        <i class="coral-Icon coral-Icon--minus"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="caconfig-multifield caconfig-if-config-not-inherited caconfig-if-property-not-overridden-and-not-inherited"
+       ng-repeat="value in values">
+    <label class="coral-Checkbox"
+           bo-if="type==='checkbox'">
+      <input class="coral-Checkbox-input" type="checkbox"
+             ng-model="value.value" />
+      <span class="coral-Checkbox-checkmark"></span>
+    </label>
+    <input class="coral-Textfield" type="type"
+           bo-if="type!=='checkbox'"
            ng-model="value.value"
            ng-pattern="pattern" />
     <div class="coral-ButtonGroup">
       <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
-              ng-disabled="isConfigInherited"
               ng-click="addNewValue($index)">
         <i class="coral-Icon coral-Icon--add"></i>
       </button>
       <button class="coral-ButtonGroup-item coral-Button coral-Button--secondary caconfig-disableable-button"
-              ng-disabled="isConfigInherited"
               ng-click="removeValue($index)">
         <i class="coral-Icon coral-Icon--minus"></i>
       </button>

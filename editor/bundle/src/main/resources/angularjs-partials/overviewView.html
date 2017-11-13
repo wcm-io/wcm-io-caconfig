@@ -1,27 +1,26 @@
-<div class="caconfig-overview" ng-cloak>
+<div bindonce="overview.ovReady" class="caconfig-overview" ng-cloak>
   <button class="coral-Button coral-Button--primary" type="button"
-          ng-disabled="!overview.hasNonExistingConfig()
+          bo-disabled="!overview.hasNonExistingConfig()
                        || !overview.state.contextPath"
-          ng-click="overview.showNonExistingConfigs()">
-    {{i18n.button.add}}
+          ng-click="overview.showNonExistingConfigs()"
+          bo-text="i18n.button.add">
   </button>
 
   <p class="caconfig-contextPath"
-     ng-show="overview.state.contextPath">
-     {{i18n.contextPath}}: <code>{{overview.state.contextPath}}</code>
+     bo-if="overview.state.contextPath">
+     <span bo-text="i18n.contextPath"></span>: <code bo-text="overview.state.contextPath"></code>
   </p>
   <p class="caconfig-contextPath"
-     ng-hide="overview.state.contextPath">
-     {{i18n.noContextPath}}
+     bo-if="!overview.state.contextPath" bo-text="i18n.noContextPath">
   </p>
 
   <table class="coral-Table coral-Table--hover"
-         ng-show="(overview.state.configNames | filter:{exists:true}).length" ng-cloak>
+         bo-if="(overview.state.configNames | filter:{exists:true}).length" ng-cloak>
     <thead>
       <tr class="coral-Table-row">
         <th class="coral-Table-headerCell" style="width:1%"></th>
-        <th class="coral-Table-headerCell">{{i18n.config.name}}</th>
-        <th class="coral-Table-headerCell">{{i18n.config.description}}</th>
+        <th class="coral-Table-headerCell" bo-text="i18n.config.name"></th>
+        <th class="coral-Table-headerCell" bo-text="i18n.config.description"></th>
       </tr>
     </thead>
     <tbody>
@@ -30,15 +29,10 @@
           ng-click="go(config.configName)" ng-cloak>
         <td class="coral-Table-cell">
           <i class="coral-Icon coral-Icon--sizeS"
-             ng-class="{'coral-Icon--page': !config.collection,
-                        'coral-Icon--pages': config.collection}"></i>
+             bo-class="config.collection ? 'coral-Icon--pages' : 'coral-Icon--page'"></i>
         </td>
-        <td class="coral-Table-cell">
-          {{config.label || config.configName}}
-        </td>
-        <td class="coral-Table-cell">
-          {{config.description}}
-        </td>
+        <td class="coral-Table-cell" bo-text="config.label || config.configName"></td>
+        <td class="coral-Table-cell" bo-text="config.description"></td>
       </tr>
     </tbody>
   </table>

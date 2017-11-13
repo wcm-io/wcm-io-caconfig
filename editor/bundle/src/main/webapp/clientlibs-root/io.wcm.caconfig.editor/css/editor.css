@@ -26,6 +26,20 @@ form.ng-dirty input.ng-dirty.ng-invalid {
   border: 1px solid #f00;
 }
 
+form.ng-dirty .caconfig-if-form-pristine,
+form.ng-pristine .caconfig-if-form-dirty,
+form.ng-valid .caconfig-if-form-invalid
+form.ng-invalid .caconfig-if-form-valid {
+  display: none;
+}
+
+form.ng-valid.ng-dirty .caconfig-if-form-invalid-or-pristine,
+form.ng-invalid .caconfig-if-form-valid-and-dirty,
+form.ng-pristine .caconfig-if-form-valid-and-dirty {
+  display: none;
+}
+
+
 span.caconfig-pathbrowser {
   width: 100% !important;
 }
@@ -71,13 +85,18 @@ span.wcm-io-editor.endor-Brand {
   overflow-y: visible;
 }
 
-.caconfig-configurationDetails .caconfig-delete-item {
+.caconfig-configTable {
+  margin-top: 10px;
+  border-top: 1px solid #bbb;
+}
+
+.caconfig-configTable .caconfig-delete-item {
   cursor: pointer;
   float: right;
 }
-.caconfig-configurationDetails table.coral-Table {
-  margin-top: 10px;
-  border-top: 1px solid #bbb;
+
+.caconfig-configEdit {
+  font-style: italic;
 }
 
 .caconfig-disableable-button,
@@ -89,4 +108,49 @@ span.wcm-io-editor.endor-Brand {
 .caconfig-breadcrumb .caconfig-breadcrumb-link,
 .caconfig-link {
   cursor: pointer;
+}
+
+.caconfig-is-preview .caconfig-if-not-preview,
+.caconfig-not-preview .caconfig-if-is-preview {
+  display: none;
+}
+
+.caconfig-is-collection .caconfig-if-not-collection,
+.caconfig-not-collection .caconfig-if-is-collection {
+  display: none;
+}
+
+.caconfig-is-new-item .caconfig-if-not-new-item,
+.caconfig-not-new-item .caconfig-if-new-item,
+.caconfig-config-inherited .caconfig-if-config-not-inherited,
+.caconfig-config-not-inherited .caconfig-if-config-inherited {
+  display: none;
+}
+
+.caconfig-config-not-inherited.caconfig-not-new-item .caconfig-if-config-inherited-or-new-item {
+  display: none;
+}
+
+.caconfig-config-inherited .caconfig-if-config-not-inherited-and-not-new-item,
+.caconfig-is-new-item .caconfig-if-config-not-inherited-and-not-new-item {
+  display: none;
+}
+
+.caconfig-property-not-overridden.caconfig-property-not-inherited .caconfig-if-property-overridden-or-inherited {
+  display: none;
+}
+
+.caconfig-property-overridden .caconfig-if-property-not-overridden-and-not-inherited,
+.caconfig-property-inherited .caconfig-if-property-not-overridden-and-not-inherited {
+  display: none;
+}
+
+/**
+ * We use a negative margin-left because of .caconfig-page-border padding
+ */
+.caconfig-largeCollection {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 30px);
+  margin: 0 0 0 -15px;
 }

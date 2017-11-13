@@ -23,8 +23,10 @@ import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigu
 import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigurationCollection;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Map;
@@ -126,9 +128,14 @@ public class PagePersistenceStrategyTest {
     writeConfigurationCollection(context, contentPage.getPath(), ListConfig.class.getName(), ImmutableList.of(
         (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1", "intParam", 123),
         (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value2", "intParam", 234)
-        ));
+    ),
+        ImmutableMap.<String, Object>of("sling:configCollectionInherit", true));
 
     // assert storage in page in /conf
+    Page parentPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName());
+    assertNotNull(parentPage);
+    assertTrue(parentPage.getContentResource().getValueMap().get("sling:configCollectionInherit", false));
+
     Page configPage1 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName() + "/item0");
     assertThat(configPage1.getContentResource(), ResourceMatchers.props("stringParam", "value1", "intParam", 123));
 
@@ -161,10 +168,13 @@ public class PagePersistenceStrategyTest {
         (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value21")));
 
     // assert storage in page in /conf
+    assertNotNull(context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListNestedConfig.class.getName()));
+
     Page configPage1 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListNestedConfig.class.getName() + "/item0");
     assertThat(configPage1.getContentResource(), ResourceMatchers.props("stringParam", "value1", "intParam", 123));
     assertThat(configPage1.getContentResource("subListConfig/item0"), ResourceMatchers.props("stringParam", "value11"));
     assertThat(configPage1.getContentResource("subListConfig/item1"), ResourceMatchers.props("stringParam", "value12"));
+    assertNull(context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListNestedConfig.class.getName() + "/item0/jcr:content/subListConfig"));
 
     Page configPage2 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListNestedConfig.class.getName() + "/item1");
     assertThat(configPage2.getContentResource(), ResourceMatchers.props("stringParam", "value2", "intParam", 234));

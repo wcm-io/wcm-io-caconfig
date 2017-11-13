@@ -19,37 +19,38 @@
  */
 package io.wcm.caconfig.extensions.references.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.management.ConfigurationManager;
+import org.apache.sling.caconfig.management.ConfigurationResourceResolverConfig;
 import org.apache.sling.caconfig.management.multiplexer.ConfigurationResourceResolvingStrategyMultiplexer;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
-import org.apache.sling.commons.osgi.PropertiesUtil;
-import org.osgi.service.cm.Configuration;
-import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.Page;
-import com.day.cq.wcm.api.reference.Reference;
+import com.day.cq.wcm.api.PageFilter;
+import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.reference.ReferenceProvider;
 
 /**
@@ -81,14 +82,14 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
   static final String REFERENCE_TYPE = "caconfig";
 
-  @org.osgi.service.component.annotations.Reference
+  @Reference
   private ConfigurationManager configurationManager;
 
-  @org.osgi.service.component.annotations.Reference
+  @Reference
   private ConfigurationResourceResolvingStrategyMultiplexer configurationResourceResolvingStrategy;
 
-  @org.osgi.service.component.annotations.Reference
-  private ConfigurationAdmin configAdmin;
+  @Reference
+  private ConfigurationResourceResolverConfig configurationResourceResolverConfig;
 
   private boolean enabled;
 
@@ -105,78 +106,91 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
   }
 
   @Override
-  public List<Reference> findReferences(Resource resource) {
+  public List<com.day.cq.wcm.api.reference.Reference> findReferences(Resource resource) {
     if (!enabled) {
       return Collections.emptyList();
     }
 
-    Set<String> configurationNames = configurationManager.getConfigurationNames();
-    List<Reference> references = new ArrayList<>(configurationNames.size());
-    Collection<String> configurationBuckets = getBucketNames();
+    PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
+    Page contextPage = pageManager.getContainingPage(resource);
+    if (contextPage == null) {
+      return Collections.emptyList();
+    }
 
-    for (String configurationName : configurationNames) {
-      ConfigurationMetadata configurationMetadata = configurationManager.getConfigurationMetadata(configurationName);
+    Map<String, ConfigurationMetadata> configurationMetadatas = new TreeMap<>(configurationManager.getConfigurationNames().stream()
+        .collect(Collectors.toMap(configName -> configName, configName -> configurationManager.getConfigurationMetadata(configName))));
+    List<com.day.cq.wcm.api.reference.Reference> references = new ArrayList<>();
+    Set<String> configurationBuckets = new LinkedHashSet<>(configurationResourceResolverConfig.configBucketNames());
+
+    for (String configurationName : configurationMetadatas.keySet()) {
       Iterator<Resource> configurationInheritanceChain = configurationResourceResolvingStrategy.getResourceInheritanceChain(resource, configurationBuckets, configurationName);
+      Map<String, Page> referencePages = new LinkedHashMap<>();
 
       while (configurationInheritanceChain != null && configurationInheritanceChain.hasNext()) {
         Resource configurationResource = configurationInheritanceChain.next();
-        log.trace("Found configuration reference {} for resource {}", configurationResource.getPath(), configurationName, resource.getPath());
-        references.add(new Reference(getType(), getReferenceName(configurationMetadata), configurationResource,
-            getLastModifiedOf(configurationResource)));
+
+        // get page for configuration resource - and all children (e.g. for config collections)
+        // collect in map to elimnate duplicate pages
+        Page configPage = pageManager.getContainingPage(configurationResource);
+        if (configPage != null) {
+          referencePages.put(configPage.getPath(), configPage);
+          Iterator<Page> deepChildren = configPage.listChildren(new PageFilter(false, true), true);
+          while (deepChildren.hasNext()) {
+            Page configChildPage = deepChildren.next();
+            referencePages.put(configChildPage.getPath(), configChildPage);
+          }
+        }
       }
+
+      // generate references for each page (but not if the context page itself is included as well)
+      referencePages.values().stream()
+          .filter(item -> !StringUtils.equals(contextPage.getPath(), item.getPath()))
+          .forEach(item -> references.add(toReference(resource, item, configurationMetadatas, configurationBuckets)));
     }
 
     log.debug("Found {} references for resource {}", references.size(), resource.getPath());
-
     return references;
   }
 
-  private static String getReferenceName(ConfigurationMetadata configurationMetadata) {
-    return StringUtils.defaultIfEmpty(configurationMetadata.getLabel(), configurationMetadata.getName());
+  private com.day.cq.wcm.api.reference.Reference toReference(Resource resource, Page configPage,
+      Map<String, ConfigurationMetadata> configurationMetadatas, Set<String> configurationBuckets) {
+    log.trace("Found configuration reference {} for resource {}", configPage.getPath(), resource.getPath());
+    return new com.day.cq.wcm.api.reference.Reference(getType(),
+        getReferenceName(configPage, configurationMetadatas, configurationBuckets),
+        configPage.adaptTo(Resource.class),
+        getLastModifiedOf(configPage));
   }
 
-  private static long getLastModifiedOf(Resource configurationResource) {
-    Page configurationPage = configurationResource.adaptTo(Page.class);
+  /**
+   * Build reference display name from path with:
+   * - translating configuration names to labels
+   * - omitting configuration bucket names
+   * - insert additional spaces so long paths may wrap on multiple lines
+   */
+  private static String getReferenceName(Page configPage,
+      Map<String, ConfigurationMetadata> configurationMetadatas, Set<String> configurationBuckets) {
+    List<String> pathParts = Arrays.asList(StringUtils.split(configPage.getPath(), "/"));
+    return pathParts.stream()
+        .filter(name -> !configurationBuckets.contains(name))
+        .map(name -> {
+          ConfigurationMetadata configMetadata = configurationMetadatas.get(name);
+          if (configMetadata != null && configMetadata.getLabel() != null) {
+            return configMetadata.getLabel();
+          }
+          else {
+            return name;
+          }
+        })
+        .collect(Collectors.joining(" / "));
+  }
 
-    if (configurationPage == null && StringUtils.equals(configurationResource.getName(), JcrConstants.JCR_CONTENT)) {
-      configurationPage = configurationResource.getParent().adaptTo(Page.class);
-    }
-
-    Calendar lastModified;
-    if (configurationPage != null && configurationPage.getLastModified() != null) {
-      lastModified = configurationPage.getLastModified();
-    }
-    else {
-      ValueMap properties = configurationResource.getValueMap();
-      lastModified = properties.get(JcrConstants.JCR_LASTMODIFIED, Calendar.class);
-    }
-
+  private static long getLastModifiedOf(Page page) {
+    Calendar lastModified = page.getLastModified();
     return lastModified != null ? lastModified.getTimeInMillis() : 0;
   }
 
   private static String getType() {
     return REFERENCE_TYPE;
-  }
-
-  private Collection<String> getBucketNames() {
-    // TODO: this is only a temporary workaround to collect the list of bucket names until https://issues.apache.org/jira/browse/SLING-7208 is available
-    List<String> bucketNames = new ArrayList<>();
-    bucketNames.add("sling:configs");
-
-    try {
-      Configuration configResolverConfig = configAdmin.getConfiguration("org.apache.sling.caconfig.impl.ConfigurationResolverImpl");
-      if (configResolverConfig != null && configResolverConfig.getProperties() != null) {
-        String[] addtlBucketNames = PropertiesUtil.toStringArray(configResolverConfig.getProperties().get("configBucketNames"));
-        if (addtlBucketNames != null && addtlBucketNames.length > 0) {
-          bucketNames.addAll(Arrays.asList(addtlBucketNames));
-        }
-      }
-    }
-    catch (IOException ex) {
-      log.warn("Error accessing OSGi config.", ex);
-    }
-
-    return bucketNames;
   }
 
 }

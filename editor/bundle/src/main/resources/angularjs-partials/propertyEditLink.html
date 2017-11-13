@@ -1,0 +1,11 @@
+<div bindonce>
+  <button class="coral-Button coral-Button--block coral-Button--default caconfig-if-config-not-inherited-and-not-new-item"
+          ng-click="configForm.$dirty ? saveWarning(configName)
+                    : go(configName)"
+          bo-text="linkText">
+  </button>
+  <button class="coral-Button coral-Button--block coral-Button--default caconfig-if-config-inherited-or-new-item"
+          disabled
+          bo-text="linkText">
+  </button>
+</div>

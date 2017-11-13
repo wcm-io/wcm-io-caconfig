@@ -19,21 +19,19 @@
  */
 (function (angular, _) {
   "use strict";
+
   angular.module("io.wcm.caconfig.widgets")
       .directive("caconfigMultifield", multifield);
 
-  multifield.$inject = ["templateUrlList", "inputMap"];
+  multifield.$inject = ["templateUrlList", "inputMap", "$rootScope"];
 
-  function multifield(templateList, inputMap) {
+  function multifield(templateList, inputMap, $rootScope) {
 
     var directive = {
-      restrict: "E",
       replace: true,
-      require: "^form",
       templateUrl: templateList.multifield,
       scope: {
-        parameter: "=caconfigParameter",
-        isConfigInherited: "=caconfigIsConfigInherited"
+        property: "="
       },
       controller: MultifieldController,
       link: link
@@ -41,8 +39,8 @@
 
     return directive;
 
-    function link(scope, element, attr, form) {
-      var input = inputMap[scope.parameter.metadata.type];
+    function link(scope) {
+      var input = inputMap[scope.property.metadata.type];
       var inheritedStateChanged = false;
 
       scope.type = input.type;
@@ -50,20 +48,20 @@
       scope.effectiveValues = [];
       scope.values = [];
 
-      setValueArray(scope.parameter.effectiveValue, scope.effectiveValues);
-      setValueArray(scope.parameter.value, scope.values);
+      setValueArray(scope.property.effectiveValue, scope.effectiveValues);
+      setValueArray(scope.property.value, scope.values);
 
       scope.$watch("values", function (newValues, oldValues) {
         var valueArray = _.map(newValues, function(newValue) {
           return scope.type === "checkbox" ? Boolean(newValue.value) : newValue.value;
         });
-        scope.parameter.value = valueArray;
+        scope.property.value = valueArray;
         if (newValues.length !== oldValues.length) {
-          form.$setDirty();
+          $rootScope.configForm.$setDirty();
         }
       }, true);
 
-      scope.$watch("parameter.inherited", function (isInherited, wasInherited) {
+      scope.$watch("property.inherited", function (isInherited, wasInherited) {
         var effectiveValueArray,
             valueArray;
 
@@ -81,12 +79,12 @@
         }
         else if (isInherited === true) {
           scope.effectiveValues = [{
-            value: String(scope.parameter.effectiveValue)
+            value: String(scope.property.effectiveValue)
           }];
         }
 
         inheritedStateChanged = true;
-        form.$setDirty();
+        $rootScope.configForm.$setDirty();
       });
     }
 

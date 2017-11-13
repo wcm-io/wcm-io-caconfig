@@ -20,10 +20,8 @@
 package io.wcm.caconfig.extensions.references.impl;
 
 import static io.wcm.caconfig.extensions.references.impl.TestUtils.applyConfig;
-import static io.wcm.caconfig.extensions.references.impl.TestUtils.assetReferences;
 import static io.wcm.caconfig.extensions.references.impl.TestUtils.registerConfigurations;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
@@ -104,10 +102,8 @@ public class ConfigurationReferenceProviderTest {
     ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
     context.registerInjectActivateService(referenceProvider);
     List<Reference> references = referenceProvider.findReferences(site1PageResource);
-    assetReferences(references,
-        "/conf/region1/site1/sling:configs/configA",
-        "/conf/region1/sling:configs/configA",
-        "/conf/global/sling:configs/configB");
+    // no config pages found
+    assertTrue(references.isEmpty());
   }
 
   @Test
@@ -115,25 +111,8 @@ public class ConfigurationReferenceProviderTest {
     ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
     context.registerInjectActivateService(referenceProvider);
     List<Reference> references = referenceProvider.findReferences(site2PageResource);
-    assetReferences(references,
-        "/conf/region1/site2/sling:configs/configA",
-        "/conf/region1/sling:configs/configA",
-        "/conf/region1/site2/sling:configs/configB",
-        "/conf/global/sling:configs/configB");
-  }
-
-  @Test
-  public void testReferencesProperties() {
-    ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
-    context.registerInjectActivateService(referenceProvider);
-    List<Reference> references = referenceProvider.findReferences(site1PageResource);
-
-    // validate props of fallback config reference
-    Reference ref = references.get(references.size() - 1);
-    assertEquals("/conf/global/sling:configs/configB", ref.getResource().getPath());
-    assertEquals(ConfigurationReferenceProvider.REFERENCE_TYPE, ref.getType());
-    assertEquals("Configuration B", ref.getName());
-    assertEquals(TIMESTAMP.getTimeInMillis(), ref.getLastModified());
+    // no config pages found
+    assertTrue(references.isEmpty());
   }
 
   @Test

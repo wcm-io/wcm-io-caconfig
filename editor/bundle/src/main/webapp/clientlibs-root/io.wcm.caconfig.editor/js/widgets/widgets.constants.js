@@ -30,11 +30,25 @@
    */
   angular.module("io.wcm.caconfig.widgets")
     .constant("templateUrlList", {
-      parameterValue: "parameterValue.html",
+      configTable: "configTable.html",
+      multifield: "multifield.html",
+      pathbrowser: "pathbrowser.html",
       popupContainer: "popupContainer.html",
       popupContent: "popupContent.html",
-      multifield: "multifield.html",
-      pathbrowser: "pathbrowser.html"
+      propertyEditLink: "propertyEditLink.html",
+      propertyInputCheckbox: "propertyInputCheckbox.html",
+      propertyInputText: "propertyInputText.html",
+      propertyRow: "propertyRow.html",
+      propertyRowPreview: "propertyRowPreview.html"
+    })
+    .constant("cssClasses", {
+      CONFIG_PREVIEW: "caconfig-is-preview",
+      CONFIG_NOT_PREVIEW: "caconfig-not-preview",
+      CONFIG_INHERITED: "caconfig-config-inherited",
+      CONFIG_NOT_INHERITED: "caconfig-config-not-inherited"
+    })
+    .constant("propertyNames", {
+      CONFIG_PROPERTY_INHERIT: "sling:configPropertyInherit"
     })
     .constant("directivePropertyPrefixes", {
       pathbrowser: "pathbrowser"

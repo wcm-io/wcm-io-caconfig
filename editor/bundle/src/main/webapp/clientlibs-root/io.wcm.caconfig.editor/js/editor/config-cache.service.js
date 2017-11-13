@@ -30,9 +30,9 @@
   angular.module("io.wcm.caconfig.editor")
     .service("configCacheService", ConfigCacheService);
 
-  ConfigCacheService.$inject = ["$window"];
+  ConfigCacheService.$inject = ["$window", "inputMap"];
 
-  function ConfigCacheService($window) {
+  function ConfigCacheService($window, inputMap) {
     var that = this;
     var configCache = {};
 
@@ -61,6 +61,61 @@
 
       return {};
     };
+
+    /**
+     * @param  {String} configName
+     * @param  {String} propertyName
+     * @return {String}
+     */
+    that.getPropertyType = function(configName, propertyName) {
+      return configCache[configName].propertyTypes[propertyName] || "";
+    };
+
+    /**
+     * @param  {String} configName
+     * @return {Object|null}
+     */
+    that.getPropertyTypes = function(configName) {
+      return configCache[configName].propertyTypes || null;
+    };
+
+    function addPropertyTypesToCache(configName, properties) {
+      if (!properties.length) {
+        return;
+      }
+
+      configCache[configName] = configCache[configName] || {};
+      configCache[configName].propertyTypes = configCache[configName].propertyTypes || {};
+
+      angular.forEach(properties, function (property) {
+        var propertyName = property.name;
+        if (propertyName && angular.isUndefined(configCache[configName].propertyTypes[propertyName])) {
+          configCache[configName].propertyTypes[propertyName] = determinePropertyType(property);
+        }
+      });
+    }
+
+    function determinePropertyType(property) {
+      var input;
+      if (property.nestedConfig) {
+        return "nestedConfig";
+      }
+      if (property.nestedConfigCollection) {
+        return "nestedConfigCollection";
+      }
+      if (property.metadata && property.metadata.multivalue) {
+        return "multivalue";
+      }
+      if (property.metadata && property.metadata.properties
+            && property.metadata.properties.widgetType === "pathbrowser") {
+        return "pathbrowser";
+      }
+      if (property.metadata && property.metadata.type) {
+        input = inputMap[property.metadata.type];
+        return input.type || property.metadata.type;
+      }
+      return "";
+    }
 
     that.plantConfigCache = function (data) {
       configCache = configCache || {};
@@ -91,7 +146,7 @@
 
     function addConfigToCache(configData, parentName) {
       var isNested = false;
-      var isCollection = false;
+      var isNestedCollection = false;
       var isCollectionItem = false;
       var children,
           config,
@@ -106,7 +161,7 @@
       else if (angular.isObject(configData.nestedConfigCollection)) {
         configName = configData.nestedConfigCollection.configName;
         isNested = true;
-        isCollection = true;
+        isNestedCollection = true;
       }
       else {
         configName = configData.configName;
@@ -121,30 +176,41 @@
 
       isCollectionItem = angular.isString(configData.collectionItemName);
 
-      // if already has been added to cache
-      if (!angular.isUndefined(config.hasChildren) && !isCollectionItem
-          && !(isNested && isCollection)) {
+      // If config has already been "fully" added to cache
+      if (!angular.isUndefined(config.propertyTypes)
+          && !angular.isUndefined(config.hasChildren)
+          && !isCollectionItem
+          && !isNestedCollection) {
         return;
       }
 
       if (!isCollectionItem) {
-        parent = that.getConfigNameObject(parentName);
-
-        config.parent = angular.equals(parent, {}) ? null : parent;
-        config.configNameObject = config.configNameObject || {};
-
-        if (isNested) {
-          config.configNameObject.configName = configName;
-          config.configNameObject.collection = isCollection;
-          config.configNameObject.name = configData.name;
-          config.configNameObject.description = configData.metadata.description;
-          config.configNameObject.label = configData.metadata.label;
+        if (angular.isUndefined(config.parent)) {
+          parent = that.getConfigNameObject(parentName);
+          config.parent = angular.equals(parent, {}) ? null : parent;
         }
 
-        config.configNameObject.breadcrumbs = buildBreadcrumbs(configName);
+        if (angular.isUndefined(config.configNameObject)) {
+          config.configNameObject = config.configNameObject || {};
+
+          if (isNested) {
+            config.configNameObject.configName = configName;
+            config.configNameObject.collection = isNestedCollection;
+            config.configNameObject.name = configData.name;
+            config.configNameObject.description = configData.metadata.description;
+            config.configNameObject.label = configData.metadata.label;
+          }
+
+          config.configNameObject.breadcrumbs = buildBreadcrumbs(configName);
+        }
       }
 
-      properties = getConfigProperties(configData, isNested, isCollection);
+      properties = getConfigProperties(configData, isNested, isNestedCollection);
+
+      if (angular.isUndefined(config.propertyTypes)) {
+        addPropertyTypesToCache(configName, properties);
+      }
+
       children = getChildren(properties);
 
       if (children.length) {
@@ -159,13 +225,13 @@
     /**
      * @param  {Object}  configData
      * @param  {Boolean} isNested
-     * @param  {Boolean} isCollection
+     * @param  {Boolean} isNestedCollection
      * @return {Array}
      */
-    function getConfigProperties(configData, isNested, isCollection) {
+    function getConfigProperties(configData, isNested, isNestedCollection) {
       var properties = [];
 
-      if (isNested && isCollection) {
+      if (isNestedCollection) {
         properties = _.flatten(_.map(configData.nestedConfigCollection.items, "properties"));
       }
       else if (isNested) {

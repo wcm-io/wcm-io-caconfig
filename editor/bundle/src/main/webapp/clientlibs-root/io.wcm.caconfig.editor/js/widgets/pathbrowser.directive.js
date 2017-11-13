@@ -19,20 +19,20 @@
  */
 (function (angular) {
   "use strict";
+
   angular.module("io.wcm.caconfig.widgets")
       .directive("caconfigPathbrowser", pathbrowser);
 
   pathbrowser.$inject = ["templateUrlList", "inputMap", "directivePropertyPrefixes", "$rootScope", "configService"];
 
+  /* eslint-disable max-params */
   function pathbrowser(templateList, inputMap, directivePropertyPrefixes, $rootScope, configService) {
+  /* eslint-enable max-params */
     var directive = {
-      restrict: "E",
       replace: true,
-      require: "^form",
       templateUrl: templateList.pathbrowser,
       scope: {
-        parameter: "=caconfigParameter",
-        isConfigInherited: "=caconfigIsConfigInherited"
+        property: "="
       },
       link: link
     };
@@ -40,14 +40,13 @@
     return directive;
 
     function link(scope, element) {
-      var input = inputMap[scope.parameter.metadata.type];
+      var input = inputMap[scope.property.metadata.type];
       var prefix = directivePropertyPrefixes.pathbrowser;
-      var props = scope.parameter.metadata.properties;
+      var props = scope.property.metadata.properties;
       var options = {};
       var widget;
 
       scope.type = input.type;
-      scope.pattern = input.pattern;
       scope.i18n = $rootScope.i18n;
 
       angular.forEach(props, function (value, prop) {
