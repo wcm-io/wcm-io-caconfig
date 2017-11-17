@@ -2,7 +2,11 @@
     class="coral-Table-row"
     bo-title="property.name" ng-cloak>
   <td class="coral-Table-cell" bo-text="property.metadata.label || property.name"></td>
-  <td class="coral-Table-cell" bo-text="property.value"></td>
+  <td class="coral-Table-cell">
+    <span class="caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-not-inherited" bo-text="property.value"></span>
+    <span class="caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-inherited" bo-text="property.value"></span>
+    <span class="caconfig-if-property-overridden-or-inherited" bo-text="property.effectiveValue"></span>
+  </td>
   <td class="coral-Table-cell"></td>
   <td class="coral-Table-cell"></td>
   <td class="coral-Table-cell"></td>
