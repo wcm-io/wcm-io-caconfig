@@ -60,16 +60,16 @@ files:
       - filter: /home/users/system/sling-caconfig
 
 # Application package
-- url: mvn:io.wcm/io.wcm.caconfig.sample-app.complete//zip
+- url: mvn:io.wcm.samples/io.wcm.caconfig.sample-app.complete//zip
   dir: packages
 
 # Application sample content package
-- url: mvn:io.wcm/io.wcm.caconfig.sample-app.sample-content-default//zip
+- url: mvn:io.wcm.samples/io.wcm.caconfig.sample-app.sample-content-default//zip
   dir: packages
   variants:
   - default-persistence-strategy 
 
-- url: mvn:io.wcm/io.wcm.caconfig.sample-app.sample-content-aempage//zip
+- url: mvn:io.wcm.samples/io.wcm.caconfig.sample-app.sample-content-aempage//zip
   dir: packages
   variants:
   - aempage-persistence-strategy
