@@ -8,13 +8,13 @@ You can use this scripts for a full deployment (application, sample content, con
 
 Using the **AEM Page Persistence Strategy** from wcm.io Context-Aware Configuration Extensions:
 
-* `clean_install_deploy_package.sh` -> deploy to author on port 4502
-* `clean_install_deploy_package.sh` -> deploy to publish on port 4503
+* `build-deploy.sh` -> deploy to author on port 4502
+* `build-deploy-publish.sh` -> deploy to publish on port 4503
 
 Using the **default Persistence Strategy** from Sling Context-Aware Configuration:
 
-* `clean_install_deploy_package_defaultpersistence.sh` -> deploy to author on port 4502
-* `clean_install_deploy_package_defaultpersistence.sh` -> deploy to publish on port 4503
+* `build-deploy-defaultpersistence.sh` -> deploy to author on port 4502
+* `build-deploy-defaultpersistence-publish.sh` -> deploy to publish on port 4503
 
 
 Open Configuration Editor
