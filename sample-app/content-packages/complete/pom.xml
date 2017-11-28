@@ -35,8 +35,8 @@
   <packaging>content-package</packaging>
 
   <properties>
-    <content-package-name>contextaware-config-sample-complete</content-package-name>
-    <content-package-group>wcm-io-sample</content-package-group>
+    <contentPackage.name>contextaware-config-sample-complete</contentPackage.name>
+    <contentPackage.group>wcm-io-samples</contentPackage.group>
   </properties>
 
   <dependencies>
@@ -83,7 +83,7 @@
   </dependencies>
 
   <build>
-    <finalName>${content-package-name}-${project.version}</finalName>
+    <finalName>${contentPackage.name}-${project.version}</finalName>
     <plugins>
 
       <plugin>
@@ -91,17 +91,17 @@
         <artifactId>filevault-package-maven-plugin</artifactId>
         <extensions>true</extensions>
         <configuration>
-          <name>${content-package-name}</name>
-          <group>${content-package-group}</group>
+          <name>${contentPackage.name}</name>
+          <group>${contentPackage.group}</group>
           <packageType>container</packageType>
 
           <filters>
             <filter>
-              <root>/apps/${content-package-name}</root>
+              <root>/apps/${contentPackage.name}</root>
             </filter>
           </filters>
 
-          <embeddedTarget>/apps/${content-package-name}/install</embeddedTarget>
+          <embeddedTarget>/apps/${contentPackage.name}/install</embeddedTarget>
           <embeddeds>
             <embedded>
               <groupId>
