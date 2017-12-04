@@ -53,7 +53,7 @@
           <name>${contentPackage.name}</name>
           <group>${contentPackage.group}</group>
           <packageType>content</packageType>
-          <acHandling>merge</acHandling>
+          <accessControlHandling>merge</accessControlHandling>
           <filters>
             <filter>
               <root>/content/contextaware-config-sample</root>
