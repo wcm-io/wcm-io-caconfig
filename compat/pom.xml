@@ -36,6 +36,7 @@
 
   <name>Context-Aware Configuration Compatibility Layer</name>
   <description>Context-aware configuration compatibility Layer for wcm.io Configuration.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io/wcm-io-caconfig.git</connection>

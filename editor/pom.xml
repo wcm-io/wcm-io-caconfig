@@ -36,6 +36,7 @@
 
   <name>Context-Aware Configuration Editor</name>
   <description>Context-Aware Configuration Editor Template for AEM.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io/wcm-io-caconfig.git</connection>

@@ -36,6 +36,7 @@
 
   <name>Context-Aware Configuration Extensions for AEM</name>
   <description>AEM-specific extensions for Apache Sling Context-Aware Configuration.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io/wcm-io-caconfig.git</connection>
