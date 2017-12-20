@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Remove test dependency to org.apache.sling.testing.caconfig-mock-plugin - should be declared in each pom individually.
       </action>
+      <action type="update" dev="sseifert">
+        Update dependencies.
+      </action>
     </release>
 
     <release version="1.1.2" date="2017-04-07">
