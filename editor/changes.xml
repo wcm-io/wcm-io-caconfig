@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.2.12" date="not released">
+      <action type="update" dev="sseifert" issue="WCON-47">
+        Include angularjs lib to make editor runnable in AEM 6.4.
+      </action>
       <action type="fix" dev="sseifert">
         Fix invalid path in clientlib definition.
       </action>
