@@ -23,13 +23,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.wcm</groupId>
+    <groupId>io.wcm.samples</groupId>
     <artifactId>io.wcm.caconfig.sample-app.parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
-  <groupId>io.wcm</groupId>
+  <groupId>io.wcm.samples</groupId>
   <artifactId>io.wcm.caconfig.sample-app.sample-content-aempage</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>content-package</packaging>
@@ -37,27 +37,23 @@
   <description>Sample content for wcm.io Context-Aware Configuration Extensions AEM Page Persistence Strategy.</description>
 
   <properties>
-    <content-package-name>contextaware-config-sample-samplecontent-aempage</content-package-name>
-    <content-package-group>wcm-io-sample</content-package-group>
+    <contentPackage.name>contextaware-config-sample-samplecontent-aempage</contentPackage.name>
+    <contentPackage.group>wcm-io-samples</contentPackage.group>
   </properties>
 
   <build>
-    <finalName>${content-package-name}-${project.version}</finalName>
-    <resources>
-      <!-- Include all files from jcr_root in content package -->
-      <resource>
-        <directory>jcr_root</directory>
-      </resource>
-    </resources>
+    <finalName>${contentPackage.name}-${project.version}</finalName>
+
     <plugins>
       <plugin>
-        <groupId>io.wcm.maven.plugins</groupId>
-        <artifactId>wcmio-content-package-maven-plugin</artifactId>
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>filevault-package-maven-plugin</artifactId>
         <extensions>true</extensions>
         <configuration>
-          <name>${content-package-name}</name>
-          <group>${content-package-group}</group>
-          <acHandling>merge</acHandling>
+          <name>${contentPackage.name}</name>
+          <group>${contentPackage.group}</group>
+          <packageType>content</packageType>
+          <accessControlHandling>merge</accessControlHandling>
           <filters>
             <filter>
               <root>/content/contextaware-config-sample</root>

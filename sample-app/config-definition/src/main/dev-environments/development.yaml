@@ -1,4 +1,4 @@
-# Local AEM configuration Development Environment
+# AEM configuration for local development environment
 
 nodes:
 
@@ -47,5 +47,5 @@ nodes:
     - aempage-persistence-strategy
 
 config:
-  contentPackage.group: wcm-io-sample
+  contentPackage.group: wcm-io-samples
   app.sampleContent: true

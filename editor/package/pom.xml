@@ -25,25 +25,18 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.parent</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.3-SNAPSHOT</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.editor.package</artifactId>
-  <version>1.2.10</version>
+  <version>1.2.11-SNAPSHOT</version>
   <packaging>content-package</packaging>
 
   <properties>
-    <content-package-name>io.wcm.caconfig.editor.package</content-package-name>
-    <content-package-group>wcm-io</content-package-group>
-    <dependency-includeArtifactIds>
-      io.wcm.caconfig.editor,
-      org.apache.sling.caconfig.api,
-      org.apache.sling.caconfig.spi,
-      org.apache.sling.caconfig.impl,
-      org.apache.sling.commons.johnzon
-    </dependency-includeArtifactIds>
+    <contentPackage.name>io.wcm.caconfig.editor.package</contentPackage.name>
+    <contentPackage.group>wcm-io</contentPackage.group>
   </properties>
 
   <dependencies>
@@ -52,7 +45,7 @@
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.caconfig.editor</artifactId>
       <scope>compile</scope>
-      <version>1.2.10</version>
+      <version>1.2.11-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.sling</groupId>
@@ -82,56 +75,52 @@
   </dependencies>
 
   <build>
-    <finalName>${content-package-name}-${project.version}</finalName>
-
-    <resources>
-      <!-- Include all files from jcr_root in content package -->
-      <resource>
-        <directory>jcr_root</directory>
-      </resource>
-    </resources>
+    <finalName>${contentPackage.name}-${project.version}</finalName>
 
     <plugins>
 
       <plugin>
-        <groupId>io.wcm.maven.plugins</groupId>
-        <artifactId>wcmio-content-package-maven-plugin</artifactId>
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>filevault-package-maven-plugin</artifactId>
         <extensions>true</extensions>
-        <!-- TODO: remove once updated to aem-global-parent 1.2.0 or higher -->
-        <version>1.5.0</version>
         <configuration>
-          <name>${content-package-name}</name>
-          <group>${content-package-group}</group>
+          <name>${contentPackage.name}</name>
+          <group>${contentPackage.group}</group>
+          <packageType>mixed</packageType>
+
           <filters>
             <filter>
-              <root>/apps/wcm-io/${content-package-name}</root>
+              <root>/apps/wcm-io/${contentPackage.name}</root>
             </filter>
             <filter>
               <root>/apps/wcm-io/caconfig/editor-package</root>
             </filter>
           </filters>
-        </configuration>
-      </plugin>
+          
+          <embeddedTarget>/apps/wcm-io/${contentPackage.name}/install</embeddedTarget>
+          <embeddeds>
+            <embedded>
+              <groupId>
+                io.wcm
+              </groupId>
+              <artifactId>
+                io.wcm.caconfig.editor
+              </artifactId>
+            </embedded>
+            <embedded>
+              <groupId>
+                org.apache.sling
+              </groupId>
+              <artifactId>
+                org.apache.sling.caconfig.api,
+                org.apache.sling.caconfig.spi,
+                org.apache.sling.caconfig.impl,
+                org.apache.sling.commons.johnzon
+              </artifactId>
+            </embedded>
+          </embeddeds>
 
-      <!-- copy the application's dependencies -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-dependencies-by-artifactid</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
-              <includeArtifactIds>${dependency-includeArtifactIds}</includeArtifactIds>
-              <outputDirectory>${project.build.directory}/vault-work/jcr_root/apps/wcm-io/${content-package-name}/install</outputDirectory>
-              <includeScope>compile</includeScope>
-            </configuration>
-          </execution>
-        </executions>
+        </configuration>
       </plugin>
 
       <!-- Do not generate eclipse project files -->
