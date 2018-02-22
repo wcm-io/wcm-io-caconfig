@@ -24,7 +24,7 @@
     "io.wcm.caconfig.templates",
     "io.wcm.caconfig.utilities"
   ])
-  .run(initRun);
+    .run(initRun);
 
   initRun.$inject = ["$rootScope"];
 

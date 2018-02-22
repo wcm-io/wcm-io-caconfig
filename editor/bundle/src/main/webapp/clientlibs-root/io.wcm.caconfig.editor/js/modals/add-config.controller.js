@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, $) {
+(function (angular) {
   "use strict";
 
   var CONFIG_SELECT = "config";
@@ -25,9 +25,11 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("AddConfigController", AddConfigController);
 
-  AddConfigController.$inject = ["$rootScope", "modalService", "configService", "uiService"];
+  AddConfigController.$inject = ["$document", "$rootScope", "modalService", "configService", "uiService"];
 
-  function AddConfigController($rootScope, modalService, configService, uiService) {
+  /* eslint-disable max-params */
+  function AddConfigController($document, $rootScope, modalService, configService, uiService) {
+  /* eslint-enable max-params */
     var that = this;
 
     modalService.addModal(modalService.modal.ADD_CONFIG, {
@@ -37,13 +39,13 @@
 
     modalService.onEvent(modalService.modal.ADD_CONFIG, "caconfig-setup", function () {
       var $select,
-          $selectClone;
+        $selectClone;
 
-      $("#caconfig-configurationSelectClone").remove();
+      $document.find("#caconfig-configurationSelectClone").remove();
 
-      $select = $("#caconfig-configurationSelect").hide()
+      $select = $document.find("#caconfig-configurationSelect").hide()
         .removeClass("coral-Select");
-      $selectClone = $("#caconfig-configurationSelect")
+      $selectClone = $document.find("#caconfig-configurationSelect")
         .clone()
         .addClass("coral-Select")
         .css("display", "inline-block")
@@ -65,4 +67,4 @@
       $rootScope.go(configName);
     };
   }
-}(angular, jQuery));
+}(angular));

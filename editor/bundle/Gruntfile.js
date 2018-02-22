@@ -1,5 +1,8 @@
+var loadGruntTasks = require("load-grunt-tasks");
+
 module.exports = function (grunt) {
-  require("load-grunt-tasks")(grunt);
+  // load all grunt prefixed tasks
+  loadGruntTasks(grunt);
 
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
@@ -27,7 +30,7 @@ module.exports = function (grunt) {
       options: {
         configFile: ".eslintrc"
       },
-      target: ["src/**/*.js"]
+      target: ["*.js", "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor/**/*.js"]
     },
     watch: {
       html: {

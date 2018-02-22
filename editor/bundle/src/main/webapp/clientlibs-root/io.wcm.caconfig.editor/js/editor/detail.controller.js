@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, $) {
+(function (angular) {
   "use strict";
 
   /**
@@ -27,10 +27,10 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("DetailController", DetailController);
 
-  DetailController.$inject = ["$window", "$rootScope", "$scope", "$timeout", "$route", "$compile", "configService", "modalService"];
+  DetailController.$inject = ["$window", "$document", "$rootScope", "$scope", "$timeout", "$route", "configService", "modalService"];
 
   /* eslint-disable max-params */
-  function DetailController($window, $rootScope, $scope, $timeout, $route, $compile, configService, modalService) {
+  function DetailController($window, $document, $rootScope, $scope, $timeout, $route, configService, modalService) {
   /* eslint-enable max-params */
     var that = this;
     var MAX_CONFIGS = Number.POSITIVE_INFINITY;
@@ -91,11 +91,11 @@
      * Show Add Collection Item button (when all collection items visible)
      */
     function showAddCollectionItemButton() {
-      $(".caconfig-addCollectionItemButton").show();
+      $document.find(".caconfig-addCollectionItemButton").show();
     }
 
     function hideLargeCollectionInfo() {
-      $(".caconfig-largeCollection").hide();
+      $document.find(".caconfig-largeCollection").hide();
     }
 
     that.addCollectionItem = function () {
@@ -104,11 +104,11 @@
     };
 
     function addScrollListener() {
-      $($window).on("scroll", onScrollToBottom);
+      $document.on("scroll", onScrollToBottom);
     }
 
     function removeScrollListener() {
-      $($window).off("scroll", onScrollToBottom);
+      $document.off("scroll", onScrollToBottom);
     }
 
     /**
@@ -195,4 +195,4 @@
         });
     }
   }
-}(angular, jQuery));
+}(angular));
