@@ -28,17 +28,19 @@ import org.apache.sling.caconfig.resource.spi.ContextResource;
 
 import com.google.common.collect.ImmutableList;
 
+import io.wcm.testing.mock.aem.junit.AemContext;
+
 final class TestUtils {
 
   private TestUtils() {
     // static methods only
   }
 
-  public static void assertNoResult(Iterator<ContextResource> result) {
-    assertResult(result);
+  public static void assertNoResult(AemContext context, Iterator<ContextResource> result) {
+    assertResult(context, result);
   }
 
-  public static void assertResult(Iterator<ContextResource> result, String... paths) {
+  public static void assertResult(AemContext context, Iterator<ContextResource> result, String... paths) {
     if (paths.length % 2 != 0) {
       throw new IllegalArgumentException("Expected path pairs.");
     }
@@ -48,7 +50,7 @@ final class TestUtils {
     for (int i = 0; i < expectedSize / 2; i++) {
       String expectedContextPath = paths[i * 2];
       String expectedConfigRef = paths[i * 2 + 1];
-      assertEquals(expectedContextPath, resultList.get(i).getResource().getPath());
+      assertEquals(expectedContextPath, Path.getPathWithoutVersionHistory(resultList.get(i).getResource().getPath(), context.resourceResolver()));
       assertEquals(expectedConfigRef, resultList.get(i).getConfigRef());
     }
   }

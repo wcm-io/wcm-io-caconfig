@@ -35,16 +35,16 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 @RunWith(MockitoJUnitRunner.class)
 public class RootTemplateContextPathStrategyTest {
 
-  private static final String TEMPLATE_1 = "/apps/app1/templates/template1";
-  private static final String TEMPLATE_2 = "/apps/app1/templates/template2";
+  static final String TEMPLATE_1 = "/apps/app1/templates/template1";
+  static final String TEMPLATE_2 = "/apps/app1/templates/template2";
 
   @Rule
   public AemContext context = new AemContext();
 
-  private Resource level1;
-  private Resource level2;
-  private Resource level3;
-  private Resource level4;
+  protected Resource level1;
+  protected Resource level2;
+  protected Resource level3;
+  protected Resource level4;
 
   @Before
   public void setUp() {
@@ -58,7 +58,7 @@ public class RootTemplateContextPathStrategyTest {
   public void testWithInvalidConfig() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy());
 
-    assertNoResult(underTest.findContextResources(level4));
+    assertNoResult(context, underTest.findContextResources(level4));
   }
 
   @Test
@@ -66,19 +66,19 @@ public class RootTemplateContextPathStrategyTest {
     ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy(),
         "templatePaths", new String[] { TEMPLATE_1 });
 
-    assertResult(underTest.findContextResources(level4),
+    assertResult(context, underTest.findContextResources(level4),
         "/content/region1/site1", "/conf/region1/site1",
         "/content/region1", "/conf/region1");
 
-    assertResult(underTest.findContextResources(level3),
+    assertResult(context, underTest.findContextResources(level3),
         "/content/region1/site1", "/conf/region1/site1",
         "/content/region1", "/conf/region1");
 
-    assertResult(underTest.findContextResources(level2),
+    assertResult(context, underTest.findContextResources(level2),
         "/content/region1/site1", "/conf/region1/site1",
         "/content/region1", "/conf/region1");
 
-    assertResult(underTest.findContextResources(level1),
+    assertResult(context, underTest.findContextResources(level1),
         "/content/region1", "/conf/region1");
   }
 
@@ -89,7 +89,7 @@ public class RootTemplateContextPathStrategyTest {
         "contextPathRegex", "^(/content/.+)$",
         "configPathPatterns", new String[] { "/conf/test1$1", "/conf/test2$1" });
 
-    assertResult(underTest.findContextResources(level4),
+    assertResult(context, underTest.findContextResources(level4),
         "/content/region1/site1", "/conf/test2/content/region1/site1",
         "/content/region1/site1", "/conf/test1/content/region1/site1",
         "/content/region1", "/conf/test2/content/region1",
@@ -102,18 +102,18 @@ public class RootTemplateContextPathStrategyTest {
         "templatePaths", new String[] { TEMPLATE_1, TEMPLATE_2 },
         "templateMatchAllLevels", true);
 
-    assertResult(underTest.findContextResources(level4),
+    assertResult(context, underTest.findContextResources(level4),
         "/content/region1/site1/en", "/conf/region1/site1/en",
         "/content/region1/site1", "/conf/region1/site1");
 
-    assertResult(underTest.findContextResources(level3),
+    assertResult(context, underTest.findContextResources(level3),
         "/content/region1/site1/en", "/conf/region1/site1/en",
         "/content/region1/site1", "/conf/region1/site1");
 
-    assertResult(underTest.findContextResources(level2),
+    assertResult(context, underTest.findContextResources(level2),
         "/content/region1/site1", "/conf/region1/site1");
 
-    assertResult(underTest.findContextResources(level1));
+    assertResult(context, underTest.findContextResources(level1));
   }
 
 }

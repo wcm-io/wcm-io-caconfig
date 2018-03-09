@@ -38,14 +38,13 @@ public class AbsoluteParentContextPathStrategyTest {
   @Rule
   public AemContext context = new AemContext();
 
-
-  private Resource level1;
-  private Resource level2;
-  private Resource level3;
-  private Resource level4;
+  protected Resource level1;
+  protected Resource level2;
+  protected Resource level3;
+  protected Resource level4;
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     level1 = context.create().page("/content/region1").adaptTo(Resource.class);
     level2 = context.create().page("/content/region1/site1").adaptTo(Resource.class);
     level3 = context.create().page("/content/region1/site1/en").adaptTo(Resource.class);
@@ -56,7 +55,7 @@ public class AbsoluteParentContextPathStrategyTest {
   public void testWithInvalidConfig() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy());
 
-    assertNoResult(underTest.findContextResources(level4));
+    assertNoResult(context, underTest.findContextResources(level4));
   }
 
   @Test
@@ -64,18 +63,18 @@ public class AbsoluteParentContextPathStrategyTest {
     ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
         "levels", new int[] { 1, 3 });
 
-    assertResult(underTest.findContextResources(level4),
+    assertResult(context, underTest.findContextResources(level4),
         "/content/region1/site1/en", "/conf/region1/site1/en",
         "/content/region1", "/conf/region1");
 
-    assertResult(underTest.findContextResources(level3),
+    assertResult(context, underTest.findContextResources(level3),
         "/content/region1/site1/en", "/conf/region1/site1/en",
         "/content/region1", "/conf/region1");
 
-    assertResult(underTest.findContextResources(level2),
+    assertResult(context, underTest.findContextResources(level2),
         "/content/region1", "/conf/region1");
 
-    assertResult(underTest.findContextResources(level1),
+    assertResult(context, underTest.findContextResources(level1),
         "/content/region1", "/conf/region1");
   }
 
@@ -87,7 +86,7 @@ public class AbsoluteParentContextPathStrategyTest {
         "contextPathBlacklistRegex", "^.*/region\\d+?$",
         "configPathPatterns", new String[] { "/conf/test1$1", "/conf/test2$1" });
 
-    assertResult(underTest.findContextResources(level4),
+    assertResult(context, underTest.findContextResources(level4),
         "/content/region1/site1/en", "/conf/test2/content/region1/site1/en",
         "/content/region1/site1/en", "/conf/test1/content/region1/site1/en");
   }

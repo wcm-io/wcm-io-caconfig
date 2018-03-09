@@ -30,8 +30,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.osgi.service.component.annotations.Activate;
@@ -121,14 +121,15 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
       return Collections.emptyIterator();
     }
 
+    ResourceResolver resourceResolver = resource.getResourceResolver();
     List<ContextResource> contextResources = new ArrayList<>();
     for (int level : this.levels) {
-      String contextPath = getAbsoluteParent(resource, level);
+      String contextPath = getAbsoluteParent(resource, level, resourceResolver);
       if (StringUtils.isNotEmpty(contextPath)) {
         Resource contextResource = resource.getResourceResolver().getResource(contextPath);
         if (contextResource != null) {
           for (String configPathPattern : configPathPatterns) {
-            String configRef = deriveConfigRef(contextPath, configPathPattern);
+            String configRef = deriveConfigRef(contextPath, configPathPattern, resourceResolver);
             if (configRef != null) {
               contextResources.add(new ContextResource(contextResource, configRef, serviceRanking));
             }
@@ -147,12 +148,12 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         && configPathPatterns.length > 0;
   }
 
-  private String getAbsoluteParent(Resource resource, int absoluteParent) {
-    return Text.getAbsoluteParent(resource.getPath(), absoluteParent);
+  private String getAbsoluteParent(Resource resource, int absoluteParent, ResourceResolver resourceResolver) {
+    return Path.getAbsoluteParent(resource.getPath(), absoluteParent, resourceResolver);
   }
 
-  private String deriveConfigRef(String contextPath, String configPathPattern) {
-    Matcher matcher = contextPathRegex.matcher(contextPath);
+  private String deriveConfigRef(String contextPath, String configPathPattern, ResourceResolver resourceResolver) {
+    Matcher matcher = contextPathRegex.matcher(Path.getPathWithoutVersionHistory(contextPath, resourceResolver));
     Matcher blacklistMatcher = null;
     if (contextPathBlacklistRegex != null) {
       blacklistMatcher = contextPathBlacklistRegex.matcher(contextPath);

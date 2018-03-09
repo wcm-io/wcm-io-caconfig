@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.osgi.service.component.annotations.Activate;
@@ -128,14 +129,15 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
       return Collections.emptyIterator();
     }
 
-    PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
+    ResourceResolver resourceResolver = resource.getResourceResolver();
+    PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
     Page page = pageManager.getContainingPage(resource);
     List<String> contextPathCandidats;
     if (templatMatchAllLevels) {
-      contextPathCandidats = getContextPathCandidatesMatchAll(page);
+      contextPathCandidats = getContextPathCandidatesMatchAll(page, resourceResolver);
     }
     else {
-      contextPathCandidats = getContextPathCandidatesMatchInnermost(page);
+      contextPathCandidats = getContextPathCandidatesMatchInnermost(page, resourceResolver);
     }
 
     List<ContextResource> contextResources = new ArrayList<>();
@@ -143,7 +145,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
       Resource contextResource = resource.getResourceResolver().getResource(contextPath);
       if (contextResource != null) {
         for (String configPathPattern : configPathPatterns) {
-          String configRef = deriveConfigRef(contextPath, configPathPattern);
+          String configRef = deriveConfigRef(contextPath, configPathPattern, resourceResolver);
           if (configRef != null) {
             contextResources.add(new ContextResource(contextResource, configRef, serviceRanking));
           }
@@ -161,11 +163,11 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
         && configPathPatterns.length > 0;
   }
 
-  private List<String> getContextPathCandidatesMatchInnermost(Page page) {
+  private List<String> getContextPathCandidatesMatchInnermost(Page page, ResourceResolver resourceResolver) {
     List<String> candidates = new ArrayList<>();
     if (page != null) {
       for (int level = minLevel; level <= maxLevel; level++) {
-        Page rootPage = page.getAbsoluteParent(level);
+        Page rootPage = Path.getAbsoluteParent(page, level, resourceResolver);
         if (rootPage != null) {
           String templatePath = rootPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
           if (templatePath != null) {
@@ -180,11 +182,11 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     return candidates;
   }
 
-  private List<String> getContextPathCandidatesMatchAll(Page page) {
+  private List<String> getContextPathCandidatesMatchAll(Page page, ResourceResolver resourceResolver) {
     List<String> candidates = new ArrayList<>();
     if (page != null) {
       for (int level = minLevel; level <= maxLevel; level++) {
-        Page rootPage = page.getAbsoluteParent(level);
+        Page rootPage = Path.getAbsoluteParent(page, level, resourceResolver);
         if (rootPage != null) {
           String templatePath = rootPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
           if (templatePath != null && templatePaths.contains(templatePath)) {
@@ -196,8 +198,8 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     return candidates;
   }
 
-  private String deriveConfigRef(String contextPath, String configPathPattern) {
-    Matcher matcher = contextPathRegex.matcher(contextPath);
+  private String deriveConfigRef(String contextPath, String configPathPattern, ResourceResolver resourceResolver) {
+    Matcher matcher = contextPathRegex.matcher(Path.getPathWithoutVersionHistory(contextPath, resourceResolver));
     if (matcher.matches()) {
       return matcher.replaceAll(configPathPattern);
     }
