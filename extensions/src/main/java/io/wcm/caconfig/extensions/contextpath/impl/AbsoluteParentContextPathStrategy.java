@@ -42,6 +42,8 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.wcm.wcm.commons.util.Path;
+
 /**
  * {@link ContextPathStrategy} that detects context paths by absolute parent levels of a context resource.
  */
@@ -153,7 +155,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
   }
 
   private String deriveConfigRef(String contextPath, String configPathPattern, ResourceResolver resourceResolver) {
-    Matcher matcher = contextPathRegex.matcher(Path.getPathWithoutVersionHistory(contextPath, resourceResolver));
+    Matcher matcher = contextPathRegex.matcher(Path.getOriginalPath(contextPath, resourceResolver));
     Matcher blacklistMatcher = null;
     if (contextPathBlacklistRegex != null) {
       blacklistMatcher = contextPathBlacklistRegex.matcher(contextPath);

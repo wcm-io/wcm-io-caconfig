@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2016 wcm.io
+ * Copyright (C) 2018 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ public class AbsoluteParentContextPathStrategyVersionHistoryTest extends Absolut
   @Override
   @Before
   public void setUp() throws Exception {
-    level1 = context.create().page(Path.VERSION_HISTORY + "/user1/region1").adaptTo(Resource.class);
-    level2 = context.create().page(Path.VERSION_HISTORY + "/user1/region1/site1").adaptTo(Resource.class);
-    level3 = context.create().page(Path.VERSION_HISTORY + "/user1/region1/site1/en").adaptTo(Resource.class);
-    level4 = context.create().page(Path.VERSION_HISTORY + "/user1/region1/site1/en/page1").adaptTo(Resource.class);
+    level1 = context.create().page("/content/versionhistory/user1/region1").adaptTo(Resource.class);
+    level2 = context.create().page("/content/versionhistory/user1/region1/site1").adaptTo(Resource.class);
+    level3 = context.create().page("/content/versionhistory/user1/region1/site1/en").adaptTo(Resource.class);
+    level4 = context.create().page("/content/versionhistory/user1/region1/site1/en/page1").adaptTo(Resource.class);
   }
 
 }

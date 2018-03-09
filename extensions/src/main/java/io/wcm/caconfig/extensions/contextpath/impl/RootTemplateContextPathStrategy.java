@@ -45,6 +45,8 @@ import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.google.common.collect.ImmutableSet;
 
+import io.wcm.wcm.commons.util.Path;
+
 /**
  * {@link ContextPathStrategy} that detects context paths by matching parent pages against a list of allowed templates
  * for context root.
@@ -199,7 +201,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
   }
 
   private String deriveConfigRef(String contextPath, String configPathPattern, ResourceResolver resourceResolver) {
-    Matcher matcher = contextPathRegex.matcher(Path.getPathWithoutVersionHistory(contextPath, resourceResolver));
+    Matcher matcher = contextPathRegex.matcher(Path.getOriginalPath(contextPath, resourceResolver));
     if (matcher.matches()) {
       return matcher.replaceAll(configPathPattern);
     }

@@ -29,6 +29,7 @@ import org.apache.sling.caconfig.resource.spi.ContextResource;
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.wcm.commons.util.Path;
 
 final class TestUtils {
 
@@ -50,7 +51,7 @@ final class TestUtils {
     for (int i = 0; i < expectedSize / 2; i++) {
       String expectedContextPath = paths[i * 2];
       String expectedConfigRef = paths[i * 2 + 1];
-      assertEquals(expectedContextPath, Path.getPathWithoutVersionHistory(resultList.get(i).getResource().getPath(), context.resourceResolver()));
+      assertEquals(expectedContextPath, Path.getOriginalPath(resultList.get(i).getResource().getPath(), context.resourceResolver()));
       assertEquals(expectedConfigRef, resultList.get(i).getConfigRef());
     }
   }
