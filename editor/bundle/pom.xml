@@ -160,8 +160,8 @@
           </execution>
         </executions>
         <configuration>
-          <nodeJsVersion>4.4.7</nodeJsVersion>
-          <npmVersion>2.15.8</npmVersion>
+          <nodeJsVersion>6.11.2</nodeJsVersion>
+          <npmVersion>3.10.10</npmVersion>
           <tasks>
             <npmInstallTask>
               <workingDirectory>${project.basedir}</workingDirectory>
