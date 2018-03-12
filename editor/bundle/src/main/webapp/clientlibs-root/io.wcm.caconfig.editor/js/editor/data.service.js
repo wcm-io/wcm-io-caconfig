@@ -38,7 +38,13 @@
        * @returns {Promise}
        */
       that.getConfigNames = function () {
-        return $http.get(restUrls.configNamesUrl);
+        var url = restUrls.configNamesUrl;
+        var timestamp = Date.now();
+
+        // there are issues with IE caching, so we break the cache
+        url += "?t=" + timestamp;
+
+        return $http.get(url);
       };
 
       /**
@@ -49,14 +55,19 @@
        */
       that.getConfigData = function (configName, isCollection) {
         var url = restUrls.configDataUrl;
+        var timestamp = Date.now();
+
+        // there are issues with IE caching, so we break the cache
+        url += "?t=" + timestamp;
 
         if (angular.isString(configName)) {
-          url += "?configName=" + configName;
+          url += "&configName=" + configName;
 
           if (isCollection) {
             url += "&collection=true";
           }
         }
+
         return $http.get(url, {
           transformResponse: dataHelperService.parseConfigData
         });

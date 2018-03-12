@@ -7,7 +7,8 @@
     "url": "https://github.com/wcm-io/wcm-io-caconfig.git"
   },
   "config": {
-    "jsPath": "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor/js/"
+    "jsPath": "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor/js/",
+    "angularPath": "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor.angularjs/js/"
   },
   "license": "Apache-2.0",
   "devDependencies": {

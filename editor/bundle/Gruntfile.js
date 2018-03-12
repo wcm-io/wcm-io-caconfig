@@ -13,7 +13,11 @@ module.exports = function (grunt) {
     min: {
       dist: {
         src: ["<%= pkg.config.jsPath %>**/*.js"],
-        dest: "target/yui-compression-test/io.wcm.caconfig.editor.js"
+        dest: "target/yui-compression-test/io.wcm.caconfig.editor.min.js"
+      },
+      lib: {
+        src: ["<%= pkg.config.angularPath %>**/*.js"],
+        dest: "target/yui-compression-test/io.wcm.caconfig.editor.angularjs.min.js"
       }
     },
     html2js: {
