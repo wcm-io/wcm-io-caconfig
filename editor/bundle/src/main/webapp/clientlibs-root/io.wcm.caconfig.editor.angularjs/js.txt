@@ -1,6 +1,6 @@
 #base=js
 
-angular.min.js
+angular.min.modified.js
 
-angular-route.min.js
+angular-route.min.modified.js
 bindonce.min.js
