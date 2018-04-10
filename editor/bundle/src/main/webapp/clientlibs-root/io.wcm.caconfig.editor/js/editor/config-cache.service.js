@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, _) {
+(function (angular) {
   "use strict";
 
   var STORED_CONFIG_CACHE = "caconfig-configCache";
@@ -135,7 +135,7 @@
      */
     that.updateConfigCache = function (configs, parentName) {
       var configData,
-          i;
+        i;
 
       for (i = 0; i < configs.length; i++) {
         configData = configs[i];
@@ -149,10 +149,10 @@
       var isNestedCollection = false;
       var isCollectionItem = false;
       var children,
-          config,
-          configName,
-          parent,
-          properties;
+        config,
+        configName,
+        parent,
+        properties;
 
       if (angular.isObject(configData.nestedConfig)) {
         configName = configData.nestedConfig.configName;
@@ -230,9 +230,19 @@
      */
     function getConfigProperties(configData, isNested, isNestedCollection) {
       var properties = [];
+      var itemProperties = [];
+      var flattenedItemProperties = [];
 
       if (isNestedCollection) {
-        properties = _.flatten(_.map(configData.nestedConfigCollection.items, "properties"));
+        itemProperties = configData.nestedConfigCollection.items.map(function (item) {
+          return item.properties;
+        });
+
+        flattenedItemProperties = itemProperties.reduce(function (a, b) {
+          return a.concat(b);
+        }, []);
+
+        properties = flattenedItemProperties;
       }
       else if (isNested) {
         properties = configData.nestedConfig.properties;
@@ -252,7 +262,7 @@
      */
     function getChildren(properties) {
       var children = [];
-      children = _.filter(properties, function (property) {
+      children = properties.filter(function (property) {
         return angular.isObject(property.nestedConfig)
           || angular.isObject(property.nestedConfigCollection);
       });
@@ -268,7 +278,7 @@
       var config = configCache[configName];
       var breadcrumbs = [];
       var configNameObject,
-          parent;
+        parent;
 
       if (!config || !config.parent) {
         return breadcrumbs;
@@ -285,8 +295,8 @@
       if (parent.collection) {
         parent.itemName = configName.replace(parent.configName, "")
           .replace(configNameObject.name, "")
-          .replace(/^\//, "")     // remove slash at start
-          .replace(/\/$/, "")     // remove slash at end
+          .replace(/^\//, "") // remove slash at start
+          .replace(/\/$/, "") // remove slash at end
           .replace(/\//g, " / "); // add spaces around remaining slashes, for view
       }
 
@@ -314,4 +324,4 @@
 
   }
 
-}(angular, _));
+}(angular));

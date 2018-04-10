@@ -104,12 +104,12 @@
      */
     function getPropertyRowsHtml(config, isPreview) {
       var configPropertyTypes,
-          propertyRowOptions,
-          property,
-          propertyRows,
-          propertyType,
-          numProps,
-          i;
+        propertyRowOptions,
+        property,
+        propertyRows,
+        propertyType,
+        numProps,
+        i;
 
       var configName = config.configName + (isPreview ? "-preview" : "");
       var getRowFn = isPreview ? getPropertyRowPreviewHtml : getPropertyRowHtml;

@@ -1,7 +1,5 @@
 #base=js
 
-lib/bindonce.min.js
-
 app.module.js
 templates.module.js
 utilities.module.js

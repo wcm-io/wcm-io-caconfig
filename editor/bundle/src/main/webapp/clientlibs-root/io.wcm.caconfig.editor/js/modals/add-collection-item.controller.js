@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, $) {
+(function (angular) {
   "use strict";
 
   var DEFAULT_ITEM_NAME_PATTERN = /^[\w-]+$/;
@@ -25,9 +25,9 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("AddCollectionItemController", AddCollectionItemController);
 
-  AddCollectionItemController.$inject = ["$scope", "modalService", "currentConfigService"];
+  AddCollectionItemController.$inject = ["$scope", "$document", "modalService", "currentConfigService"];
 
-  function AddCollectionItemController($scope, modalService, currentConfigService) {
+  function AddCollectionItemController($scope, $document, modalService, currentConfigService) {
     var that = this;
 
     that.blacklist = [];
@@ -41,13 +41,13 @@
     modalService.onEvent(modalService.modal.ADD_COLLECTION_ITEM, "show", function () {
       that.newCollectionName = null;
       that.blacklist = currentConfigService.getCollectionItemNames();
-      $("#caconfig-collectionItemName").focus();
+      $document.find("#caconfig-collectionItemName").focus();
     });
 
     that.addItem = function () {
-      var collectionItemName = $("#caconfig-collectionItemName").val()
+      var collectionItemName = $document.find("#caconfig-collectionItemName").val()
         .trim();
       currentConfigService.addItemToCurrentCollection(collectionItemName);
     };
   }
-}(angular, jQuery));
+}(angular));

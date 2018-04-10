@@ -1,10 +1,6 @@
 #base=js
 
-angular.min.js
+angular.min.modified.js
 
-angular-route.min.js
-angular-touch.min.js
-angular-animate.min.js
-angular-sanitize.min.js
-
-angular-ios9-uiwebview.patch.js
+angular-route.min.modified.js
+bindonce.min.js

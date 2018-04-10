@@ -17,11 +17,11 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, _) {
+(function (angular) {
   "use strict";
 
   angular.module("io.wcm.caconfig.widgets")
-      .directive("caconfigMultifield", multifield);
+    .directive("caconfigMultifield", multifield);
 
   multifield.$inject = ["templateUrlList", "inputMap", "$rootScope"];
 
@@ -52,7 +52,7 @@
       setValueArray(scope.property.value, scope.values);
 
       scope.$watch("values", function (newValues, oldValues) {
-        var valueArray = _.map(newValues, function(newValue) {
+        var valueArray = newValues.map(function(newValue) {
           return scope.type === "checkbox" ? Boolean(newValue.value) : newValue.value;
         });
         scope.property.value = valueArray;
@@ -63,18 +63,22 @@
 
       scope.$watch("property.inherited", function (isInherited, wasInherited) {
         var effectiveValueArray,
-            valueArray;
+          valueArray;
 
         if (isInherited === wasInherited) {
           return;
         }
 
-        valueArray = _.map(scope.values, "value");
+        valueArray = scope.values.map(function (valueItem) {
+          return valueItem.value;
+        });
 
         if (!inheritedStateChanged
             && isInherited === false
             && valueArray.length === 0) {
-          effectiveValueArray = _.map(scope.effectiveValues, "value");
+          effectiveValueArray = scope.effectiveValues.map(function (effectiveValueItem) {
+            return effectiveValueItem.value;
+          });
           setValueArray(effectiveValueArray, scope.values);
         }
         else if (isInherited === true) {
@@ -90,7 +94,7 @@
 
     function setValueArray(src, target) {
       var i,
-          tempArray;
+        tempArray;
       if (src && src.length > 0) {
         tempArray = src;
         for (i = 0; i < tempArray.length; i++) {
@@ -115,4 +119,4 @@
       $scope.values.splice(index, 1);
     };
   }
-}(angular, _));
+}(angular));

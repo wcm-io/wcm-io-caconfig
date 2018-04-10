@@ -1,5 +1,8 @@
+var loadGruntTasks = require("load-grunt-tasks");
+
 module.exports = function (grunt) {
-  require("load-grunt-tasks")(grunt);
+  // load all grunt prefixed tasks
+  loadGruntTasks(grunt);
 
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
@@ -10,7 +13,11 @@ module.exports = function (grunt) {
     min: {
       dist: {
         src: ["<%= pkg.config.jsPath %>**/*.js"],
-        dest: "target/yui-compression-test/io.wcm.caconfig.editor.js"
+        dest: "target/yui-compression-test/io.wcm.caconfig.editor.min.js"
+      },
+      lib: {
+        src: ["<%= pkg.config.angularPath %>**/*.js"],
+        dest: "target/yui-compression-test/io.wcm.caconfig.editor.angularjs.min.js"
       }
     },
     html2js: {
@@ -25,9 +32,10 @@ module.exports = function (grunt) {
     },
     eslint: {
       options: {
+        // fix: true,
         configFile: ".eslintrc"
       },
-      target: ["src/**/*.js"]
+      target: ["*.js", "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor/**/*.js"]
     },
     watch: {
       html: {
