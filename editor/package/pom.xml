@@ -96,7 +96,7 @@
               <root>/apps/wcm-io/caconfig/editor-package</root>
             </filter>
           </filters>
-          
+
           <embeddedTarget>/apps/wcm-io/${contentPackage.name}/install</embeddedTarget>
           <embeddeds>
             <embedded>

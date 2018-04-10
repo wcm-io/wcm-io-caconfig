@@ -50,7 +50,7 @@
   </properties>
 
   <dependencies>
-  
+
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.models.api</artifactId>

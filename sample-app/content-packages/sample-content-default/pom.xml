@@ -33,7 +33,7 @@
   <artifactId>io.wcm.caconfig.sample-app.sample-content-default</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>content-package</packaging>
-  
+
   <description>Sample content for Sling Context-Aware Configuration Default Persistence Strategy.</description>
 
   <properties>

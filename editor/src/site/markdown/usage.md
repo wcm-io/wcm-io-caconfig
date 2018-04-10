@@ -99,7 +99,7 @@ You should disable the configuration editor on publish by applying an OSGi confi
 
 ```
 [configurations runModes=publish]
-  
+
   # Disable Configuration Editor on publish
   io.wcm.caconfig.editor.impl.EditorConfig
     enabled=B"false"
