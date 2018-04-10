@@ -1,6 +1,6 @@
 <img src="http://wcm.io/images/favicon-16@2x.png"/> wcm.io Context-Aware Configuration
 ======
-[![Build Status](https://travis-ci.org/wcm-io/wcm-io-caconfig.png?branch=develop)](https://travis-ci.org/wcm-io/wcm-io-caconfig) 
+[![Build Status](https://travis-ci.org/wcm-io/wcm-io-caconfig.png?branch=develop)](https://travis-ci.org/wcm-io/wcm-io-caconfig)
 [![Code Coverage](https://codecov.io/gh/wcm-io/wcm-io-caconfig/branch/develop/graph/badge.svg)](https://codecov.io/gh/wcm-io/wcm-io-caconfig)
 
 Context-Aware configuration for AEM applications.
