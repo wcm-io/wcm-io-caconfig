@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.2.14" date="not released">
+      <action type="update" dev="dding" issue="WCON-47">
+        Update embedded AngularJS version and remove underscore/lodash dependency.
+      </action>
       <action type="update" dev="sseifert" issue="WCON-52">
         Set hideInNav=true by default for editor template pages.
       </action>
