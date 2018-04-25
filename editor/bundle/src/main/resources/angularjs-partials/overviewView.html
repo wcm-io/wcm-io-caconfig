@@ -5,6 +5,11 @@
           ng-click="overview.showNonExistingConfigs()"
           bo-text="i18n.button.add">
   </button>
+  <button class="caconfig-publishButton coral-Button coral-Button--secondary" type="button"
+          ng-click="overview.publishPage()"
+          bo-if="i18n.button.publish"
+          bo-text="i18n.button.publish">
+  </button>
 
   <p class="caconfig-contextPath"
      bo-if="overview.state.contextPath">

@@ -36,9 +36,20 @@
       visible: false
     });
 
-    modalService.onEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, function (e, response) {
+    modalService.onEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, function (e, data) {
+      var response,
+        message;
+
+      data = data || {};
+
+      response = data.response || {};
+      message = data.message;
+
       if (response.status === 403 && response.data && angular.isString(response.data)) {
         that.message = response.data;
+      }
+      else if (angular.isString(message) && message.length) {
+        that.message = message;
       }
       else {
         that.message = defaultMessage;

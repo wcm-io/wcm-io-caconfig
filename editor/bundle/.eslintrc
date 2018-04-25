@@ -6,7 +6,8 @@
   "extends": "eslint-config-pv/legacy",
   "globals": {
     "angular": false,
-    "CUI": false
+    "CUI": false,
+    "Granite", false
   },
   "rules": {
     "dot-notation": ["error", { "allowKeywords": false }],
