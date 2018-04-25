@@ -25,9 +25,9 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("AddCollectionItemController", AddCollectionItemController);
 
-  AddCollectionItemController.$inject = ["$scope", "$document", "modalService", "currentConfigService"];
+  AddCollectionItemController.$inject = ["$scope", "$document", "modalService", "currentConfigService", "$timeout"];
 
-  function AddCollectionItemController($scope, $document, modalService, currentConfigService) {
+  function AddCollectionItemController($scope, $document, modalService, currentConfigService, $timeout) {
     var that = this;
 
     that.blacklist = [];
@@ -48,6 +48,10 @@
       var collectionItemName = $document.find("#caconfig-collectionItemName").val()
         .trim();
       currentConfigService.addItemToCurrentCollection(collectionItemName);
+
+      $timeout(function() {
+        $document.find("html, body").animate({scrollTop: document.body.scrollHeight});
+      }, 100);
     };
   }
 }(angular));

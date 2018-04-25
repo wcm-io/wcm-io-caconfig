@@ -15,7 +15,9 @@
       "edit": "Bearbeiten",
       "ok": "OK",
       "save": "Speichern",
-      "browse": "Durchsuchen"
+      "browse": "Durchsuchen",
+      "toBottom": "Nach unten",
+      "toTop": "Nach oben"
     },
     "config": {
       "name": "Konfigurations-Name",
@@ -37,7 +39,8 @@
       "numberInCollection": "Gesamtzahl der Elemente",
       "numberInEditor": "Anzahl der sichtbaren Elemente",
       "scrollHint": "Scrollen Sie nach unten, um mehr Elemente zu laden.",
-      "loadAll": "Klicken Sie hier, um alle Elemente zu laden. (Ihr Browser könnte eine Zeitlang nicht mehr reagieren.)"
+      "loadAll": "Klicken Sie hier, um alle Elemente zu laden. (Ihr Browser könnte eine Zeitlang nicht mehr reagieren.)",
+      "addCollectionItemHint": "Alle Elemente werden geladen und ihr Browser könnte eine Zeitlang nicht mehr reagieren."
     },
     "modal": {
       "addConfig": {

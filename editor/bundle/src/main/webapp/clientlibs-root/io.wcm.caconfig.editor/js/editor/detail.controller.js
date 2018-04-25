@@ -29,9 +29,7 @@
 
   DetailController.$inject = ["$window", "$document", "$rootScope", "$scope", "$timeout", "$route", "configService", "modalService"];
 
-  /* eslint-disable max-params */
   function DetailController($window, $document, $rootScope, $scope, $timeout, $route, configService, modalService) {
-  /* eslint-enable max-params */
     var that = this;
     var MAX_CONFIGS = Number.POSITIVE_INFINITY;
     var MAX_CONFIGS_PER_PAGE = 32;
@@ -87,13 +85,6 @@
         });
     };
 
-    /**
-     * Show Add Collection Item button (when all collection items visible)
-     */
-    function showAddCollectionItemButton() {
-      $document.find(".caconfig-addCollectionItemButton").show();
-    }
-
     function hideLargeCollectionInfo() {
       $document.find(".caconfig-largeCollection").hide();
     }
@@ -101,6 +92,7 @@
     that.addCollectionItem = function () {
       modalService.show(modalService.modal.ADD_COLLECTION_ITEM);
       that.configForm.$setDirty();
+      that.showAllConfigs();
     };
 
     function addScrollListener() {
@@ -154,10 +146,17 @@
       }
 
       that.configLimit = MAX_CONFIGS;
-      showAddCollectionItemButton();
       hideLargeCollectionInfo();
       removeScrollListener();
       that.allConfigsVisible = true;
+    };
+
+    that.toBottom = function() {
+      $document.find("html, body").animate({scrollTop: document.body.scrollHeight});
+    };
+
+    that.toTop = function() {
+      $document.find("html, body").animate({scrollTop: 0});
     };
 
     /**

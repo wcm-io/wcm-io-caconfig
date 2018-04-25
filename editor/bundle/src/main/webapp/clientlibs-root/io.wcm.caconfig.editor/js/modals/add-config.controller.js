@@ -27,9 +27,7 @@
 
   AddConfigController.$inject = ["$document", "$rootScope", "modalService", "configService", "uiService"];
 
-  /* eslint-disable max-params */
   function AddConfigController($document, $rootScope, modalService, configService, uiService) {
-  /* eslint-enable max-params */
     var that = this;
 
     modalService.addModal(modalService.modal.ADD_CONFIG, {

@@ -25,9 +25,7 @@
 
   pathbrowser.$inject = ["templateUrlList", "inputMap", "directivePropertyPrefixes", "$rootScope", "$http", "configService"];
 
-  /* eslint-disable max-params */
   function pathbrowser(templateList, inputMap, directivePropertyPrefixes, $rootScope, $http, configService) {
-  /* eslint-enable max-params */
     var directive = {
       replace: true,
       templateUrl: templateList.pathbrowser,

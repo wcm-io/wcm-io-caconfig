@@ -60,6 +60,22 @@
     </label>
   </p>
 
+  <p bo-if="detail.current.isCollection">
+    <button class="coral-Button coral-Button--primary" type="button"
+            ng-click="detail.addCollectionItem()"
+            bo-if="i18n.button.addItem"
+            bo-text="i18n.button.addItem"
+            title="{{detail.current.isLargeCollection && !detail.allConfigsVisible ? i18n.largeCollection.addCollectionItemHint : i18n.button.addItem}}">
+    </button>
+    <button class="coral-Button coral-Button--square coral-Button--default" type="button"
+            bo-if="detail.current.isLargeCollection"
+            ng-show="detail.allConfigsVisible"
+            bo-title="i18n.button.toBottom"
+            ng-click="detail.toBottom()">
+      <i class="coral-Icon coral-Icon--arrowDown"></i>
+    </button>
+  </p>
+
   <p class="coral-Well caconfig-largeCollection" bo-if="detail.current.isLargeCollection">
     <span bo-if="i18n.largeCollection.numberInCollection"
           bo-text="i18n.largeCollection.numberInCollection"></span>:
@@ -72,7 +88,6 @@
           bo-text="i18n.largeCollection.scrollHint"></span>
     <br>
     <span class="coral-Link caconfig-link"
-          bo-if="true || i18n.button.addItem"
           ng-click="detail.showAllConfigs()"
           bo-if="i18n.largeCollection.loadAll"
           bo-text="i18n.largeCollection.loadAll">
@@ -92,12 +107,18 @@
      ng-cloak>
   </div>
 
-  <p bo-if="detail.current.isCollection">
-    <button class="caconfig-addCollectionItemButton coral-Button coral-Button--primary" type="button"
+  <p bo-if="detail.current.isCollection"
+     ng-show="detail.current.configs.length && detail.allConfigsVisible">
+    <button class="coral-Button coral-Button--primary" type="button"
             ng-click="detail.addCollectionItem()"
-            bo-show="detail.allConfigsVisible"
             bo-if="i18n.button.addItem"
             bo-text="i18n.button.addItem"></button>
+    <button class="coral-Button coral-Button--square coral-Button--default" type="button"
+            bo-if="detail.current.isLargeCollection"
+            bo-title="i18n.button.toTop"
+            ng-click="detail.toTop()">
+      <i class="coral-Icon coral-Icon--arrowUp"></i>
+    </button>
   </p>
 
 </form>

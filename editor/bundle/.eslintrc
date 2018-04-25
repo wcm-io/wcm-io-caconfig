@@ -10,6 +10,7 @@
   },
   "rules": {
     "dot-notation": ["error", { "allowKeywords": false }],
+    "max-params": 0,
     "no-undef": ["error"],
     "no-use-before-define": ["warn", { "functions": false }]
   }

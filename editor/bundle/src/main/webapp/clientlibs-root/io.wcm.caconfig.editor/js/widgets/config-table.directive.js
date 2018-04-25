@@ -28,9 +28,7 @@
 
   configTable.$inject = ["templateUrlList", "cssClasses", "propertyNames", "$rootScope", "currentConfigService", "$compile", "$timeout"];
 
-  /* eslint-disable max-params */
   function configTable(templateList, cssClasses, propertyNames, $rootScope, currentConfigService, $compile, $timeout) {
-  /* eslint-enable max-params */
     var propertyRowsCache = {};
 
     var directive = {
