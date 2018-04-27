@@ -61,6 +61,13 @@
     <dt>sub2StringParam:</dt>
     <dd>${nested.sub2.sub2StringParam}</dd>
   </dl>
+  <dl>
+    <dt>sub.subStringParam:</dt>
+    <dd>${nested.sub2.sub.subStringParam}</dd>
+  </dl>
+  <ul data-sly-list.item="${nested.sub2.subList}">
+    <li>subList.subStringParam: ${item.subStringParam}</li>
+  </ul>
 
   <h4>sub2List - Config collection name: io.wcm.caconfig.sample.config.ConfigSampleSub2</h4>
 
