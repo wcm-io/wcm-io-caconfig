@@ -2,6 +2,7 @@
 
 [Apache Sling Context-Aware Configuration][sling-caconfig] is part of the AEM product since version 6.3. You can also use it in AEM 6.1 or 6.2 by deploying the required bundles and adding some basic configuration. And if you want to use the latest features provided by [wcm.io Context-Aware Configuration][wcmio-caconfig] you need to deploy some updated bundles from Sling in AEM 6.3 as well.
 
+You do not need to deploy additional bundles in AEM 6.4.
 
 ### Apache Sling Context-Aware Configuration Bundles
 
