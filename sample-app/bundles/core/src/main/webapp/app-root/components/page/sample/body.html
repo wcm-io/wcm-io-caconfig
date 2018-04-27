@@ -2,6 +2,25 @@
 
 <div>
 
+  <div data-sly-use.bugModel="io.wcm.caconfig.sample.model.SampleBugModel">
+  
+    <h3>Config name: io.wcm.caconfig.sample.config.ConfigSampleNested</h3>
+  
+    <dl>
+      <dt>stringParam:</dt>
+      <dd>${bugModel.configSampleNested.stringParam}</dd>
+    </dl>
+  
+    <h3>Config collection name: io.wcm.caconfig.sample.config.ConfigSampleSub</h3>
+  
+    <ul data-sly-list.item="${bugModel.sampleSubConfigs}">
+      <li>subStringParam: ${item.subStringParam}</li>
+    </ul>
+  
+  </div>
+
+  <hr/>
+
   <h3>Config name: io.wcm.caconfig.sample.config.ConfigSample</h3>
 
   <dl>

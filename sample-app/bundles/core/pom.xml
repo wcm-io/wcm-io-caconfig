@@ -50,7 +50,8 @@
     </dependency>
     <dependency>
       <groupId>com.adobe.aem</groupId>
-      <artifactId>aem-api</artifactId>
+      <artifactId>uber-jar</artifactId>
+      <classifier>apis</classifier>
       <scope>compile</scope>
     </dependency>
     <dependency>
