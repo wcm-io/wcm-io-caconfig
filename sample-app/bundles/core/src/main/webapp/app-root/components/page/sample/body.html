@@ -15,6 +15,8 @@
     <dd>${caconfig['io.wcm.caconfig.sample.config.ConfigSample'].stringArrayParam}</dd>
   </dl>
 
+  <hr/>
+
   <h3>Config name: io.wcm.caconfig.sample.config.ConfigSample2</h3>
 
   <dl>
@@ -28,10 +30,49 @@
     <dd>${caconfig['sample/configuration/2'].boolArrayParam}</dd>
   </dl>
 
+  <hr/>
+
   <h3>Config collection name: io.wcm.caconfig.sample.config.ConfigSampleList</h3>
 
   <ul data-sly-list.item="${caconfig['io.wcm.caconfig.sample.config.ConfigSampleList']}">
     <li>stringParam: ${item.stringParam}</li>
+  </ul>
+
+  <hr/>
+
+  <sly data-sly-use.nested="io.wcm.caconfig.sample.model.ConfigSampleNestedModel"/>
+  
+  <h3>Config name: io.wcm.caconfig.sample.config.ConfigSampleNested</h3>
+
+  <dl>
+    <dt>stringParam:</dt>
+    <dd>${nested.config.stringParam}</dd>
+  </dl>
+
+  <h4>sub - Config collection name: io.wcm.caconfig.sample.config.ConfigSampleSub</h4>
+
+  <ul data-sly-list.item="${nested.sub}">
+    <li>subStringParam: ${item.subStringParam}</li>
+  </ul>
+
+  <h4>sub2 - Config name: io.wcm.caconfig.sample.config.ConfigSampleSub2</h4>
+
+  <dl>
+    <dt>sub2StringParam:</dt>
+    <dd>${nested.sub2.sub2StringParam}</dd>
+  </dl>
+  <dl>
+    <dt>sub.subStringParam:</dt>
+    <dd>${nested.sub2.sub.subStringParam}</dd>
+  </dl>
+  <ul data-sly-list.item="${nested.sub2.subList}">
+    <li>subList.subStringParam: ${item.subStringParam}</li>
+  </ul>
+
+  <h4>sub2List - Config collection name: io.wcm.caconfig.sample.config.ConfigSampleSub2</h4>
+
+  <ul data-sly-list.item="${nested.sub2List}">
+    <li>sub2StringParam: ${item.sub2StringParam}</li>
   </ul>
 
 </div>
