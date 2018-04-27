@@ -94,7 +94,7 @@
       <dependency>
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.caconfig.impl</artifactId>
-        <version>1.4.8</version>
+        <version>1.4.11-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.sling</groupId>
@@ -113,7 +113,7 @@
       <dependency>
         <groupId>io.wcm.maven</groupId>
         <artifactId>io.wcm.maven.aem-dependencies</artifactId>
-        <version>6.1.0.0001</version>
+        <version>6.0.0.0001</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
