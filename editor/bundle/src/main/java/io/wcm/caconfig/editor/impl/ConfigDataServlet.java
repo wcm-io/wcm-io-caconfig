@@ -186,7 +186,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
           if (configDatas != null) {
             JSONObject nestedConfigCollection = new JSONObject();
             StringBuilder collectionConfigName = new StringBuilder();
-            collectionConfigName.append(configurationPersistenceStrategy.getCollectionParentConfigName(config.getConfigName(), config.getResourcePath()));
+            collectionConfigName.append(configurationPersistenceStrategy.getConfigName(config.getConfigName(), config.getResourcePath()));
             if (config.getCollectionItemName() != null) {
               collectionConfigName.append("/")
                   .append(configurationPersistenceStrategy.getCollectionItemConfigName(config.getCollectionItemName(), config.getResourcePath()));

@@ -36,6 +36,9 @@
       <action type="update" dev="sseifert" issue="WCON-52">
         Set hideInNav=true by default for editor template pages.
       </action>
+      <action type="fix" dev="sseifert" issue="WCON-54">
+        Fix building for config path for nested configuration collections.
+      </action>
     </release>
 
     <release version="1.2.12" date="2018-02-05">
