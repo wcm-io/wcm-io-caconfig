@@ -23,9 +23,9 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("OverviewController", OverviewController);
 
-  OverviewController.$inject = ["$rootScope", "configService", "modalService"];
+  OverviewController.$inject = ["$rootScope", "configService", "modalService", "publishService"];
 
-  function OverviewController($rootScope, configService, modalService) {
+  function OverviewController($rootScope, configService, modalService, publishService) {
     var that = this;
 
     $rootScope.title = $rootScope.i18n.title;
@@ -53,6 +53,10 @@
     that.showNonExistingConfigs = function () {
       modalService.triggerEvent(modalService.modal.ADD_CONFIG, "caconfig-setup");
       modalService.show(modalService.modal.ADD_CONFIG);
+    };
+
+    that.publishPage = function () {
+      publishService.publishPage();
     };
   }
 }(angular));

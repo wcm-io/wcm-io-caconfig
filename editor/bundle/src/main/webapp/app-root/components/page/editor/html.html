@@ -24,6 +24,7 @@
       <ng-include src="modalTemplates.addCollectionItem"></ng-include>
       <ng-include src="modalTemplates.deleteConfig"></ng-include>
       <ng-include src="modalTemplates.error"></ng-include>
+      <ng-include src="modalTemplates.info"></ng-include>
       <ng-include src="modalTemplates.saveConfig"></ng-include>
 
       <meta data-sly-call="${clientLib.js @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
@@ -46,6 +47,7 @@
                 discard: "${'io.wcm.caconfig.editor.button.discard' @ i18n, context='text'}",
                 edit: "${'io.wcm.caconfig.editor.button.edit' @ i18n, context='text'}",
                 ok: "${'io.wcm.caconfig.editor.button.ok' @ i18n, context='text'}",
+                publish: "${'io.wcm.caconfig.editor.button.publish' @ i18n, context='text'}",
                 save: "${'io.wcm.caconfig.editor.button.save' @ i18n, context='text'}",
                 toBottom: "${'io.wcm.caconfig.editor.button.toBottom' @ i18n, context='text'}",
                 toTop: "${'io.wcm.caconfig.editor.button.toTop' @ i18n, context='text'}"
@@ -102,18 +104,31 @@
           });
 
         angular.module("io.wcm.caconfig.editor")
-          .config(["dataServiceProvider", function (dataServiceProvider) {
+          .config(["dataServiceProvider", "publishServiceProvider", function (dataServiceProvider, publishServiceProvider) {
             var configNamesUrl = "${editorConfig.configNamesUrl @ context='uri'}";
             var configDataUrl = "${editorConfig.configDataUrl @ context='uri'}";
             var configPersistUrl = "${editorConfig.configPersistUrl @ context='uri'}";
+            var publishReferencesUrl = "/libs/wcm/core/content/reference.json";
+            var publishReplicationUrl = "/bin/replicate.json";
+            var publishWizardUrl = "/libs/wcm/core/content/sites/publishpagewizard.html";
+
             dataServiceProvider.setRestUrls({
               configNamesUrl: configNamesUrl,
               configDataUrl: configDataUrl,
               configPersistUrl: configPersistUrl
             });
+
+            publishServiceProvider.setRestUrls({
+              referencesUrl: publishReferencesUrl,
+              replicationUrl: publishReplicationUrl,
+              wizardUrl: publishWizardUrl
+            });
           }]);
       </script>
 
+    </div>
+    <div class="caconfig-loading">
+      <div class="coral-Wait coral-Wait--large coral-Wait--center"></div>
     </div>
   </body>
 </html>

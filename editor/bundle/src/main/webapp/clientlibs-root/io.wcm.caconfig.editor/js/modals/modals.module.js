@@ -34,6 +34,7 @@
       addConfig: "addConfigModal.html",
       deleteConfig: "deleteConfigModal.html",
       error: "errorModal.html",
+      info: "infoModal.html",
       saveConfig: "saveConfigModal.html"
     };
   }

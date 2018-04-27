@@ -39,6 +39,7 @@
       ADD_CONFIG: "addConfig",
       ADD_COLLECTION_ITEM: "addCollectionItem",
       DELETE_CONFIG: "deleteConfig",
+      INFO: "info",
       ERROR: "error",
       SAVE_CONFIG: "saveConfig"
     };
