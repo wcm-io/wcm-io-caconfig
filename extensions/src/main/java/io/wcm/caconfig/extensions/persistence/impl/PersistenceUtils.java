@@ -53,7 +53,7 @@ import com.day.cq.wcm.api.WCMException;
 final class PersistenceUtils {
 
   private static final String DEFAULT_FOLDER_NODE_TYPE = "sling:Folder";
-  private static final String DEFAULT_FOLDER_NODE_TYPE_IN_PAGE = "sling:OrderedFolder";
+  private static final String DEFAULT_FOLDER_NODE_TYPE_IN_PAGE = JcrConstants.NT_UNSTRUCTURED;
   private static final Pattern PAGE_PATH_PATTERN = Pattern.compile("^(.*)/" + Pattern.quote(JCR_CONTENT) + "(/.*)?$");
   private static final Pattern JCR_CONTENT_PATTERN = Pattern.compile("^(.*/)?" + Pattern.quote(JCR_CONTENT) + "(/.*)?$");
 
