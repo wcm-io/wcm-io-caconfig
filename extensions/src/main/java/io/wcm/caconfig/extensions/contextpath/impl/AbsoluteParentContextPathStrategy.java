@@ -21,8 +21,10 @@ package io.wcm.caconfig.extensions.contextpath.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -42,6 +44,10 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.wcm.api.NameConstants;
+import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
+
 import io.wcm.wcm.commons.util.Path;
 
 /**
@@ -60,6 +66,11 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         required = true)
     int[] levels();
 
+    @AttributeDefinition(name = "Retrieve context for ancestor page instead",
+        description = "List of template paths and ancestor levels, separated by '='. Each page matching the template will retrieve instead the context for an ancestor page on the given level. This is useful for CAC editor pages which are often outside the main content tree.",
+        required = true)
+    String[] templatesWithAncestorLevel();
+    
     @AttributeDefinition(name = "Context path whitelist",
         description = "Expression to match context paths. Context paths matching this expression are allowed. Use groups to reference them in configPathPatterns.",
         required = true)
@@ -88,6 +99,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
   private Pattern contextPathBlacklistRegex;
   private String[] configPathPatterns;
   private int serviceRanking;
+  private Map<String, Integer> templatesAndAncestorLevels;
 
   private static final Logger log = LoggerFactory.getLogger(AbsoluteParentContextPathStrategy.class);
 
@@ -115,6 +127,30 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     }
     configPathPatterns = config.configPathPatterns();
     serviceRanking = config.service_ranking();
+    templatesAndAncestorLevels = getTemplatesAndAncestorLevelsMapFromConfig(config.templatesWithAncestorLevel());
+  }
+
+  static Map<String, Integer> getTemplatesAndAncestorLevelsMapFromConfig(String[] config) {
+    Map<String, Integer> templatesAndAncestorLevels = new HashMap<>();
+    if (config == null) {
+        return templatesAndAncestorLevels;
+    }
+    int line = 1;
+    for (String configItem : config) {
+        String[] parts = configItem.split("=", 2);
+        if (parts == null || parts.length != 2) {
+            throw new IllegalArgumentException("Each line in the config property 'templatesWithAncestorLevel' must follow the format '<template path>=<level>'! Line " + line + " is not following this pattern!");
+        }
+        try {
+            Integer level = Integer.valueOf(parts[1]);
+            templatesAndAncestorLevels.put(parts[0], level);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Each line in the config property 'templatesWithAncestorLevel' must follow the format '<template path>=<level>'! Line " + line + " does not contain a numeric level!", e);
+        }
+        
+        line++;
+    }
+    return templatesAndAncestorLevels;
   }
 
   @Override
@@ -122,7 +158,12 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     if (!isValidConfig()) {
       return Collections.emptyIterator();
     }
-
+    try {
+      resource = getBaseResource(resource);
+    } catch (IllegalStateException e) {
+        log.debug("Could not get base resource: " + e.getMessage(), e);
+        return Collections.emptyIterator();
+    }
     ResourceResolver resourceResolver = resource.getResourceResolver();
     List<ContextResource> contextResources = new ArrayList<>();
     for (int level : this.levels) {
@@ -148,6 +189,35 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         && contextPathRegex != null
         && configPathPatterns != null
         && configPathPatterns.length > 0;
+  }
+
+  private Resource getBaseResource(Resource resource) {
+      if (templatesAndAncestorLevels.isEmpty()) {
+          return resource;
+      }
+      // get page for current resource
+      ResourceResolver resourceResolver = resource.getResourceResolver();
+      if (resourceResolver == null) {
+          throw new IllegalStateException("Could not get resource resolver for resource!");
+      }
+      PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
+      if (pageManager == null) {
+          throw new IllegalStateException("Could not get PageManager from ResourceResolver!");
+      }
+      Page page = pageManager.getContainingPage(resource);
+      if (page == null) {
+          return resource;
+      }
+      String template = page.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
+      Integer ancestorLevel = templatesAndAncestorLevels.get(template);
+      if (ancestorLevel == null) {
+          return resource;
+      }
+      Page basePage = page.getParent(ancestorLevel);
+      if (basePage == null) {
+          throw new IllegalStateException("There is no parent page for level " + ancestorLevel +  " of page " + page.getPath());
+      }
+      return basePage.adaptTo(Resource.class);
   }
 
   private String getAbsoluteParent(Resource resource, int absoluteParent, ResourceResolver resourceResolver) {
