@@ -7,8 +7,12 @@ inherits:
 variants:
 - variant: aem-author
 - variant: aem-publish
-- variant: default-persistence-strategy 
+- variant: default-persistence-strategy
+  config:
+    app.caconfigAemPagePersistence: false
 - variant: aempage-persistence-strategy
+  config:
+    app.caconfigAemPagePersistence: true
 
 templateDir: sample-aem-cms
 
@@ -26,20 +30,6 @@ files:
       rootPath: /apps/sample-aem-cms-config/config
       filters:
       - filter: /apps/sample-aem-cms-config
-
-- file: sample-aem-cms-config-aempage.provisioning
-  dir: packages
-  template: sample-aem-cms-config-aempage.provisioning.hbs
-  variants:
-  - aempage-persistence-strategy
-  postProcessors:
-  - aem-contentpackage-osgiconfig
-  postProcessorOptions:
-    contentPackage:
-      name: sample-aem-cms-config-aempage
-      rootPath: /apps/sample-aem-cms-config-aempage/config
-      filters:
-      - filter: /apps/sample-aem-cms-config-aempage
 
 # AEM Systems users with ACLs (Author)
 - file: sample-aem-cms-systemusers.json
@@ -83,7 +73,6 @@ config:
 
   app:
     sampleContent: false
-    caconfigAemPagePersistence: false
 
 
   # Example for config override configuration
