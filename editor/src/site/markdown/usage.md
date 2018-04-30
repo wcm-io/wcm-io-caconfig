@@ -15,11 +15,11 @@ See [Apache Sling Context-Aware Configuration documentation][sling-caconfig] for
 
 In most cases you will deploy the configuration editor bundle `io.wcm.caconfig.editor` together with your application. In this case you should define your own template definition for it which controls where editor config pages can created (see next section).
 
-Alternatively you can deploy this AEM package which contains the config editor bundle together with a template definition which allows all paths below `/content`:
+Alternatively you can deploy it using an AEM package which contains the config editor bundle together with a template definition which allows all paths below `/content`.
 
 |---|---|---|
-| [wcm.io Context-Aware Configuration Editor AEM Package with Template Definition](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package) |
-
+| [wcm.io Context-Aware Configuration Editor Bundle (JAR)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor) |
+| [wcm.io Context-Aware Configuration Editor AEM Package with Template Definition (ZIP)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package) |
 
 When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles (API, SPI, Impl) to AEM. In AEM 6.3 you have to update the Apache Sling Context-Aware Configuration SPI and Impl version to the latest version if you want to use Editor version 1.1 and upwards. See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-caconfig-in-aem] for details.
 
