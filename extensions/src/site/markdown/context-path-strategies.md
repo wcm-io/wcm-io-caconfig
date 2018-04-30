@@ -32,12 +32,19 @@ Example:
 
 With this configuration the strategy produces the following results:
 
-|Content path                               |Detected context path             |Derived config path            |Notes
-|-------------------------------------------|----------------------------------|-------------------------------|--------------------------
-|`/content/brand1/region1`                  |`/content/brand1/region1`         |`/conf/brand1/region1`         |Direct match with level 2
-|`/content/brand1/region1/country1`         |`/content/brand1/region1/country1`|`/conf/brand1/region1/country1`|Direct match with level 3
-|`/content/brand1/region1/country1/en/page1`|`/content/brand1/region1/country1`|`/conf/brand1/region1/country1`|Page with level 5, next matching absolute parent is level 3
-|`/content/brand1/region1/tools/config`     |`/content/brand1/region1`         |`/conf/brand1/region1`         |Configuration editor page with level 4 which is blacklisted, next matching absolute parent is level 2
+|   |Content path                               |Detected context path             |Derived config path
+|---|-------------------------------------------|----------------------------------|-------------------------------
+|a) |`/content/brand1/region1`                  |`/content/brand1/region1`         |`/conf/brand1/region1`
+|b) |`/content/brand1/region1/country1`         |`/content/brand1/region1/country1`|`/conf/brand1/region1/country1`
+|c) |`/content/brand1/region1/country1/en/page1`|`/content/brand1/region1/country1`|`/conf/brand1/region1/country1`
+|d) |`/content/brand1/region1/tools/config`     |`/content/brand1/region1`         |`/conf/brand1/region1`
+
+Explanation:
+
+* a) Direct match with level 2
+* b) Direct match with level 3
+* c) Page with level 5, next matching absolute parent is level 3
+* d) Configuration editor page with level 4 which is blacklisted, next matching absolute parent is level 2
 
 
 ### Context Path Strategy: Root Templates
