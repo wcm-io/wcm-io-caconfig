@@ -52,7 +52,8 @@ import com.day.cq.wcm.api.WCMException;
 
 final class PersistenceUtils {
 
-  private static final String DEFAULT_FOLDER_NODE_TYPE = "sling:OrderedFolder";
+  private static final String DEFAULT_FOLDER_NODE_TYPE = "sling:Folder";
+  private static final String DEFAULT_FOLDER_NODE_TYPE_IN_PAGE = "sling:OrderedFolder";
   private static final Pattern PAGE_PATH_PATTERN = Pattern.compile("^(.*)/" + Pattern.quote(JCR_CONTENT) + "(/.*)?$");
   private static final Pattern JCR_CONTENT_PATTERN = Pattern.compile("^(.*/)?" + Pattern.quote(JCR_CONTENT) + "(/.*)?$");
 
@@ -113,7 +114,7 @@ final class PersistenceUtils {
       ConfigurationManagementSettings configurationManagementSettings) {
     Matcher matcher = PAGE_PATH_PATTERN.matcher(pagePath);
     if (matcher.matches()) {
-      return getOrCreateResource(resolver, pagePath, DEFAULT_FOLDER_NODE_TYPE, null, configurationManagementSettings);
+      return getOrCreateResource(resolver, pagePath, DEFAULT_FOLDER_NODE_TYPE_IN_PAGE, null, configurationManagementSettings);
     }
     return ensurePage(resolver, pagePath, null, null, configurationManagementSettings);
   }
