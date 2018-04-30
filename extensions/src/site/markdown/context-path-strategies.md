@@ -18,6 +18,8 @@ OSGi factory configuration: "wcm.io Context-Aware Configuration Context Path Str
 * **Config path patterns**: Expression to derive the config path from the context path. Regex group references like `$1` can be used.
 * **Service Ranking**: Priority of context path strategy
 
+This strategy detects context paths at absolute parent levels (starting at `/content` with level=0). It only accepts paths that match the whitelist and does not match the blacklist, and uses the nearest accepted parent if the current path is not accepted.
+
 Example:
 
 ```
@@ -25,9 +27,17 @@ Example:
     levels=I["2","3"]
     contextPathRegex="^/content(/.+)$"
     configPathPatterns=["/conf$1"]
+    contextPathBlacklistRegex="^.*/tools(/config(/.+)?)?$"
 ```
 
-With this configuration content paths like `/content/brand1/region1` and `/content/brand1/region1/country1` would be detected as contexts and the configuration would be stored in `/conf/brand1/region1` and `/conf/brand1/region1/country1`.
+With this configuration the strategy produces the following results:
+
+|Content path                               |Detected context path             |Derived config path            |Notes
+|-------------------------------------------|----------------------------------|-------------------------------|--------------------------
+|`/content/brand1/region1`                  |`/content/brand1/region1`         |`/conf/brand1/region1`         |Direct match with level 2
+|`/content/brand1/region1/country1`         |`/content/brand1/region1/country1`|`/conf/brand1/region1/country1`|Direct match with level 3
+|`/content/brand1/region1/country1/en/page1`|`/content/brand1/region1/country1`|`/conf/brand1/region1/country1`|Page with level 5, next matching absolute parent is level 3
+|`/content/brand1/region1/tools/config`     |`/content/brand1/region1`         |`/conf/brand1/region1`         |Configuration editor page with level 4 which is blacklisted, next matching absolute parent is level 2
 
 
 ### Context Path Strategy: Root Templates
@@ -42,7 +52,7 @@ OSGi factory configuration: "wcm.io Context-Aware Configuration Context Path Str
 * **Service Ranking**: Priority of context path strategy
 
 
-Detects context paths by matching parent pages against a list of allowed templates for context root. All page between min and max level up to a page with a page matching the templates are defined as context paths.
+This strategy detects context paths by matching parent pages against a list of allowed templates for context root. All page between min and max level up to a page with a page matching the templates are defined as context paths.
 
 Example:
 
