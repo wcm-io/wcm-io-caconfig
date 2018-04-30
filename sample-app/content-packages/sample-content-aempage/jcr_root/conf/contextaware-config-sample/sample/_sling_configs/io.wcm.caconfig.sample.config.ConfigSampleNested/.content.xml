@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Page">
+    <jcr:content
+        jcr:primaryType="cq:PageContent"
+        sling:configPropertyInherit="{Boolean}false"
+        stringParam="Sample value for nested config.">
+        <sub
+            jcr:primaryType="nt:unstructured"
+            sling:configCollectionInherit="{Boolean}true">
+            <item1
+                jcr:primaryType="nt:unstructured"
+                sling:configPropertyInherit="{Boolean}false"
+                boolParam="{Boolean}true"
+                intParam="{Long}5"
+                stringArrayParam="[value1,value2]"
+                subStringParam="Sample value 1 at /sub"/>
+            <item2
+                jcr:primaryType="nt:unstructured"
+                sling:configPropertyInherit="{Boolean}false"
+                intParam="{Long}10"
+                subStringParam="Sample value 2 at /sub"/>
+        </sub>
+        <sub2
+            jcr:primaryType="nt:unstructured"
+            sling:configPropertyInherit="{Boolean}false"
+            sub2StringParam="Sample value at /sub2">
+            <sub
+                jcr:primaryType="nt:unstructured"
+                sling:configPropertyInherit="{Boolean}false"
+                boolParam="{Boolean}true"
+                intParam="{Long}12"
+                stringArrayParam="[value1]"
+                subStringParam="Sample value at /sub2/sub"/>
+            <subList
+                jcr:primaryType="nt:unstructured"
+                sling:configCollectionInherit="{Boolean}true">
+                <item1
+                    jcr:primaryType="nt:unstructured"
+                    sling:configPropertyInherit="{Boolean}false"
+                    boolParam="{Boolean}true"
+                    intParam="{Long}2"
+                    stringArrayParam="[value1,value2]"
+                    subStringParam="Sample value 1 at /sub2/subList"/>
+                <item2
+                    jcr:primaryType="nt:unstructured"
+                    sling:configPropertyInherit="{Boolean}false"
+                    intParam="{Long}4"
+                    subStringParam="Sample value 2 at /sub2/subList"/>
+            </subList>
+        </sub2>
+        <sub2List
+            jcr:primaryType="nt:unstructured"
+            sling:configCollectionInherit="{Boolean}true">
+            <item1
+                jcr:primaryType="nt:unstructured"
+                sling:configPropertyInherit="{Boolean}false"
+                sub2StringParam="Sample value 1 at /sub2List"/>
+            <item2
+                jcr:primaryType="nt:unstructured"
+                sling:configPropertyInherit="{Boolean}false"
+                sub2StringParam="Sample value 2 at /sub2List"/>
+        </sub2List>
+    </jcr:content>
+</jcr:root>
