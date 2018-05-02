@@ -20,7 +20,9 @@
 package io.wcm.caconfig.extensions.contextpath.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +43,10 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.day.cq.wcm.api.NameConstants;
+import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
 
 import io.wcm.wcm.commons.util.Path;
 
@@ -70,6 +76,11 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         required = true)
     String contextPathBlacklistRegex() default "^.*/tools(/config(/.+)?)?$";
 
+    @AttributeDefinition(name = "Template path blacklist",
+            description = "Context paths belonging to a page matching one of the given template paths are not allowed.",
+            required = true)
+    String[] templatePathsBlacklist();
+
     @AttributeDefinition(name = "Config path patterns",
         description = "Expression to derive the config path from the context path. Regex group references like $1 can be used.",
         required = true)
@@ -88,6 +99,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
   private Pattern contextPathBlacklistRegex;
   private String[] configPathPatterns;
   private int serviceRanking;
+  private Set<String> templatePathsBlacklist;
 
   private static final Logger log = LoggerFactory.getLogger(AbsoluteParentContextPathStrategy.class);
 
@@ -115,6 +127,8 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     }
     configPathPatterns = config.configPathPatterns();
     serviceRanking = config.service_ranking();
+    // make sure this is never null (only DS 1.4 initializes them always to empty arrays)
+    templatePathsBlacklist = config.templatePathsBlacklist() != null ? new HashSet<>(Arrays.asList(config.templatePathsBlacklist())) : Collections.emptySet();
   }
 
   @Override
@@ -124,12 +138,18 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     }
 
     ResourceResolver resourceResolver = resource.getResourceResolver();
+    PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
     List<ContextResource> contextResources = new ArrayList<>();
     for (int level : this.levels) {
       String contextPath = getAbsoluteParent(resource, level, resourceResolver);
       if (StringUtils.isNotEmpty(contextPath)) {
         Resource contextResource = resource.getResourceResolver().getResource(contextPath);
         if (contextResource != null) {
+          // first check if resource is blacklisted
+          if (isResourceBelongingToBlacklistedTemplates(contextResource, pageManager)) {
+            log.trace("Resource '{}' is belonging to a page derived from a blacklisted template, skipping level {}", contextPath, level);
+            break;
+          }
           for (String configPathPattern : configPathPatterns) {
             String configRef = deriveConfigRef(contextPath, configPathPattern, resourceResolver);
             if (configRef != null) {
@@ -166,6 +186,31 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     else {
       return null;
     }
+  }
+
+  private boolean isResourceBelongingToBlacklistedTemplates(Resource resource, PageManager pageManager) {
+    if (templatePathsBlacklist.isEmpty()) {
+      return false;
+    }
+    Page page = pageManager.getContainingPage(resource);
+    // if no containing page could be determined, we don't blacklist
+    if (page == null) {
+      log.trace("Resource '{}' is not part of page, blacklisted templates are not considered.", resource.getPath());
+      return false;
+    }
+    String templatePath = page.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
+    if (templatePath != null) {
+      if (templatePathsBlacklist.contains(templatePath)) {
+        return true;
+      }
+    }
+    else {
+      log.trace("Resource '{}' is part of page '{}' which doesn't contain any template property, blacklisted templates are not considered.",
+          resource.getPath(), page.getPath());
+      return false;
+    }
+    log.trace("Resource '{}' is part of page '{}' but is not based on any of the blacklisted templates.", resource.getPath(), page.getPath());
+    return false;
   }
 
 }
