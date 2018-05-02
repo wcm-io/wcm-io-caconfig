@@ -138,6 +138,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     }
 
     ResourceResolver resourceResolver = resource.getResourceResolver();
+    PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
     List<ContextResource> contextResources = new ArrayList<>();
     for (int level : this.levels) {
       String contextPath = getAbsoluteParent(resource, level, resourceResolver);
@@ -145,9 +146,9 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         Resource contextResource = resource.getResourceResolver().getResource(contextPath);
         if (contextResource != null) {
           // first check if resource is blacklisted
-          if (isResourceBelongingToBlacklistedTemplates(contextResource, resourceResolver.adaptTo(PageManager.class))) {
-              log.debug("Resource '{}' is belonging to a page derived from a blacklisted template, skipping level {}", contextPath, level);
-              break;
+          if (isResourceBelongingToBlacklistedTemplates(contextResource, pageManager)) {
+            log.trace("Resource '{}' is belonging to a page derived from a blacklisted template, skipping level {}", contextPath, level);
+            break;
           }
           for (String configPathPattern : configPathPatterns) {
             String configRef = deriveConfigRef(contextPath, configPathPattern, resourceResolver);
@@ -194,7 +195,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     Page page = pageManager.getContainingPage(resource);
     // if no containing page could be determined, we don't blacklist
     if (page == null) {
-      log.debug("Resource '{}' is not part of page, blacklisted templates are not considered.", resource.getPath());
+      log.trace("Resource '{}' is not part of page, blacklisted templates are not considered.", resource.getPath());
       return false;
     }
     String templatePath = page.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
@@ -202,11 +203,14 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
       if (templatePathsBlacklist.contains(templatePath)) {
         return true;
       }
-    } else {
-      log.debug("Resource '{}' is part of page '{}' which doesn't contain any template property, blacklisted templates are not considered.", resource.getPath(), page.getPath());
+    }
+    else {
+      log.trace("Resource '{}' is part of page '{}' which doesn't contain any template property, blacklisted templates are not considered.",
+          resource.getPath(), page.getPath());
       return false;
     }
-    log.debug("Resource '{}' is part of page '{}' but is not based on any of the blacklisted templates.", resource.getPath(), page.getPath());
+    log.trace("Resource '{}' is part of page '{}' but is not based on any of the blacklisted templates.", resource.getPath(), page.getPath());
     return false;
   }
+
 }
