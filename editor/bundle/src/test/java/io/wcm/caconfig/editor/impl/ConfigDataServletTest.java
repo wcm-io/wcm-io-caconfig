@@ -52,7 +52,7 @@ import com.google.common.collect.ImmutableSet;
 
 import io.wcm.testing.mock.aem.junit.AemContext;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ConfigDataServletTest {
 
   @Rule
@@ -68,6 +68,12 @@ public class ConfigDataServletTest {
   @Before
   public void setUp() {
     when(configurationPersistenceStrategy.getCollectionParentConfigName(anyString(), nullable(String.class))).then(new Answer<String>() {
+      @Override
+      public String answer(InvocationOnMock invocation) {
+        return (String)invocation.getArgument(0);
+      }
+    });
+    when(configurationPersistenceStrategy.getConfigName(anyString(), nullable(String.class))).then(new Answer<String>() {
       @Override
       public String answer(InvocationOnMock invocation) {
         return (String)invocation.getArgument(0);

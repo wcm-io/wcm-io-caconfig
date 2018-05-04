@@ -55,7 +55,9 @@
           configCacheService.plantConfigCache(response.data.configNames);
         },
         function error(response) {
-          modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, response);
+          modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, {
+            response: response
+          });
         }
       );
     };
@@ -99,7 +101,9 @@
             return current;
           },
           function error(response) {
-            modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, response);
+            modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, {
+              response: response
+            });
           }
         );
     };
@@ -118,7 +122,9 @@
             return parent;
           },
           function error(response) {
-            modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, response);
+            modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, {
+              response: response
+            });
           }
         );
     };
@@ -136,7 +142,9 @@
           return parent;
         },
         function error(response) {
-          modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, response);
+          modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, {
+            response: response
+          });
         }
       );
     };

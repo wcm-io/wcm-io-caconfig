@@ -21,22 +21,28 @@
   "use strict";
 
   angular.module("io.wcm.caconfig.editor")
+    .config(removeHashPrefix)
     .config(configureRoutes);
 
   configureRoutes.$inject = ["$routeProvider"];
+  removeHashPrefix.$inject = ["$locationProvider"];
 
   function configureRoutes($routeProvider) {
     $routeProvider
-    .when("/:configName*", {
-      templateUrl: "detailView.html",
-      controller: "DetailController",
-      controllerAs: "detail"
-    })
-    .otherwise({
-      templateUrl: "overviewView.html",
-      controller: "OverviewController",
-      controllerAs: "overview"
-    });
+      .when("/:configName*", {
+        templateUrl: "detailView.html",
+        controller: "DetailController",
+        controllerAs: "detail"
+      })
+      .otherwise({
+        templateUrl: "overviewView.html",
+        controller: "OverviewController",
+        controllerAs: "overview"
+      });
+  }
+
+  function removeHashPrefix($locationProvider) {
+    $locationProvider.hashPrefix("");
   }
 
 }(angular));

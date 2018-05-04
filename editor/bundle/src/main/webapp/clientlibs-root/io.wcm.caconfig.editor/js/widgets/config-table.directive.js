@@ -28,9 +28,7 @@
 
   configTable.$inject = ["templateUrlList", "cssClasses", "propertyNames", "$rootScope", "currentConfigService", "$compile", "$timeout"];
 
-  /* eslint-disable max-params */
   function configTable(templateList, cssClasses, propertyNames, $rootScope, currentConfigService, $compile, $timeout) {
-  /* eslint-enable max-params */
     var propertyRowsCache = {};
 
     var directive = {
@@ -104,12 +102,12 @@
      */
     function getPropertyRowsHtml(config, isPreview) {
       var configPropertyTypes,
-          propertyRowOptions,
-          property,
-          propertyRows,
-          propertyType,
-          numProps,
-          i;
+        propertyRowOptions,
+        property,
+        propertyRows,
+        propertyType,
+        numProps,
+        i;
 
       var configName = config.configName + (isPreview ? "-preview" : "");
       var getRowFn = isPreview ? getPropertyRowPreviewHtml : getPropertyRowHtml;

@@ -15,15 +15,16 @@ See [Apache Sling Context-Aware Configuration documentation][sling-caconfig] for
 
 In most cases you will deploy the configuration editor bundle `io.wcm.caconfig.editor` together with your application. In this case you should define your own template definition for it which controls where editor config pages can created (see next section).
 
-Alternatively you can deploy this AEM package which contains the config editor bundle together with a template definition which allows all paths below `/content`:
+Alternatively you can deploy it using an AEM package which contains the config editor bundle together with a template definition which allows all paths below `/content`.
 
 |---|---|---|
-| [wcm.io Context-Aware Configuration Editor AEM Package with Template Definition](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package) |
+| [wcm.io Context-Aware Configuration Editor Bundle (JAR)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor) |
+| [wcm.io Context-Aware Configuration Editor AEM Package with Template Definition (ZIP)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.wcm%22%20AND%20a%3A%22io.wcm.caconfig.editor.package%22) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.wcm%22%20AND%20a%3A%22io.wcm.caconfig.editor.package%22) |
 
 
 When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles (API, SPI, Impl) to AEM. In AEM 6.3 you have to update the Apache Sling Context-Aware Configuration SPI and Impl version to the latest version if you want to use Editor version 1.1 and upwards. See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-caconfig-in-aem] for details.
 
-In most cases the default persistence implementation provided by Apache Sling or AEM 6.3 is not enough for the needs of AEM applications. [wcm.io Context-Aware Configuration Extensions][wcmio-caconfig-extensions] provide additional implementations and features.
+In most cases the default persistence implementation provided by Apache Sling or AEM 6.3/6.4 is not enough for the needs of AEM applications. [wcm.io Context-Aware Configuration Extensions][wcmio-caconfig-extensions] provide additional implementations and features.
 
 
 ### Defining the editor template
@@ -64,8 +65,14 @@ For a singleton configuration all configuration parameters are displayed and can
 For a configuration collection all existing collection items are displayed, and new ones can be added after entering a name. Single items or the whole configuration collection can be removed.
 
 
-
 The editor is based on AngularJS and CoralUI.
+
+
+### Publish configurations
+
+By default, Context-Aware configurations are stored below `/conf` and can thus not published by editors using the AEM Author GUI. The Editor provides an "publish this page" button, which published the editor page itself.
+
+It is recommended to also deploy the [wcm.io Context-Aware Configuration Extensions][wcmio-caconfig-extensions] and activate the [AEM Page persistence strategy][wcmio-caconfig-extensions-persistence-strategies]. Then the [reference provider][wcmio-caconfig-extensions-reference-provider] also included in the extensions bundles detects changed and unpublished configuration pages below `/conf` when publishing the editor page, and allows to publish the configurations as well.
 
 
 ### Using custom edit widgets
@@ -99,7 +106,7 @@ You should disable the configuration editor on publish by applying an OSGi confi
 
 ```
 [configurations runModes=publish]
-  
+
   # Disable Configuration Editor on publish
   io.wcm.caconfig.editor.impl.EditorConfig
     enabled=B"false"
@@ -110,3 +117,5 @@ You should disable the configuration editor on publish by applying an OSGi confi
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
 [deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
 [wcmio-caconfig-extensions]: http://wcm.io/caconfig/extensions/
+[wcmio-caconfig-extensions-persistence-strategies]: http://wcm.io/caconfig/extensions/persistence-strategies.html
+[wcmio-caconfig-extensions-reference-provider]: http://wcm.io/caconfig/extensions/reference-provider.html

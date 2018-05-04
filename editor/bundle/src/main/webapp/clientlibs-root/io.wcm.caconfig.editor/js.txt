@@ -1,7 +1,5 @@
 #base=js
 
-lib/bindonce.min.js
-
 app.module.js
 templates.module.js
 utilities.module.js
@@ -16,6 +14,7 @@ editor/data-helper.service.js
 editor/data.service.js
 editor/detail.controller.js
 editor/overview.controller.js
+editor/publish.service.js
 
 modals/modals.module.js
 modals/modal.service.js
@@ -23,6 +22,7 @@ modals/add-collection-item.controller.js
 modals/add-config.controller.js
 modals/delete-config.controller.js
 modals/error.controller.js
+modals/info.controller.js
 modals/save-config.controller.js
 
 widgets/widgets.module.js

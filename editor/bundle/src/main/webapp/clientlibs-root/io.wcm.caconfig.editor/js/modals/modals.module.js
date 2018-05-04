@@ -24,7 +24,7 @@
     "io.wcm.caconfig.templates",
     "io.wcm.caconfig.utilities"
   ])
-  .run(initRun);
+    .run(initRun);
 
   initRun.$inject = ["$rootScope"];
 
@@ -34,6 +34,7 @@
       addConfig: "addConfigModal.html",
       deleteConfig: "deleteConfigModal.html",
       error: "errorModal.html",
+      info: "infoModal.html",
       saveConfig: "saveConfigModal.html"
     };
   }

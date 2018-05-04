@@ -21,15 +21,31 @@
   "use strict";
 
   angular.module("io.wcm.caconfig.modals")
-    .controller("DeleteConfigController", DeleteConfigController);
+    .controller("InfoController", InfoController);
 
-  DeleteConfigController.$inject = ["modalService"];
+  InfoController.$inject = ["$rootScope", "$timeout", "modalService"];
 
-  function DeleteConfigController(modalService) {
-    modalService.addModal(modalService.modal.DELETE_CONFIG, {
-      element: "#caconfig-deleteConfigModal",
-      type: "notice",
+  function InfoController($rootScope, $timeout, modalService) {
+    var that = this;
+    that.message = "";
+
+    modalService.addModal(modalService.modal.INFO, {
+      element: "#caconfig-infoModal",
+      type: "info",
       visible: false
+    });
+
+    modalService.onEvent(modalService.modal.INFO, modalService.event.CUSTOM_MESSAGE, function (e, data) {
+      data = data || {};
+      that.message = data.message || "";
+
+      $timeout(function() {
+        modalService.show(modalService.modal.INFO);
+      }, 10);
+    });
+
+    modalService.onEvent(modalService.modal.INFO, "hide", function () {
+      that.message = "";
     });
   }
 }(angular));

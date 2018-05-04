@@ -26,7 +26,9 @@
   angular.module("io.wcm.caconfig.utilities")
     .service("uiService", UIService);
 
-  function UIService() {
+  UIService.$inject = ["$document"];
+
+  function UIService($document) {
     var that = this;
     var ui = {};
 
@@ -89,5 +91,13 @@
       }
       return null;
     };
+
+    that.showLoading = function () {
+      $document.find(".caconfig-loading").show();
+    }
+
+    that.hideLoading = function () {
+      $document.find(".caconfig-loading").hide();
+    }
   }
 }(angular, CUI));

@@ -48,7 +48,7 @@
   <properties>
     <site.url.module.prefix>caconfig/editor</site.url.module.prefix>
   </properties>
-  
+
   <modules>
     <module>bundle</module>
     <module>package</module>

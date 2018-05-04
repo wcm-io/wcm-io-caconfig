@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, _) {
+(function (angular) {
   "use strict";
 
   /**
@@ -123,8 +123,8 @@
     function buildProperties(config) {
       var properties = {};
       var i,
-          property,
-          tempArray;
+        property,
+        tempArray;
       for (i = 0; (config.properties && i < config.properties.length); i++) {
         property = config.properties[i];
 
@@ -137,10 +137,10 @@
             properties[property.name] = null;
           }
           else if (angular.isArray(property.value)) {
-            tempArray = _.reject(property.value, function (element) {
-              return angular.isUndefined(element) || element === null || element === "";
+            tempArray = property.value.filter(function (element) {
+              return angular.isDefined(element) && element !== null && element !== "";
             });
-            properties[property.name] = tempArray.length ? _.clone(tempArray) : null;
+            properties[property.name] = tempArray.length ? angular.copy(tempArray) : null;
           }
           else {
             properties[property.name] = property.value;
@@ -153,4 +153,4 @@
     }
   }
 
-}(angular, _));
+}(angular));

@@ -5,7 +5,6 @@
   ],
   "dependencies": [
     "coralui2",
-    "underscore",
     "io.wcm.caconfig.editor.angularjs"
   ]
 }

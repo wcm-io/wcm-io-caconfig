@@ -21,13 +21,11 @@
   "use strict";
 
   angular.module("io.wcm.caconfig.widgets")
-      .directive("caconfigPathbrowser", pathbrowser);
+    .directive("caconfigPathbrowser", pathbrowser);
 
-  pathbrowser.$inject = ["templateUrlList", "inputMap", "directivePropertyPrefixes", "$rootScope", "configService"];
+  pathbrowser.$inject = ["templateUrlList", "inputMap", "directivePropertyPrefixes", "$rootScope", "$http", "configService"];
 
-  /* eslint-disable max-params */
-  function pathbrowser(templateList, inputMap, directivePropertyPrefixes, $rootScope, configService) {
-  /* eslint-enable max-params */
+  function pathbrowser(templateList, inputMap, directivePropertyPrefixes, $rootScope, $http, configService) {
     var directive = {
       replace: true,
       templateUrl: templateList.pathbrowser,
@@ -62,7 +60,7 @@
       // get root path from config
       options.rootPath = options.rootPath || "/content";
       // if rootPathContext is set set root path to current context path
-      if (options.rootPathContext == "true") {
+      if (options.rootPathContext === "true") {
         options.rootPath = configService.getState().contextPath || options.rootPath;
         delete options.rootPathContext;
       }
@@ -80,29 +78,34 @@
         widget.off();
       });
     }
-  }
 
-  /**
-   * Helper method for the CUI:PathBrowser widget
-   * @param  {String}    path
-   * @param  {Function=} callback
-   * @return {Boolean}
-   */
-  function loadAutocompleteOptions (path, callback) {
-    jQuery.get(path + ".pages.json", {
-      predicate: "hierarchyNotFile"
-    },
-    function(data) {
-      var pages = data.pages;
-      var result = [];
-      var i;
-      for (i = 0; i < pages.length; i++) {
-        result.push(pages[i].label);
-      }
-      if (callback) {
-        callback(result);
-      }
-    }, "json");
-    return false;
+    /**
+     * Helper method for the CUI:PathBrowser widget
+     * @param  {String}    path
+     * @param  {Function=} callback
+     * @return {Boolean}
+     */
+    function loadAutocompleteOptions (path, callback) {
+      $http({
+        url: path + ".pages.json",
+        params: {
+          predicate: "hierarchyNotFile"
+        },
+        responseType: "json"
+      })
+        .then(function success(response) {
+          var pages = response.data.pages;
+          var result = [];
+          var i;
+          for (i = 0; i < pages.length; i++) {
+            result.push(pages[i].label);
+          }
+          if (callback) {
+            callback(result);
+          }
+        });
+
+      return false;
+    }
   }
 }(angular));

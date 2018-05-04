@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, $) {
+(function (angular) {
   "use strict";
 
   /**
@@ -27,11 +27,9 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("DetailController", DetailController);
 
-  DetailController.$inject = ["$window", "$rootScope", "$scope", "$timeout", "$route", "$compile", "configService", "modalService"];
+  DetailController.$inject = ["$window", "$document", "$rootScope", "$scope", "$timeout", "$route", "configService", "modalService"];
 
-  /* eslint-disable max-params */
-  function DetailController($window, $rootScope, $scope, $timeout, $route, $compile, configService, modalService) {
-  /* eslint-enable max-params */
+  function DetailController($window, $document, $rootScope, $scope, $timeout, $route, configService, modalService) {
     var that = this;
     var MAX_CONFIGS = Number.POSITIVE_INFINITY;
     var MAX_CONFIGS_PER_PAGE = 32;
@@ -87,28 +85,22 @@
         });
     };
 
-    /**
-     * Show Add Collection Item button (when all collection items visible)
-     */
-    function showAddCollectionItemButton() {
-      $(".caconfig-addCollectionItemButton").show();
-    }
-
     function hideLargeCollectionInfo() {
-      $(".caconfig-largeCollection").hide();
+      $document.find(".caconfig-largeCollection").hide();
     }
 
     that.addCollectionItem = function () {
       modalService.show(modalService.modal.ADD_COLLECTION_ITEM);
       that.configForm.$setDirty();
+      that.showAllConfigs();
     };
 
     function addScrollListener() {
-      $($window).on("scroll", onScrollToBottom);
+      $document.on("scroll", onScrollToBottom);
     }
 
     function removeScrollListener() {
-      $($window).off("scroll", onScrollToBottom);
+      $document.off("scroll", onScrollToBottom);
     }
 
     /**
@@ -154,10 +146,17 @@
       }
 
       that.configLimit = MAX_CONFIGS;
-      showAddCollectionItemButton();
       hideLargeCollectionInfo();
       removeScrollListener();
       that.allConfigsVisible = true;
+    };
+
+    that.toBottom = function() {
+      $document.find("html, body").animate({scrollTop: document.body.scrollHeight});
+    };
+
+    that.toTop = function() {
+      $document.find("html, body").animate({scrollTop: 0});
     };
 
     /**
@@ -195,4 +194,4 @@
         });
     }
   }
-}(angular, jQuery));
+}(angular));

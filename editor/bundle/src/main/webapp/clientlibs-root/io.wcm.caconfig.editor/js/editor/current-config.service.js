@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, _) {
+(function (angular) {
   "use strict";
 
   /**
@@ -56,8 +56,13 @@
     }
 
     that.getCollectionItemNames = function () {
-      return _.map(current.configs, "collectionItemName");
+      var collectionItemNames = current.configs.map(function(config) {
+        return config.collectionItemName;
+      });
+
+      return collectionItemNames;
     };
+
 
     that.getCurrent = function () {
       return current;
@@ -110,9 +115,14 @@
 
     that.getConfigPropertyInherit = function (index) {
       var config = current.configs[index];
-      var configPropertyInherit = _.find(config.properties, {
-        name: propertyNames.CONFIG_PROPERTY_INHERIT
+      var configPropertyInherit = null;
+
+      angular.forEach(config.properties, function(property) {
+        if (property.name === propertyNames.CONFIG_PROPERTY_INHERIT) {
+          configPropertyInherit = property;
+        }
       });
+
       if (!configPropertyInherit) {
         configPropertyInherit = {
           name: propertyNames.CONFIG_PROPERTY_INHERIT,
@@ -145,4 +155,4 @@
     };
   }
 
-}(angular, _));
+}(angular));
