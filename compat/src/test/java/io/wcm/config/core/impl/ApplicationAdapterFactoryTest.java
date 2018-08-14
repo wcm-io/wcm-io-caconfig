@@ -36,6 +36,7 @@ import io.wcm.config.core.management.ApplicationFinder;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class ApplicationAdapterFactoryTest {
 
   @Rule
@@ -61,6 +62,7 @@ public class ApplicationAdapterFactoryTest {
   }
 
   @Test
+  @SuppressWarnings("unused")
   public void testApplicationResource() {
     assertSame(application, underTest.getAdapter(resource, Application.class));
     assertNull(underTest.getAdapter(resource, ApplicationFinder.class));

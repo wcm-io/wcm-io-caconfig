@@ -43,6 +43,7 @@ import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class ConfigurationFinderStrategyBridgeTest {
 
   private static final String APP_1 = "/apps/app1";

@@ -36,6 +36,7 @@ import io.wcm.config.core.management.ApplicationFinder;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class ApplicationImplementationPickerTest {
 
   @Rule
