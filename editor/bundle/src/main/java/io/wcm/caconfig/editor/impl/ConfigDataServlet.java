@@ -111,6 +111,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     }
   }
 
+  @SuppressWarnings("null")
   private JSONObject getConfiguration(Resource contextResource, String configName, boolean collection) throws JSONException {
     JSONObject result;
     if (collection) {
@@ -155,6 +156,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
+  @SuppressWarnings("null")
   private JSONObject toJson(ConfigurationData config, Boolean inherited) throws JSONException {
     JSONObject result = new JSONObject();
 

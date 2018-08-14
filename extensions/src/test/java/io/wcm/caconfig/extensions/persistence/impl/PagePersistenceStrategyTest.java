@@ -51,6 +51,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 
+@SuppressWarnings("null")
 public class PagePersistenceStrategyTest {
 
   @Rule

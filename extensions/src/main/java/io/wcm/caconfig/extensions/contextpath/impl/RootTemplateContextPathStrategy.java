@@ -32,6 +32,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
@@ -125,8 +126,9 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     serviceRanking = config.service_ranking();
   }
 
+  @SuppressWarnings("null")
   @Override
-  public Iterator<ContextResource> findContextResources(Resource resource) {
+  public @NotNull Iterator<ContextResource> findContextResources(@NotNull Resource resource) {
     if (!isValidConfig()) {
       return Collections.emptyIterator();
     }
@@ -165,6 +167,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
         && configPathPatterns.length > 0;
   }
 
+  @SuppressWarnings("null")
   private List<String> getContextPathCandidatesMatchInnermost(Page page, ResourceResolver resourceResolver) {
     List<String> candidates = new ArrayList<>();
     if (page != null) {
@@ -184,6 +187,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     return candidates;
   }
 
+  @SuppressWarnings("null")
   private List<String> getContextPathCandidatesMatchAll(Page page, ResourceResolver resourceResolver) {
     List<String> candidates = new ArrayList<>();
     if (page != null) {

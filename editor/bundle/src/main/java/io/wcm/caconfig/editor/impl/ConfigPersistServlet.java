@@ -82,6 +82,7 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
   private static Logger log = LoggerFactory.getLogger(ConfigPersistServlet.class);
 
   @Override
+  @SuppressWarnings("null")
   protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
     if (!editorConfig.isEnabled()) {
       sendForbiddenWithMessage(response, "Configuration editor is disabled.");
@@ -299,6 +300,7 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
   }
 
   @Override
+  @SuppressWarnings("null")
   protected void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
 
     // get parameters

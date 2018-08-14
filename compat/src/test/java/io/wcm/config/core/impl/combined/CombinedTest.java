@@ -51,6 +51,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 /**
  * Test all configuration services in combination.
  */
+@SuppressWarnings("null")
 public class CombinedTest {
 
   private static final String CONTEXT_RESOURCE_PATH = "/content/region1/site1/en";

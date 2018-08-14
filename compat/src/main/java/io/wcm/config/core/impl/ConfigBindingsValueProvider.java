@@ -41,6 +41,7 @@ import io.wcm.config.api.Configuration;
     Constants.SERVICE_RANKING + ":Integer=100"
 })
 @Designate(ocd = ConfigBindingsValueProvider.Config.class)
+@SuppressWarnings("null")
 public class ConfigBindingsValueProvider implements BindingsValuesProvider {
 
   /**

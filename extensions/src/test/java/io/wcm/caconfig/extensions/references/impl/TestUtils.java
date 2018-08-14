@@ -42,6 +42,7 @@ import com.day.cq.wcm.api.reference.Reference;
 
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+@SuppressWarnings("null")
 final class TestUtils {
 
   private TestUtils() {

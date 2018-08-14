@@ -42,6 +42,7 @@ import com.google.common.collect.Iterators;
  * Helps converting types from object to parameter type.
  */
 @ProviderType
+@SuppressWarnings("null")
 public final class TypeConversion {
 
   /**

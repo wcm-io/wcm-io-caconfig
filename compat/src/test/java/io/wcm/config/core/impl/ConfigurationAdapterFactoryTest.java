@@ -44,6 +44,7 @@ import io.wcm.config.api.Configuration;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class ConfigurationAdapterFactoryTest {
 
   @Rule

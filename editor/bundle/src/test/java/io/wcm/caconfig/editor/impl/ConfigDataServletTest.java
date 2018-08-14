@@ -53,6 +53,7 @@ import com.google.common.collect.ImmutableSet;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
+@SuppressWarnings("null")
 public class ConfigDataServletTest {
 
   @Rule

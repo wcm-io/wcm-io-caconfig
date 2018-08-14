@@ -87,10 +87,12 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
     }
   }
 
+  @SuppressWarnings("null")
   private String getContextPath(Resource contextResource) {
     return configurationResourceResolver.getContextPath(contextResource);
   }
 
+  @SuppressWarnings("null")
   private JSONArray getConfigNames(Resource contextResource) throws JSONException {
     JSONArray output = new JSONArray();
 
@@ -111,6 +113,7 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
     return output;
   }
 
+  @SuppressWarnings("null")
   private boolean hasConfig(Resource contextResource, String configName, boolean collection) {
     if (collection) {
       Collection<ConfigurationData> configs = configManager.getConfigurationCollection(contextResource, configName).getItems();

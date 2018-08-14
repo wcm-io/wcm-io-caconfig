@@ -49,6 +49,7 @@ import io.wcm.config.spi.ConfigurationFinderStrategy;
     @Reference(service = ConfigurationFinderStrategy.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
         name = "configurationFinderStrategy", bind = "bindConfigurationFinderStrategy", unbind = "unbindConfigurationFinderStrategy")
 })
+@SuppressWarnings("null")
 public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
 
   private RankedServices<ConfigurationFinderStrategy> configurationFinderStrategies = new RankedServices<>(Order.ASCENDING);

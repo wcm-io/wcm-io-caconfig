@@ -42,6 +42,7 @@ import io.wcm.config.core.impl.util.AdaptableUtil;
     ADAPTER_CLASSES + "=io.wcm.config.api.Configuration",
     "adapter.condition=If a configuration can be found for the current/given resource or it's parents."
 })
+@SuppressWarnings("null")
 public final class ConfigurationAdapterFactory implements AdapterFactory {
 
   @Reference
