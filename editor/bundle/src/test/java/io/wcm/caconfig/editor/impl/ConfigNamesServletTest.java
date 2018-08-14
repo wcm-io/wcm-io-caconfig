@@ -45,6 +45,7 @@ import com.google.common.collect.ImmutableSortedSet;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class ConfigNamesServletTest {
 
   @Rule

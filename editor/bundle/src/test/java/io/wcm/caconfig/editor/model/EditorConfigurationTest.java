@@ -39,6 +39,7 @@ import io.wcm.caconfig.editor.impl.EditorConfig;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class EditorConfigurationTest {
 
   @Rule
