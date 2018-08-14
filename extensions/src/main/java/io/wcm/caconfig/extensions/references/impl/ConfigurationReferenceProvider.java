@@ -105,6 +105,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
     enabled = false;
   }
 
+  @SuppressWarnings("null")
   @Override
   public List<com.day.cq.wcm.api.reference.Reference> findReferences(Resource resource) {
     if (!enabled) {

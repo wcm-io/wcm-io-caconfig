@@ -32,6 +32,7 @@ import org.apache.sling.testing.mock.osgi.MapUtil;
 
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+@SuppressWarnings("null")
 final class TestUtils {
 
   private TestUtils() {

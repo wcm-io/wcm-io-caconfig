@@ -36,6 +36,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
@@ -131,8 +132,9 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     templatePathsBlacklist = config.templatePathsBlacklist() != null ? new HashSet<>(Arrays.asList(config.templatePathsBlacklist())) : Collections.emptySet();
   }
 
+  @SuppressWarnings("null")
   @Override
-  public Iterator<ContextResource> findContextResources(Resource resource) {
+  public @NotNull Iterator<ContextResource> findContextResources(@NotNull Resource resource) {
     if (!isValidConfig()) {
       return Collections.emptyIterator();
     }
@@ -188,6 +190,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     }
   }
 
+  @SuppressWarnings({ "null", "unused" })
   private boolean isResourceBelongingToBlacklistedTemplates(Resource resource, PageManager pageManager) {
     if (templatePathsBlacklist.isEmpty()) {
       return false;

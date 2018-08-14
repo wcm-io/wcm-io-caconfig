@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.caconfig.spi.ConfigurationOverrideProvider;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -71,8 +72,9 @@ public final class RequestHeaderConfigurationOverrideProvider implements Configu
   @Reference
   private RequestContext requestContext;
 
+  @SuppressWarnings("null")
   @Override
-  public Collection<String> getOverrideStrings() {
+  public @NotNull Collection<String> getOverrideStrings() {
     if (config.enabled()) {
       if (requestContext != null) {
         SlingHttpServletRequest request = requestContext.getThreadRequest();
