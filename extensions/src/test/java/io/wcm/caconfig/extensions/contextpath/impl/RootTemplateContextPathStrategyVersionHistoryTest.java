@@ -29,6 +29,7 @@ public class RootTemplateContextPathStrategyVersionHistoryTest extends RootTempl
 
   @Override
   @Before
+  @SuppressWarnings("null")
   public void setUp() {
     level1 = context.create().page("/content/versionhistory/user1/region1").adaptTo(Resource.class);
     level2 = context.create().page("/content/versionhistory/user1/region1/site1", TEMPLATE_1).adaptTo(Resource.class);

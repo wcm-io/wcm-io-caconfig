@@ -55,7 +55,6 @@ import com.google.common.collect.ImmutableList;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
 public class ConfigPersistServletTest {
 
   private static final String CONFIG_NAME = "testConfig";

@@ -72,7 +72,6 @@ public final class RequestHeaderConfigurationOverrideProvider implements Configu
   @Reference
   private RequestContext requestContext;
 
-  @SuppressWarnings("null")
   @Override
   public @NotNull Collection<String> getOverrideStrings() {
     if (config.enabled()) {

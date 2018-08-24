@@ -300,7 +300,6 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
   }
 
   @Override
-  @SuppressWarnings("null")
   protected void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
 
     // get parameters

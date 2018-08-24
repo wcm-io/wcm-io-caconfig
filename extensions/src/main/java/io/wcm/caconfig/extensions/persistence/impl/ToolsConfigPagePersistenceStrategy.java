@@ -446,7 +446,6 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     return !StringUtils.equals(resource.getName(), "jcr:content");
   }
 
-  @SuppressWarnings("null")
   @Override
   public String getResourcePath(@NotNull Resource contentResource, @NotNull String bucketName, @NotNull String configName) {
     if (!isEnabledAndParamsValid(contentResource, Collections.singleton(bucketName), configName)) {

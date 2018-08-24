@@ -111,7 +111,6 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     }
   }
 
-  @SuppressWarnings("null")
   private JSONObject getConfiguration(Resource contextResource, String configName, boolean collection) throws JSONException {
     JSONObject result;
     if (collection) {
