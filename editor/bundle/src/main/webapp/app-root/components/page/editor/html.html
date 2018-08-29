@@ -111,6 +111,7 @@
             var publishReferencesUrl = "/libs/wcm/core/content/reference.json";
             var publishReplicationUrl = "/bin/replicate.json";
             var publishWizardUrl = "/libs/wcm/core/content/sites/publishpagewizard.html";
+            var currentPagePath = "${currentPage.path @ context='uri'}";
 
             dataServiceProvider.setRestUrls({
               configNamesUrl: configNamesUrl,
@@ -121,7 +122,8 @@
             publishServiceProvider.setRestUrls({
               referencesUrl: publishReferencesUrl,
               replicationUrl: publishReplicationUrl,
-              wizardUrl: publishWizardUrl
+              wizardUrl: publishWizardUrl,
+              currentPagePath: currentPagePath
             });
           }]);
       </script>
