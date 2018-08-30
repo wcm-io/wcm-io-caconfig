@@ -69,6 +69,10 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
         description = "Enable this persistence strategy.")
     boolean enabled() default false;
 
+    @AttributeDefinition(name = "Resource type",
+        description = "Resource type for configuration pages.")
+    String resourceType();
+
     @AttributeDefinition(name = "Service Ranking",
         description = "Priority of persistence strategy (higher = higher priority).")
     int service_ranking() default 1500;
@@ -81,10 +85,12 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
   private ConfigurationManagementSettings configurationManagementSettings;
 
   private boolean enabled;
+  private String resourceType;
 
   @Activate
   void activate(Config value) {
     this.enabled = value.enabled();
+    this.resourceType = value.resourceType();
   }
 
   @Override
@@ -165,7 +171,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       return false;
     }
     String path = getResourcePath(configResourcePath);
-    ensureContainingPage(resolver, path, configurationManagementSettings);
+    ensureContainingPage(resolver, path, resourceType, configurationManagementSettings);
 
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties(), configurationManagementSettings);
 
@@ -184,7 +190,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
 
     // create page for collection parent
     String parentPath = getCollectionParentResourcePath(configResourceCollectionParentPath);
-    ensurePageIfNotContainingPage(resolver, parentPath, configurationManagementSettings);
+    ensurePageIfNotContainingPage(resolver, parentPath, resourceType, configurationManagementSettings);
     Resource configResourceParent = getOrCreateResource(resolver, parentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY, configurationManagementSettings);
     updatePageLastMod(resolver, parentPath);
 
@@ -194,7 +200,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     // create new or overwrite existing children
     for (ConfigurationPersistData item : data.getItems()) {
       String path = getCollectionItemResourcePath(parentPath + "/" + item.getCollectionItemName());
-      ensureContainingPage(resolver, path, configurationManagementSettings);
+      ensureContainingPage(resolver, path, resourceType, configurationManagementSettings);
       getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties(), configurationManagementSettings);
       updatePageLastMod(resolver, path);
     }

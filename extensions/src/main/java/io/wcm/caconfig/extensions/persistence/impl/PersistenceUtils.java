@@ -20,6 +20,7 @@
 package io.wcm.caconfig.extensions.persistence.impl;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
+import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -76,11 +77,12 @@ final class PersistenceUtils {
    * If the path does not contain /jcr:content nothing is done.
    * @param resolver Resource resolver
    * @param configResourcePath Configuration resource path
-   * @param configurationManagementSettings
+   * @param resourceType Resource type for page (if not template is set)
+   * @param configurationManagementSettings Configuration management settings
    */
   public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath,
-      ConfigurationManagementSettings configurationManagementSettings) {
-    ensureContainingPage(resolver, configResourcePath, null, null, configurationManagementSettings);
+      String resourceType, ConfigurationManagementSettings configurationManagementSettings) {
+    ensureContainingPage(resolver, configResourcePath, null, resourceType, null, configurationManagementSettings);
   }
 
   /**
@@ -90,36 +92,40 @@ final class PersistenceUtils {
    * @param resolver Resource resolver
    * @param configResourcePath Configuration resource path
    * @param template Template for page
+   * @param resourceType Resource type for page (if not template is set)
    * @param parentTemplate Template for parent/intermediate pages
-   * @param configurationManagementSettings
+   * @param configurationManagementSettings Configuration management settings
    */
-  public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath, String template, String parentTemplate,
+  public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath,
+      String template, String resourceType, String parentTemplate,
       ConfigurationManagementSettings configurationManagementSettings) {
     Matcher matcher = PAGE_PATH_PATTERN.matcher(configResourcePath);
     if (!matcher.matches()) {
       return;
     }
     String pagePath = matcher.group(1);
-    ensurePage(resolver, pagePath, template, parentTemplate, configurationManagementSettings);
+    ensurePage(resolver, pagePath, template, resourceType, parentTemplate, configurationManagementSettings);
   }
 
   /**
    * Ensure that a page at the given path exists, if the path is not already contained in a page.
    * @param resolver Resource resolver
    * @param pagePath Page path
-   * @param configurationManagementSettings
+   * @param resourceType Resource type for page (if not template is set)
+   * @param configurationManagementSettings Configuration management settings
    * @return Resource for AEM page or resource inside a page.
    */
   public static Resource ensurePageIfNotContainingPage(ResourceResolver resolver, String pagePath,
-      ConfigurationManagementSettings configurationManagementSettings) {
+      String resourceType, ConfigurationManagementSettings configurationManagementSettings) {
     Matcher matcher = PAGE_PATH_PATTERN.matcher(pagePath);
     if (matcher.matches()) {
       return getOrCreateResource(resolver, pagePath, DEFAULT_FOLDER_NODE_TYPE_IN_PAGE, null, configurationManagementSettings);
     }
-    return ensurePage(resolver, pagePath, null, null, configurationManagementSettings);
+    return ensurePage(resolver, pagePath, null, resourceType, null, configurationManagementSettings);
   }
 
-  private static Resource ensurePage(ResourceResolver resolver, String pagePath, String template, String parentTemplate,
+  private static Resource ensurePage(ResourceResolver resolver, String pagePath,
+      String template, String resourceType, String parentTemplate,
       ConfigurationManagementSettings configurationManagementSettings) {
     // check if page or resource already exists
     Resource resource = resolver.getResource(pagePath);
@@ -132,17 +138,18 @@ final class PersistenceUtils {
     String pageName = ResourceUtil.getName(pagePath);
     Resource parentResource;
     if (StringUtils.isNotEmpty(parentTemplate)) {
-      parentResource = ensurePage(resolver, parentPath, parentTemplate, parentTemplate, configurationManagementSettings);
+      parentResource = ensurePage(resolver, parentPath, parentTemplate, null, parentTemplate, configurationManagementSettings);
     }
     else {
       parentResource = getOrCreateResource(resolver, parentPath, DEFAULT_FOLDER_NODE_TYPE, null, configurationManagementSettings);
     }
 
     // create page
-    return createPage(resolver, parentResource, pageName, template);
+    return createPage(resolver, parentResource, pageName, template, resourceType);
   }
 
-  private static Resource createPage(ResourceResolver resolver, Resource parentResource, String pageName, String template) {
+  private static Resource createPage(ResourceResolver resolver, Resource parentResource, String pageName,
+      String template, String resourceType) {
     String pagePath = parentResource.getPath() + "/" + pageName;
     log.trace("! Create cq:Page node at {}", pagePath);
     try {
@@ -156,6 +163,9 @@ final class PersistenceUtils {
       props.put(JcrConstants.JCR_PRIMARYTYPE, "cq:PageContent");
       if (StringUtils.isNotEmpty(template)) {
         applyPageTemplate(resolver, props, pageName, template);
+      }
+      if (StringUtils.isNotEmpty(resourceType) && props.get(PROPERTY_RESOURCE_TYPE) == null) {
+        props.put(PROPERTY_RESOURCE_TYPE, resourceType);
       }
       resolver.create(pageResource, JCR_CONTENT, props);
 
@@ -176,7 +186,7 @@ final class PersistenceUtils {
     // get sling:resourceType from template definition
     Resource templateContentResource = resolver.getResource(template + "/" + JCR_CONTENT);
     if (templateContentResource != null) {
-      props.put("sling:resourceType", templateContentResource.getValueMap().get("sling:resourceType", String.class));
+      props.put(PROPERTY_RESOURCE_TYPE, templateContentResource.getValueMap().get(PROPERTY_RESOURCE_TYPE, String.class));
     }
   }
 

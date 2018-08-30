@@ -182,7 +182,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
       return false;
     }
     String path = getResourcePath(configResourcePath);
-    ensureContainingPage(resolver, path, config.configPageTemplate(), config.structurePageTemplate(), configurationManagementSettings);
+    ensureContainingPage(resolver, path, config.configPageTemplate(), null, config.structurePageTemplate(), configurationManagementSettings);
 
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties(), configurationManagementSettings);
 
@@ -197,7 +197,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     if (!enabled || !isConfigPagePath(configResourceCollectionParentPath)) {
       return false;
     }
-    ensureContainingPage(resolver, configResourceCollectionParentPath, config.configPageTemplate(), config.structurePageTemplate(),
+    ensureContainingPage(resolver, configResourceCollectionParentPath, config.configPageTemplate(), null, config.structurePageTemplate(),
         configurationManagementSettings);
     Resource configResourceParent = getOrCreateResource(resolver, configResourceCollectionParentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY,
         configurationManagementSettings);
