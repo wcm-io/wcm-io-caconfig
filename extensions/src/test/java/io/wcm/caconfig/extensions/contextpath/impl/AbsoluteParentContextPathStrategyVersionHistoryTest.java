@@ -29,6 +29,7 @@ public class AbsoluteParentContextPathStrategyVersionHistoryTest extends Absolut
 
   @Override
   @Before
+  @SuppressWarnings("null")
   public void setUp() throws Exception {
     level1 = context.create().page("/content/versionhistory/user1/region1").adaptTo(Resource.class);
     level2 = context.create().page("/content/versionhistory/user1/region1/site1").adaptTo(Resource.class);

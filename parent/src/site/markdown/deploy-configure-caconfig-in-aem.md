@@ -2,8 +2,6 @@
 
 [Apache Sling Context-Aware Configuration][sling-caconfig] is part of the AEM product since version 6.3. You can also use it in AEM 6.1 or 6.2 by deploying the required bundles and adding some basic configuration. And if you want to use the latest features provided by [wcm.io Context-Aware Configuration][wcmio-caconfig] you need to deploy some updated bundles from Sling in AEM 6.3 as well.
 
-You do not need to deploy additional bundles in AEM 6.4.
-
 ### Apache Sling Context-Aware Configuration Bundles
 
 Links to the latest versions of Apache Sling Context-Aware Configuration bundles:
@@ -36,7 +34,7 @@ You should apply the same configuration to the Sling Context-Aware Configuration
     configCollectionInheritancePropertyNames=["jcr:content/sling:configCollectionInherit", "jcr:content/mergeList","mergeList"]
 
   org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
-    ignorePropertyNameRegex=["^(jcr|cq):.+$"]
+    ignorePropertyNameRegex=["^(jcr|cq):.+$","^sling:resourceType$"]
     configCollectionPropertiesResourceNames=["jcr:content","."]
 ```
 
@@ -68,11 +66,22 @@ Some configuration for Sling Context-Aware configuration already ships with AEM 
     configCollectionInheritancePropertyNames=["jcr:content/sling:configCollectionInherit", "jcr:content/mergeList","mergeList"]
 
   org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
-    ignorePropertyNameRegex=["^(jcr|cq):.+$"]
+    ignorePropertyNameRegex=["^(jcr|cq):.+$","^sling:resourceType$"]
     configCollectionPropertiesResourceNames=["jcr:content","."]
 ```
 
 If you are using AEM 6.3 and want to write configuration by the Configuration Editor or the Context-Aware Configuration Management API you should also install the [wcm.io Context-Aware Configuration Extensions][wcmio-caconfig-extensions] and activate the ["AEM Page" persistence strategy][wcmio-caconfig-extensions-persistence-aempage] - otherwise you may get subtle problems e.g. when using nested configuration collections.
+
+
+### Updating Sling Context-Aware Configuration in AEM 6.4
+
+You do not need to deploy additional bundles in AEM 6.4, but it is recommended to update this configuration:
+
+```
+  org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
+    ignorePropertyNameRegex=["^(jcr|cq):.+$","^sling:resourceType$"]
+    configCollectionPropertiesResourceNames=["jcr:content","."]
+```
 
 
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html

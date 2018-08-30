@@ -54,6 +54,7 @@ public class ApplicationImplementationPicker implements ImplementationPicker {
     return pickFirstWithoutApplication(implementationsTypes);
   }
 
+  @SuppressWarnings("null")
   private Class<?> pickMatchingApplication(Class<?>[] implementationsTypes, Object adaptable) {
     String applicationId = getApplicationId(adaptable);
     if (applicationId != null) {

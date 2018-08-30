@@ -27,9 +27,6 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.impl.metadata.AnnotationClassParser;
@@ -37,12 +34,15 @@ import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.ConfigurationMetadataProvider;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.reference.Reference;
 
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+@SuppressWarnings("null")
 final class TestUtils {
 
   private TestUtils() {
@@ -79,13 +79,13 @@ final class TestUtils {
       metadata.put(AnnotationClassParser.getConfigurationName(cls), AnnotationClassParser.buildConfigurationMetadata(cls));
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public SortedSet<String> getConfigurationNames() {
       return new TreeSet<>(metadata.keySet());
     }
 
-    @CheckForNull
+    @Nullable
     @Override
     public ConfigurationMetadata getConfigurationMetadata(String s) {
       return metadata.get(s);

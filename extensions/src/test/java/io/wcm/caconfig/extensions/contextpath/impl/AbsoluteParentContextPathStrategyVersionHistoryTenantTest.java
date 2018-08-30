@@ -28,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class AbsoluteParentContextPathStrategyVersionHistoryTenantTest extends AbsoluteParentContextPathStrategyTest {
 
   @Mock

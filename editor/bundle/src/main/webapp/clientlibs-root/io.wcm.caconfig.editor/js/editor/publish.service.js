@@ -68,7 +68,7 @@
       };
 
       that.publishPage = function() {
-        var path = configService.getState().contextPath + "/config";
+        var path = restUrls.currentPagePath;
         CUI.util.state.setSessionItem(DOCUMENT_REFERRER_KEY, location.href);
 
         uiService.showLoading();
@@ -87,7 +87,7 @@
           .then(
             function success(response) {
               if (response.data && response.data.assets && response.data.assets.length === 0) {
-              // Publish directly as there is no asset
+                // Publish directly as there is no asset
                 publish(path);
               }
               else {

@@ -21,6 +21,7 @@ package io.wcm.caconfig.extensions.persistence.impl;
 
 import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfiguration;
 import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigurationCollection;
+import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -53,6 +54,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 
+@SuppressWarnings("null")
 public class ToolsConfigPagePersistenceStrategyTest {
 
   @Rule
@@ -74,7 +76,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
         "structurePageTemplate", "/apps/app1/templates/structurePage");
 
     context.create().resource("/apps/app1/templates/configEditor/jcr:content",
-        "sling:resourceType", "app1/components/page/configEditor");
+        PROPERTY_RESOURCE_TYPE, "app1/components/page/configEditor");
 
     context.create().page("/content/region1");
     context.create().page("/content/region1/site1");
@@ -94,7 +96,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
     assertThat(configPage.getContentResource(), ResourceMatchers.props(
         NameConstants.PN_TEMPLATE, "/apps/app1/templates/configEditor",
         NameConstants.PN_TITLE, "config",
-        "sling:resourceType", "app1/components/page/configEditor"));
+        PROPERTY_RESOURCE_TYPE, "app1/components/page/configEditor"));
     assertThat(configPage.getContentResource("sling:configs/" + SimpleConfig.class.getName()), ResourceMatchers.props(
         "stringParam", "value1",
         "intParam", 123));
@@ -103,7 +105,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
     assertThat(toolsPage.getContentResource(), ResourceMatchers.props(
         NameConstants.PN_TEMPLATE, "/apps/app1/templates/structurePage",
         NameConstants.PN_TITLE, "tools",
-        "sling:resourceType", null));
+        PROPERTY_RESOURCE_TYPE, null));
 
     // read config
     SimpleConfig config = contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).as(SimpleConfig.class);
@@ -130,7 +132,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
     assertThat(configPage.getContentResource(), ResourceMatchers.props(
         NameConstants.PN_TEMPLATE, "/apps/app1/templates/configEditor",
         NameConstants.PN_TITLE, "config",
-        "sling:resourceType", "app1/components/page/configEditor"));
+        PROPERTY_RESOURCE_TYPE, "app1/components/page/configEditor"));
     assertThat(configPage.getContentResource("sling:configs/" + ListConfig.class.getName() + "/item0"), ResourceMatchers.props(
         "stringParam", "value1",
         "intParam", 123));
@@ -142,7 +144,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
     assertThat(toolsPage.getContentResource(), ResourceMatchers.props(
         NameConstants.PN_TEMPLATE, "/apps/app1/templates/structurePage",
         NameConstants.PN_TITLE, "tools",
-        "sling:resourceType", null));
+        PROPERTY_RESOURCE_TYPE, null));
 
     // read config
     List<ListConfig> configs = ImmutableList.copyOf(contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).asCollection(ListConfig.class));
@@ -174,7 +176,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
     assertThat(configPage.getContentResource(), ResourceMatchers.props(
         NameConstants.PN_TEMPLATE, "/apps/app1/templates/configEditor",
         NameConstants.PN_TITLE, "config",
-        "sling:resourceType", "app1/components/page/configEditor"));
+        PROPERTY_RESOURCE_TYPE, "app1/components/page/configEditor"));
 
     assertThat(configPage.getContentResource("sling:configs/" + ListNestedConfig.class.getName() + "/item0"),
         ResourceMatchers.props("stringParam", "value1", "intParam", 123));

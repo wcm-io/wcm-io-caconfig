@@ -155,6 +155,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
+  @SuppressWarnings("null")
   private JSONObject toJson(ConfigurationData config, Boolean inherited) throws JSONException {
     JSONObject result = new JSONObject();
 

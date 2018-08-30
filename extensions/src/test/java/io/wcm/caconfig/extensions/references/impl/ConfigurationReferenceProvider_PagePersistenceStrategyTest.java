@@ -33,6 +33,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -51,13 +52,14 @@ import io.wcm.testing.mock.aem.junit.AemContextCallback;
 /**
  * Test the {@link ConfigurationReferenceProvider} with the {@link PagePersistenceStrategy}.
  */
+@SuppressWarnings("null")
 public class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
 
   @Rule
   public AemContext context = new AemContextBuilder()
       .beforeSetUp(new AemContextCallback() {
         @Override
-        public void execute(AemContext ctx) {
+        public void execute(@NotNull AemContext ctx) {
           // also find sling:configRef props in cq:Page/jcr:content nodes
           MockOsgi.setConfigForPid(ctx.bundleContext(), "org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy",
               "configRefResourceNames", new String[] { "jcr:content", "." });

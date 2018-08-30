@@ -21,6 +21,7 @@ package io.wcm.caconfig.extensions.persistence.impl;
 
 import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfiguration;
 import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigurationCollection;
+import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -51,6 +52,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 
+@SuppressWarnings("null")
 public class PagePersistenceStrategyTest {
 
   @Rule
@@ -61,6 +63,10 @@ public class PagePersistenceStrategyTest {
           // also find sling:configRef props in cq:Page/jcr:content nodes
           MockOsgi.setConfigForPid(ctx.bundleContext(), "org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy",
               "configRefResourceNames", new String[] { "jcr:content", "." });
+          // AEM-specific configuration management settings
+          MockOsgi.setConfigForPid(ctx.bundleContext(), "org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl",
+              "ignorePropertyNameRegex", new String[] { "^(jcr|cq):.+", "^" + PROPERTY_RESOURCE_TYPE + "$" },
+              "configCollectionPropertiesResourceNames", new String[] { "jcr:content", "." });
         }
       })
       .plugin(CACONFIG)
@@ -266,6 +272,50 @@ public class PagePersistenceStrategyTest {
     ListConfig subListConfig2 = subListConfigs.get(1);
     assertEquals("value4", subListConfig2.stringParam());
     assertEquals(456, subListConfig2.intParam());
+  }
+
+  @Test
+  public void testSimpleConfig_ResourceType() throws Exception {
+    context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true,
+        "resourceType", "app1/components/page/config");
+
+    // write config
+    writeConfiguration(context, contentPage.getPath(), SimpleConfig.class.getName(),
+        "stringParam", "value1",
+        "intParam", 123);
+
+    // assert storage in page in /conf
+    Page configPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + SimpleConfig.class.getName());
+    assertThat(configPage.getContentResource(), ResourceMatchers.props("stringParam", "value1", "intParam", 123,
+        PROPERTY_RESOURCE_TYPE, "app1/components/page/config"));
+
+  }
+
+  @Test
+  public void testListConfig_ResourceType() throws Exception {
+    context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true,
+        "resourceType", "app1/components/page/config");
+
+    // write config
+    writeConfigurationCollection(context, contentPage.getPath(), ListConfig.class.getName(), ImmutableList.of(
+        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1", "intParam", 123),
+        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value2", "intParam", 234)),
+        ImmutableMap.<String, Object>of("sling:configCollectionInherit", true));
+
+    // assert storage in page in /conf
+    Page parentPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName());
+    assertNotNull(parentPage);
+    assertTrue(parentPage.getContentResource().getValueMap().get("sling:configCollectionInherit", false));
+    assertThat(parentPage.getContentResource(), ResourceMatchers.props(PROPERTY_RESOURCE_TYPE, "app1/components/page/config"));
+
+    Page configPage1 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName() + "/item0");
+    assertThat(configPage1.getContentResource(), ResourceMatchers.props("stringParam", "value1", "intParam", 123));
+    assertThat(configPage1.getContentResource(), ResourceMatchers.props(PROPERTY_RESOURCE_TYPE, "app1/components/page/config"));
+
+    Page configPage2 = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName() + "/item1");
+    assertThat(configPage2.getContentResource(), ResourceMatchers.props("stringParam", "value2", "intParam", 234));
+    assertThat(configPage2.getContentResource(), ResourceMatchers.props(PROPERTY_RESOURCE_TYPE, "app1/components/page/config"));
+
   }
 
 }

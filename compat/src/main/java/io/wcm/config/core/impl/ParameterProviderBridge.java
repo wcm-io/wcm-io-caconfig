@@ -51,6 +51,7 @@ import io.wcm.config.spi.ParameterProvider;
     @Reference(service = ParameterProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
         name = "parameterProvider", bind = "bindParameterProvider", unbind = "unbindParameterProvider")
 })
+@SuppressWarnings("null")
 public class ParameterProviderBridge implements ConfigurationMetadataProvider, ChangeListener {
 
   /**

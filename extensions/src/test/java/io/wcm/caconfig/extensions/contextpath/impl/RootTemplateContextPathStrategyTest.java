@@ -33,6 +33,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class RootTemplateContextPathStrategyTest {
 
   static final String TEMPLATE_1 = "/apps/app1/templates/template1";

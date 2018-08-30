@@ -33,6 +33,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class AbsoluteParentContextPathStrategyTest {
 
   @Rule

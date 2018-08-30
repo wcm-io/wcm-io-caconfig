@@ -38,9 +38,11 @@ import org.junit.Test;
 
 import io.wcm.config.core.management.util.ConversionStringUtils;
 
+@SuppressWarnings("null")
 public class TypeConversionOsgiPropertyTest {
 
   @Test
+  @SuppressWarnings("unused")
   public void testString() {
     assertEquals("value", osgiPropertyToObject("value", String.class, null));
     assertNull(osgiPropertyToObject(null, String.class, null));
@@ -48,6 +50,7 @@ public class TypeConversionOsgiPropertyTest {
   }
 
   @Test
+  @SuppressWarnings("unused")
   public void testStringArray() {
     assertArrayEquals(new String[] {
         "value"

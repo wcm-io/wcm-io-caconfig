@@ -54,6 +54,8 @@ import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceStrategy2;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -120,7 +122,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public Resource getResource(Resource resource) {
+  public Resource getResource(@NotNull Resource resource) {
     if (!enabled || !isConfigPagePath(resource.getPath())) {
       return null;
     }
@@ -128,17 +130,17 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public Resource getCollectionParentResource(Resource resource) {
+  public Resource getCollectionParentResource(@NotNull Resource resource) {
     return getResource(resource);
   }
 
   @Override
-  public Resource getCollectionItemResource(Resource resource) {
+  public Resource getCollectionItemResource(@NotNull Resource resource) {
     return getResource(resource);
   }
 
   @Override
-  public String getResourcePath(String resourcePath) {
+  public String getResourcePath(@NotNull String resourcePath) {
     if (!enabled || !isConfigPagePath(resourcePath)) {
       return null;
     }
@@ -146,17 +148,17 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public String getCollectionParentResourcePath(String resourcePath) {
+  public String getCollectionParentResourcePath(@NotNull String resourcePath) {
     return getResourcePath(resourcePath);
   }
 
   @Override
-  public String getCollectionItemResourcePath(String resourcePath) {
+  public String getCollectionItemResourcePath(@NotNull String resourcePath) {
     return getResourcePath(resourcePath);
   }
 
   @Override
-  public String getConfigName(String configName, String relatedConfigPath) {
+  public String getConfigName(@NotNull String configName, @Nullable String relatedConfigPath) {
     if (!enabled || (relatedConfigPath != null && !isConfigPagePath(relatedConfigPath))) {
       return null;
     }
@@ -164,22 +166,23 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public String getCollectionParentConfigName(String configName, String relatedConfigPath) {
+  public String getCollectionParentConfigName(@NotNull String configName, @Nullable String relatedConfigPath) {
     return getConfigName(configName, relatedConfigPath);
   }
 
   @Override
-  public String getCollectionItemConfigName(String configName, String relatedConfigPath) {
+  public String getCollectionItemConfigName(@NotNull String configName, @Nullable String relatedConfigPath) {
     return getConfigName(configName, relatedConfigPath);
   }
 
   @Override
-  public boolean persistConfiguration(ResourceResolver resolver, String configResourcePath, ConfigurationPersistData data) {
+  public boolean persistConfiguration(@NotNull ResourceResolver resolver, @NotNull String configResourcePath,
+      @NotNull ConfigurationPersistData data) {
     if (!enabled || !isConfigPagePath(configResourcePath)) {
       return false;
     }
     String path = getResourcePath(configResourcePath);
-    ensureContainingPage(resolver, path, config.configPageTemplate(), config.structurePageTemplate(), configurationManagementSettings);
+    ensureContainingPage(resolver, path, config.configPageTemplate(), null, config.structurePageTemplate(), configurationManagementSettings);
 
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties(), configurationManagementSettings);
 
@@ -189,11 +192,12 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public boolean persistConfigurationCollection(ResourceResolver resolver, String configResourceCollectionParentPath, ConfigurationCollectionPersistData data) {
+  public boolean persistConfigurationCollection(@NotNull ResourceResolver resolver, @NotNull String configResourceCollectionParentPath,
+      @NotNull ConfigurationCollectionPersistData data) {
     if (!enabled || !isConfigPagePath(configResourceCollectionParentPath)) {
       return false;
     }
-    ensureContainingPage(resolver, configResourceCollectionParentPath, config.configPageTemplate(), config.structurePageTemplate(),
+    ensureContainingPage(resolver, configResourceCollectionParentPath, config.configPageTemplate(), null, config.structurePageTemplate(),
         configurationManagementSettings);
     Resource configResourceParent = getOrCreateResource(resolver, configResourceCollectionParentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY,
         configurationManagementSettings);
@@ -216,7 +220,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public boolean deleteConfiguration(ResourceResolver resolver, String configResourcePath) {
+  public boolean deleteConfiguration(@NotNull ResourceResolver resolver, @NotNull String configResourcePath) {
     if (!enabled || !isConfigPagePath(configResourcePath)) {
       return false;
     }
@@ -240,7 +244,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
    * Searches the resource hierarchy upwards for all config references and returns them.
    */
   @SuppressWarnings("unchecked")
-  private Iterator<String> findConfigRefs(final Resource startResource, final Collection<String> bucketNames) {
+  private Iterator<String> findConfigRefs(@NotNull final Resource startResource, @NotNull final Collection<String> bucketNames) {
 
     // collect all context path resources (but filter out those without config reference)
     final Iterator<ContextResource> contextResources = new FilterIterator(contextPathStrategy.findContextResources(startResource),
@@ -292,7 +296,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public Resource getResource(final Resource contentResource, final Collection<String> bucketNames, final String configName) {
+  public Resource getResource(@NotNull final Resource contentResource, @NotNull final Collection<String> bucketNames, @NotNull final String configName) {
     Iterator<Resource> resources = getResourceInheritanceChain(contentResource, bucketNames, configName);
     if (resources != null && resources.hasNext()) {
       return resources.next();
@@ -333,7 +337,8 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public Iterator<Resource> getResourceInheritanceChain(Resource contentResource, Collection<String> bucketNames, String configName) {
+  public Iterator<Resource> getResourceInheritanceChain(@NotNull Resource contentResource, @NotNull Collection<String> bucketNames,
+      @NotNull String configName) {
     if (!isEnabledAndParamsValid(contentResource, bucketNames, configName)) {
       return null;
     }
@@ -390,7 +395,8 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public Collection<Resource> getResourceCollection(final Resource contentResource, final Collection<String> bucketNames, final String configName) {
+  public Collection<Resource> getResourceCollection(@NotNull final Resource contentResource, @NotNull final Collection<String> bucketNames,
+      @NotNull final String configName) {
     if (!isEnabledAndParamsValid(contentResource, bucketNames, configName)) {
       return null;
     }
@@ -406,8 +412,8 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
 
   @SuppressWarnings("unchecked")
   @Override
-  public Collection<Iterator<Resource>> getResourceCollectionInheritanceChain(final Resource contentResource,
-      final Collection<String> bucketNames, final String configName) {
+  public Collection<Iterator<Resource>> getResourceCollectionInheritanceChain(@NotNull final Resource contentResource,
+      @NotNull final Collection<String> bucketNames, @NotNull final String configName) {
     if (!isEnabledAndParamsValid(contentResource, bucketNames, configName)) {
       return null;
     }
@@ -441,7 +447,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public String getResourcePath(Resource contentResource, String bucketName, String configName) {
+  public String getResourcePath(@NotNull Resource contentResource, @NotNull String bucketName, @NotNull String configName) {
     if (!isEnabledAndParamsValid(contentResource, Collections.singleton(bucketName), configName)) {
       return null;
     }
@@ -460,7 +466,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
-  public String getResourceCollectionParentPath(Resource contentResource, String bucketName, String configName) {
+  public String getResourceCollectionParentPath(@NotNull Resource contentResource, @NotNull String bucketName, @NotNull String configName) {
     return getResourcePath(contentResource, bucketName, configName);
   }
 

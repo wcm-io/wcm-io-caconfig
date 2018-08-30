@@ -48,6 +48,7 @@ import io.wcm.config.spi.ParameterProvider;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class ParameterOverrideProviderBridgeTest {
 
   private static final Map<String, String> OVERRIDES_LEGACY = ImmutableMap.<String, String>builder()
