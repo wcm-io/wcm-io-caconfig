@@ -96,7 +96,7 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
         description = "Priority of context path strategy (higher = higher priority).")
     int service_ranking() default 2000;
 
-    String webconsole_configurationFactory_nameHint() default "{applicationId} templates={templatePaths}";
+    String webconsole_configurationFactory_nameHint() default "templates={templatePaths}, path={contextPathRegex}";
 
   }
 

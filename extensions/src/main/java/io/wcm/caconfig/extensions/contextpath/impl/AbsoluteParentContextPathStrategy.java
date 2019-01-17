@@ -91,7 +91,7 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         description = "Priority of context path strategy (higher = higher priority).")
     int service_ranking() default 2000;
 
-    String webconsole_configurationFactory_nameHint() default "{applicationId} levels={levels}";
+    String webconsole_configurationFactory_nameHint() default "levels={levels}, path={contextPathRegex}";
 
   }
 
