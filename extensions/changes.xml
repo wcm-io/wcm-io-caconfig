@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.4.2" date="not released">
+      <action type="update" dev="sseifert" issue="WCON-59">
+        AbsoluteParentContextPathStrategy: Add 'unlimited' option to allow unlimited configuration of hierarchy levels.
+      </action>
       <action type="update" dev="sseifert">
         Display contextPathRegex in webconsole hint of context path strategies.
       </action>
