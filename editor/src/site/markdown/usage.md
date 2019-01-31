@@ -77,7 +77,10 @@ It is recommended to also deploy the [wcm.io Context-Aware Configuration Extensi
 
 ### Using custom edit widgets
 
-For each data type (string, number, boolean) the fitting edit widget is chosen automatically. Alternatively you can define custom widgets via extra properties on the `@Property` annotation. Currently only `pathbrowser` is supported.
+For each data type (string, number, boolean) the fitting edit widget is chosen automatically. Alternatively you can define custom widgets via extra properties on the `@Property` annotation. 
+
+
+#### pathbrowser
 
 Define a path browser widget for a string parameter with fixed path:
 
@@ -97,6 +100,19 @@ Define a path browser widget for a string parameter with the current configurati
     "pathbrowserRootPathContext=true"
 })
 String contextPath();
+```
+
+
+#### dropdown
+
+Define a dropdown list of options to choose from. The description is displayed to the user, the value of the chosen option is stored in the configuration.
+
+```java
+@Property(label = "DAM Path", description = "Browse DAM assets.", property = {
+    "widgetType=pathbrowser",
+    "pathbrowserRootPath=/content/dam"
+})
+String damPath();
 ```
 
 

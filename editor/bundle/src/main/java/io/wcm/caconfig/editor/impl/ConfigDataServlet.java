@@ -25,6 +25,7 @@ import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -69,6 +70,9 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
    * Selector
    */
   public static final String SELECTOR = "configData";
+
+  private static final Pattern JSON_STRING_ARRAY_PATTERN = Pattern.compile("^\\[.*\\]$");
+  private static final Pattern JSON_STRING_OBJECT_PATTERN = Pattern.compile("^\\{.*\\}$");
 
   @Reference
   private ConfigurationManager configManager;
@@ -179,7 +183,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         JSONObject metadata = new JSONObject();
         metadata.putOpt("label", itemMetadata.getLabel());
         metadata.putOpt("description", itemMetadata.getDescription());
-        metadata.putOpt("properties", toJson(itemMetadata.getProperties()));
+        metadata.putOpt("properties", toJsonWithValueConversion(itemMetadata.getProperties()));
         prop.put("metadata", metadata);
 
         if (itemMetadata.getType().isArray()) {
@@ -231,7 +235,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
           metadata.putOpt("defaultValue", toJsonValue(itemMetadata.getDefaultValue()));
           metadata.putOpt("label", itemMetadata.getLabel());
           metadata.putOpt("description", itemMetadata.getDescription());
-          metadata.putOpt("properties", toJson(itemMetadata.getProperties()));
+          metadata.putOpt("properties", toJsonWithValueConversion(itemMetadata.getProperties()));
           prop.put("metadata", metadata);
         }
       }
@@ -242,17 +246,44 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
-  private JSONObject toJson(Map<String, String> properties) throws JSONException {
+  /**
+   * Converts the given map to JSON. Each map value is checked for a valid JSON string - if this is the case it's
+   * inserted as JSON objects and not as string.
+   * @param properties Map
+   * @return JSON object
+   * @throws JSONException JSON exception
+   */
+  private JSONObject toJsonWithValueConversion(Map<String, String> properties) throws JSONException {
     if (properties == null || properties.isEmpty()) {
       return null;
     }
     else {
       JSONObject metadataProps = new JSONObject();
       for (Map.Entry<String, String> entry : properties.entrySet()) {
-        metadataProps.putOpt(entry.getKey(), entry.getValue());
+        metadataProps.putOpt(entry.getKey(), tryConvertJsonString(entry.getValue()));
       }
       return metadataProps;
     }
+  }
+
+  private Object tryConvertJsonString(String value) {
+    if (JSON_STRING_ARRAY_PATTERN.matcher(value).matches()) {
+      try {
+        return new JSONArray(value);
+      }
+      catch (JSONException ex) {
+        // no valid json - ignore
+      }
+    }
+    if (JSON_STRING_OBJECT_PATTERN.matcher(value).matches()) {
+      try {
+        return new JSONObject(value);
+      }
+      catch (JSONException ex) {
+        // no valid json - ignore
+      }
+    }
+    return value;
   }
 
   private Object toJsonValue(Object value) {

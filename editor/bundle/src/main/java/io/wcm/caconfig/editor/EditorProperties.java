@@ -52,4 +52,15 @@ public final class EditorProperties {
    */
   public static final @NotNull String PROPERTY_PATHBROWSER_ROOT_PATH_CONTEXT = "pathbrowserRootPathContext";
 
+  /**
+   * Widget type to add a dropdown list selection widget to a string or number parameter.
+   */
+  public static final String WIDGET_TYPE_DROPDOWN = "dropdown";
+
+  /**
+   * Defines the list of dropdown options as JSON array with the list options.
+   * Each list option item is a JSON object with two properties <code>value</code> and <code>description</code>.
+   */
+  public static final String PROPERTY_DROPDOWN_OPTIONS = "dropdownOptions";
+
 }
