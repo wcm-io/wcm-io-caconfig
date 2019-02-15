@@ -8,7 +8,7 @@ Context-Aware Configuration Editor Template for AEM.
 ### Documentation
 
 * [Usage][usage]
-* [API documentation][bundle/apidocs]
+* [API documentation][apidocs]
 * [Changelog][changelog]
 
 
@@ -42,6 +42,7 @@ See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-c
 
 
 [usage]: usage.html
+[apidocs]: bundle/apidocs/
 [changelog]: changes-report.html
 [sample-app]: https://github.com/wcm-io/wcm-io-caconfig/tree/develop/sample-app
 [deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html

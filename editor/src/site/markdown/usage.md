@@ -102,7 +102,7 @@ String contextPath();
 
 ### Filter configurations
 
-On a system that hosts multiple tenants or websites it may be desirable to offer only a subset of context-aware configurations that are present in the system. This is possible by adding a [Context-aware service][wcmio-caservice] that implements the interface `io.wcm.caconfig.editor.ConfigurationEditorFilter`.
+On a system that hosts multiple tenants or websites it may be desirable to offer only a subset of context-aware configurations that are present in the system. This is possible by adding a [Context-aware service][wcmio-caservice] that implements the interface [ConfigurationEditorFilter][configurationeditorfilter-interface].
 
 Example:
 
@@ -141,3 +141,4 @@ You should disable the configuration editor on publish by applying an OSGi confi
 [wcmio-caconfig-extensions-persistence-strategies]: http://wcm.io/caconfig/extensions/persistence-strategies.html
 [wcmio-caconfig-extensions-reference-provider]: http://wcm.io/caconfig/extensions/reference-provider.html
 [wcmio-caservice]: http://wcm.io/sling/commons/context-aware-services.html
+[configurationeditorfilter-interface]: bundle/apidocs/io/wcm/caconfig/editor/ConfigurationEditorFilter.html
