@@ -81,6 +81,14 @@ span.wcm-io-editor.endor-Brand {
   cursor: default;
 }
 
+#caconfig-addConfigModal {
+  width: 500px;
+}
+
+#caconfig-addConfigModal .coral-Select {
+  width: 100%;
+}
+
 #caconfig-addConfigModal .caconfig-addConfigModal-body {
   overflow-y: visible;
 }
