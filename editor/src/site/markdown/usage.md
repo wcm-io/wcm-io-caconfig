@@ -102,7 +102,7 @@ String contextPath();
 
 ### Filter configurations
 
-On a system that hosts multiple tenants or websites it may be desirable to offer only a subset of context-aware configurations that are present in the system. This is possible by adding a [Context-aware service][wcmio-caservice] that implements the interface [ConfigurationEditorFilter][configurationeditorfilter-interface].
+On a system that hosts multiple tenants or websites it may be desirable to offer only a subset of context-aware configurations that are present in the system. This is possible by adding a [Context-Aware Service][wcmio-caservice] that implements the interface [ConfigurationEditorFilter][configurationeditorfilter-interface].
 
 Example:
 
@@ -118,7 +118,7 @@ public class ConfigurationEditorFilterImpl implements ConfigurationEditorFilter 
 }
 ```
 
-The control which context-aware configurations are available on which content subtree in the system set the appropriate service properties or bundle header names as described in [Context-aware services][wcmio-caservice].
+The control which context-aware configurations are available on which content subtree in the system set the appropriate service properties or bundle header names as described in [Context-Aware Services][wcmio-caservice].
 
 
 ### Disable Editor on Publish
