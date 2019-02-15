@@ -36,6 +36,11 @@
 
   <name>Context-Aware Configuration Editor</name>
   <description>Context-Aware Configuration Editor Template for AEM.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
+
+  <properties>
+    <site.url.module.prefix>caconfig/editor/bundle</site.url.module.prefix>
+  </properties>
 
   <dependencies>
 
@@ -79,6 +84,14 @@
       <artifactId>org.apache.sling.caconfig.impl</artifactId>
       <version>1.4.0</version>
       <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.wcm</groupId>
+      <artifactId>io.wcm.sling.commons</artifactId>
+      <version>1.2.2</version>
+      <scope>compile</scope>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
@@ -190,15 +203,6 @@
         </executions>
       </plugin>
 
-      <!-- do not generate site for this project -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <skipDeploy>true</skipDeploy>
-        </configuration>
-      </plugin>
-
     </plugins>
     <pluginManagement>
       <plugins>
@@ -214,5 +218,12 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <distributionManagement>
+    <site>
+      <id>${site.deploy.id}</id>
+      <url>${site.deploy.url}${site.url.module.prefix}</url>
+    </site>
+  </distributionManagement>
 
 </project>

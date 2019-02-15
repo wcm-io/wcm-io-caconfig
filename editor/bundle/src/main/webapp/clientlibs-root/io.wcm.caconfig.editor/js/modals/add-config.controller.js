@@ -57,7 +57,9 @@
     });
 
     that.getConfigNames = function () {
-      return configService.getState().configNames;
+      return configService.getState().configNames.filter(function(configName) {
+        return configName.allowAdd;
+      });
     };
 
     that.addConfig = function () {

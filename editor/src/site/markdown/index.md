@@ -8,6 +8,7 @@ Context-Aware Configuration Editor Template for AEM.
 ### Documentation
 
 * [Usage][usage]
+* [API documentation][bundle/apidocs]
 * [Changelog][changelog]
 
 

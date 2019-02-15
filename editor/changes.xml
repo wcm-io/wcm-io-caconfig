@@ -23,9 +23,15 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.3.4" date="not released">
+    <release version="1.4.0" date="not released">
+      <action type="add" dev="sseifert">
+        Allow to filter configurations that are allowed to add for specific content tree via ConfigurationEditorFilter context-aware services interface.
+      </action>
       <action type="update" dev="sseifert">
         Add configuration dialog: Make select box wider to display configurations with long names.
+      </action>
+      <action type="update" dev="sseifert">
+        Add configuration dialog: Sort configuration entries by label, not by internal name.
       </action>
     </release>
 
