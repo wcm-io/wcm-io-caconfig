@@ -60,7 +60,7 @@ public class AbsoluteParentContextPathStrategyTest {
   }
 
   @Test
-  public void testWithLevels() {
+  public void testWithLevels13() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
         "levels", new int[] { 1, 3 });
 
@@ -73,6 +73,53 @@ public class AbsoluteParentContextPathStrategyTest {
         "/content/region1", "/conf/region1");
 
     assertResult(context, underTest.findContextResources(level2),
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level1),
+        "/content/region1", "/conf/region1");
+  }
+
+  @Test
+  public void testWithLevels13_Unlimited() {
+    ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
+        "levels", new int[] { 1, 3 },
+        "unlimited", true);
+
+    assertResult(context, underTest.findContextResources(level4),
+        "/content/region1/site1/en/page1", "/conf/region1/site1/en/page1",
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level3),
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level2),
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level1),
+        "/content/region1", "/conf/region1");
+  }
+
+  @Test
+  public void testWithLevels1_Unlimited() {
+    ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
+        "levels", new int[] { 1 },
+        "unlimited", true);
+
+    assertResult(context, underTest.findContextResources(level4),
+        "/content/region1/site1/en/page1", "/conf/region1/site1/en/page1",
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1/site1", "/conf/region1/site1",
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level3),
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1/site1", "/conf/region1/site1",
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level2),
+        "/content/region1/site1", "/conf/region1/site1",
         "/content/region1", "/conf/region1");
 
     assertResult(context, underTest.findContextResources(level1),
