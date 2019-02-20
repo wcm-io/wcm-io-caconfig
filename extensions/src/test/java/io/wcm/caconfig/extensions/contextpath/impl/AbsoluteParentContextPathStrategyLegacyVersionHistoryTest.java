@@ -26,15 +26,15 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("null")
-public class AbsoluteParentContextPathStrategyVersionHistoryTest extends AbsoluteParentContextPathStrategyTest {
+public class AbsoluteParentContextPathStrategyLegacyVersionHistoryTest extends AbsoluteParentContextPathStrategyTest {
 
   @Override
   @Before
   public void setUp() throws Exception {
-    level1 = context.create().page("/tmp/versionhistory/user1/version1/region1").adaptTo(Resource.class);
-    level2 = context.create().page("/tmp/versionhistory/user1/version1/region1/site1").adaptTo(Resource.class);
-    level3 = context.create().page("/tmp/versionhistory/user1/version1/region1/site1/en").adaptTo(Resource.class);
-    level4 = context.create().page("/tmp/versionhistory/user1/version1/region1/site1/en/page1").adaptTo(Resource.class);
+    level1 = context.create().page("/content/versionhistory/user1/region1").adaptTo(Resource.class);
+    level2 = context.create().page("/content/versionhistory/user1/region1/site1").adaptTo(Resource.class);
+    level3 = context.create().page("/content/versionhistory/user1/region1/site1/en").adaptTo(Resource.class);
+    level4 = context.create().page("/content/versionhistory/user1/region1/site1/en/page1").adaptTo(Resource.class);
   }
 
 }

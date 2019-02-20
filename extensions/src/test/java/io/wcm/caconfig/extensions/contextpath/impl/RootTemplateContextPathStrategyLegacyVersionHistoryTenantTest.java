@@ -29,19 +29,19 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("null")
-public class AbsoluteParentContextPathStrategyVersionHistoryTenantTest extends AbsoluteParentContextPathStrategyTest {
+public class RootTemplateContextPathStrategyLegacyVersionHistoryTenantTest extends RootTemplateContextPathStrategyTest {
 
   @Mock
   private Tenant tenant;
 
   @Override
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     context.registerAdapter(ResourceResolver.class, Tenant.class, tenant);
 
     level1 = context.create().page("/content/versionhistory/tenant1/user1/region1").adaptTo(Resource.class);
-    level2 = context.create().page("/content/versionhistory/tenant1/user1/region1/site1").adaptTo(Resource.class);
-    level3 = context.create().page("/content/versionhistory/tenant1/user1/region1/site1/en").adaptTo(Resource.class);
+    level2 = context.create().page("/content/versionhistory/tenant1/user1/region1/site1", TEMPLATE_1).adaptTo(Resource.class);
+    level3 = context.create().page("/content/versionhistory/tenant1/user1/region1/site1/en", TEMPLATE_2).adaptTo(Resource.class);
     level4 = context.create().page("/content/versionhistory/tenant1/user1/region1/site1/en/page1").adaptTo(Resource.class);
   }
 

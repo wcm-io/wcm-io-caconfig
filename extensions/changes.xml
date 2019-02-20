@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Display contextPathRegex in webconsole hint of context path strategies.
       </action>
+      <action type="fix" dev="sseifert" issue="WCON-49">
+        Context path strategies: Support new version history path at /tmp/versionhistory used since AEM 6.3.2.2, 6.4.3 and 6.5.
+      </action>
     </release>
 
     <release version="1.4.0" date="2018-08-30">
