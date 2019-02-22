@@ -20,29 +20,21 @@
 package io.wcm.caconfig.extensions.contextpath.impl;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.tenant.Tenant;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("null")
-public class RootTemplateContextPathStrategyVersionHistoryTenantTest extends RootTemplateContextPathStrategyTest {
-
-  @Mock
-  private Tenant tenant;
+public class RootTemplateContextPathStrategyLegacyVersionHistoryTest extends RootTemplateContextPathStrategyTest {
 
   @Override
   @Before
   public void setUp() {
-    context.registerAdapter(ResourceResolver.class, Tenant.class, tenant);
-
-    level1 = context.create().page("/content/versionhistory/tenant1/user1/region1").adaptTo(Resource.class);
-    level2 = context.create().page("/content/versionhistory/tenant1/user1/region1/site1", TEMPLATE_1).adaptTo(Resource.class);
-    level3 = context.create().page("/content/versionhistory/tenant1/user1/region1/site1/en", TEMPLATE_2).adaptTo(Resource.class);
-    level4 = context.create().page("/content/versionhistory/tenant1/user1/region1/site1/en/page1").adaptTo(Resource.class);
+    level1 = context.create().page("/content/versionhistory/user1/region1").adaptTo(Resource.class);
+    level2 = context.create().page("/content/versionhistory/user1/region1/site1", TEMPLATE_1).adaptTo(Resource.class);
+    level3 = context.create().page("/content/versionhistory/user1/region1/site1/en", TEMPLATE_2).adaptTo(Resource.class);
+    level4 = context.create().page("/content/versionhistory/user1/region1/site1/en/page1").adaptTo(Resource.class);
   }
 
 }

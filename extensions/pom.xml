@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.extensions</artifactId>
-  <version>1.4.1-SNAPSHOT</version>
+  <version>1.5.0</version>
   <packaging>bundle</packaging>
 
   <name>Context-Aware Configuration Extensions for AEM</name>
@@ -80,7 +80,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.wcm.commons</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>
