@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.5.0" date="not released">
+    <release version="1.5.0" date="2019-02-22">
       <action type="add" dev="sseifert" issue="WCON-59">
         AbsoluteParentContextPathStrategy: Add 'unlimited' option to allow unlimited configuration of hierarchy levels.
       </action>
