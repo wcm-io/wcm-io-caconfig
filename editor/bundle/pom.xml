@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.parent</artifactId>
-    <version>1.1.6</version>
+    <version>1.1.7-SNAPSHOT</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
@@ -64,6 +64,11 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-atinject_1.0_spec</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -151,13 +156,6 @@
             <Sling-Model-Packages>
               io.wcm.caconfig.editor.model
             </Sling-Model-Packages>
-
-            <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
-            <Import-Package>
-              javax.inject;version="[0.0,2)",
-              *
-            </Import-Package>
-
           </instructions>
         </configuration>
       </plugin>

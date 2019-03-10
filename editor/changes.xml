@@ -23,6 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.5.0" date="not released">
+      <action type="update" dev="sseifert">
+        Switch to AEM 6.2 as minimum version.
+      </action>
+    </release>
+
     <release version="1.4.0" date="2019-02-22">
       <action type="add" dev="sseifert">
         Allow to filter configurations that are allowed to add for specific content tree via ConfigurationEditorFilter context-aware services interface.

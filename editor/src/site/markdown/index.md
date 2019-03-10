@@ -40,6 +40,14 @@ When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sli
 See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-caconfig-in-aem] for details.
 
 
+### AEM Version Support Matrix
+
+|Context-Aware Configuration Editor version |AEM version supported
+|-------------------------------------------|----------------------
+|1.5.x or higher                            |AEM 6.2 and up
+|1.0.x - 1.4.x                              |AEM 6.1 and up
+
+
 
 [usage]: usage.html
 [apidocs]: bundle/apidocs/
