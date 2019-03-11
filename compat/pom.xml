@@ -96,6 +96,12 @@
       <artifactId>io.wcm.testing.wcm-io-mock.sling</artifactId>
       <version>0.6.0</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>io.wcm</groupId>
+          <artifactId>io.wcm.testing.aem-mock</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
