@@ -49,7 +49,6 @@ import io.wcm.testing.mock.aem.junit.AemContextCallback;
 /**
  * Test the {@link ConfigurationReferenceProvider} with the Sling CAConfig default persistence.
  */
-@SuppressWarnings("null")
 public class ConfigurationReferenceProviderTest {
 
   @Rule

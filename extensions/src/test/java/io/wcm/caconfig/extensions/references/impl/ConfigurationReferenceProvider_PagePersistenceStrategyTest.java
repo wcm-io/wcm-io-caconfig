@@ -52,7 +52,6 @@ import io.wcm.testing.mock.aem.junit.AemContextCallback;
 /**
  * Test the {@link ConfigurationReferenceProvider} with the {@link PagePersistenceStrategy}.
  */
-@SuppressWarnings("null")
 public class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
 
   @Rule

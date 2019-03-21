@@ -22,6 +22,8 @@ package io.wcm.config.core.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.spi.ImplementationPicker;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -46,7 +48,7 @@ public class ApplicationImplementationPicker implements ImplementationPicker {
   private ApplicationFinder applicationFinder;
 
   @Override
-  public Class<?> pick(Class<?> adapterType, Class<?>[] implementationsTypes, Object adaptable) {
+  public @Nullable Class<?> pick(@NotNull Class<?> adapterType, Class<?> @NotNull [] implementationsTypes, @NotNull Object adaptable) {
     Class<?> classMatchingApplication = pickMatchingApplication(implementationsTypes, adaptable);
     if (classMatchingApplication != null) {
       return classMatchingApplication;

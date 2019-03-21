@@ -21,6 +21,8 @@ package io.wcm.config.core.impl.combined;
 
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.wcm.config.core.impl.ApplicationAdapterFactory;
 import io.wcm.config.core.impl.ApplicationFinderImpl;
 import io.wcm.config.core.impl.ApplicationImplementationPicker;
@@ -58,7 +60,7 @@ public final class CombinedAppContext {
   private static final AemContextCallback SETUP_CALLBACK = new AemContextCallback() {
 
     @Override
-    public void execute(AemContext context) throws Exception {
+    public void execute(@NotNull AemContext context) throws Exception {
 
       context.registerService(ConfigurationFinderStrategy.class, new SampleConfigurationFinderStrategy());
       context.registerService(ParameterProvider.class, new SampleParameterProvider());

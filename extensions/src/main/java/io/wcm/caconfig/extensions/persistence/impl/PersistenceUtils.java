@@ -221,7 +221,6 @@ final class PersistenceUtils {
     }
   }
 
-  @SuppressWarnings({ "unused", "null" })
   public static void replaceProperties(Resource resource, Map<String, Object> properties,
       ConfigurationManagementSettings configurationManagementSettings) {
     if (log.isTraceEnabled()) {
@@ -242,7 +241,7 @@ final class PersistenceUtils {
     modValueMap.putAll(properties);
   }
 
-  @SuppressWarnings({ "unused", "null" })
+  @SuppressWarnings("null")
   public static void updatePageLastMod(ResourceResolver resolver, String configResourcePath) {
     PageManager pageManager = resolver.adaptTo(PageManager.class);
     Page page = pageManager.getContainingPage(configResourcePath);
@@ -284,7 +283,6 @@ final class PersistenceUtils {
    * Otherwise delete the resource using ResourceResolver.
    * @param resource Resource to delete
    */
-  @SuppressWarnings({ "null", "unused" })
   public static void deletePageOrResource(Resource resource) {
     Page configPage = resource.adaptTo(Page.class);
     if (configPage != null) {

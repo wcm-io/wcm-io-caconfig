@@ -42,6 +42,7 @@ import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -76,7 +77,7 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
   private ConfigurationEditorFilterService configurationEditorFilterService;
 
   @Override
-  protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
     if (!editorConfig.isEnabled()) {
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
       return;
