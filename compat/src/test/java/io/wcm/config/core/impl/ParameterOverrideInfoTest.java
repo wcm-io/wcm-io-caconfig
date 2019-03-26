@@ -19,17 +19,18 @@
  */
 package io.wcm.config.core.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ParameterOverrideInfoTest {
+class ParameterOverrideInfoTest {
 
   @Test
-  public void testParameterOnly() {
+  void testParameterOnly() {
     ParameterOverrideInfo underTest = new ParameterOverrideInfo("aaa");
     assertNull(underTest.getConfigurationId());
     assertFalse(underTest.isOverrideSystemDefault());
@@ -38,7 +39,7 @@ public class ParameterOverrideInfoTest {
   }
 
   @Test
-  public void testParameterWithConfigurationId() {
+  void testParameterWithConfigurationId() {
     ParameterOverrideInfo underTest = new ParameterOverrideInfo("[/path1]aaa");
     assertEquals("/path1", underTest.getConfigurationId());
     assertFalse(underTest.isOverrideSystemDefault());
@@ -47,7 +48,7 @@ public class ParameterOverrideInfoTest {
   }
 
   @Test
-  public void testParameterWithConfigurationIdLocked() {
+  void testParameterWithConfigurationIdLocked() {
     ParameterOverrideInfo underTest = new ParameterOverrideInfo("[/path1:locked]aaa");
     assertEquals("/path1", underTest.getConfigurationId());
     assertFalse(underTest.isOverrideSystemDefault());
@@ -56,7 +57,7 @@ public class ParameterOverrideInfoTest {
   }
 
   @Test
-  public void testParameterLocked() {
+  void testParameterLocked() {
     ParameterOverrideInfo underTest = new ParameterOverrideInfo("[locked]aaa");
     assertNull(underTest.getConfigurationId());
     assertFalse(underTest.isOverrideSystemDefault());
@@ -65,7 +66,7 @@ public class ParameterOverrideInfoTest {
   }
 
   @Test
-  public void testParameterWithDefaultScope() {
+  void testParameterWithDefaultScope() {
     ParameterOverrideInfo underTest = new ParameterOverrideInfo("[default]aaa");
     assertNull(underTest.getConfigurationId());
     assertTrue(underTest.isOverrideSystemDefault());
@@ -73,19 +74,25 @@ public class ParameterOverrideInfoTest {
     assertEquals("aaa", underTest.getParameterName());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testParameterWithDefaultScopeLockedNotAllowed() {
-    new ParameterOverrideInfo("[default:locked]aaa");
+  @Test
+  void testParameterWithDefaultScopeLockedNotAllowed() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      new ParameterOverrideInfo("[default:locked]aaa");
+    });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testParameterDoubleLockedNotAllowed() {
-    new ParameterOverrideInfo("[locked:locked]aaa");
+  @Test
+  void testParameterDoubleLockedNotAllowed() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      new ParameterOverrideInfo("[locked:locked]aaa");
+    });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalid() {
-    new ParameterOverrideInfo("[aaa");
+  @Test
+  void testInvalid() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      new ParameterOverrideInfo("[aaa");
+    });
   }
 
 }

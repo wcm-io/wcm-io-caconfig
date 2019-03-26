@@ -19,7 +19,7 @@
  */
 package io.wcm.config.core.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -27,12 +27,13 @@ import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.resource.spi.ContextResource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableList;
@@ -40,17 +41,18 @@ import com.google.common.collect.ImmutableList;
 import io.wcm.config.core.management.Application;
 import io.wcm.config.core.management.ApplicationFinder;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
-public class ConfigurationFinderStrategyBridgeTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ConfigurationFinderStrategyBridgeTest {
 
   private static final String APP_1 = "/apps/app1";
   private static final String APP_2 = "/apps/app2";
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Mock
   private ApplicationFinder applicationFinder;
@@ -63,8 +65,8 @@ public class ConfigurationFinderStrategyBridgeTest {
 
   private ConfigurationFinderStrategyBridge underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     context.registerService(ApplicationFinder.class, applicationFinder);
     context.registerService(ConfigurationFinderStrategy.class, configurationFinderStrategy1, Constants.SERVICE_RANKING, 100);
     context.registerService(ConfigurationFinderStrategy.class, configurationFinderStrategy2, Constants.SERVICE_RANKING, 200);
@@ -83,7 +85,7 @@ public class ConfigurationFinderStrategyBridgeTest {
   }
 
   @Test
-  public void testResourceApp1() {
+  void testResourceApp1() {
     List<ContextResource> result = ImmutableList.copyOf(underTest.findContextResources(resourceApp1));
     assertEquals(2, result.size());
     assertEquals("/content/app1/site1", result.get(0).getResource().getPath());
@@ -91,7 +93,7 @@ public class ConfigurationFinderStrategyBridgeTest {
   }
 
   @Test
-  public void testResourceNoApp() {
+  void testResourceNoApp() {
     List<ContextResource> result = ImmutableList.copyOf(underTest.findContextResources(resourceNoApp));
     assertEquals(3, result.size());
     assertEquals("/content/app1/site1", result.get(0).getResource().getPath());
