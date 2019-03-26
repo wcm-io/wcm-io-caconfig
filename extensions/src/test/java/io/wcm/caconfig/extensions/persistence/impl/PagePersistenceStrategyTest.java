@@ -23,11 +23,11 @@ import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigu
 import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigurationCollection;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
@@ -36,9 +36,9 @@ import org.apache.sling.caconfig.ConfigurationBuilder;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.hamcrest.ResourceMatchers;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
@@ -48,15 +48,16 @@ import io.wcm.caconfig.extensions.persistence.example.ListConfig;
 import io.wcm.caconfig.extensions.persistence.example.ListNestedConfig;
 import io.wcm.caconfig.extensions.persistence.example.NestedConfig;
 import io.wcm.caconfig.extensions.persistence.example.SimpleConfig;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextBuilder;
-import io.wcm.testing.mock.aem.junit.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class PagePersistenceStrategyTest {
+class PagePersistenceStrategyTest {
 
-  @Rule
-  public AemContext context = new AemContextBuilder()
+  final AemContext context = new AemContextBuilder()
       .beforeSetUp(new AemContextCallback() {
         @Override
         public void execute(AemContext ctx) {
@@ -74,15 +75,15 @@ public class PagePersistenceStrategyTest {
 
   private Page contentPage;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     context.create().resource("/conf");
     contentPage = context.create().page("/content/test/site1", "/apps/app1/templates/template1",
         ImmutableMap.<String, Object>of("sling:configRef", "/conf/test/site1"));
   }
 
   @Test
-  public void testSimpleConfig() throws Exception {
+  void testSimpleConfig() throws Exception {
     context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
 
     // write config
@@ -108,7 +109,7 @@ public class PagePersistenceStrategyTest {
   }
 
   @Test
-  public void testSimpleConfig_Disabled() throws Exception {
+  void testSimpleConfig_Disabled() throws Exception {
     context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", false);
 
     // write config
@@ -127,7 +128,7 @@ public class PagePersistenceStrategyTest {
   }
 
   @Test
-  public void testListConfig() throws Exception {
+  void testListConfig() throws Exception {
     context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
 
     // write config
@@ -160,7 +161,7 @@ public class PagePersistenceStrategyTest {
   }
 
   @Test
-  public void testListConfig_Nested() throws Exception {
+  void testListConfig_Nested() throws Exception {
     context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
 
     // write config
@@ -236,7 +237,7 @@ public class PagePersistenceStrategyTest {
   }
 
   @Test
-  public void testNestedConfig() throws Exception {
+  void testNestedConfig() throws Exception {
     context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
 
     // write config
@@ -275,7 +276,7 @@ public class PagePersistenceStrategyTest {
   }
 
   @Test
-  public void testSimpleConfig_ResourceType() throws Exception {
+  void testSimpleConfig_ResourceType() throws Exception {
     context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true,
         "resourceType", "app1/components/page/config");
 
@@ -292,7 +293,7 @@ public class PagePersistenceStrategyTest {
   }
 
   @Test
-  public void testListConfig_ResourceType() throws Exception {
+  void testListConfig_ResourceType() throws Exception {
     context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true,
         "resourceType", "app1/components/page/config");
 

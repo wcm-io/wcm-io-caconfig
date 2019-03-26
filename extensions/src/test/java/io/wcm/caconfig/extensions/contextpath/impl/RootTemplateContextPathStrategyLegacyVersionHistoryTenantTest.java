@@ -22,20 +22,23 @@ package io.wcm.caconfig.extensions.contextpath.impl;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.tenant.Tenant;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RootTemplateContextPathStrategyLegacyVersionHistoryTenantTest extends RootTemplateContextPathStrategyTest {
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+class RootTemplateContextPathStrategyLegacyVersionHistoryTenantTest extends RootTemplateContextPathStrategyTest {
 
   @Mock
   private Tenant tenant;
 
   @Override
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     context.registerAdapter(ResourceResolver.class, Tenant.class, tenant);
 
     level1 = context.create().page("/content/versionhistory/tenant1/user1/region1").adaptTo(Resource.class);

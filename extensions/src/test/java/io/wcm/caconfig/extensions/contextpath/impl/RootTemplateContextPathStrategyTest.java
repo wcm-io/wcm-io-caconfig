@@ -24,30 +24,30 @@ import static io.wcm.caconfig.extensions.contextpath.impl.TestUtils.assertResult
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RootTemplateContextPathStrategyTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+class RootTemplateContextPathStrategyTest {
 
   static final String TEMPLATE_1 = "/apps/app1/templates/template1";
   static final String TEMPLATE_2 = "/apps/app1/templates/template2";
 
-  @Rule
-  public AemContext context = new AemContext();
+  final AemContext context = new AemContext();
 
   protected Resource level1;
   protected Resource level2;
   protected Resource level3;
   protected Resource level4;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     level1 = context.create().page("/content/region1").adaptTo(Resource.class);
     level2 = context.create().page("/content/region1/site1", TEMPLATE_1).adaptTo(Resource.class);
     level3 = context.create().page("/content/region1/site1/en", TEMPLATE_2).adaptTo(Resource.class);
@@ -55,14 +55,14 @@ public class RootTemplateContextPathStrategyTest {
   }
 
   @Test
-  public void testWithInvalidConfig() {
+  void testWithInvalidConfig() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy());
 
     assertNoResult(context, underTest.findContextResources(level4));
   }
 
   @Test
-  public void testWithTemplate() {
+  void testWithTemplate() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy(),
         "templatePaths", new String[] { TEMPLATE_1 });
 
@@ -83,7 +83,7 @@ public class RootTemplateContextPathStrategyTest {
   }
 
   @Test
-  public void testWithAlternativePatterns() {
+  void testWithAlternativePatterns() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy(),
         "templatePaths", new String[] { TEMPLATE_1 },
         "contextPathRegex", "^(/content/.+)$",
@@ -97,7 +97,7 @@ public class RootTemplateContextPathStrategyTest {
   }
 
   @Test
-  public void testWithTemplate_TemplatMatchAllLevels() {
+  void testWithTemplate_TemplatMatchAllLevels() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new RootTemplateContextPathStrategy(),
         "templatePaths", new String[] { TEMPLATE_1, TEMPLATE_2 },
         "templateMatchAllLevels", true);

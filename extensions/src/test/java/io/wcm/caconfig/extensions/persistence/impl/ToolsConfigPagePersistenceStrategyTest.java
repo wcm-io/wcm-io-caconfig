@@ -23,10 +23,10 @@ import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigu
 import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigurationCollection;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.List;
@@ -36,9 +36,9 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.ConfigurationBuilder;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.hamcrest.ResourceMatchers;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
@@ -51,21 +51,22 @@ import io.wcm.caconfig.extensions.persistence.example.ListNestedConfig;
 import io.wcm.caconfig.extensions.persistence.example.NestedConfig;
 import io.wcm.caconfig.extensions.persistence.example.SimpleConfig;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class ToolsConfigPagePersistenceStrategyTest {
+class ToolsConfigPagePersistenceStrategyTest {
 
-  @Rule
-  public AemContext context = new AemContextBuilder()
+  final AemContext context = new AemContextBuilder()
       .plugin(CACONFIG)
       .build();
 
   private Page contentPage;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
         "levels", new int[] { 1, 3 },
         "contextPathRegex", "^/content(/.+)$",
@@ -85,7 +86,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
   }
 
   @Test
-  public void testSimpleConfig() throws Exception {
+  void testSimpleConfig() throws Exception {
     // write config
     writeConfiguration(context, contentPage.getPath(), SimpleConfig.class.getName(),
         "stringParam", "value1",
@@ -121,7 +122,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
   }
 
   @Test
-  public void testListConfig() throws Exception {
+  void testListConfig() throws Exception {
     // write config
     writeConfigurationCollection(context, contentPage.getPath(), ListConfig.class.getName(), ImmutableList.of(
         (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1", "intParam", 123),
@@ -158,7 +159,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
   }
 
   @Test
-  public void testListConfig_Nested() throws Exception {
+  void testListConfig_Nested() throws Exception {
     context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
 
     // write config
@@ -240,7 +241,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
   }
 
   @Test
-  public void testNestedConfig() throws Exception {
+  void testNestedConfig() throws Exception {
     // write config
     writeConfiguration(context, contentPage.getPath(), NestedConfig.class.getName(),
         "stringParam", "value1");
@@ -284,7 +285,7 @@ public class ToolsConfigPagePersistenceStrategyTest {
   }
 
   @Test
-  public void testSimpleConfigWithCQLastModified() throws Exception {
+  void testSimpleConfigWithCQLastModified() throws Exception {
     context.create().page("/content/region2");
     context.create().page("/content/region2/site2");
     context.create().page("/content/region2/site2/en");
