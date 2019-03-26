@@ -19,24 +19,24 @@
  */
 package io.wcm.config.spi.helpers;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 
-@RunWith(MockitoJUnitRunner.class)
-public class AbstractAbsoluteParentConfigurationFinderStrategyTest {
+@ExtendWith(MockitoExtension.class)
+class AbstractAbsoluteParentConfigurationFinderStrategyTest {
 
   private static final String APP_ID = "/apps/app1";
 
@@ -45,20 +45,20 @@ public class AbstractAbsoluteParentConfigurationFinderStrategyTest {
 
   private ConfigurationFinderStrategy underTest;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     underTest = new AbstractAbsoluteParentConfigurationFinderStrategy(APP_ID, 1, 2) {
       // nothing to override
     };
   }
 
   @Test
-  public void testGetApplicationId() {
+  void testGetApplicationId() {
     assertEquals(APP_ID, underTest.getApplicationId());
   }
 
   @Test
-  public void testFindConfigurationIds() {
+  void testFindConfigurationIds() {
 
     assertConfigurationIds("/", new String[0]);
     assertConfigurationIds("/content", new String[0]);

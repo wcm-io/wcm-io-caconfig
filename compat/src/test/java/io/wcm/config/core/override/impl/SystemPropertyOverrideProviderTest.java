@@ -19,40 +19,40 @@
  */
 package io.wcm.config.core.override.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class SystemPropertyOverrideProviderTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+class SystemPropertyOverrideProviderTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     System.setProperty(SystemPropertyOverrideProvider.SYSTEM_PROPERTY_PREFIX + "[default]param1", "value1");
     System.setProperty(SystemPropertyOverrideProvider.SYSTEM_PROPERTY_PREFIX + "[/config1]param2", "value2");
   }
 
-  @After
-  public void tearDown() {
+  @AfterEach
+  void tearDown() {
     System.clearProperty(SystemPropertyOverrideProvider.SYSTEM_PROPERTY_PREFIX + "[default]param1");
     System.clearProperty(SystemPropertyOverrideProvider.SYSTEM_PROPERTY_PREFIX + "[/config1]param2");
   }
 
   @Test
-  public void testEnabled() {
+  void testEnabled() {
     SystemPropertyOverrideProvider provider = context.registerInjectActivateService(new SystemPropertyOverrideProvider(),
         "enabled", true);
 
@@ -62,7 +62,7 @@ public class SystemPropertyOverrideProviderTest {
   }
 
   @Test
-  public void testDisabled() {
+  void testDisabled() {
     SystemPropertyOverrideProvider provider = context.registerInjectActivateService(new SystemPropertyOverrideProvider(),
         "enabled", false);
 

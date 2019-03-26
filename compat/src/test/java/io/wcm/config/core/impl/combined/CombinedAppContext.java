@@ -33,9 +33,9 @@ import io.wcm.config.core.impl.ParameterProviderBridge;
 import io.wcm.config.core.override.impl.SystemPropertyOverrideProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextBuilder;
-import io.wcm.testing.mock.aem.junit.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContextCallback;
 
 public final class CombinedAppContext {
 

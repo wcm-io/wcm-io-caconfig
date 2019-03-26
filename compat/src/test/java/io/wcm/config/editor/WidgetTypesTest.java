@@ -19,20 +19,20 @@
  */
 package io.wcm.config.editor;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the available {@link WidgetTypes}
  */
-public class WidgetTypesTest {
+class WidgetTypesTest {
 
   @Test
-  public void testDefaultParametersImmutability() {
+  void testDefaultParametersImmutability() {
     Map<String, Object> defaultParams = WidgetTypes.PATHBROWSER.getDefaultWidgetConfiguration();
     assertEquals(defaultParams.get(EditorProperties.ROOT_PATH), "/content/");
     defaultParams.put(EditorProperties.ROOT_PATH, "/content/test");
@@ -42,7 +42,7 @@ public class WidgetTypesTest {
   }
 
   @Test
-  public void testDefaultOverrides() {
+  void testDefaultOverrides() {
     Map<String, Object> overrides = new HashMap<>();
     overrides.put(EditorProperties.ROOT_PATH, "/content/test");
 

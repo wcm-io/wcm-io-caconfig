@@ -30,7 +30,7 @@ import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.testing.mock.osgi.MapUtil;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 @SuppressWarnings("null")
 final class TestUtils {

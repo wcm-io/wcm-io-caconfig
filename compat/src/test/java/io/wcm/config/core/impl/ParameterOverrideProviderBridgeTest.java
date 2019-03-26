@@ -19,10 +19,10 @@
  */
 package io.wcm.config.core.impl;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -32,24 +32,27 @@ import java.util.Map;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.ConfigurationMetadataProvider;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.config.spi.ParameterOverrideProvider;
 import io.wcm.config.spi.ParameterProvider;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
-public class ParameterOverrideProviderBridgeTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ParameterOverrideProviderBridgeTest {
 
   private static final Map<String, String> OVERRIDES_LEGACY = ImmutableMap.<String, String>builder()
       .put("[/content/a/b]stringParam", "value1")
@@ -61,8 +64,7 @@ public class ParameterOverrideProviderBridgeTest {
       .put("otherParam", "value3")
       .build();
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Mock
   private ConfigurationManager configManager;
@@ -70,8 +72,8 @@ public class ParameterOverrideProviderBridgeTest {
   private ParameterOverrideProviderBridge underTest;
   private ConfigurationMetadataProvider configMetadataProvider;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     context.registerService(ConfigurationManager.class, configManager);
     configMetadataProvider = context.registerInjectActivateService(new ParameterProviderBridge());
     when(configManager.getConfigurationMetadata(anyString())).thenAnswer(new Answer<ConfigurationMetadata>() {
@@ -84,7 +86,7 @@ public class ParameterOverrideProviderBridgeTest {
   }
 
   @Test
-  public void testWithMetadata() {
+  void testWithMetadata() {
     context.registerService(ParameterProvider.class, new DummyParameterProvider());
     context.registerService(ParameterOverrideProvider.class, new ParameterOverrideProvider() {
       @Override
@@ -107,7 +109,7 @@ public class ParameterOverrideProviderBridgeTest {
 
 
   @Test
-  public void testNoMetadata() {
+  void testNoMetadata() {
     context.registerService(ParameterOverrideProvider.class, new ParameterOverrideProvider() {
       @Override
       public Map<String, String> getOverrideMap() {
@@ -128,7 +130,7 @@ public class ParameterOverrideProviderBridgeTest {
   }
 
   @Test
-  public void testNoOverrides() {
+  void testNoOverrides() {
     assertTrue(underTest.getOverrideStrings().isEmpty());
   }
 

@@ -19,22 +19,23 @@
  */
 package io.wcm.config.core.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.config.api.Configuration;
 import io.wcm.config.api.Parameter;
 import io.wcm.config.api.ParameterBuilder;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
-public class ConfigurationImplTest {
+class ConfigurationImplTest {
 
   private static final String APP_ID = "/apps/app1";
   private static final String CONFIG_ID = "/config1";
@@ -50,13 +51,13 @@ public class ConfigurationImplTest {
 
   private Configuration underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     underTest = new ConfigurationImpl(CONFIG_ID, SAMPLE_PROPS);
   }
 
   @Test
-  public void testProperties() {
+  void testProperties() {
     assertEquals(CONFIG_ID, underTest.getConfigurationId());
     assertEquals(CONFIG_ID, underTest.toString());
     assertEquals("value1", underTest.get("prop1", String.class));
@@ -66,13 +67,13 @@ public class ConfigurationImplTest {
   }
 
   @Test
-  public void testDefault() {
+  void testDefault() {
     assertEquals("def", underTest.get("prop3", "def"));
     assertEquals("def", underTest.get(PARAM3, "def"));
   }
 
   @Test
-  public void testMapAccessMethods() {
+  void testMapAccessMethods() {
     assertEquals(2, underTest.size());
     assertFalse(underTest.isEmpty());
     assertTrue(underTest.containsKey("prop1"));
@@ -83,27 +84,35 @@ public class ConfigurationImplTest {
     assertEquals(2, underTest.entrySet().size());
   }
 
-  @Test(expected = UnsupportedOperationException.class)
-  public void testMapClear() {
-    underTest.clear();
+  @Test
+  void testMapClear() {
+    assertThrows(UnsupportedOperationException.class, () -> {
+      underTest.clear();
+    });
   }
 
-  @Test(expected = UnsupportedOperationException.class)
-  public void testMapRemove() {
-    underTest.remove("prop2");
+  @Test
+  void testMapRemove() {
+    assertThrows(UnsupportedOperationException.class, () -> {
+      underTest.remove("prop2");
+    });
   }
 
-  @Test(expected = UnsupportedOperationException.class)
-  public void testMapPut() {
-    underTest.put("prop3", "value3");
+  @Test
+  void testMapPut() {
+    assertThrows(UnsupportedOperationException.class, () -> {
+      underTest.put("prop3", "value3");
+    });
   }
 
-  @Test(expected = UnsupportedOperationException.class)
-  public void testMapPutAll() {
-    underTest.putAll(ImmutableValueMap.builder()
-        .put("prop4", 25)
-        .put("prop5", 33)
-        .build());
+  @Test
+  void testMapPutAll() {
+    assertThrows(UnsupportedOperationException.class, () -> {
+      underTest.putAll(ImmutableValueMap.builder()
+          .put("prop4", 25)
+          .put("prop5", 33)
+          .build());
+    });
   }
 
 }

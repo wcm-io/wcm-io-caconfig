@@ -22,7 +22,7 @@ package io.wcm.caconfig.extensions.references.impl;
 import static io.wcm.caconfig.extensions.references.impl.TestUtils.applyConfig;
 import static io.wcm.caconfig.extensions.references.impl.TestUtils.registerConfigurations;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.List;
@@ -32,9 +32,9 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.Page;
@@ -42,19 +42,19 @@ import com.day.cq.wcm.api.reference.Reference;
 import com.day.cq.wcm.api.reference.ReferenceProvider;
 import com.google.common.collect.ImmutableMap;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextBuilder;
-import io.wcm.testing.mock.aem.junit.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test the {@link ConfigurationReferenceProvider} with the Sling CAConfig default persistence.
  */
-public class ConfigurationReferenceProviderTest {
+@ExtendWith(AemContextExtension.class)
+class ConfigurationReferenceProviderTest {
 
-  @Rule
-  public AemContext context = new AemContextBuilder()
+  private final AemContext context = new AemContextBuilder()
       .beforeSetUp(new AemContextCallback() {
-
         @Override
         public void execute(@NotNull AemContext ctx) {
           // also find sling:configRef props in cq:Page/jcr:content nodes
@@ -72,8 +72,8 @@ public class ConfigurationReferenceProviderTest {
   private Resource site1PageResource;
   private Resource site2PageResource;
 
-  @Before
-  public void setup() {
+  @BeforeEach
+  void setup() {
     context.create().resource("/conf");
 
     context.create().page("/content/region1", null, ImmutableMap.of("sling:configRef", "/conf/region1"));
@@ -99,7 +99,7 @@ public class ConfigurationReferenceProviderTest {
   }
 
   @Test
-  public void testReferencesOfPage1() {
+  void testReferencesOfPage1() {
     ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
     context.registerInjectActivateService(referenceProvider);
     List<Reference> references = referenceProvider.findReferences(site1PageResource);
@@ -108,7 +108,7 @@ public class ConfigurationReferenceProviderTest {
   }
 
   @Test
-  public void testReferencesOfPage2() {
+  void testReferencesOfPage2() {
     ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
     context.registerInjectActivateService(referenceProvider);
     List<Reference> references = referenceProvider.findReferences(site2PageResource);
@@ -117,11 +117,11 @@ public class ConfigurationReferenceProviderTest {
   }
 
   @Test
-  public void testDisabled() {
+  void testDisabled() {
     ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
     context.registerInjectActivateService(referenceProvider, "enabled", false);
     List<Reference> references = referenceProvider.findReferences(site1PageResource);
-    assertTrue("no references", references.isEmpty());
+    assertTrue(references.isEmpty(), "no references");
   }
 
 }

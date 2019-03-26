@@ -19,37 +19,56 @@
  */
 package io.wcm.caconfig.extensions.override.impl;
 
-import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextBuilder;
-import io.wcm.testing.mock.wcmio.sling.MockSlingExtensions;
+import io.wcm.sling.commons.request.RequestContext;
+import io.wcm.sling.models.injectors.impl.AemObjectInjector;
+import io.wcm.sling.models.injectors.impl.ModelsImplConfiguration;
+import io.wcm.sling.models.injectors.impl.SlingObjectOverlayInjector;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import io.wcm.testing.mock.wcmio.sling.MockRequestContext;
 
-public class RequestHeaderConfigurationOverrideProviderTest {
+@ExtendWith(AemContextExtension.class)
+class RequestHeaderConfigurationOverrideProviderTest {
 
   private static final String HEADER_NAME = "testHeaderName";
 
-  @Rule
-  public AemContext context = new AemContextBuilder().plugin(WCMIO_SLING).build();;
+  private final AemContext context = new AemContextBuilder()
+      .beforeSetUp(aemContext -> {
+        // register request context
+        aemContext.registerService(RequestContext.class, new MockRequestContext());
 
-  @Before
-  public void setUp() {
-    MockSlingExtensions.setRequestContext(context, context.request());
+        // register sling models extensions
+        aemContext.registerInjectActivateService(new ModelsImplConfiguration(),
+            ImmutableMap.<String, Object>of("requestThreadLocal", true));
+
+        aemContext.registerInjectActivateService(new AemObjectInjector());
+        aemContext.registerInjectActivateService(new SlingObjectOverlayInjector());
+      })
+      .build();
+
+  @BeforeEach
+  @SuppressWarnings("null")
+  void setUp() {
+    MockRequestContext requestContext = (MockRequestContext)context.getService(RequestContext.class);
+    requestContext.setRequest(context.request());
 
     context.request().addHeader(HEADER_NAME, "param1=value1");
     context.request().addHeader(HEADER_NAME, "[/content/path1]param2=value2");
   }
 
   @Test
-  public void testEnabled() {
+  void testEnabled() {
     RequestHeaderConfigurationOverrideProvider provider = context.registerInjectActivateService(new RequestHeaderConfigurationOverrideProvider(),
         "enabled", true,
         "headerName", HEADER_NAME);
@@ -61,7 +80,7 @@ public class RequestHeaderConfigurationOverrideProviderTest {
   }
 
   @Test
-  public void testDisabled() {
+  void testDisabled() {
     RequestHeaderConfigurationOverrideProvider provider = context.registerInjectActivateService(new RequestHeaderConfigurationOverrideProvider(),
         "enabled", false);
 

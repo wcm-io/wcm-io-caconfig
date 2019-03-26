@@ -19,46 +19,47 @@
  */
 package io.wcm.config.spi.helpers;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.config.spi.ConfigurationFinderStrategy;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-public class AbstractRootTemplateConfigurationFinderStrategyTest {
+@ExtendWith(AemContextExtension.class)
+class AbstractRootTemplateConfigurationFinderStrategyTest {
 
   private static final String APP_ID = "/apps/app1";
   private static final String TEMPLATE_STRUCTURE = "/apps/app1/templates/structure";
   private static final String TEMPLATE_SITEROOT = "/apps/app1/templates/siteRoot";
   private static final String TEMPLATE_CONTENT = "/apps/app1/templates/content";
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   private ConfigurationFinderStrategy underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     underTest = new AbstractRootTemplateConfigurationFinderStrategy(APP_ID, 1, 4, TEMPLATE_SITEROOT) {
       // nothing to override
     };
   }
 
   @Test
-  public void testGetApplicationId() {
+  void testGetApplicationId() {
     assertEquals(APP_ID, underTest.getApplicationId());
   }
 
   @Test
-  public void testFindConfigurationIds() {
+  void testFindConfigurationIds() {
     context.create().page("/content");
     context.create().page("/content/region1", TEMPLATE_STRUCTURE);
     context.create().page("/content/region1/country1", TEMPLATE_STRUCTURE);
@@ -93,7 +94,7 @@ public class AbstractRootTemplateConfigurationFinderStrategyTest {
   }
 
   @Test
-  public void testFindConfigurationIds_WithMissingPageInHierarchy() {
+  void testFindConfigurationIds_WithMissingPageInHierarchy() {
     context.create().page("/content");
     context.create().page("/content/region1", TEMPLATE_STRUCTURE);
     context.create().page("/content/region1/country1/en", TEMPLATE_SITEROOT);
@@ -106,7 +107,7 @@ public class AbstractRootTemplateConfigurationFinderStrategyTest {
   }
 
   @Test
-  public void testFindConfigurationIds_MaxLevel() {
+  void testFindConfigurationIds_MaxLevel() {
     context.create().page("/content");
     context.create().page("/content/region1", TEMPLATE_STRUCTURE);
     context.create().page("/content/region1/country1", TEMPLATE_STRUCTURE);

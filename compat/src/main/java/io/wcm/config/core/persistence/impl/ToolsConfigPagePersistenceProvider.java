@@ -80,7 +80,7 @@ import io.wcm.config.core.impl.ParameterProviderBridge;
 },
     property = Constants.SERVICE_RANKING + ":Integer=2000")
 @Designate(ocd = ToolsConfigPagePersistenceProvider.Config.class)
-@SuppressWarnings({ "null", "unused" })
+@SuppressWarnings("null")
 public final class ToolsConfigPagePersistenceProvider implements ConfigurationResourceResolvingStrategy,
     ConfigurationInheritanceStrategy, ConfigurationPersistenceStrategy2 {
 

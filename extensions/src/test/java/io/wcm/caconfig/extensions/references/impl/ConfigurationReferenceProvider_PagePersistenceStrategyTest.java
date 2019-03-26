@@ -23,8 +23,8 @@ import static io.wcm.caconfig.extensions.references.impl.TestUtils.applyConfig;
 import static io.wcm.caconfig.extensions.references.impl.TestUtils.assetReferences;
 import static io.wcm.caconfig.extensions.references.impl.TestUtils.registerConfigurations;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.List;
@@ -34,9 +34,9 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
@@ -45,17 +45,18 @@ import com.day.cq.wcm.api.reference.ReferenceProvider;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.caconfig.extensions.persistence.impl.PagePersistenceStrategy;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextBuilder;
-import io.wcm.testing.mock.aem.junit.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test the {@link ConfigurationReferenceProvider} with the {@link PagePersistenceStrategy}.
  */
-public class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
+@ExtendWith(AemContextExtension.class)
+class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
 
-  @Rule
-  public AemContext context = new AemContextBuilder()
+  private final AemContext context = new AemContextBuilder()
       .beforeSetUp(new AemContextCallback() {
         @Override
         public void execute(@NotNull AemContext ctx) {
@@ -74,8 +75,8 @@ public class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
   private Resource site1PageResource;
   private Resource site2PageResource;
 
-  @Before
-  public void setup() {
+  @BeforeEach
+  void setup() {
 
     // enable AEM page persistence strategy
     context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
@@ -105,7 +106,7 @@ public class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
   }
 
   @Test
-  public void testReferencesOfPage1() {
+  void testReferencesOfPage1() {
     ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
     context.registerInjectActivateService(referenceProvider);
     List<Reference> references = referenceProvider.findReferences(site1PageResource);
@@ -116,7 +117,7 @@ public class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
   }
 
   @Test
-  public void testReferencesOfPage2() {
+  void testReferencesOfPage2() {
     ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
     context.registerInjectActivateService(referenceProvider);
     List<Reference> references = referenceProvider.findReferences(site2PageResource);
@@ -128,7 +129,7 @@ public class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
   }
 
   @Test
-  public void testReferencesProperties() {
+  void testReferencesProperties() {
     ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
     context.registerInjectActivateService(referenceProvider);
     List<Reference> references = referenceProvider.findReferences(site1PageResource);
@@ -142,11 +143,11 @@ public class ConfigurationReferenceProvider_PagePersistenceStrategyTest {
   }
 
   @Test
-  public void testDisabled() {
+  void testDisabled() {
     ReferenceProvider referenceProvider = new ConfigurationReferenceProvider();
     context.registerInjectActivateService(referenceProvider, "enabled", false);
     List<Reference> references = referenceProvider.findReferences(site1PageResource);
-    assertTrue("no references", references.isEmpty());
+    assertTrue(references.isEmpty(), "no references");
   }
 
 }

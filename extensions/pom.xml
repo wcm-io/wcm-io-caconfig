@@ -109,6 +109,10 @@
           <groupId>io.wcm</groupId>
           <artifactId>io.wcm.testing.aem-mock</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
 
