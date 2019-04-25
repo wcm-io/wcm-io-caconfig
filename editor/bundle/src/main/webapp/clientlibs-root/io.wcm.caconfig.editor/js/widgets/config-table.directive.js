@@ -109,7 +109,10 @@
         numProps,
         i;
 
-      var configName = config.configName + (isPreview ? "-preview" : "");
+      var configName = config.configName
+        + (config.collectionItemName ? "-" + config.collectionItemName : "")
+        + (isPreview ? "-preview" : "");
+
       var getRowFn = isPreview ? getPropertyRowPreviewHtml : getPropertyRowHtml;
 
       if (propertyRowsCache[configName]) {

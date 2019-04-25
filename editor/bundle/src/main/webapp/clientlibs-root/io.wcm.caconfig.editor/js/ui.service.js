@@ -94,10 +94,10 @@
 
     that.showLoading = function () {
       $document.find(".caconfig-loading").show();
-    }
+    };
 
     that.hideLoading = function () {
       $document.find(".caconfig-loading").hide();
-    }
+    };
   }
 }(angular, CUI));
