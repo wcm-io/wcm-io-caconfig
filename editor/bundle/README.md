@@ -3,6 +3,11 @@
 
 ## Front-End Development Environment
 
+## Dependencies
+
+- Node 6.11.2
+- npm 3.10.10
+
 ### Getting Started
 
 1. Start a local AEM (6.2 or higher) instance on port 4502.
