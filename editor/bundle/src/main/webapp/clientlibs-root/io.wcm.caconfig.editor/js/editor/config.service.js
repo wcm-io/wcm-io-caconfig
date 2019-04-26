@@ -89,8 +89,9 @@
             if (isCollection) {
               currentConfigService.setCollectionItemTemplate(configName, response.data.newItem);
             }
-            // if collection, but no items, use newItem "template" to cache properties
+            // if collection, but no items, use newItem "template" to display properties
             if (isCollection && !(response.data.configs && response.data.configs.length)) {
+              response.data.newItem.isNewItem = true;
               configCacheService.updateConfigCache([response.data.newItem]);
             }
             else {
@@ -126,7 +127,6 @@
       return dataService.saveConfigData(current)
         .then(
           function success() {
-            configCacheService.removeStoredConfigCache();
             return parent;
           },
           function error(response) {
@@ -146,7 +146,7 @@
       var parent = current.configNameObject.parent || null;
       return dataService.deleteConfigData(current.configName).then(
         function success() {
-          configCacheService.removeStoredConfigCache();
+          configCacheService.removeConfigFromCache(current.configName);
           return parent;
         },
         function error(response) {

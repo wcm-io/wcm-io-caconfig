@@ -134,8 +134,38 @@
         configData = configs[i];
         addConfigToCache(configData, parentName);
       }
+      cleanUpCache();
       setStoredConfigCache();
     };
+
+    that.removeConfigFromCache = function (configName) {
+      nullifyChildren(configName);
+      cleanUpCache();
+      setStoredConfigCache();
+    };
+
+    function nullifyChildren(configName) {
+      if (configCache[configName] && configCache[configName].hasChildren) {
+        angular.forEach(configCache, function(child, childConfigName) {
+
+          if (child && child.parent && child.parent.configName === configName) {
+            nullifyChildren(childConfigName);
+
+            if (child.parent.collection) {
+              configCache[childConfigName] = null;
+            }
+          }
+        });
+      }
+    }
+
+    function cleanUpCache() {
+      angular.forEach(configCache, function(config, configName) {
+        if (!config) {
+          delete configCache[configName];
+        }
+      });
+    }
 
     function addConfigToCache(configData, parentName) {
       var isNested = false;
@@ -185,7 +215,7 @@
           else {
             // User has deeplinked to a nested config with uncached parent.
             // This will cause problems, so we so we abort the process.
-            delete configCache[configName];
+            configCache[configName] = null;
             window.console.error("Deeplinking error.");
             return;
           }
