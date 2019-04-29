@@ -27,6 +27,12 @@
       <action type="update" dev="sseifert">
         Switch to AEM 6.2 as minimum version.
       </action>
+      <action type="fix" dev="dding" issue="WCON-67">
+        Configuration Editor Header Bar looks broken in AEM 6.4 SP3 and AEM 6.5.
+      </action>
+      <action type="fix" dev="dding" issue="WCON-65">
+        Editor binds click actions of first item in collection to every item.
+      </action>
     </release>
 
     <release version="1.4.0" date="2019-02-22">
