@@ -166,8 +166,8 @@
     function init() {
       // Load Configuration Details
       configService.loadConfig(that.current.configName)
-        .then(function (currentData) {
-          if (!angular.isUndefined(currentData)) {
+        .then(function success(currentData) {
+          if (angular.isDefined(currentData)) {
             that.current.configs = currentData.configs;
             that.current.originalLength = currentData.configs.length;
             that.current.isCollection = currentData.isCollection;
@@ -191,6 +191,13 @@
           else {
             that.showAllConfigs();
           }
+        },
+        function error(message) {
+          modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, {
+            message: message
+          });
+          // redirect to overview
+          $rootScope.go();
         });
     }
   }
