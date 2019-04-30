@@ -133,14 +133,17 @@
         }
         else if (!property.overridden && !property.inherited
             && !property.nestedConfig && !property.nestedConfigCollection) {
-          if (angular.isUndefined(property.value) || property.value === "") {
+          if (angular.isUndefined(property.value)) {
             properties[property.name] = null;
           }
           else if (angular.isArray(property.value)) {
             tempArray = property.value.filter(function (element) {
               return angular.isDefined(element) && element !== null && element !== "";
             });
-            properties[property.name] = tempArray.length ? angular.copy(tempArray) : null;
+            properties[property.name] = angular.copy(tempArray);
+          }
+          else if (property.metadata.type !== "String" && property.value === "") {
+            properties[property.name] = null;
           }
           else {
             properties[property.name] = property.value;
