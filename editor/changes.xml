@@ -42,6 +42,9 @@
       <action type="fix" dev="dding" issue="WCON-60">
         Collections of Collections break the editor.
       </action>
+      <action type="fix" dev="dding" issue="WCON-71">
+        Validate decimal separator for double params.
+      </action>
     </release>
 
     <release version="1.4.0" date="2019-02-22">
