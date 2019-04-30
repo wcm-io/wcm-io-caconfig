@@ -19,11 +19,14 @@
  */
 package io.wcm.caconfig.editor.impl;
 
+import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_COLLECTION;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Servlet;
@@ -194,7 +197,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
                   .append(configurationPersistenceStrategy.getCollectionItemConfigName(config.getCollectionItemName(), config.getResourcePath()));
             }
             collectionConfigName.append("/").append(itemMetadata.getConfigurationMetadata().getName());
-            nestedConfigCollection.put("configName", collectionConfigName.toString());
+            nestedConfigCollection.put("configName", cleanupCollectionConfigName(collectionConfigName.toString()));
             JSONArray items = new JSONArray();
             for (ConfigurationData configData : configDatas) {
               items.put(toJson(configData, false));
@@ -241,6 +244,33 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     result.put("properties", props);
 
     return result;
+  }
+
+  /**
+   * Handle edge cases in persistence strategies that store configurations in AEM Page nodes with jcr:content
+   * child nodes. Ensure there are never multiple jcr:content nodes in a nested configuration path.
+   * @param collectionConfigName Collection configuration name
+   * @return Cleaned up collection configuration name
+   */
+  private String cleanupCollectionConfigName(@NotNull String collectionConfigName) {
+    String[] pathParts = StringUtils.splitPreserveAllTokens(collectionConfigName, "/");
+    List<String> cleanedUpPathParts = new ArrayList<>();
+    boolean jcrContentFound = false;
+    for (int i = 0; i < pathParts.length; i++) {
+      String pathPart = pathParts[i];
+      boolean isJcrContent = StringUtils.equals(pathPart, JCR_CONTENT);
+      if (isJcrContent) {
+        if (jcrContentFound) {
+          // skip all jcr:content nodes except the first one
+          continue;
+        }
+        else {
+          jcrContentFound = true;
+        }
+      }
+      cleanedUpPathParts.add(pathPart);
+    }
+    return StringUtils.join(cleanedUpPathParts, "/");
   }
 
   private JSONObject toJson(Map<String, String> properties) throws JSONException {
