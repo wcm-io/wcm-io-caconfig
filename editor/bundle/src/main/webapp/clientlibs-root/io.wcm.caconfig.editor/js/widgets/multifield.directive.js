@@ -107,16 +107,31 @@
     }
   }
 
-  MultifieldController.$inject = ["$scope"];
+  MultifieldController.$inject = ["$rootScope", "$scope"];
 
-  function MultifieldController($scope) {
-    $scope.addNewValue = function (index) {
+  function MultifieldController($rootScope, $scope) {
+    $scope.UP = "up";
+    $scope.DOWN = "down";
+
+    $scope.addValue = function (insertAfter, value) {
+      value = value || { value: undefined };
+
       $scope.$evalAsync(function () {
-        $scope.values.splice(index + 1, 0, { value: undefined });
+        $scope.values.splice(insertAfter + 1, 0, value);
       });
     };
+
     $scope.removeValue = function (index) {
-      $scope.values.splice(index, 1);
+      var removedValueArray = $scope.values.splice(index, 1);
+      return removedValueArray[0];
+    };
+
+    $scope.moveValue = function (index, direction) {
+      var value = $scope.removeValue(index);
+      var insertAfter = (direction === $scope.UP ? index - 2 : index);
+
+      $scope.addValue(insertAfter, value);
+      $rootScope.configForm.$setDirty();
     };
   }
 }(angular));

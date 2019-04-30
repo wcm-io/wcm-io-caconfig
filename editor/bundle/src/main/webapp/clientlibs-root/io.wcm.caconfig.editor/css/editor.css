@@ -97,7 +97,7 @@ span.caconfig-pathbrowser {
 
 .caconfig-multifield {
   position: relative;
-  padding-right: 103px;
+  padding-right: 132px;
 }
 
 .caconfig-multifield .coral-Textfield {
@@ -108,6 +108,22 @@ span.caconfig-pathbrowser {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.caconfig-multifield .coral-ButtonGroup-item {
+  min-width: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.caconfig-multifield:first-child .caconfig-button--up,
+.caconfig-multifield:last-child .caconfig-button--down {
+  border-color: #e6e6e6;
+  background-color: #f0f0f0;
+  color: #bebebe;
+  text-shadow: none;
+  cursor: default;
+  pointer-events: none;
 }
 
 .caconfig-pathbrowser .coral-PathBrowser {
