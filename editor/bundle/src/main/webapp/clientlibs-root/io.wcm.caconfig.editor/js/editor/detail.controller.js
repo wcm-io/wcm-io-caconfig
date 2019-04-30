@@ -40,7 +40,7 @@
       configs: []
     };
 
-    // If detail view was loaded directly via deeplink, we need to first loadConfigNames
+    // If detail view was loaded directly via deep link, we need to first loadConfigNames
     if (!configService.getState().contextPath || !configService.getState().configNames.length) {
       configService.loadConfigNames()
         .then(init);
@@ -196,8 +196,6 @@
           modalService.triggerEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, {
             message: message
           });
-          // redirect to overview
-          $rootScope.go();
         });
     }
   }

@@ -30,15 +30,15 @@
   angular.module("io.wcm.caconfig.editor")
     .service("configCacheService", ConfigCacheService);
 
-  ConfigCacheService.$inject = ["$window", "inputMap"];
+  ConfigCacheService.$inject = ["$rootScope", "$window", "inputMap"];
 
-  function ConfigCacheService($window, inputMap) {
+  function ConfigCacheService($rootScope, $window, inputMap) {
     var that = this;
     var configCache;
 
     /**
      * Gets "configNameObject" for a config from cache.
-     * If none exists, then the user has deeplinked to the config with cleared localstorage
+     * If none exists, then the user has deep-linked to the config with cleared localstorage
      * and will be unable to view or edit the config correctly.
      *
      * @param  {String} configName
@@ -213,10 +213,10 @@
             config.parent = that.getConfigNameObject(parentName);
           }
           else {
-            // User has deeplinked to a nested config with uncached parent.
+            // User has deep-linked to a nested config with uncached parent.
             // This will cause problems, so we so we abort the process.
             configCache[configName] = null;
-            window.console.error("Deeplinking error.");
+            window.console.error($rootScope.i18n.deepLinkError);
             return;
           }
         }
