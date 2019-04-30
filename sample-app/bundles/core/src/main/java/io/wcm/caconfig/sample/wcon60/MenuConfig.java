@@ -27,7 +27,7 @@ import org.apache.sling.caconfig.annotation.Property;
 public @interface MenuConfig {
 
   /**
-   * Links
+   * @return Links
    */
   @Property(label = "Links", description = "Configure a list of links")
   MenuLinkConfig[] links();

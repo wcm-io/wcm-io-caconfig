@@ -27,7 +27,7 @@ import org.apache.sling.caconfig.annotation.Property;
 public @interface MenuLinkConfig {
 
   /**
-   * Link Text
+   * @return Link Text
    */
   @Property(
       label = "Link Text",
@@ -36,7 +36,7 @@ public @interface MenuLinkConfig {
   String linkText();
 
   /**
-   * Link
+   * @return Link
    */
   @Property(
       label = "Link",

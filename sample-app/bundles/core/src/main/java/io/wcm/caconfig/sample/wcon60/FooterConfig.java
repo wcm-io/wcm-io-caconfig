@@ -31,7 +31,7 @@ import org.apache.sling.caconfig.annotation.Property;
 public @interface FooterConfig {
 
   /**
-   * Navigational menu's
+   * @return Navigational menu's
    */
   @Property(
       label = "Navigational menu's",
