@@ -39,6 +39,9 @@
       <action type="fix" dev="dding" issue="WCON-60">
         Collections of Collections break the editor.
       </action>
+      <action type="fix" dev="dding" issue="WCON-66">
+        Unable to clear inherited property
+      </action>
     </release>
 
     <release version="1.4.0" date="2019-02-22">
