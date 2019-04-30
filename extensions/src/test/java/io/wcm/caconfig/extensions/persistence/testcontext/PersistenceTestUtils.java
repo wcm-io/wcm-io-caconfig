@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caconfig.extensions.persistence.impl;
+package io.wcm.caconfig.extensions.persistence.testcontext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,10 +32,13 @@ import org.apache.sling.testing.mock.osgi.MapUtil;
 
 import io.wcm.testing.mock.aem.junit5.AemContext;
 
+/**
+ * Helper methods for persisting configuration data.
+ */
 @SuppressWarnings("null")
-final class TestUtils {
+public final class PersistenceTestUtils {
 
-  private TestUtils() {
+  private PersistenceTestUtils() {
     // static methods only
   }
 

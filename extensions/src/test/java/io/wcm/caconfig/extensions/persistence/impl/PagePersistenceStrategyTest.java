@@ -19,8 +19,8 @@
  */
 package io.wcm.caconfig.extensions.persistence.impl;
 
-import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfiguration;
-import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigurationCollection;
+import static io.wcm.caconfig.extensions.persistence.testcontext.PersistenceTestUtils.writeConfiguration;
+import static io.wcm.caconfig.extensions.persistence.testcontext.PersistenceTestUtils.writeConfigurationCollection;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,24 +30,27 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.sling.caconfig.ConfigurationBuilder;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.hamcrest.ResourceMatchers;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 import io.wcm.caconfig.extensions.persistence.example.ListConfig;
 import io.wcm.caconfig.extensions.persistence.example.ListNestedConfig;
 import io.wcm.caconfig.extensions.persistence.example.NestedConfig;
 import io.wcm.caconfig.extensions.persistence.example.SimpleConfig;
+import io.wcm.caconfig.extensions.persistence.example.wcon60.FooterConfig;
+import io.wcm.caconfig.extensions.persistence.example.wcon60.MenuConfig;
+import io.wcm.caconfig.extensions.persistence.example.wcon60.MenuLinkConfig;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit5.AemContextCallback;
@@ -60,7 +63,7 @@ class PagePersistenceStrategyTest {
   final AemContext context = new AemContextBuilder()
       .beforeSetUp(new AemContextCallback() {
         @Override
-        public void execute(AemContext ctx) {
+        public void execute(@NotNull AemContext ctx) {
           // also find sling:configRef props in cq:Page/jcr:content nodes
           MockOsgi.setConfigForPid(ctx.bundleContext(), "org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy",
               "configRefResourceNames", new String[] { "jcr:content", "." });
@@ -79,7 +82,7 @@ class PagePersistenceStrategyTest {
   void setUp() throws Exception {
     context.create().resource("/conf");
     contentPage = context.create().page("/content/test/site1", "/apps/app1/templates/template1",
-        ImmutableMap.<String, Object>of("sling:configRef", "/conf/test/site1"));
+        ImmutableValueMap.of("sling:configRef", "/conf/test/site1"));
   }
 
   @Test
@@ -133,10 +136,10 @@ class PagePersistenceStrategyTest {
 
     // write config
     writeConfigurationCollection(context, contentPage.getPath(), ListConfig.class.getName(), ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1", "intParam", 123),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value2", "intParam", 234)
+        ImmutableValueMap.of("stringParam", "value1", "intParam", 123),
+        ImmutableValueMap.of("stringParam", "value2", "intParam", 234)
     ),
-        ImmutableMap.<String, Object>of("sling:configCollectionInherit", true));
+        ImmutableValueMap.of("sling:configCollectionInherit", true));
 
     // assert storage in page in /conf
     Page parentPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName());
@@ -166,13 +169,13 @@ class PagePersistenceStrategyTest {
 
     // write config
     writeConfigurationCollection(context, contentPage.getPath(), ListNestedConfig.class.getName(), ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1", "intParam", 123),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value2", "intParam", 234)));
+        ImmutableValueMap.of("stringParam", "value1", "intParam", 123),
+        ImmutableValueMap.of("stringParam", "value2", "intParam", 234)));
     writeConfigurationCollection(context, contentPage.getPath(), ListNestedConfig.class.getName() + "/item0/jcr:content/subListConfig", ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value11"),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value12")));
+        ImmutableValueMap.of("stringParam", "value11"),
+        ImmutableValueMap.of("stringParam", "value12")));
     writeConfigurationCollection(context, contentPage.getPath(), ListNestedConfig.class.getName() + "/item1/jcr:content/subListConfig", ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value21")));
+        ImmutableValueMap.of("stringParam", "value21")));
 
     // assert storage in page in /conf
     assertNotNull(context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListNestedConfig.class.getName()));
@@ -207,9 +210,9 @@ class PagePersistenceStrategyTest {
 
     // update config collection items
     writeConfigurationCollection(context, contentPage.getPath(), ListNestedConfig.class.getName(), ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1-new", "intParam", 123),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value2-new", "intParam", 234),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value3-new", "intParam", 345)));
+        ImmutableValueMap.of("stringParam", "value1-new", "intParam", 123),
+        ImmutableValueMap.of("stringParam", "value2-new", "intParam", 234),
+        ImmutableValueMap.of("stringParam", "value3-new", "intParam", 345)));
 
     // read config
     configs = ImmutableList.copyOf(contentPage.getContentResource().adaptTo(ConfigurationBuilder.class)
@@ -247,8 +250,8 @@ class PagePersistenceStrategyTest {
         "stringParam", "value2",
         "intParam", 234);
     writeConfigurationCollection(context, contentPage.getPath(), NestedConfig.class.getName() + "/jcr:content/subListConfig", ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value3", "intParam", 345),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value4", "intParam", 456)));
+        ImmutableValueMap.of("stringParam", "value3", "intParam", 345),
+        ImmutableValueMap.of("stringParam", "value4", "intParam", 456)));
 
     // assert storage in page in /conf
     Page configPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + NestedConfig.class.getName());
@@ -276,6 +279,33 @@ class PagePersistenceStrategyTest {
   }
 
   @Test
+  void testDeeplyNestedConfig_WCON60() throws Exception {
+    context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
+
+    // write config
+    writeConfigurationCollection(context, contentPage.getPath(), FooterConfig.class.getName() + "/jcr:content/menu/menu1/links", ImmutableList.of(
+        ImmutableValueMap.of("linkText", "text1"),
+        ImmutableValueMap.of("linkText", "text2")));
+
+    // assert storage in page in /conf
+    Page configPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + FooterConfig.class.getName());
+    assertThat(configPage.getContentResource("menu/menu1/links/item0"), ResourceMatchers.props("linkText", "text1"));
+    assertThat(configPage.getContentResource("menu/menu1/links/item1"), ResourceMatchers.props("linkText", "text2"));
+
+    // read config
+    FooterConfig config = contentPage.getContentResource().adaptTo(ConfigurationBuilder.class).as(FooterConfig.class);
+    assertEquals(1, config.menu().length);
+
+    MenuConfig menu1 = config.menu()[0];
+    assertEquals(2, menu1.links().length);
+
+    MenuLinkConfig link1 = menu1.links()[0];
+    assertEquals("text1", link1.linkText());
+    MenuLinkConfig link2 = menu1.links()[1];
+    assertEquals("text2", link2.linkText());
+  }
+
+  @Test
   void testSimpleConfig_ResourceType() throws Exception {
     context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true,
         "resourceType", "app1/components/page/config");
@@ -299,9 +329,9 @@ class PagePersistenceStrategyTest {
 
     // write config
     writeConfigurationCollection(context, contentPage.getPath(), ListConfig.class.getName(), ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1", "intParam", 123),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value2", "intParam", 234)),
-        ImmutableMap.<String, Object>of("sling:configCollectionInherit", true));
+        ImmutableValueMap.of("stringParam", "value1", "intParam", 123),
+        ImmutableValueMap.of("stringParam", "value2", "intParam", 234)),
+        ImmutableValueMap.of("sling:configCollectionInherit", true));
 
     // assert storage in page in /conf
     Page parentPage = context.pageManager().getPage("/conf/test/site1/sling:configs/" + ListConfig.class.getName());
