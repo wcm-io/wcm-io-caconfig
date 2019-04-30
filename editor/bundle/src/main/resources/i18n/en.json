@@ -3,6 +3,7 @@
     "title": "Configuration Editor",
     "contextPath": "Context Path",
     "noContextPath": "No context path detected.",
+    "deepLinkError": "Deep linking to nested configurations is only partially supported. Please first navigate to the configuration manually.",
     "button": {
       "add": "Add",
       "addItem": "Add Item",

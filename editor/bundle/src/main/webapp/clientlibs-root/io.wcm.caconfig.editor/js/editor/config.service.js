@@ -28,9 +28,9 @@
   angular.module("io.wcm.caconfig.editor")
     .service("configService", ConfigService);
 
-  ConfigService.$inject = ["$q", "dataService", "configCacheService", "currentConfigService", "modalService"];
+  ConfigService.$inject = ["$rootScope", "$q", "dataService", "configCacheService", "currentConfigService", "modalService"];
 
-  function ConfigService($q, dataService, configCacheService, currentConfigService, modalService) {
+  function ConfigService($rootScope, $q, dataService, configCacheService, currentConfigService, modalService) {
     var that = this;
 
     var state = {
@@ -74,10 +74,10 @@
       var configNameObject = configCacheService.getConfigNameObject(configName);
       var isCollection;
 
-      // Most likely caused by user deeplinking to uncached configuration.
+      // Most likely caused by user deep-linking to uncached configuration.
       if (!configNameObject) {
         configCacheService.removeStoredConfigCache();
-        return $q.reject();
+        return $q.reject($rootScope.i18n.deepLinkError);
       }
 
       isCollection = Boolean(configNameObject.collection);
