@@ -19,14 +19,11 @@
  */
 package io.wcm.caconfig.editor.impl;
 
-import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_COLLECTION;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Servlet;
@@ -122,12 +119,12 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
       if (newItem == null) {
         throw new ConfigurationPersistenceException("Invalid configuration name: " + configName);
       }
-      result = toJson(configManager.getConfigurationCollection(contextResource, configName), newItem);
+      result = toJson(configManager.getConfigurationCollection(contextResource, configName), newItem, configName);
     }
     else {
       ConfigurationData configData = configManager.getConfiguration(contextResource, configName);
       if (configData != null) {
-        result = toJson(configData, configData.isInherited());
+        result = toJson(configData, configData.isInherited(), configName);
       }
       else {
         result = null;
@@ -136,7 +133,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
-  private JSONObject toJson(ConfigurationCollectionData configCollection, ConfigurationData newItem) throws JSONException {
+  private JSONObject toJson(ConfigurationCollectionData configCollection, ConfigurationData newItem, String fullConfigName) throws JSONException {
     JSONObject result = new JSONObject();
     result.putOpt("configName", configCollection.getConfigName());
 
@@ -150,17 +147,17 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
     JSONArray items = new JSONArray();
     for (ConfigurationData configData : configCollection.getItems()) {
-      items.put(toJson(configData, configData.isInherited()));
+      items.put(toJson(configData, configData.isInherited(), fullConfigName));
     }
     result.put("items", items);
 
-    result.put("newItem", toJson(newItem, null));
+    result.put("newItem", toJson(newItem, null, fullConfigName));
 
     return result;
   }
 
   @SuppressWarnings("null")
-  private JSONObject toJson(ConfigurationData config, Boolean inherited) throws JSONException {
+  private JSONObject toJson(ConfigurationData config, Boolean inherited, String fullConfigName) throws JSONException {
     JSONObject result = new JSONObject();
 
     result.putOpt("configName", config.getConfigName());
@@ -191,16 +188,18 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
           if (configDatas != null) {
             JSONObject nestedConfigCollection = new JSONObject();
             StringBuilder collectionConfigName = new StringBuilder();
-            collectionConfigName.append(configurationPersistenceStrategy.getConfigName(config.getConfigName(), config.getResourcePath()));
             if (config.getCollectionItemName() != null) {
-              collectionConfigName.append("/")
-                  .append(configurationPersistenceStrategy.getCollectionItemConfigName(config.getCollectionItemName(), config.getResourcePath()));
+              collectionConfigName.append(configurationPersistenceStrategy.getCollectionItemConfigName(fullConfigName
+                      + "/" + config.getCollectionItemName(), config.getResourcePath()));
+            }
+            else {
+              collectionConfigName.append(configurationPersistenceStrategy.getConfigName(fullConfigName, config.getResourcePath()));
             }
             collectionConfigName.append("/").append(itemMetadata.getConfigurationMetadata().getName());
-            nestedConfigCollection.put("configName", cleanupCollectionConfigName(collectionConfigName.toString()));
+            nestedConfigCollection.put("configName", collectionConfigName.toString());
             JSONArray items = new JSONArray();
             for (ConfigurationData configData : configDatas) {
-              items.put(toJson(configData, false));
+              items.put(toJson(configData, false, collectionConfigName.toString()));
             }
             nestedConfigCollection.put("items", items);
             prop.put("nestedConfigCollection", nestedConfigCollection);
@@ -209,7 +208,8 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         else {
           ConfigurationData configData = (ConfigurationData)item.getValue();
           if (configData != null) {
-            prop.put("nestedConfig", toJson(configData, null));
+            prop.put("nestedConfig", toJson(configData, null, fullConfigName
+                + "/" + itemMetadata.getConfigurationMetadata().getName()));
           }
         }
       }
@@ -244,33 +244,6 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     result.put("properties", props);
 
     return result;
-  }
-
-  /**
-   * Handle edge cases in persistence strategies that store configurations in AEM Page nodes with jcr:content
-   * child nodes. Ensure there are never multiple jcr:content nodes in a nested configuration path.
-   * @param collectionConfigName Collection configuration name
-   * @return Cleaned up collection configuration name
-   */
-  private String cleanupCollectionConfigName(@NotNull String collectionConfigName) {
-    String[] pathParts = StringUtils.splitPreserveAllTokens(collectionConfigName, "/");
-    List<String> cleanedUpPathParts = new ArrayList<>();
-    boolean jcrContentFound = false;
-    for (int i = 0; i < pathParts.length; i++) {
-      String pathPart = pathParts[i];
-      boolean isJcrContent = StringUtils.equals(pathPart, JCR_CONTENT);
-      if (isJcrContent) {
-        if (jcrContentFound) {
-          // skip all jcr:content nodes except the first one
-          continue;
-        }
-        else {
-          jcrContentFound = true;
-        }
-      }
-      cleanedUpPathParts.add(pathPart);
-    }
-    return StringUtils.join(cleanedUpPathParts, "/");
   }
 
   private JSONObject toJson(Map<String, String> properties) throws JSONException {
