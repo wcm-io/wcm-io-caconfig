@@ -133,6 +133,19 @@
   <build>
     <plugins>
 
+      <!-- Publish test artifact -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>io.wcm.devops.maven.plugins</groupId>
         <artifactId>eclipse-maven-plugin</artifactId>

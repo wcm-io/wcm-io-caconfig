@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Switch to AEM 6.2 as minimum version.
       </action>
+      <action type="fix" dev="sseifert" issue="WCON-63">
+        AEM Page persistence strategy: Ensure AEM page is created also for nested list configuration without properties on the first level.
+      </action>
     </release>
 
     <release version="1.5.0" date="2019-02-22">

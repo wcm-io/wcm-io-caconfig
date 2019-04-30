@@ -19,8 +19,8 @@
  */
 package io.wcm.caconfig.extensions.persistence.impl;
 
-import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfiguration;
-import static io.wcm.caconfig.extensions.persistence.impl.TestUtils.writeConfigurationCollection;
+import static io.wcm.caconfig.extensions.persistence.testcontext.PersistenceTestUtils.writeConfiguration;
+import static io.wcm.caconfig.extensions.persistence.testcontext.PersistenceTestUtils.writeConfigurationCollection;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.ConfigurationBuilder;
@@ -43,7 +42,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 import io.wcm.caconfig.extensions.contextpath.impl.AbsoluteParentContextPathStrategy;
 import io.wcm.caconfig.extensions.persistence.example.ListConfig;
@@ -125,8 +123,8 @@ class ToolsConfigPagePersistenceStrategyTest {
   void testListConfig() throws Exception {
     // write config
     writeConfigurationCollection(context, contentPage.getPath(), ListConfig.class.getName(), ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1", "intParam", 123),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value2", "intParam", 234)));
+        ImmutableValueMap.of("stringParam", "value1", "intParam", 123),
+        ImmutableValueMap.of("stringParam", "value2", "intParam", 234)));
 
     // assert storage in page in /content/*/tools/config
     Page configPage = context.pageManager().getPage("/content/region1/site1/en/tools/config");
@@ -164,13 +162,13 @@ class ToolsConfigPagePersistenceStrategyTest {
 
     // write config
     writeConfigurationCollection(context, contentPage.getPath(), ListNestedConfig.class.getName(), ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1", "intParam", 123),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value2", "intParam", 234)));
+        ImmutableValueMap.of("stringParam", "value1", "intParam", 123),
+        ImmutableValueMap.of("stringParam", "value2", "intParam", 234)));
     writeConfigurationCollection(context, contentPage.getPath(), ListNestedConfig.class.getName() + "/item0/subListConfig", ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value11"),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value12")));
+        ImmutableValueMap.of("stringParam", "value11"),
+        ImmutableValueMap.of("stringParam", "value12")));
     writeConfigurationCollection(context, contentPage.getPath(), ListNestedConfig.class.getName() + "/item1/subListConfig", ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value21")));
+        ImmutableValueMap.of("stringParam", "value21")));
 
     // assert storage in page in /content/*/tools/config
     Page configPage = context.pageManager().getPage("/content/region1/site1/en/tools/config");
@@ -211,9 +209,9 @@ class ToolsConfigPagePersistenceStrategyTest {
 
     // update config collection items
     writeConfigurationCollection(context, contentPage.getPath(), ListNestedConfig.class.getName(), ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value1-new", "intParam", 123),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value2-new", "intParam", 234),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value3-new", "intParam", 345)));
+        ImmutableValueMap.of("stringParam", "value1-new", "intParam", 123),
+        ImmutableValueMap.of("stringParam", "value2-new", "intParam", 234),
+        ImmutableValueMap.of("stringParam", "value3-new", "intParam", 345)));
 
     // read config
     configs = ImmutableList.copyOf(contentPage.getContentResource().adaptTo(ConfigurationBuilder.class)
@@ -249,8 +247,8 @@ class ToolsConfigPagePersistenceStrategyTest {
         "stringParam", "value2",
         "intParam", 234);
     writeConfigurationCollection(context, contentPage.getPath(), NestedConfig.class.getName() + "/subListConfig", ImmutableList.of(
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value3", "intParam", 345),
-        (Map<String, Object>)ImmutableMap.<String, Object>of("stringParam", "value4", "intParam", 456)));
+        ImmutableValueMap.of("stringParam", "value3", "intParam", 345),
+        ImmutableValueMap.of("stringParam", "value4", "intParam", 456)));
 
     // assert storage in page in /content/*/tools/config
     Page configPage = context.pageManager().getPage("/content/region1/site1/en/tools/config");
