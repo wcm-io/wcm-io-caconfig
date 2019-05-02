@@ -1,0 +1,13 @@
+<div class="caconfig-property-dropdown">
+  <span class="coral-Select" ng-id="id">
+    <button class="coral-Select-button coral-MinimalButton" type="button">
+      <span class="coral-Select-button-text" ng-bind="i18n.button.choose"></span>
+    </button>
+    <select class="coral-Select-select">
+      <option ng-repeat="option in dropdownOptions"
+              ng-value="option.value"
+              ng-bind="option.description">
+      </option>
+    </select>
+  </span>
+</div>

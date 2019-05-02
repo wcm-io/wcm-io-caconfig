@@ -35,6 +35,7 @@
       pathbrowser: "pathbrowser.html",
       popupContainer: "popupContainer.html",
       popupContent: "popupContent.html",
+      propertyDropdown: "propertyDropdown.html",
       propertyEditLink: "propertyEditLink.html",
       propertyInputCheckbox: "propertyInputCheckbox.html",
       propertyInputText: "propertyInputText.html",

@@ -183,6 +183,10 @@
         return "<td caconfig-pathbrowser property=\"config.properties[" + obj.propIndex + "]\"></td>";
       }
 
+      if (obj.type === "dropdown") {
+        return "<td caconfig-property-dropdown property=\"config.properties[" + obj.propIndex + "]\"></td>";
+      }
+
       if (obj.type === "nestedConfig") {
         return "<td caconfig-property-edit-link config-name=\"" + obj.property.nestedConfig.configName + "\" "
           + "link-text=\"" + obj.editLinkText + "\"></td>";

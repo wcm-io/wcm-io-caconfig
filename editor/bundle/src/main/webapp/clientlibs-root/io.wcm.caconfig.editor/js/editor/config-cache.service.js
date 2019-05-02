@@ -110,6 +110,10 @@
             && property.metadata.properties.widgetType === "pathbrowser") {
         return "pathbrowser";
       }
+      if (property.metadata && property.metadata.properties
+        && property.metadata.properties.widgetType === "dropdown") {
+        return "dropdown";
+      }
       if (property.metadata && property.metadata.type) {
         input = inputMap[property.metadata.type];
         return input.type || property.metadata.type;
