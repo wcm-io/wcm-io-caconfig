@@ -185,7 +185,6 @@
         </executions>
         <configuration>
           <nodeJsVersion>6.11.2</nodeJsVersion>
-          <npmVersion>3.10.10</npmVersion>
           <tasks>
             <npmInstallTask>
               <workingDirectory>${project.basedir}</workingDirectory>
