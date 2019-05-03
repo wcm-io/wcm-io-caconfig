@@ -49,10 +49,12 @@
      * @param {String} componentType
      * @param {String} componentName
      * @param {Object=} options
+     * @return {CUI.Widget} ui[componentType][componentName] - widget instance
      */
     that.addUI = function (componentType, componentName, options) {
       ui[componentType] = ui[componentType] || {};
       ui[componentType][componentName] = new CUI[componentType](options);
+      return ui[componentType][componentName];
     };
 
     /**
@@ -94,10 +96,10 @@
 
     that.showLoading = function () {
       $document.find(".caconfig-loading").show();
-    }
+    };
 
     that.hideLoading = function () {
       $document.find(".caconfig-loading").hide();
-    }
+    };
   }
 }(angular, CUI));

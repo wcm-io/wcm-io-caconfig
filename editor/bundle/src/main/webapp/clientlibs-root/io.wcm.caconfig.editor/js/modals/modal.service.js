@@ -47,9 +47,10 @@
     /**
      * @param {String} modalName
      * @param {Object} options
+     * @returns {CUI.Modal}
      */
     that.addModal = function (modalName, options) {
-      uiService.addUI(uiService.component.MODAL, modalName, options);
+      return uiService.addUI(uiService.component.MODAL, modalName, options);
     };
 
     /**
