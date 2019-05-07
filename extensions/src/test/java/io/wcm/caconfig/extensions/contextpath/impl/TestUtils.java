@@ -19,7 +19,7 @@
  */
 package io.wcm.caconfig.extensions.contextpath.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +28,7 @@ import org.apache.sling.caconfig.resource.spi.ContextResource;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.util.Path;
 
 final class TestUtils {
@@ -47,7 +47,7 @@ final class TestUtils {
     }
     List<ContextResource> resultList = ImmutableList.copyOf(result);
     int expectedSize = paths.length / 2;
-    assertEquals("Number of paths", expectedSize, resultList.size());
+    assertEquals(expectedSize, resultList.size(), "Number of paths");
     for (int i = 0; i < expectedSize / 2; i++) {
       String expectedContextPath = paths[i * 2];
       String expectedConfigRef = paths[i * 2 + 1];

@@ -287,6 +287,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     return ref;
   }
 
+  @SuppressWarnings("unused")
   private boolean isEnabledAndParamsValid(final Resource contentResource, final Collection<String> bucketNames, final String configName) {
     return enabled && contentResource != null;
   }

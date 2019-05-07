@@ -55,7 +55,7 @@ final class PersistenceUtils {
 
   private static final String DEFAULT_FOLDER_NODE_TYPE = "sling:Folder";
   private static final String DEFAULT_FOLDER_NODE_TYPE_IN_PAGE = JcrConstants.NT_UNSTRUCTURED;
-  private static final Pattern PAGE_PATH_PATTERN = Pattern.compile("^(.*)/" + Pattern.quote(JCR_CONTENT) + "(/.*)?$");
+  private static final Pattern PAGE_PATH_PATTERN = Pattern.compile("^(.*?)/" + Pattern.quote(JCR_CONTENT) + "(/.*)?$");
   private static final Pattern JCR_CONTENT_PATTERN = Pattern.compile("^(.*/)?" + Pattern.quote(JCR_CONTENT) + "(/.*)?$");
 
   private static final Logger log = LoggerFactory.getLogger(PersistenceUtils.class);
@@ -119,6 +119,9 @@ final class PersistenceUtils {
       String resourceType, ConfigurationManagementSettings configurationManagementSettings) {
     Matcher matcher = PAGE_PATH_PATTERN.matcher(pagePath);
     if (matcher.matches()) {
+      // ensure that shorted path part that ends with /jcr:content is created as AEM page (if not existent already)
+      String detectedPagePath = matcher.group(1);
+      ensurePage(resolver, detectedPagePath, null, resourceType, null, configurationManagementSettings);
       return getOrCreateResource(resolver, pagePath, DEFAULT_FOLDER_NODE_TYPE_IN_PAGE, null, configurationManagementSettings);
     }
     return ensurePage(resolver, pagePath, null, resourceType, null, configurationManagementSettings);
@@ -221,7 +224,6 @@ final class PersistenceUtils {
     }
   }
 
-  @SuppressWarnings({ "unused", "null" })
   public static void replaceProperties(Resource resource, Map<String, Object> properties,
       ConfigurationManagementSettings configurationManagementSettings) {
     if (log.isTraceEnabled()) {
@@ -242,7 +244,7 @@ final class PersistenceUtils {
     modValueMap.putAll(properties);
   }
 
-  @SuppressWarnings({ "unused", "null" })
+  @SuppressWarnings("null")
   public static void updatePageLastMod(ResourceResolver resolver, String configResourcePath) {
     PageManager pageManager = resolver.adaptTo(PageManager.class);
     Page page = pageManager.getContainingPage(configResourcePath);
@@ -284,7 +286,6 @@ final class PersistenceUtils {
    * Otherwise delete the resource using ResourceResolver.
    * @param resource Resource to delete
    */
-  @SuppressWarnings({ "null", "unused" })
   public static void deletePageOrResource(Resource resource) {
     Page configPage = resource.adaptTo(Page.class);
     if (configPage != null) {

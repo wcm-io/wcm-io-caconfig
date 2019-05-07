@@ -23,7 +23,7 @@
   var ANYTHING = /^.*$/;
   var BOOLEAN = /^(true|false)$/;
   var INTEGER = /^[-+]?[0-9]+([eE][-+]?[0-9]+)?$/;
-  var FLOAT = /^[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?$/;
+  var FLOAT = /^[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?$/;
 
   /**
    * Provides the list of available templates, used in directives

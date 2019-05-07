@@ -19,39 +19,39 @@
  */
 package io.wcm.config.core.management;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ApplicationTest {
+class ApplicationTest {
 
   private static final String APPLICATION_ID = "app1";
   private static final String LABEL = "Application #1";
 
   private Application underTest;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     underTest = new Application(APPLICATION_ID, LABEL);
   }
 
   @Test
-  public void testGetApplicationId() throws Exception {
+  void testGetApplicationId() throws Exception {
     assertEquals(APPLICATION_ID, underTest.getApplicationId());
     assertEquals(APPLICATION_ID, underTest.toString());
   }
 
   @Test
-  public void testGetLabel() throws Exception {
+  void testGetLabel() throws Exception {
     assertEquals(LABEL, underTest.getLabel());
   }
 
   @Test
-  public void testSort() {
+  void testSort() {
     Set<Application> apps = new TreeSet<>();
     apps.add(new Application("app1", "App #1"));
     apps.add(new Application("app3", "App #3"));

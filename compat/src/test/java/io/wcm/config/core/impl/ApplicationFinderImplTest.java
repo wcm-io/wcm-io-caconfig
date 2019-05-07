@@ -19,8 +19,8 @@
  */
 package io.wcm.config.core.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,25 +29,27 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.osgi.framework.Constants;
 
 import io.wcm.config.core.management.Application;
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
-public class ApplicationFinderImplTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ApplicationFinderImplTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   private Resource resource;
 
@@ -69,8 +71,8 @@ public class ApplicationFinderImplTest {
 
   private ApplicationFinderImpl underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     resource = context.create().resource("/any/path");
 
     context.registerService(ApplicationProvider.class, applicationProvider1, SERVICE_PROPS_1);
@@ -88,7 +90,7 @@ public class ApplicationFinderImplTest {
   }
 
   @Test
-  public void testFind() {
+  void testFind() {
     Application app = underTest.find(resource);
     assertNotNull(app);
     assertEquals(APPLICATION_ID_1, app.getApplicationId());
@@ -98,7 +100,7 @@ public class ApplicationFinderImplTest {
   }
 
   @Test
-  public void testGetAll() {
+  void testGetAll() {
     Set<Application> allApps = underTest.getAll();
     Application[] apps = allApps.toArray(new Application[allApps.size()]);
     assertEquals(2, apps.length);

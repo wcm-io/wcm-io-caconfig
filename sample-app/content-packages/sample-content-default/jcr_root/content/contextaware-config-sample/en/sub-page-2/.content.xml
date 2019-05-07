@@ -5,5 +5,7 @@
         cq:template="/apps/contextaware-config-sample/templates/sample"
         jcr:primaryType="cq:PageContent"
         jcr:title="Sub Page 2"
+        sling:configRef="/conf/contextaware-config-sample/sample/sub2"
         sling:resourceType="/apps/contextaware-config-sample/components/page/sample"/>
+    <config/>
 </jcr:root>

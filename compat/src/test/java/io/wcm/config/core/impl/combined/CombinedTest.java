@@ -24,10 +24,10 @@ import static io.wcm.config.core.impl.combined.CombinedAppContext.STRUCTURE_PAGE
 import static io.wcm.config.core.impl.combined.SampleParameterProvider.PROP_1;
 import static io.wcm.config.core.impl.combined.SampleParameterProvider.PROP_2;
 import static io.wcm.config.core.impl.combined.SampleParameterProvider.PROP_3;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 
@@ -35,9 +35,9 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
@@ -46,28 +46,29 @@ import io.wcm.config.api.Configuration;
 import io.wcm.config.core.impl.ParameterProviderBridge;
 import io.wcm.config.core.persistence.impl.ToolsConfigPagePersistenceProvider;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test all configuration services in combination.
  */
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class CombinedTest {
+class CombinedTest {
 
   private static final String CONTEXT_RESOURCE_PATH = "/content/region1/site1/en";
 
-  @Rule
-  public final AemContext context = CombinedAppContext.newAemContext();
+  private final AemContext context = CombinedAppContext.newAemContext();
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     // mount sample content
     context.load().json("/combined-test-content.json", "/content");
     context.currentPage(CONTEXT_RESOURCE_PATH);
   }
 
   @Test
-  public void testConfigWithInheritance() {
+  void testConfigWithInheritance() {
     context.registerInjectActivateService(new ToolsConfigPagePersistenceProvider(),
         "enabled", true,
         "configPageTemplate", CONFIG_PAGE_TEMPLATE,
@@ -83,7 +84,7 @@ public class CombinedTest {
   }
 
   @Test
-  public void testConfigWithInheritance_Disabled() {
+  void testConfigWithInheritance_Disabled() {
     context.registerInjectActivateService(new ToolsConfigPagePersistenceProvider(),
         "enabled", false);
 
@@ -97,7 +98,7 @@ public class CombinedTest {
   }
 
   @Test
-  public void testWriteReadConfig() {
+  void testWriteReadConfig() {
     long currentTime = Calendar.getInstance().getTimeInMillis();
 
     context.registerInjectActivateService(new ToolsConfigPagePersistenceProvider(),
@@ -127,7 +128,7 @@ public class CombinedTest {
   }
 
   @Test
-  public void testWriteReadConfig_NewPath() {
+  void testWriteReadConfig_NewPath() {
     long currentTime = Calendar.getInstance().getTimeInMillis();
 
     context.registerInjectActivateService(new ToolsConfigPagePersistenceProvider(),

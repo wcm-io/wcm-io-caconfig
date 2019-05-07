@@ -20,12 +20,12 @@
 package io.wcm.caconfig.editor.impl;
 
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.times;
@@ -42,34 +42,37 @@ import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ConfigPersistServletTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ConfigPersistServletTest {
 
   private static final String CONFIG_NAME = "testConfig";
   private static final String CONFIG_COL_NAME = "testConfigCol";
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Mock
   private ConfigurationManager configManager;
 
   private ConfigPersistServlet underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     context.registerService(ConfigurationManager.class, configManager);
     context.registerInjectActivateService(new EditorConfig());
     underTest = context.registerInjectActivateService(new ConfigPersistServlet());
@@ -99,7 +102,7 @@ public class ConfigPersistServletTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void testPersist() throws Exception {
+  void testPersist() throws Exception {
     String jsonData = "{properties:{"
         + "stringProp:'value1',"
         + "intProp:5,"
@@ -127,7 +130,7 @@ public class ConfigPersistServletTest {
   }
 
   @Test
-  public void testPersistCollection_None() throws Exception {
+  void testPersistCollection_None() throws Exception {
     String jsonData = "{items:[]}";
     assertEquals(HttpServletResponse.SC_OK, post(CONFIG_COL_NAME, true, jsonData));
 
@@ -139,7 +142,7 @@ public class ConfigPersistServletTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void testPersistCollection_One() throws Exception {
+  void testPersistCollection_One() throws Exception {
     String jsonData = "{properties:{colProp:'value1'},items:[{collectionItemName:'item1',properties:{"
         + "stringProp:['value1','value2'],"
         + "intProp:[5],"
@@ -185,7 +188,7 @@ public class ConfigPersistServletTest {
   }
 
   @Test
-  public void testPersistCollection_Two() throws Exception {
+  void testPersistCollection_Two() throws Exception {
     String jsonData = "{items:[{collectionItemName:'item1',properties:{stringProp:['value1','value2']}},"
         + "{collectionItemName:'item2',properties:{stringProp:['value3']}}]}";
     assertEquals(HttpServletResponse.SC_OK, post(CONFIG_COL_NAME, true, jsonData));
@@ -212,7 +215,7 @@ public class ConfigPersistServletTest {
   }
 
   @Test
-  public void testDelete() throws Exception {
+  void testDelete() throws Exception {
     assertEquals(HttpServletResponse.SC_OK, delete(CONFIG_NAME));
 
     verify(configManager, times(1)).deleteConfiguration(same(context.request().getResource()), eq(CONFIG_NAME));

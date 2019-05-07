@@ -4,7 +4,7 @@ wcm.io Context-Aware Configuration AEM Sample
 Deploy sample project
 ---------------------
 
-You can use this scripts for a full deployment (application, sample content, configuration) into local AEM 6.1 or higher instances.
+You can use this scripts for a full deployment (application, sample content, configuration) into local AEM 6.2 or higher instances.
 
 Using the **AEM Page Persistence Strategy** from wcm.io Context-Aware Configuration Extensions:
 

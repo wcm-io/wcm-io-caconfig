@@ -27,3 +27,4 @@ npm-debug.log
 *.sublime-*
 *nbactions*.xml
 .temp/
+.vscode

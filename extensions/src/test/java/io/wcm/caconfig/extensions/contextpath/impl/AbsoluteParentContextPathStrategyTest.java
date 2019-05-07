@@ -24,28 +24,27 @@ import static io.wcm.caconfig.extensions.contextpath.impl.TestUtils.assertResult
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.resource.spi.ContextPathStrategy;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
-public class AbsoluteParentContextPathStrategyTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+class AbsoluteParentContextPathStrategyTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  final AemContext context = new AemContext();
 
   protected Resource level1;
   protected Resource level2;
   protected Resource level3;
   protected Resource level4;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     level1 = context.create().page("/content/region1").adaptTo(Resource.class);
     level2 = context.create().page("/content/region1/site1").adaptTo(Resource.class);
     level3 = context.create().page("/content/region1/site1/en").adaptTo(Resource.class);
@@ -53,14 +52,14 @@ public class AbsoluteParentContextPathStrategyTest {
   }
 
   @Test
-  public void testWithInvalidConfig() {
+  void testWithInvalidConfig() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy());
 
     assertNoResult(context, underTest.findContextResources(level4));
   }
 
   @Test
-  public void testWithLevels() {
+  void testWithLevels13() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
         "levels", new int[] { 1, 3 });
 
@@ -80,7 +79,54 @@ public class AbsoluteParentContextPathStrategyTest {
   }
 
   @Test
-  public void testWithAlternativePatterns() {
+  void testWithLevels13_Unlimited() {
+    ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
+        "levels", new int[] { 1, 3 },
+        "unlimited", true);
+
+    assertResult(context, underTest.findContextResources(level4),
+        "/content/region1/site1/en/page1", "/conf/region1/site1/en/page1",
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level3),
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level2),
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level1),
+        "/content/region1", "/conf/region1");
+  }
+
+  @Test
+  void testWithLevels1_Unlimited() {
+    ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
+        "levels", new int[] { 1 },
+        "unlimited", true);
+
+    assertResult(context, underTest.findContextResources(level4),
+        "/content/region1/site1/en/page1", "/conf/region1/site1/en/page1",
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1/site1", "/conf/region1/site1",
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level3),
+        "/content/region1/site1/en", "/conf/region1/site1/en",
+        "/content/region1/site1", "/conf/region1/site1",
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level2),
+        "/content/region1/site1", "/conf/region1/site1",
+        "/content/region1", "/conf/region1");
+
+    assertResult(context, underTest.findContextResources(level1),
+        "/content/region1", "/conf/region1");
+  }
+
+  @Test
+  void testWithAlternativePatterns() {
     ContextPathStrategy underTest = context.registerInjectActivateService(new AbsoluteParentContextPathStrategy(),
         "levels", new int[] { 1, 3 },
         "contextPathRegex", "^(/content/.+)$",
@@ -96,7 +142,7 @@ public class AbsoluteParentContextPathStrategyTest {
    * Test case for WCON-51
    */
   @Test
-  public void testWithConfigChildPagesBlacklistedByPath() {
+  void testWithConfigChildPagesBlacklistedByPath() {
     Resource level1Config = context.create().page("/content/region1/config").getContentResource();
     Resource level2Config = context.create().page("/content/region1/site1/config").getContentResource();
     Resource level3Config = context.create().page("/content/region1/site1/en/config").getContentResource();
@@ -125,7 +171,7 @@ public class AbsoluteParentContextPathStrategyTest {
    * Test case for WCON-51
    */
   @Test
-  public void testWithConfigChildPagesBlacklistedByTemplate() {
+  void testWithConfigChildPagesBlacklistedByTemplate() {
     Resource level1Config = context.create().page("/content/region1/myconfig", "/apps/myapp/templates/caconfig-editor").getContentResource();
     Resource level2Config = context.create().page("/content/region1/site1/config", "/apps/myapp/templates/some-other-template").getContentResource();
     Resource level3Config = context.create().page("/content/region1/site1/en/other-config", "/apps/myapp/templates/caconfig-editor").getContentResource();

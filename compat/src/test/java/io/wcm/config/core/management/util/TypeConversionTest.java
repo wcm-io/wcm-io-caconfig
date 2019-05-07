@@ -21,26 +21,27 @@ package io.wcm.config.core.management.util;
 
 import static io.wcm.config.core.management.util.TypeConversion.objectToString;
 import static io.wcm.config.core.management.util.TypeConversion.stringToObject;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TypeConversionTest {
+class TypeConversionTest {
 
   @Test
-  public void testString() {
+  void testString() {
     assertConversion("value", "value", String.class);
     assertConversion(null, null, String.class);
   }
 
   @Test
-  public void testStringArray() {
+  void testStringArray() {
     assertConversion(new String[] {
         "value"
     }, "value", String[].class);
@@ -57,7 +58,7 @@ public class TypeConversionTest {
   }
 
   @Test
-  public void testStringArrayWithSpecialChars() {
+  void testStringArrayWithSpecialChars() {
     String[] values = new String[] {
         "value1",
         "value;2",
@@ -70,21 +71,21 @@ public class TypeConversionTest {
   }
 
   @Test
-  public void testInteger() {
+  void testInteger() {
     assertConversion(55, "55", Integer.class);
     assertEquals((Integer)0, stringToObject("wurst", Integer.class));
     assertConversion(null, null, Integer.class);
   }
 
   @Test
-  public void testLong() {
+  void testLong() {
     assertConversion(55L, "55", Long.class);
     assertEquals((Long)0L, stringToObject("wurst", Long.class));
     assertConversion(null, null, Long.class);
   }
 
   @Test
-  public void testDouble() {
+  void testDouble() {
     assertConversion(55d, "55.0", Double.class);
     assertConversion(55.123d, "55.123", Double.class);
     assertEquals((Double)0d, stringToObject("wurst", Double.class));
@@ -92,14 +93,14 @@ public class TypeConversionTest {
   }
 
   @Test
-  public void testBoolean() {
+  void testBoolean() {
     assertConversion(true, "true", Boolean.class);
     assertFalse(stringToObject("wurst", Boolean.class));
     assertConversion(null, null, Boolean.class);
   }
 
   @Test
-  public void testMap() {
+  void testMap() {
     Map<String, String> map = new LinkedHashMap<>();
     map.put("key1", "abc");
     map.put("key2", "def");
@@ -111,26 +112,30 @@ public class TypeConversionTest {
   }
 
   @Test
-  public void testMapWithSpecialChars() {
+  void testMapWithSpecialChars() {
     Map<String, String> map = new LinkedHashMap<>();
     map.put("key1", "value1");
     map.put("key;2", "value;2");
     map.put("key=3", "value=3");
     map.put("key=4;", "=value;4");
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "null" })
     Map<String, String> convertedMap = stringToObject(objectToString(map), Map.class);
     assertEquals(map, convertedMap);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testToObjectIllegalType() {
-    stringToObject("value", Date.class);
+  @Test
+  void testToObjectIllegalType() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      stringToObject("value", Date.class);
+    });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testToStringIllegalType() {
-    objectToString(new Date());
+  @Test
+  void testToStringIllegalType() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      objectToString(new Date());
+    });
   }
 
   /**
@@ -141,12 +146,12 @@ public class TypeConversionTest {
    */
   private void assertConversion(Object objectValue, String stringValue, Class<?> type) {
     if (type == String[].class) {
-      assertArrayEquals("stringToObject(" + stringValue + ")", (String[])objectValue, stringToObject(stringValue, String[].class));
+      assertArrayEquals((String[])objectValue, stringToObject(stringValue, String[].class), "stringToObject(" + stringValue + ")");
     }
     else {
-      assertEquals("stringToObject(" + stringValue + ")", objectValue, stringToObject(stringValue, type));
+      assertEquals(objectValue, stringToObject(stringValue, type), "stringToObject(" + stringValue + ")");
     }
-    assertEquals("objectToString(" + objectValue + ")", stringValue, objectToString(objectValue));
+    assertEquals(stringValue, objectToString(objectValue), "objectToString(" + objectValue + ")");
   }
 
 }

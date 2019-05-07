@@ -67,6 +67,11 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         required = true)
     int[] levels();
 
+    @AttributeDefinition(name = "Unlimited levels",
+        description = "If set to true, the 'Absolute Levels' define only the minimum levels. "
+            + "Above the highest level number every additional level is accepted as well.")
+    boolean unlimited() default false;
+
     @AttributeDefinition(name = "Context path whitelist",
         description = "Expression to match context paths. Context paths matching this expression are allowed. Use groups to reference them in configPathPatterns.",
         required = true)
@@ -96,6 +101,8 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
   }
 
   private Set<Integer> levels;
+  private int unlimitedLevelStart;
+  private boolean unlimited;
   private Pattern contextPathRegex;
   private Pattern contextPathBlacklistRegex;
   private String[] configPathPatterns;
@@ -110,8 +117,12 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     if (config.levels() != null) {
       for (int level : config.levels()) {
         levels.add(level);
+        if (level >= unlimitedLevelStart) {
+          unlimitedLevelStart = level + 1;
+        }
       }
     }
+    unlimited = config.unlimited();
     try {
       contextPathRegex = Pattern.compile(config.contextPathRegex());
     }
@@ -132,7 +143,6 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     templatePathsBlacklist = config.templatePathsBlacklist() != null ? new HashSet<>(Arrays.asList(config.templatePathsBlacklist())) : Collections.emptySet();
   }
 
-  @SuppressWarnings("null")
   @Override
   public @NotNull Iterator<ContextResource> findContextResources(@NotNull Resource resource) {
     if (!isValidConfig()) {
@@ -142,25 +152,30 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     ResourceResolver resourceResolver = resource.getResourceResolver();
     PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
     List<ContextResource> contextResources = new ArrayList<>();
-    for (int level : this.levels) {
-      String contextPath = getAbsoluteParent(resource, level, resourceResolver);
-      if (StringUtils.isNotEmpty(contextPath)) {
-        Resource contextResource = resource.getResourceResolver().getResource(contextPath);
-        if (contextResource != null) {
-          // first check if resource is blacklisted
-          if (isResourceBelongingToBlacklistedTemplates(contextResource, pageManager)) {
-            log.trace("Resource '{}' is belonging to a page derived from a blacklisted template, skipping level {}", contextPath, level);
-            break;
-          }
-          for (String configPathPattern : configPathPatterns) {
-            String configRef = deriveConfigRef(contextPath, configPathPattern, resourceResolver);
-            if (configRef != null) {
-              contextResources.add(new ContextResource(contextResource, configRef, serviceRanking));
+
+    int maxLevel = Path.getAbsoluteLevel(resource.getPath(), resourceResolver);
+    for (int level = 0; level <= maxLevel; level++) {
+      if (levels.contains(level) || (unlimited && level >= unlimitedLevelStart)) {
+        String contextPath = Path.getAbsoluteParent(resource.getPath(), level, resourceResolver);
+        if (StringUtils.isNotEmpty(contextPath)) {
+          Resource contextResource = resource.getResourceResolver().getResource(contextPath);
+          if (contextResource != null) {
+            // first check if resource is blacklisted
+            if (isResourceBelongingToBlacklistedTemplates(contextResource, pageManager)) {
+              log.trace("Resource '{}' is belonging to a page derived from a blacklisted template, skipping level {}", contextPath, level);
+              break;
+            }
+            for (String configPathPattern : configPathPatterns) {
+              String configRef = deriveConfigRef(contextPath, configPathPattern, resourceResolver);
+              if (configRef != null) {
+                contextResources.add(new ContextResource(contextResource, configRef, serviceRanking));
+              }
             }
           }
         }
       }
     }
+
     Collections.reverse(contextResources);
     return contextResources.iterator();
   }
@@ -170,10 +185,6 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
         && contextPathRegex != null
         && configPathPatterns != null
         && configPathPatterns.length > 0;
-  }
-
-  private String getAbsoluteParent(Resource resource, int absoluteParent, ResourceResolver resourceResolver) {
-    return Path.getAbsoluteParent(resource.getPath(), absoluteParent, resourceResolver);
   }
 
   private String deriveConfigRef(String contextPath, String configPathPattern, ResourceResolver resourceResolver) {
@@ -190,7 +201,6 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     }
   }
 
-  @SuppressWarnings({ "null", "unused" })
   private boolean isResourceBelongingToBlacklistedTemplates(Resource resource, PageManager pageManager) {
     if (templatePathsBlacklist.isEmpty()) {
       return false;

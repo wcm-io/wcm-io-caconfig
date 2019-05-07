@@ -19,29 +19,30 @@
  */
 package io.wcm.config.core.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.config.spi.ApplicationProvider;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-public class PathApplicationProviderTest {
+@ExtendWith(AemContextExtension.class)
+class PathApplicationProviderTest {
 
   private static final String APP_ID = "/apps/app1";
   private static final String APP_LABEL = "Application 1";
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   private ApplicationProvider underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     underTest = context.registerInjectActivateService(new PathApplicationProvider(),
         "applicationId", APP_ID,
         "label", APP_LABEL,
@@ -49,17 +50,17 @@ public class PathApplicationProviderTest {
   }
 
   @Test
-  public void testApplicationId() {
+  void testApplicationId() {
     assertEquals(APP_ID, underTest.getApplicationId());
   }
 
   @Test
-  public void testLabel() {
+  void testLabel() {
     assertEquals(APP_LABEL, underTest.getLabel());
   }
 
   @Test
-  public void testMatches() {
+  void testMatches() {
     assertFalse(underTest.matches(context.resourceResolver().getResource("/")));
     assertFalse(underTest.matches(context.create().resource("/content")));
     assertTrue(underTest.matches(context.create().resource("/content/region1")));

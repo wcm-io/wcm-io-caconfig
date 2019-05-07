@@ -19,28 +19,30 @@
  */
 package io.wcm.config.core.impl;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import io.wcm.config.core.management.Application;
 import io.wcm.config.core.management.ApplicationFinder;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
-public class ApplicationImplementationPickerTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ApplicationImplementationPickerTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   private static final String APP_ID_1 = "app1";
   private static final String APP_ID_2 = "app2";
@@ -63,8 +65,8 @@ public class ApplicationImplementationPickerTest {
 
   private ApplicationImplementationPicker underTest;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     when(applicationFinder.find(resourceApp1)).thenReturn(APP_1);
     when(applicationFinder.find(resourceApp2)).thenReturn(APP_2);
 
@@ -73,17 +75,17 @@ public class ApplicationImplementationPickerTest {
   }
 
   @Test
-  public void testResourceApp1() {
+  void testResourceApp1() {
     assertSame(Impl1.class, underTest.pick(Comparable.class, IMPL_ARRAY, resourceApp1));
   }
 
   @Test
-  public void testResourceApp2() {
+  void testResourceApp2() {
     assertSame(Impl2.class, underTest.pick(Comparable.class, IMPL_ARRAY, resourceApp2));
   }
 
   @Test
-  public void testResourceOther() {
+  void testResourceOther() {
     assertSame(Impl0.class, underTest.pick(Comparable.class, IMPL_ARRAY, resourceOther));
   }
 

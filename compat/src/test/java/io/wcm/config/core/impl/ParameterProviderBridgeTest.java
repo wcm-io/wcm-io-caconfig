@@ -20,40 +20,40 @@
 package io.wcm.config.core.impl;
 
 import static io.wcm.config.core.impl.ParameterProviderBridge.DEFAULT_CONFIG_NAME;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.google.common.collect.ImmutableSet;
 
 import io.wcm.config.spi.ParameterProvider;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ParameterProviderBridgeTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+class ParameterProviderBridgeTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   private ParameterProviderBridge underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     underTest = context.registerInjectActivateService(new ParameterProviderBridge());
   }
 
   @Test
-  public void testWithParameters() {
+  void testWithParameters() {
     context.registerService(ParameterProvider.class, new DummyParameterProvider());
 
     assertEquals(ImmutableSet.of(DEFAULT_CONFIG_NAME), underTest.getConfigurationNames());
@@ -100,7 +100,7 @@ public class ParameterProviderBridgeTest {
   }
 
   @Test
-  public void testWithoutParameters() {
+  void testWithoutParameters() {
     assertTrue(underTest.getConfigurationNames().isEmpty());
     assertNull(underTest.getConfigurationMetadata(DEFAULT_CONFIG_NAME));
   }

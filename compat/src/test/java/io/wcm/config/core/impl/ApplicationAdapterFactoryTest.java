@@ -19,28 +19,30 @@
  */
 package io.wcm.config.core.impl;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import io.wcm.config.core.management.Application;
 import io.wcm.config.core.management.ApplicationFinder;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
-public class ApplicationAdapterFactoryTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ApplicationAdapterFactoryTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Mock
   private ApplicationFinder applicationFinder;
@@ -49,8 +51,8 @@ public class ApplicationAdapterFactoryTest {
 
   private ApplicationAdapterFactory underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     resource = context.create().resource("/content/test");
     context.currentResource(resource);
 
@@ -62,15 +64,14 @@ public class ApplicationAdapterFactoryTest {
   }
 
   @Test
-  @SuppressWarnings("unused")
-  public void testApplicationResource() {
+  void testApplicationResource() {
     assertSame(application, underTest.getAdapter(resource, Application.class));
     assertNull(underTest.getAdapter(resource, ApplicationFinder.class));
     assertNull(underTest.getAdapter(this, Application.class));
   }
 
   @Test
-  public void testApplicationRequest() {
+  void testApplicationRequest() {
     assertSame(application, underTest.getAdapter(context.request(), Application.class));
 
     context.currentResource((Resource)null);
@@ -78,7 +79,7 @@ public class ApplicationAdapterFactoryTest {
   }
 
   @Test
-  public void testApplicationInvalid() {
+  void testApplicationInvalid() {
     assertNull(underTest.getAdapter(this, Application.class));
   }
 

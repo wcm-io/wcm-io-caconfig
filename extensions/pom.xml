@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.parent</artifactId>
-    <version>1.1.6</version>
+    <version>1.1.7-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.extensions</artifactId>
-  <version>1.4.1-SNAPSHOT</version>
+  <version>1.5.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Context-Aware Configuration Extensions for AEM</name>
@@ -80,7 +80,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.wcm.commons</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>
@@ -104,6 +104,16 @@
       <artifactId>io.wcm.testing.wcm-io-mock.sling</artifactId>
       <version>0.6.0</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>io.wcm</groupId>
+          <artifactId>io.wcm.testing.aem-mock</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -122,6 +132,19 @@
 
   <build>
     <plugins>
+
+      <!-- Publish test artifact -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
       <plugin>
         <groupId>io.wcm.devops.maven.plugins</groupId>

@@ -20,16 +20,16 @@
 package io.wcm.config.core.persistence.impl;
 
 import static io.wcm.config.core.persistence.impl.MapUtil.traceOutput;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-public class MapUtilTest {
+class MapUtilTest {
 
   @Test
-  public void testTraceOutput() {
+  void testTraceOutput() {
     assertEquals("{}", traceOutput(ImmutableMap.<String, Object>of()));
 
     assertEquals("{prop1: 'aa', prop2: 5, prop3: true}", traceOutput(ImmutableMap.<String, Object>of(

@@ -101,7 +101,8 @@
      * @return {String}
      */
     function getPropertyRowsHtml(config, isPreview) {
-      var configPropertyTypes,
+      var configName,
+        configPropertyTypes,
         propertyRowOptions,
         property,
         propertyRows,
@@ -109,8 +110,16 @@
         numProps,
         i;
 
-      var configName = config.configName + (isPreview ? "-preview" : "");
       var getRowFn = isPreview ? getPropertyRowPreviewHtml : getPropertyRowHtml;
+
+      if (config.isNewItem) {
+        configName = config.configName + "-new-item";
+      }
+      else {
+        configName = config.configName
+          + (config.collectionItemName ? "-" + config.collectionItemName : "")
+          + (isPreview ? "-preview" : "");
+      }
 
       if (propertyRowsCache[configName]) {
         return propertyRowsCache[configName];

@@ -30,36 +30,28 @@
   angular.module("io.wcm.caconfig.editor")
     .service("configCacheService", ConfigCacheService);
 
-  ConfigCacheService.$inject = ["$window", "inputMap"];
+  ConfigCacheService.$inject = ["$rootScope", "$window", "inputMap"];
 
-  function ConfigCacheService($window, inputMap) {
+  function ConfigCacheService($rootScope, $window, inputMap) {
     var that = this;
-    var configCache = {};
+    var configCache;
 
     /**
-     * Gets "configNameObject" for a config,
-     * first checking the configCache,
-     * then falling back to the "storedConfigCache" (in local storage)
+     * Gets "configNameObject" for a config from cache.
+     * If none exists, then the user has deep-linked to the config with cleared localstorage
+     * and will be unable to view or edit the config correctly.
      *
      * @param  {String} configName
-     * @return {Object}
+     * @return {Object|null}
      */
     that.getConfigNameObject = function(configName) {
-      var storedConfigCache;
       var config = configCache[configName];
 
       if (angular.isObject(config) && angular.isObject(config.configNameObject)) {
         return config.configNameObject;
       }
 
-      storedConfigCache = getStoredConfigCache();
-      config = storedConfigCache[configName];
-
-      if (angular.isObject(config) && angular.isObject(config.configNameObject)) {
-        return config.configNameObject;
-      }
-
-      return {};
+      return null;
     };
 
     /**
@@ -122,12 +114,13 @@
     }
 
     that.plantConfigCache = function (data) {
-      configCache = configCache || {};
+      configCache = configCache || getStoredConfigCache() || {};
       angular.forEach(data, function (config) {
         var configName = config.configName;
         if (configName) {
           configCache[configName] = configCache[configName] || {};
           configCache[configName].configNameObject = config;
+          configCache[configName].isRoot = true;
         }
       });
       return configCache;
@@ -145,8 +138,38 @@
         configData = configs[i];
         addConfigToCache(configData, parentName);
       }
+      cleanUpCache();
       setStoredConfigCache();
     };
+
+    that.removeConfigFromCache = function (configName) {
+      nullifyChildren(configName);
+      cleanUpCache();
+      setStoredConfigCache();
+    };
+
+    function nullifyChildren(configName) {
+      if (configCache[configName] && configCache[configName].hasChildren) {
+        angular.forEach(configCache, function(child, childConfigName) {
+
+          if (child && child.parent && child.parent.configName === configName) {
+            nullifyChildren(childConfigName);
+
+            if (child.parent.collection) {
+              configCache[childConfigName] = null;
+            }
+          }
+        });
+      }
+    }
+
+    function cleanUpCache() {
+      angular.forEach(configCache, function(config, configName) {
+        if (!config) {
+          delete configCache[configName];
+        }
+      });
+    }
 
     function addConfigToCache(configData, parentName) {
       var isNested = false;
@@ -155,7 +178,6 @@
       var children,
         config,
         configName,
-        parent,
         properties;
 
       if (angular.isObject(configData.nestedConfig)) {
@@ -181,17 +203,26 @@
       isCollectionItem = angular.isString(configData.collectionItemName);
 
       // If config has already been "fully" added to cache
-      if (!angular.isUndefined(config.propertyTypes)
-          && !angular.isUndefined(config.hasChildren)
+      if (angular.isDefined(config.propertyTypes)
+          && angular.isDefined(config.hasChildren)
           && !isCollectionItem
-          && !isNestedCollection) {
+          && !isNestedCollection
+          && (config.isRoot || config.configNameObject.breadcrumbs.length)) {
         return;
       }
 
       if (!isCollectionItem) {
-        if (angular.isUndefined(config.parent)) {
-          parent = that.getConfigNameObject(parentName);
-          config.parent = angular.equals(parent, {}) ? null : parent;
+        if (!config.parent && !config.isRoot) {
+          if (angular.isDefined(parentName)) {
+            config.parent = that.getConfigNameObject(parentName);
+          }
+          else {
+            // User has deep-linked to a nested config with uncached parent.
+            // This will cause problems, so we so we abort the process.
+            configCache[configName] = null;
+            window.console.error($rootScope.i18n.deepLinkError);
+            return;
+          }
         }
 
         if (angular.isUndefined(config.configNameObject)) {
@@ -314,12 +345,15 @@
       $window.localStorage.setItem(STORED_CONFIG_CACHE, angular.toJson(configCache));
     }
 
+    /**
+     * @return {object|null}
+     */
     function getStoredConfigCache() {
       var storedConfigCache = angular.fromJson($window.localStorage.getItem(STORED_CONFIG_CACHE));
       if (angular.isObject(storedConfigCache)) {
         return storedConfigCache;
       }
-      return {};
+      return null;
     }
 
     that.removeStoredConfigCache = function () {
