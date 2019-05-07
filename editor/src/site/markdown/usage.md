@@ -119,6 +119,8 @@ Define a dropdown list of options to choose from. The description is displayed t
 String dropdownParam();
 ```
 
+If you annotate an array parameter multiple options can be selected.
+
 
 ### Filter configurations
 

@@ -100,4 +100,20 @@ public @interface ConfigSample {
       })
   int intDropdownParam();
 
+  /**
+   * @return String multivalue dropdown parameter
+   */
+  @Property(label = "String Multivalue Dropdown Param", description = "This is a multi-valued string parameter with dropdown list.", order = 9,
+      property = {
+          "widgetType=dropdown",
+          "dropdownOptions=["
+              + "{'value':'option1','description':'Option #1'},"
+              + "{'value':'option2','description':'Option #2'},"
+              + "{'value':'option3','description':'Option #3'},"
+              + "{'value':'option4','description':'Option #4'},"
+              + "{'value':'option5','description':'Option #5'}"
+              + "]"
+      })
+  String[] stringMultivalueDropdownParam();
+
 }
