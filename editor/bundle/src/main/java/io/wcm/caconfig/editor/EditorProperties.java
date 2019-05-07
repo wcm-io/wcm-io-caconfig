@@ -19,8 +19,6 @@
  */
 package io.wcm.caconfig.editor;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Properties that can be used for configuration property definitions to customize the edit widget within the editor.
  */
@@ -33,24 +31,24 @@ public final class EditorProperties {
   /**
    * Property name for defining the widget type. Values should be one of the WIDGET_TYPE_* properties.
    */
-  public static final @NotNull String PROPERTY_WIDGET_TYPE = "widgetType";
+  public static final String PROPERTY_WIDGET_TYPE = "widgetType";
 
   /**
    * Widget type to add a pathbrowser selection widget to a string parameter.
    */
-  public static final @NotNull String WIDGET_TYPE_PATHBROWSER = "pathbrowser";
+  public static final String WIDGET_TYPE_PATHBROWSER = "pathbrowser";
 
   /**
    * With this additional property the root path for the path browser widget can be set:
    * The root path is passed as string value of the property.
    */
-  public static final @NotNull String PROPERTY_PATHBROWSER_ROOT_PATH = "pathbrowserRootPath";
+  public static final String PROPERTY_PATHBROWSER_ROOT_PATH = "pathbrowserRootPath";
 
   /**
    * With this additional property the root path for the path browser widget can be set:
    * If set to true, the current configuration context path is used as root path.
    */
-  public static final @NotNull String PROPERTY_PATHBROWSER_ROOT_PATH_CONTEXT = "pathbrowserRootPathContext";
+  public static final String PROPERTY_PATHBROWSER_ROOT_PATH_CONTEXT = "pathbrowserRootPathContext";
 
   /**
    * Widget type to add a dropdown list selection widget to a string or number parameter.
