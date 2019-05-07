@@ -108,11 +108,15 @@ String contextPath();
 Define a dropdown list of options to choose from. The description is displayed to the user, the value of the chosen option is stored in the configuration.
 
 ```java
-@Property(label = "DAM Path", description = "Browse DAM assets.", property = {
-    "widgetType=pathbrowser",
-    "pathbrowserRootPath=/content/dam"
+@Property(label = "Dropdown Param", description = "Parameter with dropdown list.", property = {
+    "widgetType=dropdown",
+    "dropdownOptions=["
+        + "{'value':'option1','description':'First option'},"
+        + "{'value':'option2','description':'Second option'},"
+        + "{'value':'option3','description':'Third option'}"
+        + "]"
 })
-String damPath();
+String dropdownParam();
 ```
 
 

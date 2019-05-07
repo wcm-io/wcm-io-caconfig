@@ -76,7 +76,7 @@ public @interface ConfigSample {
   /**
    * @return String dropdown parameter
    */
-  @Property(label = "String Dropdown Param", description = "This is a string parameter with dropdown list in the singleton configuration.", order = 7,
+  @Property(label = "String Dropdown Param", description = "This is a string parameter with dropdown list.", order = 7,
       property = {
           "widgetType=dropdown",
           "dropdownOptions=["
