@@ -38,6 +38,15 @@
         "collectionItem": "This configuration is inherited via collection inheritance.",
         "config": "This configuration is inherited.",
         "property": "Enable property inheritance"
+      },
+
+      "tooltip": {
+        "inheritedCollection": "This collection contains inherited configurations.",
+        "inheritedConfig": "This configuration is inherited.",
+        "notInheritedCollection": "This collection does not contain any inherited configurations.",
+        "notInheritedConfig": "This configuration is not inherited.",
+        "overriddenCollection": "This collection is overridden.",
+        "overriddenConfig": "This configuration is overridden."
       }
     },
 

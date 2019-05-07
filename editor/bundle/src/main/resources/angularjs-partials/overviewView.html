@@ -26,6 +26,7 @@
         <th class="coral-Table-headerCell" style="width:1%"></th>
         <th class="coral-Table-headerCell" bo-text="i18n('config.name')"></th>
         <th class="coral-Table-headerCell" bo-text="i18n('config.description')"></th>
+        <th class="coral-Table-headerCell" style="width:1%"></th>
       </tr>
     </thead>
     <tbody>
@@ -38,6 +39,26 @@
         </td>
         <td class="coral-Table-cell" bo-text="config.label || config.configName"></td>
         <td class="coral-Table-cell" bo-text="config.description"></td>
+        <td class="coral-Table-cell">
+          <i bo-if="config.overridden"
+             class="coral-Icon coral-Icon--sizeS coral-Icon--lockOn"
+             data-init="quicktip" data-quicktip-arrow="left" data-quicktip-type="info" role="img" tabindex="0"
+             bo-attr
+             bo-attr-data-quicktip-content="i18n(config.collection ? 'config.tooltip.overriddenCollection' : 'config.tooltip.overriddenConfig')"
+          ></i>
+          <i bo-if="!config.overridden && config.inherited"
+             class="coral-Icon coral-Icon--sizeS coral-Icon--link"
+             data-init="quicktip" data-quicktip-arrow="left" data-quicktip-type="info" role="img" tabindex="0"
+             bo-attr
+             bo-attr-data-quicktip-content="i18n(config.collection ? 'config.tooltip.inheritedCollection' : 'config.tooltip.inheritedConfig')"
+          ></i>
+          <i bo-if="!config.overridden && !config.inherited"
+             class="coral-Icon coral-Icon--sizeS coral-Icon--linkOff"
+             data-init="quicktip" data-quicktip-arrow="left" data-quicktip-type="info" role="img" tabindex="0"
+             bo-attr
+             bo-attr-data-quicktip-content="i18n(config.collection ? 'config.tooltip.notInheritedCollection' : 'config.tooltip.notInheritedConfig')"
+          ></i>
+        </td>
       </tr>
     </tbody>
   </table>

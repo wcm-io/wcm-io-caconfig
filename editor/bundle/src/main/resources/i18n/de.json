@@ -38,6 +38,15 @@
         "collectionItem": "Diese Konfiguration wird über Sammlungs-Vererbung vererbt.",
         "config": "Diese Konfiguration wird vererbt.",
         "property": "Eigenschafts-Vererbung aktivieren"
+      },
+
+      "tooltip": {
+        "inheritedCollection": "Diese Sammlung enthält vererbte Konfigurationen.",
+        "inheritedConfig": "Diese Konfiguration wird vererbt.",
+        "notInheritedCollection": "Diese Sammlung enthält keine vererbte Konfigurationen.",
+        "notInheritedConfig": "Diese Konfiguration wird nicht vererbt.",
+        "overriddenCollection": "Diese Sammlung wird überschrieben.",
+        "overriddenConfig": "Diese Konfiguration wird überschrieben."
       }
     },
 
