@@ -3,20 +3,20 @@
           bo-disabled="!overview.hasNonExistingConfig()
                        || !overview.state.contextPath"
           ng-click="overview.showNonExistingConfigs()"
-          bo-text="i18n.button.add">
+          bo-text="i18n('button.add')">
   </button>
   <button class="caconfig-publishButton coral-Button coral-Button--secondary" type="button"
           ng-click="overview.publishPage()"
-          bo-if="i18n.button.publish"
-          bo-text="i18n.button.publish">
+          bo-if="i18n('button.publish')"
+          bo-text="i18n('button.publish')">
   </button>
 
   <p class="caconfig-contextPath"
      bo-if="overview.state.contextPath">
-     <span bo-text="i18n.contextPath"></span>: <code bo-text="overview.state.contextPath"></code>
+     <span bo-text="i18n('contextPath')"></span>: <code bo-text="overview.state.contextPath"></code>
   </p>
   <p class="caconfig-contextPath"
-     bo-if="!overview.state.contextPath" bo-text="i18n.noContextPath">
+     bo-if="!overview.state.contextPath" bo-text="i18n('noContextPath')">
   </p>
 
   <table class="coral-Table coral-Table--hover"
@@ -24,8 +24,8 @@
     <thead>
       <tr class="coral-Table-row">
         <th class="coral-Table-headerCell" style="width:1%"></th>
-        <th class="coral-Table-headerCell" bo-text="i18n.config.name"></th>
-        <th class="coral-Table-headerCell" bo-text="i18n.config.description"></th>
+        <th class="coral-Table-headerCell" bo-text="i18n('config.name')"></th>
+        <th class="coral-Table-headerCell" bo-text="i18n('config.description')"></th>
       </tr>
     </thead>
     <tbody>

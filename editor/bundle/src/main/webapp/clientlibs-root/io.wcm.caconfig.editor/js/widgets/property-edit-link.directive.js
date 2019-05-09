@@ -46,7 +46,7 @@
       scope.configForm = $rootScope.configForm;
       scope.go = $rootScope.go;
       scope.saveWarning = $rootScope.saveWarning;
-      scope.linkText = $rootScope.i18n.button.edit;
+      scope.linkText = $rootScope.i18n("button.edit");
     }
   }
 }(angular));

@@ -29,6 +29,9 @@ import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ProviderType;
 
+import com.day.cq.wcm.api.Page;
+
+import io.wcm.sling.models.annotations.AemObject;
 import io.wcm.caconfig.editor.impl.ConfigDataServlet;
 import io.wcm.caconfig.editor.impl.ConfigNamesServlet;
 import io.wcm.caconfig.editor.impl.ConfigPersistServlet;
@@ -48,6 +51,7 @@ public class EditorConfiguration {
   private final String configDataUrl;
   private final String configPersistUrl;
   private final String contextPath;
+  private final String language;
   private final boolean enabled;
 
   /**
@@ -56,11 +60,13 @@ public class EditorConfiguration {
   @Inject
   public EditorConfiguration(@SlingObject Resource currentResource,
       @OSGiService ConfigurationResourceResolver configResourceResolver,
-      @OSGiService EditorConfig editorConfig) {
+      @OSGiService EditorConfig editorConfig,
+      @AemObject Page currentPage) {
     this.configNamesUrl = currentResource.getPath() + "." + ConfigNamesServlet.SELECTOR + ".json";
     this.configDataUrl = currentResource.getPath() + "." + ConfigDataServlet.SELECTOR + ".json";
     this.configPersistUrl = currentResource.getPath() + "." + ConfigPersistServlet.SELECTOR + ".json";
     this.contextPath = configResourceResolver.getContextPath(currentResource);
+    this.language = currentPage.getLanguage(false).getLanguage();
     this.enabled = editorConfig.isEnabled();
   }
 
@@ -78,6 +84,10 @@ public class EditorConfiguration {
 
   public String getContextPath() {
     return this.contextPath;
+  }
+
+  public String getLanguage() {
+    return this.language;
   }
 
   public boolean isEnabled() {
