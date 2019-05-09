@@ -180,7 +180,6 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     return true;
   }
 
-  @SuppressWarnings({ "null", "unused" })
   @Override
   public boolean persistConfigurationCollection(@NotNull ResourceResolver resolver, @NotNull String configResourceCollectionParentPath,
       @NotNull ConfigurationCollectionPersistData data) {

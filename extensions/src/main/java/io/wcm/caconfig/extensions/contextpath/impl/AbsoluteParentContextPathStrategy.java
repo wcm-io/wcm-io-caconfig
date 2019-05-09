@@ -143,7 +143,6 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     templatePathsBlacklist = config.templatePathsBlacklist() != null ? new HashSet<>(Arrays.asList(config.templatePathsBlacklist())) : Collections.emptySet();
   }
 
-  @SuppressWarnings("null")
   @Override
   public @NotNull Iterator<ContextResource> findContextResources(@NotNull Resource resource) {
     if (!isValidConfig()) {
@@ -202,7 +201,6 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     }
   }
 
-  @SuppressWarnings({ "null", "unused" })
   private boolean isResourceBelongingToBlacklistedTemplates(Resource resource, PageManager pageManager) {
     if (templatePathsBlacklist.isEmpty()) {
       return false;

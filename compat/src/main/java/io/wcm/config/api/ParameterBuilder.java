@@ -60,6 +60,7 @@ public final class ParameterBuilder<T> {
   private T defaultValue;
   private final Map<String, Object> properties = new HashMap<>();
 
+  @SuppressWarnings("null")
   private ParameterBuilder() {
     // private constructor
   }

@@ -25,6 +25,8 @@ import java.util.Set;
 
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -54,6 +56,7 @@ public final class ConfigurationImpl implements Configuration {
   }
 
   @Override
+  @SuppressWarnings("null")
   public <T> T get(Parameter<T> parameter) {
     return this.properties.get(parameter.getName(), parameter.getType());
   }
@@ -66,12 +69,12 @@ public final class ConfigurationImpl implements Configuration {
   // -- delegate methods for ValueMap --
 
   @Override
-  public <T> T get(String name, Class<T> type) {
+  public @Nullable <T> T get(@NotNull String name, @NotNull Class<T> type) {
     return this.properties.get(name, type);
   }
 
   @Override
-  public <T> T get(String name, T defaultValue) {
+  public <T> T get(@NotNull String name, T defaultValue) {
     return this.properties.get(name, defaultValue);
   }
 

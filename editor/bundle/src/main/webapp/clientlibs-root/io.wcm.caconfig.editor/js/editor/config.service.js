@@ -28,9 +28,9 @@
   angular.module("io.wcm.caconfig.editor")
     .service("configService", ConfigService);
 
-  ConfigService.$inject = ["dataService", "configCacheService", "currentConfigService", "modalService"];
+  ConfigService.$inject = ["$rootScope", "$q", "dataService", "configCacheService", "currentConfigService", "modalService"];
 
-  function ConfigService(dataService, configCacheService, currentConfigService, modalService) {
+  function ConfigService($rootScope, $q, dataService, configCacheService, currentConfigService, modalService) {
     var that = this;
 
     var state = {
@@ -72,7 +72,15 @@
      */
     that.loadConfig = function (configName) {
       var configNameObject = configCacheService.getConfigNameObject(configName);
-      var isCollection = Boolean(configNameObject.collection);
+      var isCollection;
+
+      // Most likely caused by user deep-linking to uncached configuration.
+      if (!configNameObject) {
+        configCacheService.removeStoredConfigCache();
+        return $q.reject($rootScope.i18n.deepLinkError);
+      }
+
+      isCollection = Boolean(configNameObject.collection);
 
       return dataService.getConfigData(configName, isCollection)
         .then(
@@ -81,8 +89,9 @@
             if (isCollection) {
               currentConfigService.setCollectionItemTemplate(configName, response.data.newItem);
             }
-            // if collection, but no items, use newItem "template" to cache properties
+            // if collection, but no items, use newItem "template" to display properties
             if (isCollection && !(response.data.configs && response.data.configs.length)) {
+              response.data.newItem.isNewItem = true;
               configCacheService.updateConfigCache([response.data.newItem]);
             }
             else {
@@ -118,7 +127,6 @@
       return dataService.saveConfigData(current)
         .then(
           function success() {
-            configCacheService.removeStoredConfigCache();
             return parent;
           },
           function error(response) {
@@ -138,7 +146,7 @@
       var parent = current.configNameObject.parent || null;
       return dataService.deleteConfigData(current.configName).then(
         function success() {
-          configCacheService.removeStoredConfigCache();
+          configCacheService.removeConfigFromCache(current.configName);
           return parent;
         },
         function error(response) {

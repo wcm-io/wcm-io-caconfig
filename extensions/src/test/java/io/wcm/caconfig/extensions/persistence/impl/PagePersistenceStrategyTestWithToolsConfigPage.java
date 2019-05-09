@@ -19,12 +19,16 @@
  */
 package io.wcm.caconfig.extensions.persistence.impl;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-public class PagePersistenceStrategyTestWithToolsConfigPage extends PagePersistenceStrategyTest {
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-  @Before
-  public void registerAdditionalPersictenceStrategy() throws Exception {
+@ExtendWith(AemContextExtension.class)
+class PagePersistenceStrategyTestWithToolsConfigPage extends PagePersistenceStrategyTest {
+
+  @BeforeEach
+  void registerAdditionalPersictenceStrategy() throws Exception {
     context.registerInjectActivateService(new ToolsConfigPagePersistenceStrategy(),
         "enabled", true);
   }

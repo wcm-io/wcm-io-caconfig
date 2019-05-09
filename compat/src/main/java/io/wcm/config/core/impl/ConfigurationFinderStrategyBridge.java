@@ -60,6 +60,7 @@ public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
   private static final Logger log = LoggerFactory.getLogger(ConfigurationFinderStrategyBridge.class);
 
   @Override
+  @SuppressWarnings("deprecation")
   public Iterator<ContextResource> findContextResources(Resource resource) {
     String applicationId = findApplicationId(resource);
     ResourceResolver resourceResolver = resource.getResourceResolver();

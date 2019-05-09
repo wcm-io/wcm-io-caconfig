@@ -19,7 +19,7 @@
  */
 package io.wcm.caconfig.editor.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,12 +33,11 @@ import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.google.common.collect.ImmutableList;
@@ -46,14 +45,15 @@ import com.google.common.collect.ImmutableSortedSet;
 
 import io.wcm.caconfig.editor.ConfigurationEditorFilter;
 import io.wcm.sling.commons.caservice.impl.ContextAwareServiceResolverImpl;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
 @SuppressWarnings("null")
-public class ConfigNamesServletTest {
+class ConfigNamesServletTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Mock
   private ConfigurationManager configManager;
@@ -62,8 +62,8 @@ public class ConfigNamesServletTest {
   @Mock
   private ConfigurationData configData;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     context.currentResource(context.create().resource("/content/test"));
 
     ConfigurationMetadata metadata1 = new ConfigurationMetadata("name1", ImmutableList.<PropertyMetadata<?>>of(), false)
@@ -94,7 +94,7 @@ public class ConfigNamesServletTest {
   }
 
   @Test
-  public void testResponse() throws Exception {
+  void testResponse() throws Exception {
     ConfigNamesServlet underTest = context.registerInjectActivateService(new ConfigNamesServlet());
     underTest.doGet(context.request(), context.response());
 
@@ -109,7 +109,7 @@ public class ConfigNamesServletTest {
   }
 
   @Test
-  public void testResponseWithFiltering() throws Exception {
+  void testResponseWithFiltering() throws Exception {
     context.registerService(ConfigurationEditorFilter.class, new ConfigurationEditorFilter() {
       @Override
       public boolean allowAdd(@NotNull String configName) {

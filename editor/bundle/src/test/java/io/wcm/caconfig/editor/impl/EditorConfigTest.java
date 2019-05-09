@@ -19,27 +19,28 @@
  */
 package io.wcm.caconfig.editor.impl;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-public class EditorConfigTest {
+@ExtendWith(AemContextExtension.class)
+class EditorConfigTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Test
-  public void testDefault() {
+  void testDefault() {
     EditorConfig underTest = context.registerInjectActivateService(new EditorConfig());
     assertTrue(underTest.isEnabled());
   }
 
   @Test
-  public void testDisabled() {
+  void testDisabled() {
     EditorConfig underTest = context.registerInjectActivateService(new EditorConfig(),
         "enabled", false);
     assertFalse(underTest.isEnabled());

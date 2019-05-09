@@ -19,13 +19,13 @@
  */
 package io.wcm.config.spi.helpers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -33,10 +33,10 @@ import io.wcm.config.api.Parameter;
 import io.wcm.config.api.ParameterBuilder;
 import io.wcm.config.spi.ParameterProvider;
 
-public class AbstractParameterProviderTest {
+class AbstractParameterProviderTest {
 
   @Test
-  public void testFromSet() {
+  void testFromSet() {
     ParameterProvider provider = new AbstractParameterProvider(ImmutableSet.<Parameter<?>>builder()
         .add(ParamsSample.PARAM_1).add(ParamsSample.PARAM_2).build()) {
       // nothing to override
@@ -50,7 +50,7 @@ public class AbstractParameterProviderTest {
   }
 
   @Test
-  public void testFromType() {
+  void testFromType() {
     ParameterProvider provider = new AbstractParameterProvider(ParamsSample.class) {
       // nothing to override
     };
@@ -62,13 +62,13 @@ public class AbstractParameterProviderTest {
     assertFalse(params.contains(ParamsSample.PARAM_3));
   }
 
-  public static final class ParamsSample {
+  static final class ParamsSample {
 
     private ParamsSample() {
       // static methods only
     }
 
-    public static final String APP_ID = "/apps/app1";
+    static final String APP_ID = "/apps/app1";
 
     public static final Parameter<String> PARAM_1 = ParameterBuilder.create("param1", String.class, APP_ID).build();
     public static final Parameter<Integer> PARAM_2 = ParameterBuilder.create("param2", Integer.class, APP_ID).build();

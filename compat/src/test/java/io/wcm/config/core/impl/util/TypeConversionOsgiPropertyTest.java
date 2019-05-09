@@ -21,11 +21,12 @@ package io.wcm.config.core.impl.util;
 
 import static io.wcm.config.core.management.util.TypeConversion.KEY_VALUE_DELIMITER;
 import static io.wcm.config.core.management.util.TypeConversion.osgiPropertyToObject;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,24 +35,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.config.core.management.util.ConversionStringUtils;
 
 @SuppressWarnings("null")
-public class TypeConversionOsgiPropertyTest {
+class TypeConversionOsgiPropertyTest {
 
   @Test
-  @SuppressWarnings("unused")
-  public void testString() {
+  void testString() {
     assertEquals("value", osgiPropertyToObject("value", String.class, null));
     assertNull(osgiPropertyToObject(null, String.class, null));
     assertEquals("defValue", osgiPropertyToObject(null, String.class, "defValue"));
   }
 
   @Test
-  @SuppressWarnings("unused")
-  public void testStringArray() {
+  void testStringArray() {
     assertArrayEquals(new String[] {
         "value"
     }, osgiPropertyToObject("value", String[].class, null));
@@ -79,7 +78,7 @@ public class TypeConversionOsgiPropertyTest {
   }
 
   @Test
-  public void testStringArrayWithSpecialChars() {
+  void testStringArrayWithSpecialChars() {
     String[] values = new String[] {
         "value1",
         "value;2",
@@ -91,7 +90,7 @@ public class TypeConversionOsgiPropertyTest {
   }
 
   @Test
-  public void testInteger() {
+  void testInteger() {
     assertEquals((Integer)55, osgiPropertyToObject(55, Integer.class, null));
     assertEquals((Integer)55, osgiPropertyToObject(55L, Integer.class, null));
     assertEquals((Integer)55, osgiPropertyToObject("55", Integer.class, null));
@@ -102,7 +101,7 @@ public class TypeConversionOsgiPropertyTest {
   }
 
   @Test
-  public void testLong() {
+  void testLong() {
     assertEquals((Long)55L, osgiPropertyToObject(55, Long.class, null));
     assertEquals((Long)55L, osgiPropertyToObject(55L, Long.class, null));
     assertEquals((Long)55L, osgiPropertyToObject("55", Long.class, null));
@@ -113,7 +112,7 @@ public class TypeConversionOsgiPropertyTest {
   }
 
   @Test
-  public void testDouble() {
+  void testDouble() {
     assertEquals(55d, osgiPropertyToObject(55, Double.class, null), 0.0001d);
     assertEquals(55d, osgiPropertyToObject(55L, Double.class, null), 0.0001d);
     assertEquals(55d, osgiPropertyToObject(55d, Double.class, null), 0.0001d);
@@ -126,7 +125,7 @@ public class TypeConversionOsgiPropertyTest {
   }
 
   @Test
-  public void testBoolean() {
+  void testBoolean() {
     assertTrue(osgiPropertyToObject(true, Boolean.class, null));
     assertTrue(osgiPropertyToObject("true", Boolean.class, null));
     assertFalse(osgiPropertyToObject("wurst", Boolean.class, null));
@@ -136,7 +135,7 @@ public class TypeConversionOsgiPropertyTest {
   }
 
   @Test
-  public void testMap() {
+  void testMap() {
     Map<String, String> map = new HashMap<>();
     map.put("key1", "abc");
     map.put("key2", "def");
@@ -154,7 +153,7 @@ public class TypeConversionOsgiPropertyTest {
   }
 
   @Test
-  public void testMapWithSpecialChars() {
+  void testMapWithSpecialChars() {
     Map<String, String> map = new TreeMap<>();
     map.put("key1", "value1");
     map.put("key;2", "value;2");
@@ -179,9 +178,11 @@ public class TypeConversionOsgiPropertyTest {
     assertEquals(map, convertedMap);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testIllegalType() {
-    osgiPropertyToObject("value", Date.class, null);
+  @Test
+  void testIllegalType() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      osgiPropertyToObject("value", Date.class, null);
+    });
   }
 
 }

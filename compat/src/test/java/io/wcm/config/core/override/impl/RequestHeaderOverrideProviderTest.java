@@ -19,35 +19,55 @@
  */
 package io.wcm.config.core.override.impl;
 
-import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextBuilder;
-import io.wcm.testing.mock.wcmio.sling.MockSlingExtensions;
+import com.google.common.collect.ImmutableMap;
 
-public class RequestHeaderOverrideProviderTest {
+import io.wcm.sling.commons.request.RequestContext;
+import io.wcm.sling.models.injectors.impl.AemObjectInjector;
+import io.wcm.sling.models.injectors.impl.ModelsImplConfiguration;
+import io.wcm.sling.models.injectors.impl.SlingObjectOverlayInjector;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import io.wcm.testing.mock.wcmio.sling.MockRequestContext;
 
-  @Rule
-  public AemContext context = new AemContextBuilder().plugin(WCMIO_SLING).build();;
+@ExtendWith(AemContextExtension.class)
+class RequestHeaderOverrideProviderTest {
 
-  @Before
-  public void setUp() {
-    MockSlingExtensions.setRequestContext(context, context.request());
+  private final AemContext context = new AemContextBuilder()
+      .beforeSetUp(aemContext -> {
+        // register request context
+        aemContext.registerService(RequestContext.class, new MockRequestContext());
+
+        // register sling models extensions
+        aemContext.registerInjectActivateService(new ModelsImplConfiguration(),
+            ImmutableMap.<String, Object>of("requestThreadLocal", true));
+
+        aemContext.registerInjectActivateService(new AemObjectInjector());
+        aemContext.registerInjectActivateService(new SlingObjectOverlayInjector());
+      })
+      .build();
+
+  @BeforeEach
+  @SuppressWarnings("null")
+  void setUp() {
+    MockRequestContext requestContext = (MockRequestContext)context.getService(RequestContext.class);
+    requestContext.setRequest(context.request());
 
     context.request().setHeader(RequestHeaderOverrideProvider.REQUEST_HEADER_PREFIX + "[default]param1", "value1");
     context.request().setHeader(RequestHeaderOverrideProvider.REQUEST_HEADER_PREFIX + "[/config1]param2", "value2");
   }
 
   @Test
-  public void testEnabled() {
+  void testEnabled() {
     RequestHeaderOverrideProvider provider = context.registerInjectActivateService(new RequestHeaderOverrideProvider(),
         "enabled", true);
 
@@ -57,7 +77,7 @@ public class RequestHeaderOverrideProviderTest {
   }
 
   @Test
-  public void testDisabled() {
+  void testDisabled() {
     RequestHeaderOverrideProvider provider = context.registerInjectActivateService(new RequestHeaderOverrideProvider(),
         "enabled", false);
 

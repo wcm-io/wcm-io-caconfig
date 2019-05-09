@@ -10,11 +10,11 @@
     <meta data-sly-call="${clientLib.css @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
   </head>
   <body class="coral--light" ng-cloak>
-    <nav class="coral-Panel-header endor-BlackBar header-main">
-      <a href="/" class="wcm-io-editor endor-Brand">
-        <i class="wcm-io-editor endor-Brand-icon coral-Icon coral-Icon--adobeMarketingCloud coral-Icon--sizeM"></i>
+    <nav class="coral-Panel-header endor-BlackBar header-main caconfig-header">
+      <a href="/" class="wcm-io-editor endor-Brand caconfig-brand">
+        <i class="wcm-io-editor endor-Brand-icon coral-Icon coral-Icon--adobeMarketingCloud coral-Icon--sizeM caconfig-brand-icon"></i>
       </a>
-      <span class="wcm-io-editor caconfig-title endor-Brand" ng-bind="title">${'io.wcm.caconfig.editor.title' @ i18n}</span>
+      <span class="wcm-io-editor caconfig-title endor-Brand caconfig-brand" ng-bind="title">${'io.wcm.caconfig.editor.title' @ i18n}</span>
     </nav>
     <div class="caconfig-page-border">
 
@@ -35,6 +35,7 @@
               title: "${'io.wcm.caconfig.editor.title' @ i18n, context='text'}",
               contextPath: "${'io.wcm.caconfig.editor.contextPath' @ i18n, context='text'}",
               noContextPath: "${'io.wcm.caconfig.editor.noContextPath' @ i18n, context='text'}",
+              deepLinkError: "${'io.wcm.caconfig.editor.deepLinkError' @ i18n, context='text'}",
               button: {
                 add: "${'io.wcm.caconfig.editor.button.add' @ i18n, context='text'}",
                 addItem: "${'io.wcm.caconfig.editor.button.addItem' @ i18n, context='text'}",

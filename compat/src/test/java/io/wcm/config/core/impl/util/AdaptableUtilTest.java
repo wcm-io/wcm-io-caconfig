@@ -19,21 +19,24 @@
  */
 package io.wcm.config.core.impl.util;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
-public class AdaptableUtilTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class AdaptableUtilTest {
 
   @Mock
   private Resource resource;
@@ -42,23 +45,23 @@ public class AdaptableUtilTest {
   @Mock
   private SlingHttpServletRequest request;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     when(request.getResource()).thenReturn(resource);
   }
 
   @Test
-  public void testResource() {
+  void testResource() {
     assertSame(resource, AdaptableUtil.getResource(resource));
   }
 
   @Test
-  public void testRequest() {
+  void testRequest() {
     assertSame(resource, AdaptableUtil.getResource(request));
   }
 
   @Test
-  public void testOther() {
+  void testOther() {
     assertNull(AdaptableUtil.getResource(resolver));
   }
 

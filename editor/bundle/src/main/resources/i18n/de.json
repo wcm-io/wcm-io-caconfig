@@ -3,6 +3,7 @@
     "title": "Konfiguration bearbeiten",
     "contextPath": "Kontext-Pfad",
     "noContextPath": "Der Kontext-Pfad konnte nicht ermittelt werden.",
+    "deepLinkError": "Deep-Linking zu geschachtelten Konfigurationen wird nur teilweise unterstützt. Bitte navigieren Sie zunächst manuell zur Konfiguration.",
     "button": {
       "add": "Hinzufügen",
       "addItem": "Element hinzufügen",
@@ -34,7 +35,7 @@
         "collectionItem": "Diese Konfiguration wird über Sammlungs-Vererbung vererbt.",
         "break": "Klicken Sie hier, um die Vererbung zu deaktivieren."
       },
-      "edit": "Klicken Sie hier, um die Konfiguration zu bearbeiten.",
+      "edit": "Klicken Sie hier, um die Konfiguration zu bearbeiten."
     },
     "largeCollection": {
       "numberInCollection": "Gesamtzahl der Elemente",

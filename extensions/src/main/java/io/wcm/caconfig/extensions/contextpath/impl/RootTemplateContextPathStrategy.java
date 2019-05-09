@@ -167,7 +167,6 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
         && configPathPatterns.length > 0;
   }
 
-  @SuppressWarnings("null")
   private List<String> getContextPathCandidatesMatchInnermost(Page page, ResourceResolver resourceResolver) {
     List<String> candidates = new ArrayList<>();
     if (page != null) {
@@ -187,7 +186,6 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     return candidates;
   }
 
-  @SuppressWarnings("null")
   private List<String> getContextPathCandidatesMatchAll(Page page, ResourceResolver resourceResolver) {
     List<String> candidates = new ArrayList<>();
     if (page != null) {

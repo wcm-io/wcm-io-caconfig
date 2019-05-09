@@ -17,6 +17,48 @@
  * limitations under the License.
  * #L%
  */
+.caconfig-header {
+  padding: 0 .9375rem 0 0;
+  min-height: 2.75rem;
+  height: 2.75rem;
+  background-color: #232323;
+}
+
+.caconfig-brand {
+  display: inline-block;
+  background-color: transparent;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  text-decoration: none;
+  white-space: nowrap;
+  height: 2.75rem;
+  cursor: pointer;
+  padding-left: .9375rem;
+  font-size: 1rem;
+  line-height: 2.75rem;
+  color: rgba(255,255,255,0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  -webkit-transition: margin-top 0.5s ease;
+  -moz-transition: margin-top 0.5s ease;
+  -o-transition: margin-top 0.5s ease;
+  -ms-transition: margin-top 0.5s ease;
+  transition: margin-top 0.5s ease;
+}
+
+.caconfig-brand-icon {
+  margin-right: .5rem;
+  line-height: inherit;
+  vertical-align: top;
+}
+
+.caconfig-title {
+  cursor: default;
+}
+
 .caconfig-page-border {
   padding: 15px;
 }
@@ -70,15 +112,6 @@ span.caconfig-pathbrowser {
 
 .caconfig-pathbrowser .coral-PathBrowser {
   width: 100%;
-}
-
-.wcm-io-editor.endor-Brand {
-  display: inline-block;
-  background-color: transparent;
-}
-
-span.wcm-io-editor.endor-Brand {
-  cursor: default;
 }
 
 #caconfig-addConfigModal {

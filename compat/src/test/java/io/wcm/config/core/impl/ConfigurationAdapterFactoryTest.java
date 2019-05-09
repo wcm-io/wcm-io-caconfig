@@ -19,8 +19,8 @@
  */
 package io.wcm.config.core.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.util.Map;
@@ -31,24 +31,26 @@ import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.config.api.Configuration;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
-public class ConfigurationAdapterFactoryTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class ConfigurationAdapterFactoryTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Mock
   private Resource resource;
@@ -68,8 +70,8 @@ public class ConfigurationAdapterFactoryTest {
       "param1", "value1",
       "param2", 555);
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     when(request.getResource()).thenReturn(resource);
 
     when(configManager.getConfiguration(resource, ParameterProviderBridge.DEFAULT_CONFIG_NAME)).thenReturn(configData);
@@ -82,21 +84,21 @@ public class ConfigurationAdapterFactoryTest {
   }
 
   @Test
-  public void testConfigurationResource() {
+  void testConfigurationResource() {
     Configuration config = underTest.getAdapter(resource, Configuration.class);
     assertEquals("/context/path", config.getConfigurationId());
     assertEquals(PROPS, config);
   }
 
   @Test
-  public void testConfigurationRequest() {
+  void testConfigurationRequest() {
     Configuration config = underTest.getAdapter(request, Configuration.class);
     assertEquals("/context/path", config.getConfigurationId());
     assertEquals(PROPS, config);
   }
 
   @Test
-  public void testConfigurationInvalid() {
+  void testConfigurationInvalid() {
     assertNull(underTest.getAdapter(this, Configuration.class));
   }
 

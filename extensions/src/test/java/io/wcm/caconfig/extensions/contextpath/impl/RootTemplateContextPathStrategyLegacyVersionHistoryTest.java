@@ -20,17 +20,19 @@
 package io.wcm.caconfig.extensions.contextpath.impl;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
-public class RootTemplateContextPathStrategyLegacyVersionHistoryTest extends RootTemplateContextPathStrategyTest {
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+class RootTemplateContextPathStrategyLegacyVersionHistoryTest extends RootTemplateContextPathStrategyTest {
 
   @Override
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     level1 = context.create().page("/content/versionhistory/user1/region1").adaptTo(Resource.class);
     level2 = context.create().page("/content/versionhistory/user1/region1/site1", TEMPLATE_1).adaptTo(Resource.class);
     level3 = context.create().page("/content/versionhistory/user1/region1/site1/en", TEMPLATE_2).adaptTo(Resource.class);

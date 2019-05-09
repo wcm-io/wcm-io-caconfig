@@ -19,23 +19,24 @@
  */
 package io.wcm.config.api;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedSet;
 
-public class ParameterBuilderTest {
+class ParameterBuilderTest {
 
   private static final String APP_ID = "/apps/app1";
 
   @Test
-  public void testBuilder() {
+  void testBuilder() {
     Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
 
     Parameter<String> param = ParameterBuilder.create("param1", String.class, APP_ID)
@@ -58,7 +59,7 @@ public class ParameterBuilderTest {
   }
 
   @Test
-  public void testSort() {
+  void testSort() {
     Set<Parameter<String>> params = ImmutableSortedSet.of(
         ParameterBuilder.create("app5_param2", String.class, APP_ID).build(),
         ParameterBuilder.create("app1_param2", String.class, APP_ID).build(),
@@ -71,44 +72,60 @@ public class ParameterBuilderTest {
     assertEquals("app5_param2", paramArray[2].getName());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidName() {
-    ParameterBuilder.create("param 1", String.class, APP_ID).build();
+  @Test
+  void testInvalidName() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      ParameterBuilder.create("param 1", String.class, APP_ID).build();
+    });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullName() {
-    ParameterBuilder.create(null, String.class, APP_ID).build();
+  @Test
+  void testNullName() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      ParameterBuilder.create(null, String.class, APP_ID).build();
+    });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidType() {
-    ParameterBuilder.create("param1", Date.class, APP_ID).build();
+  @Test
+  void testInvalidType() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      ParameterBuilder.create("param1", Date.class, APP_ID).build();
+    });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullType() {
-    ParameterBuilder.create("param1", null, APP_ID).build();
+  @Test
+  void testNullType() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      ParameterBuilder.create("param1", null, APP_ID).build();
+    });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidApplicationId() {
-    ParameterBuilder.create("param1", String.class, "app 1").build();
+  @Test
+  void testInvalidApplicationId() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      ParameterBuilder.create("param1", String.class, "app 1").build();
+    });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullApplicationId() {
-    ParameterBuilder.create("param1", String.class, null).build();
+  @Test
+  void testNullApplicationId() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      ParameterBuilder.create("param1", String.class, null).build();
+    });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidDefaultOsgiConfigProperty() {
-    ParameterBuilder.create("param1", String.class, APP_ID).defaultOsgiConfigProperty("aaa").build();
+  @Test
+  void testInvalidDefaultOsgiConfigProperty() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      ParameterBuilder.create("param1", String.class, APP_ID).defaultOsgiConfigProperty("aaa").build();
+    });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullDefaultOsgiConfigProperty() {
-    ParameterBuilder.create("param1", String.class, APP_ID).defaultOsgiConfigProperty(null).build();
+  @Test
+  void testNullDefaultOsgiConfigProperty() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      ParameterBuilder.create("param1", String.class, APP_ID).defaultOsgiConfigProperty(null).build();
+    });
   }
 
 }

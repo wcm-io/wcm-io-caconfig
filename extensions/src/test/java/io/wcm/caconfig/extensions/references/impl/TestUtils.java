@@ -19,7 +19,7 @@
  */
 package io.wcm.caconfig.extensions.references.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.reference.Reference;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 @SuppressWarnings("null")
 final class TestUtils {
@@ -56,9 +56,9 @@ final class TestUtils {
   }
 
   public static void assetReferences(List<Reference> references, String... paths) {
-    assertEquals("number of references", paths.length, references.size());
+    assertEquals(paths.length, references.size(), "number of references");
     for (int i = 0; i < paths.length; i++) {
-      assertEquals("reference #" + i, paths[i], references.get(i).getResource().getPath());
+      assertEquals(paths[i], references.get(i).getResource().getPath(), "reference #" + i);
     }
   }
 

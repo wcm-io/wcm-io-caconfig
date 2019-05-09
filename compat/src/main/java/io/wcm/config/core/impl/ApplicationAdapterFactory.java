@@ -24,6 +24,8 @@ import static org.apache.sling.api.adapter.AdapterFactory.ADAPTER_CLASSES;
 
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -46,7 +48,7 @@ public final class ApplicationAdapterFactory implements AdapterFactory {
 
   @SuppressWarnings("unchecked")
   @Override
-  public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
+  public @Nullable <AdapterType> AdapterType getAdapter(@NotNull Object adaptable, @NotNull Class<AdapterType> type) {
     if (type == Application.class) {
       Resource resource = AdaptableUtil.getResource(adaptable);
       if (resource != null) {

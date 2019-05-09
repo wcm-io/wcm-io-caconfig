@@ -22,16 +22,16 @@ package io.wcm.config.core.management.util;
 import static io.wcm.config.core.management.util.ConversionStringUtils.decodeString;
 import static io.wcm.config.core.management.util.ConversionStringUtils.encodeString;
 import static io.wcm.config.core.management.util.ConversionStringUtils.splitPreserveAllTokens;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ConversionStringUtilsTest {
+class ConversionStringUtilsTest {
 
   @Test
-  public void testSplitPreserveAllTokens() {
+  void testSplitPreserveAllTokens() {
     assertArrayEquals(new String[0], splitPreserveAllTokens(null, ';'));
     assertArrayEquals(new String[0], splitPreserveAllTokens("", ';'));
 
@@ -64,7 +64,7 @@ public class ConversionStringUtilsTest {
   }
 
   @Test
-  public void testEncodeString() {
+  void testEncodeString() {
     assertNull(encodeString((String)null));
     assertEquals("", encodeString(""));
 
@@ -75,7 +75,7 @@ public class ConversionStringUtilsTest {
   }
 
   @Test
-  public void testDecodeStringString() {
+  void testDecodeStringString() {
     assertNull(decodeString((String)null));
     assertEquals("", decodeString(""));
 

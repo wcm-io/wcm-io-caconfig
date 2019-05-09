@@ -50,8 +50,9 @@
     </dependency>
     <dependency>
       <groupId>com.adobe.aem</groupId>
-      <artifactId>aem-api</artifactId>
-      <scope>compile</scope>
+      <artifactId>uber-jar</artifactId>
+      <classifier>apis</classifier>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.sling</groupId>
