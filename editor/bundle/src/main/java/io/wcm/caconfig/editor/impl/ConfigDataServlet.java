@@ -119,12 +119,12 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
       if (newItem == null) {
         throw new ConfigurationPersistenceException("Invalid configuration name: " + configName);
       }
-      result = toJson(configManager.getConfigurationCollection(contextResource, configName), newItem);
+      result = toJson(configManager.getConfigurationCollection(contextResource, configName), newItem, configName);
     }
     else {
       ConfigurationData configData = configManager.getConfiguration(contextResource, configName);
       if (configData != null) {
-        result = toJson(configData, configData.isInherited());
+        result = toJson(configData, configData.isInherited(), configName);
       }
       else {
         result = null;
@@ -133,7 +133,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
-  private JSONObject toJson(ConfigurationCollectionData configCollection, ConfigurationData newItem) throws JSONException {
+  private JSONObject toJson(ConfigurationCollectionData configCollection, ConfigurationData newItem, String fullConfigName) throws JSONException {
     JSONObject result = new JSONObject();
     result.putOpt("configName", configCollection.getConfigName());
 
@@ -147,17 +147,17 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
     JSONArray items = new JSONArray();
     for (ConfigurationData configData : configCollection.getItems()) {
-      items.put(toJson(configData, configData.isInherited()));
+      items.put(toJson(configData, configData.isInherited(), fullConfigName));
     }
     result.put("items", items);
 
-    result.put("newItem", toJson(newItem, null));
+    result.put("newItem", toJson(newItem, null, fullConfigName));
 
     return result;
   }
 
   @SuppressWarnings("null")
-  private JSONObject toJson(ConfigurationData config, Boolean inherited) throws JSONException {
+  private JSONObject toJson(ConfigurationData config, Boolean inherited, String fullConfigName) throws JSONException {
     JSONObject result = new JSONObject();
 
     result.putOpt("configName", config.getConfigName());
@@ -188,16 +188,18 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
           if (configDatas != null) {
             JSONObject nestedConfigCollection = new JSONObject();
             StringBuilder collectionConfigName = new StringBuilder();
-            collectionConfigName.append(configurationPersistenceStrategy.getConfigName(config.getConfigName(), config.getResourcePath()));
             if (config.getCollectionItemName() != null) {
-              collectionConfigName.append("/")
-                  .append(configurationPersistenceStrategy.getCollectionItemConfigName(config.getCollectionItemName(), config.getResourcePath()));
+              collectionConfigName.append(configurationPersistenceStrategy.getCollectionItemConfigName(fullConfigName
+                      + "/" + config.getCollectionItemName(), config.getResourcePath()));
+            }
+            else {
+              collectionConfigName.append(configurationPersistenceStrategy.getConfigName(fullConfigName, config.getResourcePath()));
             }
             collectionConfigName.append("/").append(itemMetadata.getConfigurationMetadata().getName());
             nestedConfigCollection.put("configName", collectionConfigName.toString());
             JSONArray items = new JSONArray();
             for (ConfigurationData configData : configDatas) {
-              items.put(toJson(configData, false));
+              items.put(toJson(configData, false, collectionConfigName.toString()));
             }
             nestedConfigCollection.put("items", items);
             prop.put("nestedConfigCollection", nestedConfigCollection);
@@ -206,7 +208,8 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         else {
           ConfigurationData configData = (ConfigurationData)item.getValue();
           if (configData != null) {
-            prop.put("nestedConfig", toJson(configData, null));
+            prop.put("nestedConfig", toJson(configData, null, fullConfigName
+                + "/" + itemMetadata.getConfigurationMetadata().getName()));
           }
         }
       }
