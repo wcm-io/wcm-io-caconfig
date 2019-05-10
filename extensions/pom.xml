@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.parent</artifactId>
-    <version>1.1.7-SNAPSHOT</version>
+    <version>1.1.8</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.extensions</artifactId>
-  <version>1.5.1-SNAPSHOT</version>
+  <version>1.6.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Context-Aware Configuration Extensions for AEM</name>
