@@ -186,6 +186,14 @@ span.caconfig-pathbrowser {
   display: none;
 }
 
+.caconfig-dummy-taglist .coral-TagList-tag,
+.caconfig-dummy-taglist .coral-TagList-tag-removeButton {
+  color: #bebebe;
+  text-shadow: none;
+  cursor: default;
+  pointer-events: none;
+}
+
 /**
  * We use a negative margin-left because of .caconfig-page-border padding
  */

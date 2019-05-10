@@ -35,7 +35,8 @@
     that.component = {
       MODAL: "Modal",
       POPOVER: "Popover",
-      SELECT: "Select"
+      SELECT: "Select",
+      TAG_LIST: "TagList"
     };
 
     that.method = {

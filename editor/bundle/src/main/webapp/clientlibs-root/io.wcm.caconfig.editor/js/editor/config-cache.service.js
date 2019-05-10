@@ -95,16 +95,16 @@
       if (property.nestedConfigCollection) {
         return "nestedConfigCollection";
       }
+      if (property.metadata && property.metadata.properties
+        && property.metadata.properties.widgetType === "dropdown") {
+        return "dropdown";
+      }
       if (property.metadata && property.metadata.multivalue) {
         return "multivalue";
       }
       if (property.metadata && property.metadata.properties
             && property.metadata.properties.widgetType === "pathbrowser") {
         return "pathbrowser";
-      }
-      if (property.metadata && property.metadata.properties
-        && property.metadata.properties.widgetType === "dropdown") {
-        return "dropdown";
       }
       if (property.metadata && property.metadata.type) {
         input = inputMap[property.metadata.type];

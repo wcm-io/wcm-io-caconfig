@@ -193,7 +193,8 @@
       }
 
       if (obj.type === "dropdown") {
-        return "<td caconfig-property-dropdown property=\"config.properties[" + obj.propIndex + "]\"></td>";
+        return "<td caconfig-property-dropdown property=\"config.properties[" + obj.propIndex + "]\""
+          + "multivalue=\"" + Boolean(obj.property.metadata.multivalue) + "\"></td>";
       }
 
       if (obj.type === "nestedConfig") {
