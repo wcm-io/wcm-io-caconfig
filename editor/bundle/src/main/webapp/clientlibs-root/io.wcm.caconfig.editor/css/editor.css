@@ -95,6 +95,10 @@ span.caconfig-pathbrowser {
   display: none !important;
 }
 
+.coral-Multifield {
+  width: 100%;
+}
+
 .caconfig-multifield {
   position: relative;
   padding-right: 103px;

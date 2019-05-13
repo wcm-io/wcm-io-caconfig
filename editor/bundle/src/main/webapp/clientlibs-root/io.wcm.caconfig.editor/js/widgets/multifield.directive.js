@@ -23,9 +23,9 @@
   angular.module("io.wcm.caconfig.widgets")
     .directive("caconfigMultifield", multifield);
 
-  multifield.$inject = ["templateUrlList", "inputMap", "$rootScope"];
+  multifield.$inject = ["templateUrlList", "inputMap", "$rootScope", "uiService", "$timeout"];
 
-  function multifield(templateList, inputMap, $rootScope) {
+  function multifield(templateList, inputMap, $rootScope, uiService, $timeout) {
 
     var directive = {
       replace: true,
@@ -39,14 +39,25 @@
 
     return directive;
 
-    function link(scope) {
+    function link(scope, element) {
       var input = inputMap[scope.property.metadata.type];
       var inheritedStateChanged = false;
+      var $templateDiv = element.find(".caconfig-multifield__template");
+      var $templateScript = element.find(".js-coral-Multifield-input-template");
 
       scope.type = input.type;
       scope.pattern = input.pattern;
       scope.effectiveValues = [];
       scope.values = [];
+
+      $templateScript.append($templateDiv.html());
+      $templateDiv.remove();
+
+      $timeout(function () {
+        uiService.addUI(uiService.component.MULTIFIELD, scope.property.name, {
+          element: element.find(".coral-Multifield")
+        });
+      });
 
       setValueArray(scope.property.effectiveValue, scope.effectiveValues);
       setValueArray(scope.property.value, scope.values);

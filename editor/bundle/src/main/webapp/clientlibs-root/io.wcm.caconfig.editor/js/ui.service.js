@@ -34,6 +34,7 @@
 
     that.component = {
       MODAL: "Modal",
+      MULTIFIELD: "Multifield",
       POPOVER: "Popover",
       SELECT: "Select"
     };
