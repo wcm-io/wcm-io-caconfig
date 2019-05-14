@@ -138,7 +138,7 @@
           propertyRowOptions = {
             propIndex: i,
             type: propertyType,
-            editLinkText: $rootScope.i18n.button.edit,
+            editLinkText: $rootScope.i18n("button.edit"),
             property: property
           };
 

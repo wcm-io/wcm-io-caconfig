@@ -216,7 +216,7 @@
             // User has deep-linked to a nested config with uncached parent.
             // This will cause problems, so we so we abort the process.
             configCache[configName] = null;
-            window.console.error($rootScope.i18n.deepLinkError);
+            window.console.error($rootScope.i18n("deepLinkError"));
             return;
           }
         }
