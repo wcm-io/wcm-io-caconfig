@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.6.0" date="not released">
+      <action type="update" dev="dding" issue="WCON-68">
+        Add icons as visual indication of configuration inheritance state in overview.
+      </action>
       <action type="fix" dev="sseifert">
         Use AEM UI language instead of content language for Editor UI translation.
       </action>

@@ -41,12 +41,12 @@
       },
 
       "tooltip": {
-        "inheritedCollection": "This collection contains inherited configurations.",
-        "inheritedConfig": "This configuration is inherited.",
-        "notInheritedCollection": "This collection does not contain any inherited configurations.",
-        "notInheritedConfig": "This configuration is not inherited.",
-        "overriddenCollection": "This collection is overridden.",
-        "overriddenConfig": "This configuration is overridden."
+        "inheritedCollection": "Configuration inherited from higher-level context path.",
+        "inheritedConfig": "Configuration inherited from higher-level context path.",
+        "notInheritedCollection": "Configuration for this context path.",
+        "notInheritedConfig": "Configuration for this context path.",
+        "overriddenCollection": "Configuration is overridden.",
+        "overriddenConfig": "Configuration is overridden."
       }
     },
 
