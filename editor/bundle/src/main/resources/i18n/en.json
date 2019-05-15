@@ -42,7 +42,7 @@
       "numberInEditor": "Number of items visible in editor",
       "scrollHint": "Scroll down to load more items.",
       "loadAll": "Click here to load all items. (Your browser may become unresponsive for some time.)",
-      "addCollectionItemHint": "All times will be loaded and your browser may become unresponsive for some time."
+      "addCollectionItemHint": "All items will be loaded and your browser may become unresponsive for some time."
     },
     "modal": {
       "addConfig": {
