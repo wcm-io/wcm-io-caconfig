@@ -46,7 +46,7 @@
 
     $rootScope.i18n = function (key) {
       return Granite.I18n.get("io.wcm.caconfig.editor." + key);
-    }
+    };
   }
 
 }(angular, Granite));
