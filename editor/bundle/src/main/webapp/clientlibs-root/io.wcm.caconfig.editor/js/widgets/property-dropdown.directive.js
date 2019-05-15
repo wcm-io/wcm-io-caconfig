@@ -82,8 +82,6 @@
 
       $timeout(function () {
         var $select = element.find("#" + scope.id);
-        var optionValues,
-          existingValues;
 
         selectWidget = uiService.addUI(uiService.component.SELECT, scope.property.name, {
           element: $select,
@@ -98,33 +96,20 @@
           }, 1);
         }
 
-        // If value exists it should be preselected
-        if (!scope.property.inherited && !scope.property.overridden
-                  && angular.isDefined(scope.property.value)) {
+        // We ensure any existing values are in the dropdown
+        addValues(selectWidget, scope.property.value);
 
-          existingValues = angular.isArray(scope.property.value)
-            ? scope.property.value.map(String)
-            : [String(scope.property.value)];
+        if (scope.property.inherited) {
+          addValues(selectWidget, scope.property.effectiveValue);
+        }
 
-          optionValues = selectWidget.getItems().map(function (item) {
-            return item.getValue();
-          });
-
-          // We check if current value(s) are already in select options.
-          // If they are not, we add them to the dropdown.
-          angular.forEach(existingValues, function (existingValue) {
-            if (optionValues.indexOf(existingValue) === -1) {
-              selectWidget.addOption({
-                value: existingValue,
-                display: existingValue
-              });
-            }
-          });
-
+        // Non-inherited/overridden existing values should be preselected
+        if (angular.isDefined(scope.property.value) && !scope.property.inherited && !scope.property.overridden) {
           setValue(selectWidget, scope.property.value);
         }
-        // If multivalue values are inherited, we create a dummy tag list.
-        else if (scope.multivalue) {
+
+        // If multivalue values are inherited/overridden, we create a dummy tag list
+        if (scope.multivalue && (scope.property.inherited || scope.property.overridden)) {
           $dummyTagLists = element.find(".caconfig-dummy-taglist");
 
           angular.forEach($dummyTagLists, function(dummyTagList, ix) {
@@ -199,6 +184,38 @@
    */
   function setValue(selectWidget, value) {
     selectWidget.setValue(angular.isArray(value) ? value.map(String) : String(value));
+  }
+
+  /**
+   * @param {CUI.Select} selectWidget
+   * @param {Array|string|number} values
+   */
+  function addValues(selectWidget, values) {
+    var existingValues,
+      optionValues;
+
+    if (angular.isUndefined(values)) {
+      return;
+    }
+
+    existingValues = angular.isArray(values)
+      ? values.map(String)
+      : [String(values)];
+
+    optionValues = selectWidget.getItems().map(function (item) {
+      return item.getValue();
+    });
+
+    // We check if current value(s) are already in select options.
+    // If they are not, we add them to the dropdown.
+    angular.forEach(existingValues, function (existingValue) {
+      if (optionValues.indexOf(existingValue) === -1) {
+        selectWidget.addOption({
+          value: existingValue,
+          display: existingValue
+        });
+      }
+    });
   }
 
   PropertyDropdownController.$inject = ["$scope"];
