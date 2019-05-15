@@ -88,14 +88,6 @@
           multiple: scope.multivalue
         });
 
-        // Add empty option for single value string properties.
-        if (!scope.multivalue) {
-          selectWidget.addOption({
-            value: "",
-            display: ""
-          }, 1);
-        }
-
         // We ensure any existing values are in the dropdown
         addValues(selectWidget, scope.property.value);
 
