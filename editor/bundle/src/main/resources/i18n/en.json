@@ -38,6 +38,15 @@
         "collectionItem": "This configuration is inherited via collection inheritance.",
         "config": "This configuration is inherited.",
         "property": "Enable property inheritance"
+      },
+
+      "tooltip": {
+        "inheritedCollection": "Configuration inherited from higher-level context path.",
+        "inheritedConfig": "Configuration inherited from higher-level context path.",
+        "notInheritedCollection": "Configuration for this context path.",
+        "notInheritedConfig": "Configuration for this context path.",
+        "overriddenCollection": "Configuration is overridden.",
+        "overriddenConfig": "Configuration is overridden."
       }
     },
 
