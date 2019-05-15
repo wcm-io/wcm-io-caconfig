@@ -91,7 +91,7 @@
         });
 
         // Add empty option for single value string properties.
-        if (!scope.multivalue && inputType === "text") {
+        if (!scope.multivalue) {
           selectWidget.addOption({
             value: "",
             display: ""
@@ -185,7 +185,11 @@
       return widgetValue;
     }
 
-    return angular.isArray(widgetValue) ? widgetValue.map(Number) : Number(widgetValue);
+    if (angular.isArray(widgetValue)) {
+      return widgetValue.map(Number);
+    }
+
+    return widgetValue === "" ? null : Number(widgetValue);
   }
 
   /**
