@@ -146,7 +146,7 @@
             });
 
             if (useEffective) {
-              scope.property.effectiveValue = $rootScope.i18n.button.choose;
+              scope.property.effectiveValue = $rootScope.i18n("button.choose");
             }
           });
         }
