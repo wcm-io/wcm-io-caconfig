@@ -1,68 +1,79 @@
 {
   "io.wcm.caconfig.editor": {
-    "title": "Konfiguration bearbeiten",
     "contextPath": "Kontext-Pfad",
-    "noContextPath": "Der Kontext-Pfad konnte nicht ermittelt werden.",
     "deepLinkError": "Deep-Linking zu geschachtelten Konfigurationen wird nur teilweise unterstützt. Bitte navigieren Sie zunächst manuell zur Konfiguration.",
+    "noContextPath": "Der Kontext-Pfad konnte nicht ermittelt werden.",
+    "title": "Konfiguration bearbeiten",
+
     "button": {
       "add": "Hinzufügen",
       "addItem": "Element hinzufügen",
+      "browse": "Durchsuchen",
       "cancel": "Abbrechen",
       "choose": "Wählen",
-      "deleteConfig": "Löschen",
       "deleteCollection": "Sammlung löschen",
+      "deleteConfig": "Löschen",
       "deleteItem": "Element löschen",
       "discard": "Änderungen verwefen",
       "edit": "Bearbeiten",
       "ok": "OK",
       "publish": "Seite veröffentlichen",
       "save": "Speichern",
-      "browse": "Durchsuchen",
       "toBottom": "Nach unten",
       "toTop": "Nach oben"
     },
+
     "config": {
+      "description": "Beschreibung",
+      "edit": "Klicken Sie hier, um die Konfiguration zu bearbeiten.",
+      "inherited": "Vererbt",
       "name": "Konfigurations-Name",
+      "overridden": "Überschrieben",
       "property": "Eigenschaft",
       "value": "Wert",
-      "inherited": "Vererbt",
-      "overridden": "Überschrieben",
-      "description": "Beschreibung",
+
       "inheritance": {
-        "property": "Eigenschafts-Vererbung aktivieren",
-        "config": "Diese Konfiguration wird vererbt.",
+        "break": "Klicken Sie hier, um die Vererbung zu deaktivieren.",
         "collection": "Sammlungs-Vererbung aktivieren",
         "collectionItem": "Diese Konfiguration wird über Sammlungs-Vererbung vererbt.",
-        "break": "Klicken Sie hier, um die Vererbung zu deaktivieren."
-      },
-      "edit": "Klicken Sie hier, um die Konfiguration zu bearbeiten."
+        "config": "Diese Konfiguration wird vererbt.",
+        "property": "Eigenschafts-Vererbung aktivieren"
+      }
     },
+
     "largeCollection": {
+      "addCollectionItemHint": "Alle Elemente werden geladen und ihr Browser könnte eine Zeitlang nicht mehr reagieren.",
+      "loadAll": "Klicken Sie hier, um alle Elemente zu laden. (Ihr Browser könnte eine Zeitlang nicht mehr reagieren.)",
       "numberInCollection": "Gesamtzahl der Elemente",
       "numberInEditor": "Anzahl der sichtbaren Elemente",
-      "scrollHint": "Scrollen Sie nach unten, um mehr Elemente zu laden.",
-      "loadAll": "Klicken Sie hier, um alle Elemente zu laden. (Ihr Browser könnte eine Zeitlang nicht mehr reagieren.)",
-      "addCollectionItemHint": "Alle Elemente werden geladen und ihr Browser könnte eine Zeitlang nicht mehr reagieren."
+      "scrollHint": "Scrollen Sie nach unten, um mehr Elemente zu laden."
     },
+
     "modal": {
-      "addConfig": {
-        "title": "Konfiguration hinzufügen"
-      },
+      "close": "Schließen",
+
       "addCollectionItem": {
         "title": "Konfiguration hinzufügen"
       },
-      "close": "Schließen",
-      "deleteConfig": {
-        "title": "Konfiguration löschen",
-        "message": "Diese Konfiguration wird gelöscht."
+
+      "addConfig": {
+        "title": "Konfiguration hinzufügen"
       },
+
+      "deleteConfig": {
+        "message": "Diese Konfiguration wird gelöscht.",
+        "title": "Konfiguration löschen"
+      },
+
       "error": {
         "message": "Ein interner Fehler ist aufgetreten. Bitte nochmal probieren."
       },
+
       "saveConfig": {
-        "title": "Konfiguration speichern",
-        "message": "Die Konfiguration wurde verändert. Möchten Sie die Änderungen speichern?"
+        "message": "Die Konfiguration wurde verändert. Möchten Sie die Änderungen speichern?",
+        "title": "Konfiguration speichern"
       },
+
       "tooltip": {
         "allowed": "Erlaubte Zeichen: A-Z a-z 0-9 - _",
         "unique": "Dieser Name ist bereits in Verwendung."

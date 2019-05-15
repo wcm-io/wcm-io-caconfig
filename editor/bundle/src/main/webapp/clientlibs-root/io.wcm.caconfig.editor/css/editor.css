@@ -163,6 +163,8 @@ span.caconfig-pathbrowser {
 
 .caconfig-is-new-item .caconfig-if-not-new-item,
 .caconfig-not-new-item .caconfig-if-new-item,
+.caconfig-config-overridden .caconfig-if-config-not-overridden,
+.caconfig-config-not-overridden .caconfig-if-config-overridden,
 .caconfig-config-inherited .caconfig-if-config-not-inherited,
 .caconfig-config-not-inherited .caconfig-if-config-inherited {
   display: none;
