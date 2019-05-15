@@ -19,9 +19,10 @@
  */
 package io.wcm.caconfig.editor.model;
 
-import javax.inject.Inject;
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.apache.sling.models.annotations.Model;
@@ -37,30 +38,33 @@ import io.wcm.caconfig.editor.impl.EditorConfig;
 /**
  * Provides editor configuration options
  */
-@Model(adaptables = {
-    HttpServletRequest.class,
-    Resource.class
-})
+@Model(adaptables = HttpServletRequest.class)
 @ProviderType
 public class EditorConfiguration {
 
-  private final String configNamesUrl;
-  private final String configDataUrl;
-  private final String configPersistUrl;
-  private final String contextPath;
-  private final boolean enabled;
+  @SlingObject
+  private Resource currentResource;
+  @SlingObject
+  private SlingHttpServletRequest request;
+  @OSGiService
+  private ConfigurationResourceResolver configResourceResolver;
+  @OSGiService
+  private EditorConfig editorConfig;
 
-  /**
-   * @param currentResource Current resource
-   */
-  @Inject
-  public EditorConfiguration(@SlingObject Resource currentResource,
-      @OSGiService ConfigurationResourceResolver configResourceResolver,
-      @OSGiService EditorConfig editorConfig) {
+  private String configNamesUrl;
+  private String configDataUrl;
+  private String configPersistUrl;
+  private String contextPath;
+  private String language;
+  private boolean enabled;
+
+  @PostConstruct
+  private void activate() {
     this.configNamesUrl = currentResource.getPath() + "." + ConfigNamesServlet.SELECTOR + ".json";
     this.configDataUrl = currentResource.getPath() + "." + ConfigDataServlet.SELECTOR + ".json";
     this.configPersistUrl = currentResource.getPath() + "." + ConfigPersistServlet.SELECTOR + ".json";
     this.contextPath = configResourceResolver.getContextPath(currentResource);
+    this.language = request.getLocale().getLanguage();
     this.enabled = editorConfig.isEnabled();
   }
 
@@ -78,6 +82,10 @@ public class EditorConfiguration {
 
   public String getContextPath() {
     return this.contextPath;
+  }
+
+  public String getLanguage() {
+    return this.language;
   }
 
   public boolean isEnabled() {

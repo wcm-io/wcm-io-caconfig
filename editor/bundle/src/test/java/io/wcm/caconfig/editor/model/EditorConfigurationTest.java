@@ -35,6 +35,7 @@ import io.wcm.caconfig.editor.impl.ConfigDataServlet;
 import io.wcm.caconfig.editor.impl.ConfigNamesServlet;
 import io.wcm.caconfig.editor.impl.ConfigPersistServlet;
 import io.wcm.caconfig.editor.impl.EditorConfig;
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
@@ -45,20 +46,24 @@ class EditorConfigurationTest {
   private final AemContext context = new AemContext();
 
   private static final String SAMPLE_PATH = "/sample/path";
-
-  @Mock
-  private Resource contentResource;
-  @Mock
-  private ConfigurationResourceResolver configResourceResolver;
+  private static final String DEFAULT_LANGUAGE = "en";
 
   private EditorConfiguration underTest;
 
+  @Mock
+  private ConfigurationResourceResolver configResourceResolver;
+
   @BeforeEach
   void setUp() {
-    when(contentResource.getPath()).thenReturn(SAMPLE_PATH);
+    context.registerInjectActivateService(new EditorConfig());
+    context.registerService(ConfigurationResourceResolver.class, configResourceResolver);
+
+    Resource contentResource = context.create().resource(SAMPLE_PATH);
+    context.currentResource(contentResource);
+
     when(configResourceResolver.getContextPath(contentResource)).thenReturn(SAMPLE_PATH);
-    EditorConfig editorConfig = context.registerInjectActivateService(new EditorConfig());
-    underTest = new EditorConfiguration(contentResource, configResourceResolver, editorConfig);
+
+    underTest = AdaptTo.notNull(context.request(), EditorConfiguration.class);
   }
 
   @Test
@@ -67,6 +72,7 @@ class EditorConfigurationTest {
     assertEquals(SAMPLE_PATH + "." + ConfigDataServlet.SELECTOR + ".json", underTest.getConfigDataUrl());
     assertEquals(SAMPLE_PATH + "." + ConfigPersistServlet.SELECTOR + ".json", underTest.getConfigPersistUrl());
     assertEquals(SAMPLE_PATH, underTest.getContextPath());
+    assertEquals(DEFAULT_LANGUAGE, underTest.getLanguage());
     assertTrue(underTest.isEnabled());
   }
 

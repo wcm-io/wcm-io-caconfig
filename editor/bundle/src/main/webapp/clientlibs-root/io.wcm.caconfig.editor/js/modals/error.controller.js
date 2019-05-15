@@ -27,7 +27,7 @@
 
   function ErrorController($rootScope, $timeout, modalService) {
     var that = this;
-    var defaultMessage = $rootScope.i18n.modal.error.message;
+    var defaultMessage = $rootScope.i18n("modal.error.message");
     that.message = defaultMessage;
 
     modalService.addModal(modalService.modal.ERROR, {

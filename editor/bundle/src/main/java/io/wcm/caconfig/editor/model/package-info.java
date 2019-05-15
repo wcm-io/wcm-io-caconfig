@@ -20,5 +20,5 @@
 /**
  * Controllers used by the configuration editor scripts internally.
  */
-@org.osgi.annotation.versioning.Version("1.0.0")
+@org.osgi.annotation.versioning.Version("2.0.0")
 package io.wcm.caconfig.editor.model;
