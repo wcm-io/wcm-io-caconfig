@@ -342,14 +342,14 @@
     }
 
     function setStoredConfigCache() {
-      $window.localStorage.setItem(STORED_CONFIG_CACHE, angular.toJson(configCache));
+      $window.sessionStorage.setItem(STORED_CONFIG_CACHE, angular.toJson(configCache));
     }
 
     /**
      * @return {object|null}
      */
     function getStoredConfigCache() {
-      var storedConfigCache = angular.fromJson($window.localStorage.getItem(STORED_CONFIG_CACHE));
+      var storedConfigCache = angular.fromJson($window.sessionStorage.getItem(STORED_CONFIG_CACHE));
       if (angular.isObject(storedConfigCache)) {
         return storedConfigCache;
       }
@@ -357,7 +357,7 @@
     }
 
     that.removeStoredConfigCache = function () {
-      $window.localStorage.removeItem(STORED_CONFIG_CACHE);
+      $window.sessionStorage.removeItem(STORED_CONFIG_CACHE);
     };
 
   }
