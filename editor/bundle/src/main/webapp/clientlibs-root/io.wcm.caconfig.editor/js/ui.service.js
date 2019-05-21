@@ -35,7 +35,8 @@
     that.component = {
       MODAL: "Modal",
       POPOVER: "Popover",
-      SELECT: "Select"
+      SELECT: "Select",
+      TAG_LIST: "TagList"
     };
 
     that.method = {
@@ -49,10 +50,12 @@
      * @param {String} componentType
      * @param {String} componentName
      * @param {Object=} options
+     * @return {CUI.Widget} ui[componentType][componentName] - widget instance
      */
     that.addUI = function (componentType, componentName, options) {
       ui[componentType] = ui[componentType] || {};
       ui[componentType][componentName] = new CUI[componentType](options);
+      return ui[componentType][componentName];
     };
 
     /**

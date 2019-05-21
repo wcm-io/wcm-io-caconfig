@@ -77,7 +77,10 @@ It is recommended to also deploy the [wcm.io Context-Aware Configuration Extensi
 
 ### Using custom edit widgets
 
-For each data type (string, number, boolean) the fitting edit widget is chosen automatically. Alternatively you can define custom widgets via extra properties on the `@Property` annotation. Currently only `pathbrowser` is supported.
+For each data type (string, number, boolean) the fitting edit widget is chosen automatically. Alternatively you can define custom widgets via extra properties on the `@Property` annotation. 
+
+
+#### pathbrowser
 
 Define a path browser widget for a string parameter with fixed path:
 
@@ -98,6 +101,25 @@ Define a path browser widget for a string parameter with the current configurati
 })
 String contextPath();
 ```
+
+
+#### dropdown
+
+Define a dropdown list of options to choose from. The description is displayed to the user, the value of the chosen option is stored in the configuration.
+
+```java
+@Property(label = "Dropdown Param", description = "Parameter with dropdown list.", property = {
+    "widgetType=dropdown",
+    "dropdownOptions=["
+        + "{'value':'option1','description':'First option'},"
+        + "{'value':'option2','description':'Second option'},"
+        + "{'value':'option3','description':'Third option'}"
+        + "]"
+})
+String dropdownParam();
+```
+
+If you annotate an array parameter multiple options can be selected.
 
 
 ### Filter configurations

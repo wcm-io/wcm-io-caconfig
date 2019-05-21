@@ -58,10 +58,11 @@ public @interface ConfigSample {
   /**
    * @return Path parameter
    */
-  @Property(label = "Context Path", description = "Browse pages in the current configuration context path.", order = 5, property = {
-      "widgetType=pathbrowser",
-      "pathbrowserRootPathContext=true"
-  })
+  @Property(label = "Context Path", description = "Browse pages in the current configuration context path.", order = 5,
+      property = {
+          "widgetType=pathbrowser",
+          "pathbrowserRootPathContext=true"
+      })
   String contextPath();
 
   /**
@@ -69,7 +70,50 @@ public @interface ConfigSample {
    */
   @Property(label = "String Array Param", order = 6)
   String[] stringArrayParam() default {
-    "value1", "value2"
+      "value1", "value2"
   };
+
+  /**
+   * @return String dropdown parameter
+   */
+  @Property(label = "String Dropdown Param", description = "This is a string parameter with dropdown list.", order = 7,
+      property = {
+          "widgetType=dropdown",
+          "dropdownOptions=["
+              + "{'value':'option1','description':'First option'},"
+              + "{'value':'option2','description':'Second option'},"
+              + "{'value':'option3','description':'Third option'}"
+              + "]"
+      })
+  String stringDropdownParam();
+
+  /**
+   * @return Integer dropdown parameter
+   */
+  @Property(label = "Integer Dropdown Param", order = 8,
+      property = {
+          "widgetType=dropdown",
+          "dropdownOptions=["
+              + "{'value':1,'description':'Number One'},"
+              + "{'value':2,'description':'Number Two'}"
+              + "]"
+      })
+  int intDropdownParam();
+
+  /**
+   * @return String multivalue dropdown parameter
+   */
+  @Property(label = "String Multivalue Dropdown Param", description = "This is a multi-valued string parameter with dropdown list.", order = 9,
+      property = {
+          "widgetType=dropdown",
+          "dropdownOptions=["
+              + "{'value':'option1','description':'Option #1'},"
+              + "{'value':'option2','description':'Option #2'},"
+              + "{'value':'option3','description':'Option #3'},"
+              + "{'value':'option4','description':'Option #4'},"
+              + "{'value':'option5','description':'Option #5'}"
+              + "]"
+      })
+  String[] stringMultivalueDropdownParam();
 
 }

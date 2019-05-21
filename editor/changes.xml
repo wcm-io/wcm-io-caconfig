@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.6.0" date="not released">
+      <action type="add" dev="sseifert" issue="WCON-48">
+        Add new editor widget type "dropdown".
+      </action>
       <action type="update" dev="dding" issue="WCON-68">
         Add icons as visual indication of configuration inheritance state in overview.
       </action>
