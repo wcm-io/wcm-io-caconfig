@@ -1,4 +1,4 @@
-<img src="http://wcm.io/images/favicon-16@2x.png"/> wcm.io Context-Aware Configuration
+<img src="https://wcm.io/images/favicon-16@2x.png"/> wcm.io Context-Aware Configuration
 ======
 
 ## Front-End Development Environment

@@ -85,6 +85,6 @@ You do not need to deploy additional bundles in AEM 6.4, but it is recommended t
 
 
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
-[wcmio-caconfig]: http://wcm.io/caconfig/
-[wcmio-caconfig-extensions]: http://wcm.io/caconfig/extensions/
-[wcmio-caconfig-extensions-persistence-aempage]: http://wcm.io/caconfig/extensions/persistence-strategies.html
+[wcmio-caconfig]: https://wcm.io/caconfig/
+[wcmio-caconfig-extensions]: https://wcm.io/caconfig/extensions/
+[wcmio-caconfig-extensions-persistence-aempage]: https://wcm.io/caconfig/extensions/persistence-strategies.html

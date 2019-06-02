@@ -28,11 +28,11 @@ Sources: https://github.com/wcm-io/wcm-io-caconfig
 
 ### Further Resources
 
-* [wcm.io AEM Context-Aware Configuration training material](http://training.wcm.io/caconfig/)
+* [wcm.io AEM Context-Aware Configuration training material](https://training.wcm.io/caconfig/)
 * [adaptTo() 2016 Talk: Sling Context-Aware Configuration](https://adapt.to/2016/en/schedule/sling-context-aware-configuration.html)
 * [adaptTo() 2017 Talk: Context-Aware Configuration in AEM](https://adapt.to/2017/en/schedule/context-aware-configuration-in-aem.html)
 
 
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
-[config-deprecated]: http://wcm.io/config/
-[deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
+[config-deprecated]: https://wcm.io/config/
+[deploy-configure-caconfig-in-aem]: https://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html

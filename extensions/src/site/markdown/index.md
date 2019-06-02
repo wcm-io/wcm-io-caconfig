@@ -40,7 +40,7 @@ See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-c
 
 [usage]: usage.html
 [changelog]: changes-report.html
-[deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
+[deploy-configure-caconfig-in-aem]: https://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
 [context-path-strategies]: context-path-strategies.html
 [persistence-strategies]: persistence-strategies.html
 [override-providers]: override-providers.html

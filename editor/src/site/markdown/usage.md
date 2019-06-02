@@ -158,9 +158,9 @@ You should disable the configuration editor on publish by applying an OSGi confi
 
 
 [sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
-[deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
-[wcmio-caconfig-extensions]: http://wcm.io/caconfig/extensions/
-[wcmio-caconfig-extensions-persistence-strategies]: http://wcm.io/caconfig/extensions/persistence-strategies.html
-[wcmio-caconfig-extensions-reference-provider]: http://wcm.io/caconfig/extensions/reference-provider.html
-[wcmio-caservice]: http://wcm.io/sling/commons/context-aware-services.html
+[deploy-configure-caconfig-in-aem]: https://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
+[wcmio-caconfig-extensions]: https://wcm.io/caconfig/extensions/
+[wcmio-caconfig-extensions-persistence-strategies]: https://wcm.io/caconfig/extensions/persistence-strategies.html
+[wcmio-caconfig-extensions-reference-provider]: https://wcm.io/caconfig/extensions/reference-provider.html
+[wcmio-caservice]: https://wcm.io/sling/commons/context-aware-services.html
 [configurationeditorfilter-interface]: bundle/apidocs/io/wcm/caconfig/editor/ConfigurationEditorFilter.html
