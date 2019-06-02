@@ -16,5 +16,5 @@ With this provider it is possible to inject configuration overrides from HTTP he
 Via the "Header Name" configuration property the name of the header is defined. The header can be included multiple times in the request, each containing an configuration override string.
 
 
-[sling-caconfig-override]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration-override.html
+[sling-caconfig-override]: https://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration-override.html
 

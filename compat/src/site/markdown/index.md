@@ -50,5 +50,5 @@ See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-c
 [changelog]: changes-report.html
 [config-deprecated]: https://wcm.io/config/
 [caconfig-migration]: https://wcm-io.atlassian.net/wiki/x/BgCvAg
-[sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
+[sling-caconfig]: https://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
 [deploy-configure-caconfig-in-aem]: https://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
