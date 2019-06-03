@@ -36,7 +36,7 @@
 
   <name>Context-Aware Configuration Editor</name>
   <description>Context-Aware Configuration Editor Template for AEM.</description>
-  <url>${site.url}/${site.url.module.prefix}/</url>
+  <url>${site.url}/caconfig/editor/</url>
 
   <properties>
     <site.url.module.prefix>caconfig/editor/bundle</site.url.module.prefix>

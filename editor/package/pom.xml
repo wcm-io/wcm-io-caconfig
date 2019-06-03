@@ -33,6 +33,7 @@
   <artifactId>io.wcm.caconfig.editor.package</artifactId>
   <version>1.5.1-SNAPSHOT</version>
   <packaging>content-package</packaging>
+  <url>${site.url}/caconfig/editor/</url>
 
   <properties>
     <contentPackage.name>io.wcm.caconfig.editor.package</contentPackage.name>
