@@ -13,7 +13,7 @@
     "angularPath": "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor.angularjs/js/"
   },
   "devDependencies": {
-    "eslint": "4.18.1",
+    "eslint": "4.19.1",
     "eslint-config-pv": "2.0.0",
     "grunt": "0.4.5",
     "grunt-cli": "1.2.0",
