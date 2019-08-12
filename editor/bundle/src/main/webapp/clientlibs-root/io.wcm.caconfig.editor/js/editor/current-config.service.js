@@ -106,7 +106,7 @@
         property.value = property.effectiveValue;
       }
       else {
-        property.effectiveValue = "(" + $rootScope.i18n.config.inherited + ")";
+        property.effectiveValue = "(" + $rootScope.i18n("config.inherited") + ")";
         if (angular.isUndefined(property.value)) {
           property.value = null;
         }

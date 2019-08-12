@@ -1,4 +1,4 @@
-<img src="http://wcm.io/images/favicon-16@2x.png"/> wcm.io Context-Aware Configuration
+<img src="https://wcm.io/images/favicon-16@2x.png"/> wcm.io Context-Aware Configuration
 ======
 
 ## Front-End Development Environment
@@ -12,7 +12,7 @@
 
 1. Start a local AEM (6.2 or higher) instance on port 4502.
 2. [Deploy sample project](../../sample-app).
-3. Download the [Filesystem Resource Provider](http://sling.apache.org/documentation/bundles/accessing-filesystem-resources-extensions-fsresource.html)
+3. Download the [Filesystem Resource Provider](https://sling.apache.org/documentation/bundles/accessing-filesystem-resources-extensions-fsresource.html)
 4. Install and start the Filesystem Resource Provider via http://localhost:4502/system/console/bundles
 5. Mount the editor bundle via http://localhost:4502/system/console/configMgr. ([See configurations below](#filesystem-resource-configurations)).
 6. Load http://localhost:4502/content/contextaware-config-sample/en/config.html?debugClientLibs=true in browser (note query string).

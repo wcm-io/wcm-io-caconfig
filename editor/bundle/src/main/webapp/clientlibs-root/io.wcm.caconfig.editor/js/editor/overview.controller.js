@@ -28,7 +28,7 @@
   function OverviewController($rootScope, configService, modalService, publishService) {
     var that = this;
 
-    $rootScope.title = $rootScope.i18n.title;
+    $rootScope.title = $rootScope.i18n("title");
     that.state = configService.getState();
     configService.loadConfigNames()
       .then(function() {

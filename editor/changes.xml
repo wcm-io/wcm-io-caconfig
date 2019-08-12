@@ -23,6 +23,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.6.0" date="not released">
+      <action type="add" dev="sseifert" issue="WCON-48">
+        Add new editor widget type "dropdown".
+      </action>
+      <action type="update" dev="dding" issue="WCON-68">
+        Add icons as visual indication of configuration inheritance state in overview.
+      </action>
+      <action type="fix" dev="sseifert">
+        Use AEM UI language instead of content language for Editor UI translation.
+      </action>
+    </release>
+
     <release version="1.5.0" date="2019-05-09">
       <action type="update" dev="dding" issue="WCON-66">
         Allow to overwrite inherited string properties with empty strings.

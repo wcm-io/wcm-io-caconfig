@@ -51,6 +51,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import io.wcm.caconfig.editor.EditorProperties;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
@@ -189,6 +190,34 @@ class ConfigDataServletTest {
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
+  @Test
+  public void testSingleWithDropdown() throws Exception {
+    ConfigurationData configData = buildConfigDataWithDropdown("name1");
+    when(configManager.getConfiguration(context.currentResource(), "name1")).thenReturn(configData);
+
+    context.request().setQueryString(RP_CONFIGNAME + "=" + configData.getConfigName());
+    underTest.doGet(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+
+    String expectedJson = "{configName:'name1',overridden:false,inherited:false,"
+        + "properties:["
+        + "{name:'param1',value:'option1',effectiveValue:'option1',default:false,inherited:true,overridden:false,"
+        + "metadata:{type:'String',properties:{widgetType:'dropdown',dropdownOptions:["
+        + "{'value':'option1','description':'First option'},"
+        + "{'value':'option2','description':'Second option'},"
+        + "{'value':'option3','description':'Third option'}"
+        + "]}}},"
+        + "{name:'param2',value:5,effectiveValue:5,default:false,inherited:true,overridden:false,"
+        + "metadata:{type:'Integer',defaultValue:0,properties:{widgetType:'dropdown',dropdownOptions:["
+        + "{'value':1,'description':'Number One'},"
+        + "{'value':2,'description':'Number Two'}"
+        + "]}}}"
+        + "]}";
+    System.out.println(context.response().getOutputAsString());
+    JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
+  }
+
   @SuppressWarnings("unchecked")
   private ConfigurationData buildConfigData(String configName, int index) {
     ConfigurationData configData = mock(ConfigurationData.class);
@@ -210,6 +239,38 @@ class ConfigDataServletTest {
 
     ValueInfo param3 = buildValueInfo("param3", true, false, null);
     when(configData.getValueInfo("param3")).thenReturn(param3);
+
+    return configData;
+  }
+
+  @SuppressWarnings("unchecked")
+  private ConfigurationData buildConfigDataWithDropdown(String configName) {
+    ConfigurationData configData = mock(ConfigurationData.class);
+    when(configData.getConfigName()).thenReturn(configName);
+    when(configData.getPropertyNames()).thenReturn(ImmutableSet.of("param1", "param2"));
+
+    ValueInfo param1 = buildValueInfo("param1", "option1", "option1", null);
+    when(param1.getPropertyMetadata()).thenReturn(
+        new PropertyMetadata<>("param1", String.class)
+            .properties(ImmutableMap.of(
+                EditorProperties.PROPERTY_WIDGET_TYPE, EditorProperties.WIDGET_TYPE_DROPDOWN,
+                EditorProperties.PROPERTY_DROPDOWN_OPTIONS, "["
+                    + "{'value':'option1','description':'First option'},"
+                    + "{'value':'option2','description':'Second option'},"
+                    + "{'value':'option3','description':'Third option'}"
+                    + "]")));
+    when(configData.getValueInfo("param1")).thenReturn(param1);
+
+    ValueInfo param2 = buildValueInfo("param2", 5, 5, 0);
+    when(param2.getPropertyMetadata()).thenReturn(
+        new PropertyMetadata<>("param2", 0)
+            .properties(ImmutableMap.of(
+                EditorProperties.PROPERTY_WIDGET_TYPE, EditorProperties.WIDGET_TYPE_DROPDOWN,
+                EditorProperties.PROPERTY_DROPDOWN_OPTIONS, "["
+                    + "{'value':1,'description':'Number One'},"
+                    + "{'value':2,'description':'Number Two'}"
+                    + "]")));
+    when(configData.getValueInfo("param2")).thenReturn(param2);
 
     return configData;
   }

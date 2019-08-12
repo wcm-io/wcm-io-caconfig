@@ -138,7 +138,7 @@
           propertyRowOptions = {
             propIndex: i,
             type: propertyType,
-            editLinkText: $rootScope.i18n.button.edit,
+            editLinkText: $rootScope.i18n("button.edit"),
             property: property
           };
 
@@ -190,6 +190,11 @@
 
       if (obj.type === "pathbrowser") {
         return "<td caconfig-pathbrowser property=\"config.properties[" + obj.propIndex + "]\"></td>";
+      }
+
+      if (obj.type === "dropdown") {
+        return "<td caconfig-property-dropdown property=\"config.properties[" + obj.propIndex + "]\""
+          + "multivalue=\"" + Boolean(obj.property.metadata.multivalue) + "\"></td>";
       }
 
       if (obj.type === "nestedConfig") {

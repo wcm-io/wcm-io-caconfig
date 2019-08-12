@@ -53,4 +53,4 @@ See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-c
 [apidocs]: bundle/apidocs/
 [changelog]: changes-report.html
 [sample-app]: https://github.com/wcm-io/wcm-io-caconfig/tree/develop/sample-app
-[deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
+[deploy-configure-caconfig-in-aem]: https://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html

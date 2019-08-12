@@ -25,18 +25,18 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.parent</artifactId>
-    <version>1.1.8</version>
+    <version>1.1.9-SNAPSHOT</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.editor</artifactId>
-  <version>1.5.0</version>
+  <version>1.5.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Context-Aware Configuration Editor</name>
   <description>Context-Aware Configuration Editor Template for AEM.</description>
-  <url>${site.url}/${site.url.module.prefix}/</url>
+  <url>${site.url}/caconfig/editor/</url>
 
   <properties>
     <site.url.module.prefix>caconfig/editor/bundle</site.url.module.prefix>
@@ -102,7 +102,7 @@
     <dependency>
       <groupId>org.skyscreamer</groupId>
       <artifactId>jsonassert</artifactId>
-      <version>1.4.0</version>
+      <version>1.5.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -124,6 +124,13 @@
       <version>1.6.0</version>
       <classifier>tests</classifier>
       <scope>test</scope>
+    </dependency>
+
+    <!-- For build compatibility with Java 11 -->
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-annotation_1.3_spec</artifactId>
+      <scope>provided</scope>
     </dependency>
 
   </dependencies>
@@ -169,6 +176,13 @@
             <Sling-Model-Packages>
               io.wcm.caconfig.editor.model
             </Sling-Model-Packages>
+
+            <!-- Make compatible with different AEM versions -->
+            <Import-Package>
+              javax.annotation;version="[0.0,2)",
+              *
+            </Import-Package>
+
           </instructions>
         </configuration>
       </plugin>
@@ -209,6 +223,32 @@
             <goals>
               <goal>transform</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Apply maven filtering to clientlib definitions (cache key) -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>add-resource</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>src/main/webapp</directory>
+                  <targetPath>SLING-INF</targetPath>
+                  <filtering>true</filtering>
+                  <includes>
+                    <include>clientlibs-root/*.json</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
           </execution>
         </executions>
       </plugin>

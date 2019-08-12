@@ -95,6 +95,10 @@
       if (property.nestedConfigCollection) {
         return "nestedConfigCollection";
       }
+      if (property.metadata && property.metadata.properties
+        && property.metadata.properties.widgetType === "dropdown") {
+        return "dropdown";
+      }
       if (property.metadata && property.metadata.multivalue) {
         return "multivalue";
       }
@@ -216,7 +220,7 @@
             // User has deep-linked to a nested config with uncached parent.
             // This will cause problems, so we so we abort the process.
             configCache[configName] = null;
-            window.console.error($rootScope.i18n.deepLinkError);
+            window.console.error($rootScope.i18n("deepLinkError"));
             return;
           }
         }
@@ -338,14 +342,14 @@
     }
 
     function setStoredConfigCache() {
-      $window.localStorage.setItem(STORED_CONFIG_CACHE, angular.toJson(configCache));
+      $window.sessionStorage.setItem(STORED_CONFIG_CACHE, angular.toJson(configCache));
     }
 
     /**
      * @return {object|null}
      */
     function getStoredConfigCache() {
-      var storedConfigCache = angular.fromJson($window.localStorage.getItem(STORED_CONFIG_CACHE));
+      var storedConfigCache = angular.fromJson($window.sessionStorage.getItem(STORED_CONFIG_CACHE));
       if (angular.isObject(storedConfigCache)) {
         return storedConfigCache;
       }
@@ -353,7 +357,7 @@
     }
 
     that.removeStoredConfigCache = function () {
-      $window.localStorage.removeItem(STORED_CONFIG_CACHE);
+      $window.sessionStorage.removeItem(STORED_CONFIG_CACHE);
     };
 
   }

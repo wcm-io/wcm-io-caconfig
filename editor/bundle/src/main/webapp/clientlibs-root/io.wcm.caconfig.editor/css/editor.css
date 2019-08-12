@@ -163,6 +163,8 @@ span.caconfig-pathbrowser {
 
 .caconfig-is-new-item .caconfig-if-not-new-item,
 .caconfig-not-new-item .caconfig-if-new-item,
+.caconfig-config-overridden .caconfig-if-config-not-overridden,
+.caconfig-config-not-overridden .caconfig-if-config-overridden,
 .caconfig-config-inherited .caconfig-if-config-not-inherited,
 .caconfig-config-not-inherited .caconfig-if-config-inherited {
   display: none;
@@ -184,6 +186,14 @@ span.caconfig-pathbrowser {
 .caconfig-property-overridden .caconfig-if-property-not-overridden-and-not-inherited,
 .caconfig-property-inherited .caconfig-if-property-not-overridden-and-not-inherited {
   display: none;
+}
+
+.caconfig-dummy-taglist .coral-TagList-tag,
+.caconfig-dummy-taglist .coral-TagList-tag-removeButton {
+  color: #bebebe;
+  text-shadow: none;
+  cursor: default;
+  pointer-events: none;
 }
 
 /**

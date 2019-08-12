@@ -77,7 +77,7 @@
       // Most likely caused by user deep-linking to uncached configuration.
       if (!configNameObject) {
         configCacheService.removeStoredConfigCache();
-        return $q.reject($rootScope.i18n.deepLinkError);
+        return $q.reject($rootScope.i18n("deepLinkError"));
       }
 
       isCollection = Boolean(configNameObject.collection);
