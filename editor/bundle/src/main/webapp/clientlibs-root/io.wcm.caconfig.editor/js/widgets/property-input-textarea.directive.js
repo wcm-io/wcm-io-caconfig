@@ -21,7 +21,7 @@
   "use strict";
 
   /**
-   * Directive for text field input, used for string and numeric properties.
+   * Directive for textarea field input, used for string multiline properties.
    */
   angular.module("io.wcm.caconfig.widgets")
     .directive("caconfigPropertyInputTextarea", propertyInputTextarea);
