@@ -11,7 +11,7 @@ import org.osgi.service.component.annotations.Component;
 /**
  * AEM-specific configuration binding resource strategy that has higher precedence than the default strategy from Sling.
  * <p>
- * It uses the {@code WCMBindings.CURRENT_PAGE} binding instead of the default {@code SlingBindings.REQUEST} binding.
+ * It uses the {@code WCMBindings.CURRENT_PAGE} binding instead of the default {@code SlingBindings.REQUEST} binding to detect the resource.
  * </p>
  */
 @Component(
