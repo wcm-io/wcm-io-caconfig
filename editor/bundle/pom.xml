@@ -153,6 +153,15 @@
         <targetPath>SLING-INF</targetPath>
         <filtering>false</filtering>
       </resource>
+      <!-- Apply maven filtering to clientlib definitions (cache key) -->
+      <resource>
+        <directory>src/main/webapp</directory>
+        <targetPath>SLING-INF</targetPath>
+        <filtering>true</filtering>
+        <includes>
+          <include>clientlibs-root/*.json</include>
+        </includes>
+      </resource>
     </resources>
     <plugins>
 
@@ -227,32 +236,6 @@
             <goals>
               <goal>transform</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Apply maven filtering to clientlib definitions (cache key) -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>add-resource</goal>
-            </goals>
-            <phase>process-resources</phase>
-            <configuration>
-              <resources>
-                <resource>
-                  <directory>src/main/webapp</directory>
-                  <targetPath>SLING-INF</targetPath>
-                  <filtering>true</filtering>
-                  <includes>
-                    <include>clientlibs-root/*.json</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
           </execution>
         </executions>
       </plugin>
