@@ -171,6 +171,8 @@
             <!-- Make compatible with different AEM versions -->
             Import-Package: \
               javax.annotation;version="[0.0,2)",\
+              <!-- optional dependency -->\
+              io.wcm.sling.commons.caservice;resolution:=optional,\
               *
           </bnd>
         </configuration>
