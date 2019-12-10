@@ -2,5 +2,6 @@
   "jcr:primaryType": "cq:ClientLibraryFolder",
   "categories": [
     "io.wcm.caconfig.editor.angularjs"
-  ]
+  ],
+  "longCacheKey": "${project.version}-${buildNumber}"
 }
