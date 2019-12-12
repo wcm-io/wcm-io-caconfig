@@ -205,7 +205,7 @@
         <artifactId>nodejs-maven-plugin</artifactId>
         <executions>
           <execution>
-            <phase>compile</phase>
+            <phase>generate-sources</phase>
             <goals><goal>run</goal></goals>
           </execution>
         </executions>
