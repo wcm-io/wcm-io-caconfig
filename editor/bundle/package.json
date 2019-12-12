@@ -20,7 +20,6 @@
     "grunt-contrib-watch": "1.0.0",
     "grunt-eslint": "20.1.0",
     "grunt-html2js": "0.5.1",
-    "grunt-yui-compressor": "0.4.0",
     "load-grunt-tasks": "3.5.2"
   },
   "engines": {
