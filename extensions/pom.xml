@@ -25,14 +25,14 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.parent</artifactId>
-    <version>1.1.10</version>
+    <version>1.2.0-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.extensions</artifactId>
   <version>1.6.1-SNAPSHOT</version>
-  <packaging>bundle</packaging>
+  <packaging>jar</packaging>
 
   <name>Context-Aware Configuration Extensions for AEM</name>
   <description>AEM-specific extensions for Apache Sling Context-Aware Configuration.</description>
@@ -133,45 +133,44 @@
   <build>
     <plugins>
 
-      <!-- Publish test artifact -->
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
+        <configuration>
+          <bnd>
+            Import-Package: \
+              <!-- Make dependency to io.wcm.sling.commons optional, only required for RequestHeaderConfigurationOverrideProvider -->\
+              io.wcm.sling.commons.*;version="[0.0,2)";resolution:=optional,\
+              com.day.cq.commons;version="[5.7,7)",\
+              <!-- Remove those package imports because embedded and relocated via shade plugin (see below) -->\
+              !io.wcm.wcm.commons.util,\
+              <!-- Required by Path util class -->\
+              org.apache.sling.tenant;version="[1.0,2)",\
+              org.apache.jackrabbit.util;version="[2.4,3)",\
+              *
+          </bnd>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-baseline-maven-plugin</artifactId>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
         <executions>
+          <!-- Publish test artifact -->
           <execution>
             <goals>
               <goal>test-jar</goal>
             </goals>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>io.wcm.devops.maven.plugins</groupId>
-        <artifactId>eclipse-maven-plugin</artifactId>
-        <configuration>
-          <addVersionToProjectName>false</addVersionToProjectName>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Import-Package>
-              <!-- Make dependency to io.wcm.sling.commons optional, only required for RequestHeaderConfigurationOverrideProvider -->
-              io.wcm.sling.commons.*;version="[0.0,2)";resolution:=optional,
-              com.day.cq.commons;version="[5.7,7)",
-              <!-- Remove those package imports because embedded and relocated via shade plugin (see below) -->
-              !io.wcm.wcm.commons.util,
-              <!-- Required by Path util class -->
-              org.apache.sling.tenant;version="[1.0,2)",
-              org.apache.jackrabbit.util;version="[2.4,3)",
-              *
-            </Import-Package>
-          </instructions>
-        </configuration>
       </plugin>
 
       <plugin>
