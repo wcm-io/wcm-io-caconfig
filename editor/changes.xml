@@ -24,7 +24,7 @@
   <body>
 
     <release version="1.7.0" date="not released">
-      <action type="add" dev="santiagozky">
+      <action type="add" dev="santiagozky" issue="WCON-31">
         Add "textarea" widget type for string parameters.
       </action>
     </release>
