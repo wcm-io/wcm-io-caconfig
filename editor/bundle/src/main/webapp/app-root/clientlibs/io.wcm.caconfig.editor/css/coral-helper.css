@@ -116,7 +116,8 @@
   content: none;
 }
 
-.coral-Table .coral-Textfield {
+.coral-Table .coral-Textfield,
+.coral-Table .coral3-Textfield {
   width: 100%;
 }
 

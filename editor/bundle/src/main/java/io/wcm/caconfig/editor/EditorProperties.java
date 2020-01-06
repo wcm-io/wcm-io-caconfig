@@ -61,4 +61,9 @@ public final class EditorProperties {
    */
   public static final String PROPERTY_DROPDOWN_OPTIONS = "dropdownOptions";
 
+  /**
+   * Widget type that allows to enter multiple lines of text for a string parameter.
+   */
+  public static final String WIDGET_TYPE_TEXTAREA = "textarea";
+
 }
