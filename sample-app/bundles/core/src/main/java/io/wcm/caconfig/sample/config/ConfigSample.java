@@ -116,4 +116,13 @@ public @interface ConfigSample {
       })
   String[] stringMultivalueDropdownParam();
 
+  /**
+   * @return Path parameter
+   */
+  @Property(label = "String Text Area", description = "Enter multiple lines of text.", order = 10,
+      property = {
+          "widgetType=textarea"
+      })
+  String stringTextArea();
+
 }
