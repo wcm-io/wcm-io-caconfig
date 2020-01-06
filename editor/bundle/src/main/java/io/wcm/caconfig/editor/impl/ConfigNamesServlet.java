@@ -58,6 +58,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
     "sling.servlet.selectors=" + ConfigNamesServlet.SELECTOR,
     "sling.servlet.methods=GET"
 })
+@SuppressWarnings("deprecation")
 public class ConfigNamesServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 

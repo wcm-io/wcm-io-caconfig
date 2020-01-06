@@ -64,6 +64,7 @@ import org.slf4j.LoggerFactory;
     "sling.servlet.selectors=" + ConfigDataServlet.SELECTOR,
     "sling.servlet.methods=GET"
 })
+@SuppressWarnings("deprecation")
 public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
@@ -255,7 +256,6 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
    * inserted as JSON objects and not as string.
    * @param properties Map
    * @return JSON object
-   * @throws JSONException JSON exception
    */
   private JSONObject toJsonWithValueConversion(Map<String, String> properties) throws JSONException {
     if (properties == null || properties.isEmpty()) {

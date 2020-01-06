@@ -27,6 +27,9 @@
       <action type="add" dev="santiagozky" issue="WCON-31">
         Add "textarea" widget type for string parameters.
       </action>
+      <action type="update" dev="sseifert">
+        Switch to AEM 6.3 as minimum version.
+      </action>
     </release>
 
     <release version="1.6.2" date="2019-12-16">

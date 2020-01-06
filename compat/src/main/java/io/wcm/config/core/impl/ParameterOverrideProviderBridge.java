@@ -53,7 +53,7 @@ import io.wcm.config.spi.ParameterOverrideProvider;
     @Reference(service = ParameterOverrideProvider.class, cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
         name = "parameterOverrideProvider", bind = "bindParameterOverrideProvider", unbind = "unbindParameterOverrideProvider")
 })
-@SuppressWarnings("null")
+@SuppressWarnings({ "null", "deprecation" })
 public class ParameterOverrideProviderBridge implements ConfigurationOverrideProvider, ChangeListener {
 
   private RankedServices<ParameterOverrideProvider> parameterOverrideProviders = new RankedServices<>(Order.ASCENDING, this);

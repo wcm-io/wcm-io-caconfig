@@ -67,6 +67,7 @@ import org.slf4j.LoggerFactory;
     "sling.servlet.methods=POST",
     "sling.servlet.methods=DELETE"
 })
+@SuppressWarnings("deprecation")
 public class ConfigPersistServlet extends SlingAllMethodsServlet {
   private static final long serialVersionUID = 1L;
 
