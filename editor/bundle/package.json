@@ -9,8 +9,8 @@
     "url": "https://github.com/wcm-io/wcm-io-caconfig.git"
   },
   "config": {
-    "jsPath": "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor/js/",
-    "angularPath": "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor.angularjs/js/"
+    "jsPath": "src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor/js/",
+    "angularPath": "src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor.angularjs/js/"
   },
   "devDependencies": {
     "eslint": "4.19.1",
@@ -20,7 +20,6 @@
     "grunt-contrib-watch": "1.0.0",
     "grunt-eslint": "20.1.0",
     "grunt-html2js": "0.5.1",
-    "grunt-yui-compressor": "0.4.0",
     "load-grunt-tasks": "3.5.2"
   },
   "engines": {
