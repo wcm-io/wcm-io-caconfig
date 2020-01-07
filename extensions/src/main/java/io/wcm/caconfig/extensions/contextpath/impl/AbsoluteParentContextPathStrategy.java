@@ -127,14 +127,14 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
       contextPathRegex = Pattern.compile(config.contextPathRegex());
     }
     catch (PatternSyntaxException ex) {
-      log.warn("Invalid context path regex: " + config.contextPathRegex(), ex);
+      log.warn("Invalid context path regex: {}", config.contextPathRegex(), ex);
     }
     if (StringUtils.isNotEmpty(config.contextPathBlacklistRegex())) {
       try {
         contextPathBlacklistRegex = Pattern.compile(config.contextPathBlacklistRegex());
       }
       catch (PatternSyntaxException ex) {
-        log.warn("Invalid context path blacklist regex: " + config.contextPathBlacklistRegex(), ex);
+        log.warn("Invalid context path blacklist regex: {}", config.contextPathBlacklistRegex(), ex);
       }
     }
     configPathPatterns = config.configPathPatterns();

@@ -105,7 +105,6 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
     enabled = false;
   }
 
-  @SuppressWarnings("null")
   @Override
   public List<com.day.cq.wcm.api.reference.Reference> findReferences(Resource resource) {
     if (!enabled) {
@@ -113,6 +112,9 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
     }
 
     PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
+    if (pageManager == null) {
+      throw new RuntimeException("No page manager.");
+    }
     Page contextPage = pageManager.getContainingPage(resource);
     if (contextPage == null) {
       return Collections.emptyList();

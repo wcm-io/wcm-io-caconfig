@@ -66,7 +66,7 @@ public class PathApplicationProvider implements ApplicationProvider {
 
   private String applicationId;
   private String label;
-  private List<Pattern> pathPatterns = new ArrayList<>();
+  private final List<Pattern> pathPatterns = new ArrayList<>();
 
   private static final Logger log = LoggerFactory.getLogger(PathApplicationProvider.class);
 
@@ -80,7 +80,7 @@ public class PathApplicationProvider implements ApplicationProvider {
           pathPatterns.add(Pattern.compile(pathPattern));
         }
         catch (PatternSyntaxException ex) {
-          log.warn("Invalid path regex: " + pathPattern, ex);
+          log.warn("Invalid path regex: {}", pathPattern, ex);
         }
       }
     }

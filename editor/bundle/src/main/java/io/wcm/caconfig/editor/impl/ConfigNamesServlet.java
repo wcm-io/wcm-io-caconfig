@@ -169,7 +169,7 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
-  private final class ConfigurationState {
+  private static final class ConfigurationState {
     private boolean exists;
     private boolean inherited;
     private boolean overridden;
