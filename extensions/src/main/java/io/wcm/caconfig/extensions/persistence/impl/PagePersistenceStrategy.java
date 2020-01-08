@@ -49,6 +49,8 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import com.day.cq.wcm.api.Page;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * AEM-specific persistence strategy that has higher precedence than the default strategy from Sling,
  * but lower precedence that the persistence strategy that is part of AEM since version 6.3.
@@ -166,6 +168,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
   }
 
   @Override
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public boolean persistConfiguration(@NotNull ResourceResolver resolver, @NotNull String configResourcePath, @NotNull ConfigurationPersistData data) {
     if (!enabled) {
       return false;
@@ -181,6 +184,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
   }
 
   @Override
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public boolean persistConfigurationCollection(@NotNull ResourceResolver resolver, @NotNull String configResourceCollectionParentPath,
       @NotNull ConfigurationCollectionPersistData data) {
     if (!enabled) {

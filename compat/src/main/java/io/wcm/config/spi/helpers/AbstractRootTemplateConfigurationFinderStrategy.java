@@ -43,7 +43,6 @@ import io.wcm.config.spi.ConfigurationFinderStrategy;
  * no further configuration scopes are accepted.
  */
 @ConsumerType
-@SuppressWarnings("null")
 public abstract class AbstractRootTemplateConfigurationFinderStrategy implements ConfigurationFinderStrategy {
 
   private final String applicationId;

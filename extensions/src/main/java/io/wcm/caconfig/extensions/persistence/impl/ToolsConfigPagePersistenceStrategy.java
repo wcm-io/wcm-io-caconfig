@@ -65,6 +65,8 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * AEM-specific persistence strategy that gets only active if a context path is redirected to path
  * <code>/content/.../tools/config</code>.
@@ -176,6 +178,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public boolean persistConfiguration(@NotNull ResourceResolver resolver, @NotNull String configResourcePath,
       @NotNull ConfigurationPersistData data) {
     if (!enabled || !isConfigPagePath(configResourcePath)) {
