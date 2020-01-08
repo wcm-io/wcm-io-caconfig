@@ -81,7 +81,7 @@ public final class ConversionStringUtils {
     if (match || lastMatch) {
       list.add(value.substring(start, i));
     }
-    return list.toArray(new String[list.size()]);
+    return list.toArray(new String[0]);
   }
 
   /**
@@ -121,6 +121,7 @@ public final class ConversionStringUtils {
           break;
         default:
           // just append char
+          break;
       }
       encoded.append(c);
     }

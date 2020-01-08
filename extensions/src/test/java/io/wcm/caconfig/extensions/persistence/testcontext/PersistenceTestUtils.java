@@ -30,12 +30,14 @@ import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
 import org.apache.sling.testing.mock.osgi.MapUtil;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 
 /**
  * Helper methods for persisting configuration data.
  */
 @SuppressWarnings("null")
+@SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
 public final class PersistenceTestUtils {
 
   private PersistenceTestUtils() {

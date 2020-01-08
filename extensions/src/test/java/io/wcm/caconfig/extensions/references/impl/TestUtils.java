@@ -52,6 +52,9 @@ final class TestUtils {
   public static void applyConfig(AemContext context, Page page, String name, ValueMap props) {
     ConfigurationManager configManager = context.getService(ConfigurationManager.class);
     Resource contextResource = page.adaptTo(Resource.class);
+    if (contextResource == null) {
+      throw new RuntimeException("No page resource: " + page.getPath());
+    }
     configManager.persistConfiguration(contextResource, name, new ConfigurationPersistData(props));
   }
 

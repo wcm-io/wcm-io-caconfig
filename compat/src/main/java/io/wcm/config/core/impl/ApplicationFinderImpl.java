@@ -63,6 +63,7 @@ public final class ApplicationFinderImpl implements ApplicationFinder {
       .build();
 
   @Override
+  @SuppressWarnings("PMD.PreserveStackTrace")
   public Application find(final Resource resource) {
     try {
       Application result = applicationFindCache.get(resource.getPath(), new Callable<Application>() {
@@ -76,7 +77,7 @@ public final class ApplicationFinderImpl implements ApplicationFinder {
           return APPLICATION_NOT_FOUND;
         }
       });
-      if (result == APPLICATION_NOT_FOUND) {
+      if (APPLICATION_NOT_FOUND.equals(result)) {
         return null;
       }
       else {

@@ -120,13 +120,12 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
       contextPathRegex = Pattern.compile(config.contextPathRegex());
     }
     catch (PatternSyntaxException ex) {
-      log.warn("Invalid context path regex: " + config.contextPathRegex(), ex);
+      log.warn("Invalid context path regex: {}", config.contextPathRegex(), ex);
     }
     configPathPatterns = config.configPathPatterns();
     serviceRanking = config.service_ranking();
   }
 
-  @SuppressWarnings("null")
   @Override
   public @NotNull Iterator<ContextResource> findContextResources(@NotNull Resource resource) {
     if (!isValidConfig()) {
@@ -135,6 +134,9 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
 
     ResourceResolver resourceResolver = resource.getResourceResolver();
     PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
+    if (pageManager == null) {
+      throw new RuntimeException("No page manager.");
+    }
     Page page = pageManager.getContainingPage(resource);
     List<String> contextPathCandidats;
     if (templatMatchAllLevels) {

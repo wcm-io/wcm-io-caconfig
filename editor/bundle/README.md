@@ -10,7 +10,7 @@
 
 ### Getting Started
 
-1. Start a local AEM (6.2 or higher) instance on port 4502.
+1. Start a local AEM instance on port 4502.
 2. [Deploy sample project](../../sample-app).
 3. Download the [Filesystem Resource Provider](https://sling.apache.org/documentation/bundles/accessing-filesystem-resources-extensions-fsresource.html)
 4. Install and start the Filesystem Resource Provider via http://localhost:4502/system/console/bundles
