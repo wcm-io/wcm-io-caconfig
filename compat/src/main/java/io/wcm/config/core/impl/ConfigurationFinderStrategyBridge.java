@@ -52,7 +52,7 @@ import io.wcm.config.spi.ConfigurationFinderStrategy;
 @SuppressWarnings("null")
 public class ConfigurationFinderStrategyBridge implements ContextPathStrategy {
 
-  private RankedServices<ConfigurationFinderStrategy> configurationFinderStrategies = new RankedServices<>(Order.ASCENDING);
+  private final RankedServices<ConfigurationFinderStrategy> configurationFinderStrategies = new RankedServices<>(Order.ASCENDING);
 
   @Reference
   private ApplicationFinder applicationFinder;

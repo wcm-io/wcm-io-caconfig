@@ -64,6 +64,7 @@ import org.slf4j.LoggerFactory;
     "sling.servlet.selectors=" + ConfigDataServlet.SELECTOR,
     "sling.servlet.methods=GET"
 })
+@SuppressWarnings("deprecation")
 public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
@@ -85,6 +86,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private static Logger log = LoggerFactory.getLogger(ConfigDataServlet.class);
 
   @Override
+  @SuppressWarnings("PMD.GuardLogStatement")
   protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
     if (!editorConfig.isEnabled()) {
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -160,7 +162,6 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
-  @SuppressWarnings("null")
   private JSONObject toJson(ConfigurationData config, Boolean inherited, String fullConfigName) throws JSONException {
     JSONObject result = new JSONObject();
 
@@ -174,6 +175,9 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     JSONArray props = new JSONArray();
     for (String propertyName : config.getPropertyNames()) {
       ValueInfo<?> item = config.getValueInfo(propertyName);
+      if (item == null) {
+        continue;
+      }
       PropertyMetadata<?> itemMetadata = item.getPropertyMetadata();
 
       JSONObject prop = new JSONObject();
@@ -255,7 +259,6 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
    * inserted as JSON objects and not as string.
    * @param properties Map
    * @return JSON object
-   * @throws JSONException JSON exception
    */
   private JSONObject toJsonWithValueConversion(Map<String, String> properties) throws JSONException {
     if (properties == null || properties.isEmpty()) {

@@ -122,6 +122,18 @@ String dropdownParam();
 If you annotate an array parameter multiple options can be selected.
 
 
+#### textarea
+
+Allows to enter multiple lines of text for a string parameter.
+
+```java
+@Property(label = "String Text Area", description = "Enter multiple lines of text.", property = {
+    "widgetType=textarea"
+})
+String stringTextArea();
+```
+
+
 ### Filter configurations
 
 On a system that hosts multiple tenants or websites it may be desirable to offer only a subset of context-aware configurations that are present in the system. This is possible by adding a [Context-Aware Service][wcmio-caservice] that implements the interface [ConfigurationEditorFilter][configurationeditorfilter-interface].

@@ -59,7 +59,7 @@ public class ParameterProviderBridge implements ConfigurationMetadataProvider, C
    */
   public static final String DEFAULT_CONFIG_NAME = "config";
 
-  private RankedServices<ParameterProvider> parameterProviders = new RankedServices<>(Order.ASCENDING, this);
+  private final RankedServices<ParameterProvider> parameterProviders = new RankedServices<>(Order.ASCENDING, this);
 
   private volatile ConfigurationMetadata configMetadata;
 

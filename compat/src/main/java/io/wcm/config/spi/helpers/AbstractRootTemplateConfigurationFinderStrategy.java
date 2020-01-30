@@ -43,7 +43,6 @@ import io.wcm.config.spi.ConfigurationFinderStrategy;
  * no further configuration scopes are accepted.
  */
 @ConsumerType
-@SuppressWarnings("null")
 public abstract class AbstractRootTemplateConfigurationFinderStrategy implements ConfigurationFinderStrategy {
 
   private final String applicationId;
@@ -78,16 +77,18 @@ public abstract class AbstractRootTemplateConfigurationFinderStrategy implements
     List<String> configurationIds = new ArrayList<>();
 
     PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
-    Page page = pageManager.getContainingPage(resource);
-    if (page != null) {
-      for (int level = minLevel; level <= maxLevel; level++) {
-        Page rootPage = page.getAbsoluteParent(level);
-        if (rootPage != null) {
-          String templatePath = rootPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
-          if (templatePath != null) {
-            configurationIds.add(rootPage.getPath());
-            if (configRootTemplatePaths.contains(templatePath)) {
-              break;
+    if (pageManager != null) {
+      Page page = pageManager.getContainingPage(resource);
+      if (page != null) {
+        for (int level = minLevel; level <= maxLevel; level++) {
+          Page rootPage = page.getAbsoluteParent(level);
+          if (rootPage != null) {
+            String templatePath = rootPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
+            if (templatePath != null) {
+              configurationIds.add(rootPage.getPath());
+              if (configRootTemplatePaths.contains(templatePath)) {
+                break;
+              }
             }
           }
         }

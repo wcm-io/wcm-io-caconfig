@@ -67,6 +67,7 @@ import org.slf4j.LoggerFactory;
     "sling.servlet.methods=POST",
     "sling.servlet.methods=DELETE"
 })
+@SuppressWarnings("deprecation")
 public class ConfigPersistServlet extends SlingAllMethodsServlet {
   private static final long serialVersionUID = 1L;
 
@@ -83,7 +84,7 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
   private static Logger log = LoggerFactory.getLogger(ConfigPersistServlet.class);
 
   @Override
-  @SuppressWarnings("null")
+  @SuppressWarnings({ "null", "PMD.GuardLogStatement" })
   protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
     if (!editorConfig.isEnabled()) {
       sendForbiddenWithMessage(response, "Configuration editor is disabled.");
@@ -301,6 +302,7 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
   }
 
   @Override
+  @SuppressWarnings("PMD.GuardLogStatement")
   protected void doDelete(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
 
     // get parameters
