@@ -39,6 +39,7 @@ import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
@@ -48,6 +49,7 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.PageManagerFactory;
 
 import io.wcm.wcm.commons.util.Path;
 
@@ -111,6 +113,9 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
 
   private static final Logger log = LoggerFactory.getLogger(AbsoluteParentContextPathStrategy.class);
 
+  @Reference
+  private PageManagerFactory pageManagerFactory;
+
   @Activate
   void activate(Config config) {
     levels = new TreeSet<>();
@@ -150,7 +155,10 @@ public class AbsoluteParentContextPathStrategy implements ContextPathStrategy {
     }
 
     ResourceResolver resourceResolver = resource.getResourceResolver();
-    PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
+    PageManager pageManager = pageManagerFactory.getPageManager(resource.getResourceResolver());
+    if (pageManager == null) {
+      throw new RuntimeException("No page manager.");
+    }
     List<ContextResource> contextResources = new ArrayList<>();
 
     int maxLevel = Path.getAbsoluteLevel(resource.getPath(), resourceResolver);

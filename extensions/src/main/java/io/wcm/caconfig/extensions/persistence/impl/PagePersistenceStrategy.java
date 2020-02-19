@@ -48,6 +48,8 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.PageManagerFactory;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -85,6 +87,8 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
 
   @Reference
   private ConfigurationManagementSettings configurationManagementSettings;
+  @Reference
+  private PageManagerFactory pageManagerFactory;
 
   private boolean enabled;
   private String resourceType;
@@ -178,7 +182,8 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
 
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties(), configurationManagementSettings);
 
-    updatePageLastMod(resolver, path);
+    PageManager pageManager = pageManagerFactory.getPageManager(resolver);
+    updatePageLastMod(resolver, pageManager, path);
     commit(resolver, configResourcePath);
     return true;
   }
@@ -191,11 +196,13 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       return false;
     }
 
+    PageManager pageManager = pageManagerFactory.getPageManager(resolver);
+
     // create page for collection parent
     String parentPath = getCollectionParentResourcePath(configResourceCollectionParentPath);
     ensurePageIfNotContainingPage(resolver, parentPath, resourceType, configurationManagementSettings);
     Resource configResourceParent = getOrCreateResource(resolver, parentPath, DEFAULT_CONFIG_NODE_TYPE, ValueMap.EMPTY, configurationManagementSettings);
-    updatePageLastMod(resolver, parentPath);
+    updatePageLastMod(resolver, pageManager, parentPath);
 
     // delete existing children no longer in the list
     deleteChildrenNotInCollection(configResourceParent, data);
@@ -205,7 +212,7 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
       String path = getCollectionItemResourcePath(parentPath + "/" + item.getCollectionItemName());
       ensureContainingPage(resolver, path, resourceType, configurationManagementSettings);
       getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, item.getProperties(), configurationManagementSettings);
-      updatePageLastMod(resolver, path);
+      updatePageLastMod(resolver, pageManager, path);
     }
 
     // if resource collection parent properties are given replace them as well
@@ -232,7 +239,8 @@ public class PagePersistenceStrategy implements ConfigurationPersistenceStrategy
     if (configResource != null) {
       deletePageOrResource(configResource);
     }
-    updatePageLastMod(resolver, configResourcePath);
+    PageManager pageManager = pageManagerFactory.getPageManager(resolver);
+    updatePageLastMod(resolver, pageManager, configResourcePath);
     commit(resolver, configResourcePath);
     return true;
   }

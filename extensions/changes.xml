@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Switch to AEM 6.3 as minimum version.
       </action>
+      <action type="update" dev="sseifert">
+        Use PageManagerFactory to get PageManager instances.
+      </action>
     </release>
 
     <release version="1.6.0" date="2019-05-09">

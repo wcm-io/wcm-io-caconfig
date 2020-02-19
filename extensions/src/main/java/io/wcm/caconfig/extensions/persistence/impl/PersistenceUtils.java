@@ -245,11 +245,7 @@ final class PersistenceUtils {
     modValueMap.putAll(properties);
   }
 
-  public static void updatePageLastMod(ResourceResolver resolver, String configResourcePath) {
-    PageManager pageManager = resolver.adaptTo(PageManager.class);
-    if (pageManager == null) {
-      throw new RuntimeException("No page manager.");
-    }
+  public static void updatePageLastMod(ResourceResolver resolver, PageManager pageManager, String configResourcePath) {
     Page page = pageManager.getContainingPage(configResourcePath);
     if (page == null) {
       return;
