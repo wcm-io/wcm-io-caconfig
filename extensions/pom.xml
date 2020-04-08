@@ -47,6 +47,9 @@
 
   <properties>
     <site.url.module.prefix>caconfig/extensions</site.url.module.prefix>
+
+    <!-- Enable reproducible builds -->
+    <project.build.outputTimestamp>${timestamp}</project.build.outputTimestamp>
   </properties>
 
   <dependencies>

@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.parent</artifactId>
-    <version>1.2.2</version>
+    <version>1.2.3-SNAPSHOT</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
@@ -38,6 +38,9 @@
   <properties>
     <contentPackage.name>io.wcm.caconfig.editor.package</contentPackage.name>
     <contentPackage.group>wcm-io</contentPackage.group>
+
+    <!-- Enable reproducible builds -->
+    <project.build.outputTimestamp>${timestamp}</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
