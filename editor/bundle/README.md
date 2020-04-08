@@ -5,8 +5,7 @@
 
 ## Dependencies
 
-- Node 6.11.2
-- npm 3.10.10
+- Node 12.16.1
 
 ### Getting Started
 

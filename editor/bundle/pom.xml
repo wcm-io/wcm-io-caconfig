@@ -214,7 +214,7 @@
           </execution>
         </executions>
         <configuration>
-          <nodeJsVersion>6.11.2</nodeJsVersion>
+          <nodeJsVersion>12.16.1</nodeJsVersion>
           <tasks>
             <npmInstallTask>
               <workingDirectory>${project.basedir}</workingDirectory>
