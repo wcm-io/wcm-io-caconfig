@@ -20,10 +20,6 @@
 (function (angular) {
   "use strict";
 
-  var uid = ["0", "0", "0"];
-  var DIGIT_9 = 57;
-  var LETTER_Z = 90;
-
   /**
    * Utilities module.
    */
@@ -31,34 +27,7 @@
     .service("utilities", UtilitiesService);
 
   function UtilitiesService() {
-    var that = this;
-
-    /**
-     * Generates unique id
-     * @return {String}
-     */
-    that.nextUid = function () {
-      var index = uid.length;
-      var digit;
-
-      while (index) {
-        index--;
-        digit = uid[index].charCodeAt(0);
-        if (digit === DIGIT_9) {
-          uid[index] = "A";
-          return uid.join("");
-        }
-        if (digit === LETTER_Z) {
-          uid[index] = "0";
-        }
-        else {
-          uid[index] = String.fromCharCode(digit + 1);
-          return uid.join("");
-        }
-      }
-      uid.unshift("0");
-      return uid.join("");
-    };
+    // add utility methods here
   }
 
 }(angular));

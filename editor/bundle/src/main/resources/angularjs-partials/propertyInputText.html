@@ -1,11 +1,11 @@
 <div>
-  <input class="coral-Textfield caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-not-inherited" type="text"
+  <input is="coral-textfield" class="caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-not-inherited"
          ng-model="property.value"
          ng-pattern="pattern" />
-  <input class="coral-Textfield caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-inherited" type="text"
+  <input is="coral-textfield" class="caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-inherited"
          ng-model="property.value"
          disabled readonly />
-  <input class="coral-Textfield caconfig-if-property-overridden-or-inherited" type="text"
+  <input is="coral-textfield" class="caconfig-if-property-overridden-or-inherited"
          ng-model="property.effectiveValue"
          disabled readonly />
 </div>

@@ -30,7 +30,6 @@
 
     modalService.addModal(modalService.modal.SAVE_CONFIG, {
       element: "#caconfig-saveConfigModal",
-      type: "notice",
       visible: false
     });
 

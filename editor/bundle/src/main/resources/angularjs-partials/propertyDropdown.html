@@ -1,27 +1,25 @@
 <div class="caconfig-property-dropdown" bindonce="dropdownReady" ng-model="property.value">
-  <span class="coral-Select caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-not-inherited" bo-id="id">
-    <button class="coral-Select-button coral-MinimalButton" type="button">
-      <span class="coral-Select-button-text" bo-text="multivalue ? i18n('button.choose') : ''"></span>
+  <coral-select class="caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-not-inherited" bo-id="id"
+                bo-attr bo-attr-placeholder="i18n('button.choose')">
+    <coral-select-item ng-repeat="option in dropdownOptions"
+                       bo-value="option.value"
+                       bo-text="option.description">
+    </coral-select-item>
+  </coral-select>
+
+  <span class="coral-Select coral3-Select caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-inherited">
+    <button class="coral3-Button coral3-Button--secondary coral3-Button--block coral3-Select-button" disabled readonly>
+      <coral-icon class="coral3-Icon coral3-Select-openIcon coral3-Icon--chevronDown coral3-Icon--sizeXS" icon="chevronDown" size="XS"></coral-icon>
+      <span class="coral3-Select-label" bo-if="i18n('button.choose')" bo-text="i18n('button.choose')"></span>
     </button>
-    <select class="coral-Select-select">
-      <option bo-if="multivalue" disabled selected value bo-text="i18n('button.choose')"></option>
-      <option bo-if="!multivalue" selected></option>
-      <option ng-repeat="option in dropdownOptions"
-              bo-value="option.value"
-              bo-text="option.description">
-      </option>
-    </select>
+    <coral-taglist class="coral3-Select-tagList caconfig-dummy-taglist"></coral-taglist>
   </span>
-  <span class="coral-Select caconfig-if-property-not-overridden-and-not-inherited caconfig-if-config-inherited">
-    <button class="coral-Select-button coral-MinimalButton" type="button" readonly disabled>
-      <span class="coral-Select-button-text" bo-text="i18n('button.choose')"></span>
+
+  <span class="coral-Select coral3-Select caconfig-if-property-overridden-or-inherited">
+    <button class="coral3-Button coral3-Button--secondary coral3-Button--block coral3-Select-button" disabled readonly>
+      <coral-icon class="coral3-Icon coral3-Select-openIcon coral3-Icon--chevronDown coral3-Icon--sizeXS" icon="chevronDown" size="XS"></coral-icon>
+      <span class="coral3-Select-label" ng-bind="getOptionText(property.effectiveValue)"></span>
     </button>
-    <ol class="coral-TagList caconfig-dummy-taglist" role="list"></ol>
-  </span>
-  <span class="coral-Select caconfig-if-property-overridden-or-inherited">
-    <button class="coral-Select-button coral-MinimalButton" type="button" readonly disabled>
-      <span class="coral-Select-button-text" ng-bind="getOptionText(property.effectiveValue)"></span>
-    </button>
-    <ol class="coral-TagList caconfig-dummy-taglist caconfig-dummy-taglist--effective" role="list"></ol>
+    <coral-taglist class="coral3-Select-tagList caconfig-dummy-taglist caconfig-dummy-taglist--effective"></coral-taglist>
   </span>
 </div>

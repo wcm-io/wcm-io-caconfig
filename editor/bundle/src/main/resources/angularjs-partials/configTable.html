@@ -26,9 +26,8 @@
       <th class="coral-Table-headerCell" style="width: 1%;"></th>
       <th class="coral-Table-headerCell" style="width: 1%;"></th>
       <th class="coral-Table-headerCell" style="width: 1%;">
-        <i class="coral-Icon coral-Icon--delete caconfig-delete-item caconfig-if-is-collection caconfig-if-config-not-inherited"
-           bo-title="i18n('button.deleteItem')"
-           ng-click="configTable.removeCollectionItem(index)"></i>
+        <button is="coral-button" icon="delete" variant="quiet" class="caconfig-delete-item caconfig-if-is-collection caconfig-if-config-not-inherited"
+          bo-title="i18n('button.deleteItem')" ng-click="configTable.removeCollectionItem(index)"></button>
       </th>
     </tr>
     <tr class="coral-Table-row">

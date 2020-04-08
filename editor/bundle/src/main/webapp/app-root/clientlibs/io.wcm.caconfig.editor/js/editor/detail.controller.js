@@ -27,9 +27,9 @@
   angular.module("io.wcm.caconfig.editor")
     .controller("DetailController", DetailController);
 
-  DetailController.$inject = ["$window", "$document", "$rootScope", "$scope", "$timeout", "$route", "configService", "modalService"];
+  DetailController.$inject = ["$window", "$document", "$rootScope", "$timeout", "$route", "configService", "modalService"];
 
-  function DetailController($window, $document, $rootScope, $scope, $timeout, $route, configService, modalService) {
+  function DetailController($window, $document, $rootScope, $timeout, $route, configService, modalService) {
     var that = this;
     var MAX_CONFIGS = Number.POSITIVE_INFINITY;
     var MAX_CONFIGS_PER_PAGE = 32;
