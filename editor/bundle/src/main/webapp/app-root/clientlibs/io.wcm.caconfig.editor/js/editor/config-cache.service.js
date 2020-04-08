@@ -108,7 +108,7 @@
       }
       if (property.metadata && property.metadata.properties
                   && property.metadata.properties.widgetType === "textarea") {
-         return "textarea";
+        return "textarea";
       }
       if (property.metadata && property.metadata.type) {
         input = inputMap[property.metadata.type];

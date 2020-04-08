@@ -179,7 +179,7 @@
       if (obj.type === "text" || obj.type === "number") {
         return "<td caconfig-property-input-text property=\"config.properties[" + obj.propIndex + "]\"></td>";
       }
-      if (obj.type === "textarea" ) {
+      if (obj.type === "textarea") {
         return "<td caconfig-property-input-textarea property=\"config.properties[" + obj.propIndex + "]\"></td>";
       }
       if (obj.type === "checkbox") {
