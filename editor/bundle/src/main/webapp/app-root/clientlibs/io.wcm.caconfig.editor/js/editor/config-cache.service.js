@@ -38,7 +38,7 @@
 
     /**
      * Gets "configNameObject" for a config from cache.
-     * If none exists, then the user has deep-linked to the config with cleared localstorage
+     * If none exists, then the user has deep-linked to the config with cleared sessionStorage
      * and will be unable to view or edit the config correctly.
      *
      * @param  {String} configName
@@ -108,7 +108,7 @@
       }
       if (property.metadata && property.metadata.properties
                   && property.metadata.properties.widgetType === "textarea") {
-         return "textarea";
+        return "textarea";
       }
       if (property.metadata && property.metadata.type) {
         input = inputMap[property.metadata.type];

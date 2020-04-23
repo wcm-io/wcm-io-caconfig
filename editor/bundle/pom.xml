@@ -19,19 +19,19 @@
   #L%
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.parent</artifactId>
-    <version>1.2.2</version>
+    <version>1.2.3-SNAPSHOT</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.editor</artifactId>
-  <version>1.7.0</version>
+  <version>1.7.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Context-Aware Configuration Editor</name>
@@ -40,6 +40,9 @@
 
   <properties>
     <site.url.module.prefix>caconfig/editor/bundle</site.url.module.prefix>
+
+    <!-- Enable reproducible builds -->
+    <project.build.outputTimestamp>${timestamp}</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -214,7 +217,7 @@
           </execution>
         </executions>
         <configuration>
-          <nodeJsVersion>6.11.2</nodeJsVersion>
+          <nodeJsVersion>12.16.1</nodeJsVersion>
           <tasks>
             <npmInstallTask>
               <workingDirectory>${project.basedir}</workingDirectory>

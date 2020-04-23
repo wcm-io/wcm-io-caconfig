@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageFilter;
 import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.PageManagerFactory;
 import com.day.cq.wcm.api.reference.ReferenceProvider;
 
 /**
@@ -95,6 +96,9 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
 
   private static final Logger log = LoggerFactory.getLogger(ConfigurationReferenceProvider.class);
 
+  @Reference
+  private PageManagerFactory pageManagerFactory;
+
   @Activate
   protected void activate(Config config) {
     enabled = config.enabled();
@@ -111,7 +115,7 @@ public class ConfigurationReferenceProvider implements ReferenceProvider {
       return Collections.emptyList();
     }
 
-    PageManager pageManager = resource.getResourceResolver().adaptTo(PageManager.class);
+    PageManager pageManager = pageManagerFactory.getPageManager(resource.getResourceResolver());
     if (pageManager == null) {
       throw new RuntimeException("No page manager.");
     }
