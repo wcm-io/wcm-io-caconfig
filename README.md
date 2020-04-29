@@ -8,7 +8,8 @@ Context-Aware configuration for AEM applications.
 Documentation: https://wcm.io/caconfig/<br/>
 Issues: https://wcm-io.atlassian.net/projects/WCON<br/>
 Wiki: https://wcm-io.atlassian.net/wiki/<br/>
-Continuous Integration: https://travis-ci.org/wcm-io/wcm-io-caconfig/
+Continuous Integration: https://travis-ci.org/wcm-io/wcm-io-caconfig/<br/>
+Commercial support: https://wcm.io/commercial-support.html
 
 
 ## Build from sources
