@@ -81,8 +81,9 @@
 
       angular.forEach(properties, function (property) {
         var propertyName = property.name;
-        if (propertyName && angular.isUndefined(configCache[configName].propertyTypes[propertyName])) {
-          configCache[configName].propertyTypes[propertyName] = determinePropertyType(property);
+        var propertyType = determinePropertyType(property);
+        if (propertyName && configCache[configName].propertyTypes[propertyName] !== propertyType) {
+          configCache[configName].propertyTypes[propertyName] = propertyType;
         }
       });
     }
@@ -182,7 +183,8 @@
       var children,
         config,
         configName,
-        properties;
+        properties,
+        propertyTypesCacheValid;
 
       if (angular.isObject(configData.nestedConfig)) {
         configName = configData.nestedConfig.configName;
@@ -206,8 +208,23 @@
 
       isCollectionItem = angular.isString(configData.collectionItemName);
 
+      if (angular.isUndefined(config.propertyTypes)) {
+        propertyTypesCacheValid = false;
+      }
+      else {
+        propertyTypesCacheValid = true;
+
+        // check if any properties have been added, or changed
+        angular.forEach(configData.properties, function (property) {
+          var propertyType = determinePropertyType(config);
+          if (angular.isUndefined(config.propertyTypes[property.name]) || config.propertyTypes[property.name] !== propertyType) {
+            propertyTypesCacheValid = false;
+          }
+        });
+      }
+
       // If config has already been "fully" added to cache
-      if (angular.isDefined(config.propertyTypes)
+      if (propertyTypesCacheValid
           && angular.isDefined(config.hasChildren)
           && !isCollectionItem
           && !isNestedCollection
@@ -246,7 +263,7 @@
 
       properties = getConfigProperties(configData, isNested, isNestedCollection);
 
-      if (angular.isUndefined(config.propertyTypes)) {
+      if (!propertyTypesCacheValid) {
         addPropertyTypesToCache(configName, properties);
       }
 
