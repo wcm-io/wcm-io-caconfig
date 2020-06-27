@@ -113,7 +113,9 @@
       var getRowFn = isPreview ? getPropertyRowPreviewHtml : getPropertyRowHtml;
 
       if (config.isNewItem) {
-        configName = config.configName + "-new-item";
+        configName = config.configName
+          + "-new-item"
+          + (isPreview ? "-preview" : "");
       }
       else {
         configName = config.configName
