@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.parent</artifactId>
-  <version>1.2.7-SNAPSHOT</version>
+  <version>1.2.6</version>
   <packaging>pom</packaging>
 
   <name>Context-Aware Configuration</name>
