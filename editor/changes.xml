@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.7.2" date="not released">
+    <release version="1.7.2" date="2020-06-28">
       <action type="fix" dev="dding" issue="WCON-74">
         Fix: Local storage caching prevents displaying new parameters correctly.
       </action>
