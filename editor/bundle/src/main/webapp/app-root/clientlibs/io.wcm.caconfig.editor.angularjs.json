@@ -3,6 +3,5 @@
   "categories": [
     "io.wcm.caconfig.editor.angularjs"
   ],
-  "jsProcessor": ["default:none", "min:none"],
-  "longCacheKey": "${project.version}-${buildNumber}"
+  "jsProcessor": ["default:none", "min:none"]
 }

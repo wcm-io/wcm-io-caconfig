@@ -163,15 +163,6 @@
         <targetPath>SLING-INF</targetPath>
         <filtering>false</filtering>
       </resource>
-      <!-- Apply maven filtering to clientlib definitions (cache key) -->
-      <resource>
-        <directory>src/main/webapp</directory>
-        <targetPath>SLING-INF</targetPath>
-        <filtering>true</filtering>
-        <includes>
-          <include>app-root/clientlibs/*.json</include>
-        </includes>
-      </resource>
     </resources>
     <plugins>
 

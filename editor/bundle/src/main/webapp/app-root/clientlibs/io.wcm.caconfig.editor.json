@@ -6,6 +6,5 @@
   "dependencies": [
     "coralui2",
     "io.wcm.caconfig.editor.angularjs"
-  ],
-  "longCacheKey": "${project.version}-${buildNumber}"
+  ]
 }
