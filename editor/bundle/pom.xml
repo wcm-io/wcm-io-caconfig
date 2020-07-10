@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.editor</artifactId>
-  <version>1.7.2</version>
+  <version>1.7.4</version>
   <packaging>jar</packaging>
 
   <name>Context-Aware Configuration Editor</name>
@@ -162,15 +162,6 @@
         <directory>src/main/webapp</directory>
         <targetPath>SLING-INF</targetPath>
         <filtering>false</filtering>
-      </resource>
-      <!-- Apply maven filtering to clientlib definitions (cache key) -->
-      <resource>
-        <directory>src/main/webapp</directory>
-        <targetPath>SLING-INF</targetPath>
-        <filtering>true</filtering>
-        <includes>
-          <include>app-root/clientlibs/*.json</include>
-        </includes>
       </resource>
     </resources>
     <plugins>
