@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.editor.parent</artifactId>
-  <version>1.7.3-SNAPSHOT</version>
+  <version>1.7.5-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Context-Aware Configuration Editor</name>
