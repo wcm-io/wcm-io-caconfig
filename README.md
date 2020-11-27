@@ -1,6 +1,6 @@
 <img src="https://wcm.io/images/favicon-16@2x.png"/> wcm.io Context-Aware Configuration
 ======
-[![Build Status](https://travis-ci.org/wcm-io/wcm-io-caconfig.png?branch=develop)](https://travis-ci.org/wcm-io/wcm-io-caconfig)
+[![Build Status](https://travis-ci.com/wcm-io/wcm-io-caconfig.png?branch=develop)](https://travis-ci.com/wcm-io/wcm-io-caconfig)
 [![Code Coverage](https://codecov.io/gh/wcm-io/wcm-io-caconfig/branch/develop/graph/badge.svg)](https://codecov.io/gh/wcm-io/wcm-io-caconfig)
 
 Context-Aware configuration for AEM applications.
@@ -8,7 +8,7 @@ Context-Aware configuration for AEM applications.
 Documentation: https://wcm.io/caconfig/<br/>
 Issues: https://wcm-io.atlassian.net/projects/WCON<br/>
 Wiki: https://wcm-io.atlassian.net/wiki/<br/>
-Continuous Integration: https://travis-ci.org/wcm-io/wcm-io-caconfig/<br/>
+Continuous Integration: https://travis-ci.com/wcm-io/wcm-io-caconfig/<br/>
 Commercial support: https://wcm.io/commercial-support.html
 
 
