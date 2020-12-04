@@ -22,6 +22,7 @@ package io.wcm.caconfig.editor.model;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
@@ -51,6 +52,7 @@ public class EditorConfiguration {
   @OSGiService
   private EditorConfig editorConfig;
 
+  private String servletContextPathPrefix;
   private String configNamesUrl;
   private String configDataUrl;
   private String configPersistUrl;
@@ -60,12 +62,20 @@ public class EditorConfiguration {
 
   @PostConstruct
   private void activate() {
-    this.configNamesUrl = currentResource.getPath() + "." + ConfigNamesServlet.SELECTOR + ".json";
-    this.configDataUrl = currentResource.getPath() + "." + ConfigDataServlet.SELECTOR + ".json";
-    this.configPersistUrl = currentResource.getPath() + "." + ConfigPersistServlet.SELECTOR + ".json";
+    this.servletContextPathPrefix = StringUtils.defaultString(request.getContextPath());
+    if (StringUtils.equals(this.servletContextPathPrefix, "/")) {
+      this.servletContextPathPrefix = "";
+    }
+    this.configNamesUrl = servletContextPathPrefix + currentResource.getPath() + "." + ConfigNamesServlet.SELECTOR + ".json";
+    this.configDataUrl = servletContextPathPrefix + currentResource.getPath() + "." + ConfigDataServlet.SELECTOR + ".json";
+    this.configPersistUrl = servletContextPathPrefix + currentResource.getPath() + "." + ConfigPersistServlet.SELECTOR + ".json";
     this.contextPath = configResourceResolver.getContextPath(currentResource);
     this.language = request.getLocale().getLanguage();
     this.enabled = editorConfig.isEnabled();
+  }
+
+  public String getServletContextPathPrefix() {
+    return this.servletContextPathPrefix;
   }
 
   public String getConfigNamesUrl() {

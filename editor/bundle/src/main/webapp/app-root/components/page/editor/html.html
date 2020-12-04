@@ -35,9 +35,9 @@
             var configNamesUrl = "${editorConfig.configNamesUrl @ context='uri'}";
             var configDataUrl = "${editorConfig.configDataUrl @ context='uri'}";
             var configPersistUrl = "${editorConfig.configPersistUrl @ context='uri'}";
-            var publishReferencesUrl = "/libs/wcm/core/content/reference.json";
-            var publishReplicationUrl = "/bin/replicate.json";
-            var publishWizardUrl = "/libs/wcm/core/content/sites/publishpagewizard.html";
+            var publishReferencesUrl = "${editorConfig.servletContextPathPrefix @ context='uri'}/libs/wcm/core/content/reference.json";
+            var publishReplicationUrl = "${editorConfig.servletContextPathPrefix @ context='uri'}/bin/replicate.json";
+            var publishWizardUrl = "${editorConfig.servletContextPathPrefix @ context='uri'}/libs/wcm/core/content/sites/publishpagewizard.html";
             var currentPagePath = "${currentPage.path @ context='uri'}";
 
             dataServiceProvider.setRestUrls({
