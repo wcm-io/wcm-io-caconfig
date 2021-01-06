@@ -41,7 +41,6 @@
     <module>parent</module>
     <module>editor</module>
     <module>extensions</module>
-    <module>compat</module>
     <module>sample-app</module>
   </modules>
 
