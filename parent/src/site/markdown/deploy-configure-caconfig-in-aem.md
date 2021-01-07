@@ -90,6 +90,6 @@ You do not need to deploy additional bundles in AEM 6.4, but it is recommended t
 [wcmio-caconfig-extensions-persistence-aempage]: https://wcm.io/caconfig/extensions/persistence-strategies.html
 
 
-### Updating Sling Context-Aware Configuration in AEM 6.5 and AEM Cloud Service
+### AEM 6.5 and AEM Cloud Service
 
 No special configurations required, everything is up-to-date.
