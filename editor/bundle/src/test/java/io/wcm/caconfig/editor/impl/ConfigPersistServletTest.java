@@ -32,11 +32,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.spi.ConfigurationCollectionPersistData;
 import org.apache.sling.caconfig.spi.ConfigurationPersistData;
@@ -225,7 +225,7 @@ class ConfigPersistServletTest {
     context.request().setQueryString(RP_CONFIGNAME + "=" + configName
         + (collection ? "&collection=true" : ""));
     context.request().setContentType("application/json");
-    context.request().setContent(jsonData.getBytes(CharEncoding.UTF_8));
+    context.request().setContent(jsonData.getBytes(StandardCharsets.UTF_8));
     context.request().setMethod("POST");
 
     underTest.service(context.request(), context.response());

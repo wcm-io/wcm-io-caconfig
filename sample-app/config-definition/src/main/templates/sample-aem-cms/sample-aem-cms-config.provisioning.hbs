@@ -11,21 +11,10 @@
     org.apache.sling.commons.log.file.size="'.'yyyy-MM-dd"
     org.apache.sling.commons.log.file.number=I"15"
 
-  # Configure Sling Context-Aware Configuration for AEM
-  org.apache.sling.caconfig.resource.impl.def.DefaultContextPathStrategy
-    configRefResourceNames=["jcr:content","."]
-    configRefPropertyNames=["cq:conf"]
-
-  org.apache.sling.caconfig.resource.impl.def.DefaultConfigurationResourceResolvingStrategy
-    fallbackPaths=["/conf/global","/apps","/libs"]
-    configCollectionInheritancePropertyNames=["jcr:content/sling:configCollectionInherit","jcr:content/mergeList","mergeList"]
-  
+  # Configure Sling Context-Aware Configuration for AEM 6.4
   org.apache.sling.caconfig.management.impl.ConfigurationManagementSettingsImpl
     ignorePropertyNameRegex=["^(jcr|cq):.+$","^sling:resourceType$"]
     configCollectionPropertiesResourceNames=["jcr:content","."]
-
-  org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-sling-caconfig
-    user.mapping=["org.apache.sling.caconfig.impl\=sling-caconfig"]
 
   # Example for config override
   org.apache.sling.caconfig.impl.override.OsgiConfigurationOverrideProvider-caconfig-sample
