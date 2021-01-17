@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.caconfig.parent</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.0</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.editor.parent</artifactId>
-  <version>1.8.0-SNAPSHOT</version>
+  <version>1.8.0</version>
   <packaging>pom</packaging>
 
   <name>Context-Aware Configuration Editor</name>
