@@ -110,13 +110,13 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.caconfig.extensions</artifactId>
-      <version>1.6.0</version>
+      <version>1.8.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.caconfig.extensions</artifactId>
-      <version>1.6.0</version>
+      <version>1.8.0</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
