@@ -63,11 +63,6 @@
       <artifactId>org.apache.sling.caconfig.impl</artifactId>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.sling</groupId>
-      <artifactId>org.apache.sling.commons.johnzon</artifactId>
-      <scope>compile</scope>
-    </dependency>
 
     <dependency>
       <groupId>io.wcm</groupId>
@@ -116,8 +111,7 @@
               <artifactId>
                 org.apache.sling.caconfig.api,
                 org.apache.sling.caconfig.spi,
-                org.apache.sling.caconfig.impl,
-                org.apache.sling.commons.johnzon
+                org.apache.sling.caconfig.impl
               </artifactId>
             </embedded>
           </embeddeds>

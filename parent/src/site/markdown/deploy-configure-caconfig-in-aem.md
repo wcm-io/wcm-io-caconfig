@@ -88,3 +88,8 @@ You do not need to deploy additional bundles in AEM 6.4, but it is recommended t
 [wcmio-caconfig]: https://wcm.io/caconfig/
 [wcmio-caconfig-extensions]: https://wcm.io/caconfig/extensions/
 [wcmio-caconfig-extensions-persistence-aempage]: https://wcm.io/caconfig/extensions/persistence-strategies.html
+
+
+### AEM 6.5 and AEM Cloud Service
+
+No special configurations required, everything is up-to-date.
