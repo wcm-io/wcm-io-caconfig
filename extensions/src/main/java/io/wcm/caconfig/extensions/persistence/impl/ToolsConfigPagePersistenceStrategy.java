@@ -65,6 +65,11 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.PageManagerFactory;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * AEM-specific persistence strategy that gets only active if a context path is redirected to path
  * <code>/content/.../tools/config</code>.
@@ -111,7 +116,8 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   private ContextPathStrategyMultiplexer contextPathStrategy;
   @Reference
   private ConfigurationManagementSettings configurationManagementSettings;
-
+  @Reference
+  private PageManagerFactory pageManagerFactory;
 
   // --- ConfigurationPersitenceStrategy ---
 
@@ -176,6 +182,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
   }
 
   @Override
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public boolean persistConfiguration(@NotNull ResourceResolver resolver, @NotNull String configResourcePath,
       @NotNull ConfigurationPersistData data) {
     if (!enabled || !isConfigPagePath(configResourcePath)) {
@@ -186,7 +193,8 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
 
     getOrCreateResource(resolver, path, DEFAULT_CONFIG_NODE_TYPE, data.getProperties(), configurationManagementSettings);
 
-    updatePageLastMod(resolver, path);
+    PageManager pageManager = pageManagerFactory.getPageManager(resolver);
+    updatePageLastMod(resolver, pageManager, path);
     commit(resolver, configResourcePath);
     return true;
   }
@@ -214,7 +222,8 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
       replaceProperties(configResourceParent, data.getProperties(), configurationManagementSettings);
     }
 
-    updatePageLastMod(resolver, configResourceCollectionParentPath);
+    PageManager pageManager = pageManagerFactory.getPageManager(resolver);
+    updatePageLastMod(resolver, pageManager, configResourceCollectionParentPath);
     commit(resolver, configResourceCollectionParentPath);
     return true;
   }
@@ -228,7 +237,8 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     if (resource != null) {
       deletePageOrResource(resource);
     }
-    updatePageLastMod(resolver, configResourcePath);
+    PageManager pageManager = pageManagerFactory.getPageManager(resolver);
+    updatePageLastMod(resolver, pageManager, configResourcePath);
     commit(resolver, configResourcePath);
     return true;
   }

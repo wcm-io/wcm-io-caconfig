@@ -3,9 +3,9 @@
      bindonce>
   <div class="coral-Modal-header">
     <i class="coral-Modal-typeIcon coral-Icon coral-Icon--sizeS"></i>
-    <h2 class="coral-Modal-title coral-Heading coral-Heading--2" bo-text="i18n.modal.addCollectionItem.title"></h2>
+    <h2 class="coral-Modal-title coral-Heading coral-Heading--2" bo-text="i18n('modal.addCollectionItem.title')"></h2>
     <button class="coral-MinimalButton coral-Modal-closeButton"
-            data-dismiss="modal" type="button" bo-title="i18n.modal.close">
+            data-dismiss="modal" type="button" bo-title="i18n('modal.close')">
       <i class="coral-Icon coral-Icon--sizeXS coral-Icon--close coral-MinimalButton-icon"></i>
     </button>
   </div>
@@ -13,17 +13,17 @@
     <form class="coral-Form coral-Form--vertical" name="addCollectionItemForm" novalidate>
       <section class="coral-Form-fieldset">
       <div class="coral-Form-fieldwrapper">
-          <label class="coral-Form-fieldlabel" bo-text="i18n.config.name"></label>
+          <label class="coral-Form-fieldlabel" bo-text="i18n('config.name')"></label>
           <i class="coral-Form-fielderror coral-Icon coral-Icon--alert"
              data-init="quicktip" data-quicktip-arrow="right" data-quicktip-type="error"
              bo-attr
-             bo-attr-data-quicktip-content="i18n.modal.tooltip.unique"
+             bo-attr-data-quicktip-content="i18n('modal.tooltip.unique')"
              role="img" tabindex="0"
              ng-show="addCollectionItem.blacklist.indexOf(addCollectionItem.newCollectionName) !== -1"></i>
           <i class="coral-Form-fielderror coral-Icon coral-Icon--alert"
              data-init="quicktip" data-quicktip-arrow="right" data-quicktip-type="error"
              bo-attr
-             bo-attr-data-quicktip-content="i18n.modal.tooltip.allowed"
+             bo-attr-data-quicktip-content="i18n('modal.tooltip.allowed')"
              role="img" tabindex="0"
              ng-show="addCollectionItemForm.collectionItemName.$error.pattern"></i>
           <input class="coral-Form-field coral-Textfield"
@@ -40,10 +40,10 @@
             ng-disabled="!addCollectionItemForm.$valid
                          || addCollectionItem.blacklist.indexOf(addCollectionItem.newCollectionName) !== -1
                          || !addCollectionItem.newCollectionName"
-            ng-click="addCollectionItem.addItem()" bo-text="i18n.button.ok">
+            ng-click="addCollectionItem.addItem()" bo-text="i18n('button.ok')">
     </button>
     <button class="coral-Button coral-Button--secondary" data-dismiss="modal"
-            type="button" bo-text="i18n.button.cancel">
+            type="button" bo-text="i18n('button.cancel')">
     </button>
   </div>
 </div>

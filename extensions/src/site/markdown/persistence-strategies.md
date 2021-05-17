@@ -65,4 +65,4 @@ Usually the page `/content/brand1/region1/country1/tools/config` is associated w
 
 
 [context-path-strategies]: context-path-strategies.html
-[wcmio-caconfig-editor]: http://wcm.io/caconfig/editor/
+[wcmio-caconfig-editor]: https://wcm.io/caconfig/editor/

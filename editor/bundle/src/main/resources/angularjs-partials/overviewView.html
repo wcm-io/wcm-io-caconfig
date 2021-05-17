@@ -3,20 +3,20 @@
           bo-disabled="!overview.hasNonExistingConfig()
                        || !overview.state.contextPath"
           ng-click="overview.showNonExistingConfigs()"
-          bo-text="i18n.button.add">
+          bo-text="i18n('button.add')">
   </button>
   <button class="caconfig-publishButton coral-Button coral-Button--secondary" type="button"
           ng-click="overview.publishPage()"
-          bo-if="i18n.button.publish"
-          bo-text="i18n.button.publish">
+          bo-if="i18n('button.publish')"
+          bo-text="i18n('button.publish')">
   </button>
 
   <p class="caconfig-contextPath"
      bo-if="overview.state.contextPath">
-     <span bo-text="i18n.contextPath"></span>: <code bo-text="overview.state.contextPath"></code>
+     <span bo-text="i18n('contextPath')"></span>: <code bo-text="overview.state.contextPath"></code>
   </p>
   <p class="caconfig-contextPath"
-     bo-if="!overview.state.contextPath" bo-text="i18n.noContextPath">
+     bo-if="!overview.state.contextPath" bo-text="i18n('noContextPath')">
   </p>
 
   <table class="coral-Table coral-Table--hover"
@@ -24,8 +24,9 @@
     <thead>
       <tr class="coral-Table-row">
         <th class="coral-Table-headerCell" style="width:1%"></th>
-        <th class="coral-Table-headerCell" bo-text="i18n.config.name"></th>
-        <th class="coral-Table-headerCell" bo-text="i18n.config.description"></th>
+        <th class="coral-Table-headerCell" bo-text="i18n('config.name')"></th>
+        <th class="coral-Table-headerCell" bo-text="i18n('config.description')"></th>
+        <th class="coral-Table-headerCell" style="width:1%"></th>
       </tr>
     </thead>
     <tbody>
@@ -38,6 +39,26 @@
         </td>
         <td class="coral-Table-cell" bo-text="config.label || config.configName"></td>
         <td class="coral-Table-cell" bo-text="config.description"></td>
+        <td class="coral-Table-cell">
+          <i bo-if="config.overridden"
+             class="coral-Icon coral-Icon--sizeS coral-Icon--lockOn"
+             data-init="quicktip" data-quicktip-arrow="right" data-quicktip-type="info" role="img" tabindex="0"
+             bo-attr
+             bo-attr-data-quicktip-content="i18n(config.collection ? 'config.tooltip.overriddenCollection' : 'config.tooltip.overriddenConfig')"
+          ></i>
+          <i bo-if="!config.overridden && config.inherited"
+             class="coral-Icon coral-Icon--sizeS coral-Icon--link"
+             data-init="quicktip" data-quicktip-arrow="right" data-quicktip-type="info" role="img" tabindex="0"
+             bo-attr
+             bo-attr-data-quicktip-content="i18n(config.collection ? 'config.tooltip.inheritedCollection' : 'config.tooltip.inheritedConfig')"
+          ></i>
+          <i bo-if="!config.overridden && !config.inherited"
+             class="coral-Icon coral-Icon--sizeS coral-Icon--linkOff"
+             data-init="quicktip" data-quicktip-arrow="right" data-quicktip-type="info" role="img" tabindex="0"
+             bo-attr
+             bo-attr-data-quicktip-content="i18n(config.collection ? 'config.tooltip.notInheritedCollection' : 'config.tooltip.notInheritedConfig')"
+          ></i>
+        </td>
       </tr>
     </tbody>
   </table>

@@ -1,0 +1,221 @@
+/*
+ * #%L
+ * wcm.io
+ * %%
+ * Copyright (C) 2016 wcm.io
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+.caconfig-header {
+  padding: 0 .9375rem 0 0;
+  min-height: 2.75rem;
+  height: 2.75rem;
+  background-color: #232323;
+}
+
+.caconfig-brand {
+  display: inline-block;
+  background-color: transparent;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  text-decoration: none;
+  white-space: nowrap;
+  height: 2.75rem;
+  cursor: pointer;
+  padding-left: .9375rem;
+  font-size: 1rem;
+  line-height: 2.75rem;
+  color: rgba(255,255,255,0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  -webkit-transition: margin-top 0.5s ease;
+  -moz-transition: margin-top 0.5s ease;
+  -o-transition: margin-top 0.5s ease;
+  -ms-transition: margin-top 0.5s ease;
+  transition: margin-top 0.5s ease;
+}
+
+.caconfig-brand-icon {
+  margin-right: .5rem;
+  line-height: inherit;
+  vertical-align: top;
+}
+
+.caconfig-title {
+  cursor: default;
+}
+
+.caconfig-page-border {
+  padding: 15px;
+}
+
+form.ng-dirty textarea.ng-dirty.ng-invalid,
+form.ng-dirty input.ng-dirty.ng-invalid {
+  border: 1px solid #f00;
+}
+
+form.ng-dirty .caconfig-if-form-pristine,
+form.ng-pristine .caconfig-if-form-dirty,
+form.ng-valid .caconfig-if-form-invalid
+form.ng-invalid .caconfig-if-form-valid {
+  display: none;
+}
+
+form.ng-valid.ng-dirty .caconfig-if-form-invalid-or-pristine,
+form.ng-invalid .caconfig-if-form-valid-and-dirty,
+form.ng-pristine .caconfig-if-form-valid-and-dirty {
+  display: none;
+}
+
+
+span.caconfig-pathbrowser {
+  width: 100% !important;
+}
+
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+  display: none !important;
+}
+
+.coral-Multifield {
+  width: 100%;
+}
+
+.caconfig-multifield {
+  position: relative;
+  padding-right: 103px;
+}
+
+.caconfig-multifield .coral-Textfield {
+  width: 98%;
+}
+
+.caconfig-multifield .coral-ButtonGroup {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.caconfig-pathbrowser .coral-PathBrowser {
+  width: 100%;
+}
+
+#caconfig-addConfigModal {
+  width: 500px;
+}
+
+#caconfig-addConfigModal .coral-Select {
+  width: 100%;
+}
+
+#caconfig-addConfigModal .caconfig-addConfigModal-body {
+  overflow-y: visible;
+}
+
+.caconfig-configTable {
+  margin-top: 10px;
+  border-top: 1px solid #bbb;
+}
+
+.caconfig-configTable .caconfig-delete-item {
+  cursor: pointer;
+  float: right;
+}
+
+.caconfig-configEdit {
+  font-style: italic;
+}
+
+.caconfig-disableable-button,
+.caconfig-disableable-button:disabled,
+.caconfig-disableable-button.is-disabled {
+  display: inline-block;
+}
+
+.caconfig-breadcrumb .caconfig-breadcrumb-link,
+.caconfig-link {
+  cursor: pointer;
+}
+
+.caconfig-is-preview .caconfig-if-not-preview,
+.caconfig-not-preview .caconfig-if-is-preview {
+  display: none;
+}
+
+.caconfig-is-collection .caconfig-if-not-collection,
+.caconfig-not-collection .caconfig-if-is-collection {
+  display: none;
+}
+
+.caconfig-is-new-item .caconfig-if-not-new-item,
+.caconfig-not-new-item .caconfig-if-new-item,
+.caconfig-config-overridden .caconfig-if-config-not-overridden,
+.caconfig-config-not-overridden .caconfig-if-config-overridden,
+.caconfig-config-inherited .caconfig-if-config-not-inherited,
+.caconfig-config-not-inherited .caconfig-if-config-inherited {
+  display: none;
+}
+
+.caconfig-config-not-inherited.caconfig-not-new-item .caconfig-if-config-inherited-or-new-item {
+  display: none;
+}
+
+.caconfig-config-inherited .caconfig-if-config-not-inherited-and-not-new-item,
+.caconfig-is-new-item .caconfig-if-config-not-inherited-and-not-new-item {
+  display: none;
+}
+
+.caconfig-property-not-overridden.caconfig-property-not-inherited .caconfig-if-property-overridden-or-inherited {
+  display: none;
+}
+
+.caconfig-property-overridden .caconfig-if-property-not-overridden-and-not-inherited,
+.caconfig-property-inherited .caconfig-if-property-not-overridden-and-not-inherited {
+  display: none;
+}
+
+.caconfig-dummy-taglist .coral-TagList-tag,
+.caconfig-dummy-taglist .coral-TagList-tag-removeButton {
+  color: #bebebe;
+  text-shadow: none;
+  cursor: default;
+  pointer-events: none;
+}
+
+/**
+ * We use a negative margin-left because of .caconfig-page-border padding
+ */
+.caconfig-largeCollection {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 30px);
+  margin: 0 0 0 -15px;
+}
+
+.caconfig-loading {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+}

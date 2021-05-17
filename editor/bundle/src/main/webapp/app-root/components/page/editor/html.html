@@ -3,7 +3,8 @@
     data-sly-use.editorConfig="io.wcm.caconfig.editor.model.EditorConfiguration"
     data-sly-use.clientLib="/libs/granite/sightly/templates/clientlib.html"
     data-sly-test="${editorConfig.enabled}"
-    ng-app="io.wcm.caconfig.app">
+    ng-app="io.wcm.caconfig.app"
+    lang="${editorConfig.language}">
   <head>
     <meta charset="UTF-8">
     <title ng-bind="title"></title>
@@ -29,89 +30,14 @@
 
       <meta data-sly-call="${clientLib.js @ categories='io.wcm.caconfig.editor'}" data-sly-unwrap></meta>
       <script type="text/javascript">
-        angular.module("io.wcm.caconfig.app")
-          .run(function ($rootScope) {
-            var i18n = {
-              title: "${'io.wcm.caconfig.editor.title' @ i18n, context='text'}",
-              contextPath: "${'io.wcm.caconfig.editor.contextPath' @ i18n, context='text'}",
-              noContextPath: "${'io.wcm.caconfig.editor.noContextPath' @ i18n, context='text'}",
-              deepLinkError: "${'io.wcm.caconfig.editor.deepLinkError' @ i18n, context='text'}",
-              button: {
-                add: "${'io.wcm.caconfig.editor.button.add' @ i18n, context='text'}",
-                addItem: "${'io.wcm.caconfig.editor.button.addItem' @ i18n, context='text'}",
-                browse: "${'io.wcm.caconfig.editor.button.browse' @ i18n, context='text'}",
-                cancel: "${'io.wcm.caconfig.editor.button.cancel' @ i18n, context='text'}",
-                choose: "${'io.wcm.caconfig.editor.button.choose' @ i18n, context='text'}",
-                deleteConfig: "${'io.wcm.caconfig.editor.button.deleteConfig' @ i18n, context='text'}",
-                deleteCollection: "${'io.wcm.caconfig.editor.button.deleteCollection' @ i18n, context='text'}",
-                deleteItem: "${'io.wcm.caconfig.editor.button.deleteItem' @ i18n, context='text'}",
-                discard: "${'io.wcm.caconfig.editor.button.discard' @ i18n, context='text'}",
-                edit: "${'io.wcm.caconfig.editor.button.edit' @ i18n, context='text'}",
-                ok: "${'io.wcm.caconfig.editor.button.ok' @ i18n, context='text'}",
-                publish: "${'io.wcm.caconfig.editor.button.publish' @ i18n, context='text'}",
-                save: "${'io.wcm.caconfig.editor.button.save' @ i18n, context='text'}",
-                toBottom: "${'io.wcm.caconfig.editor.button.toBottom' @ i18n, context='text'}",
-                toTop: "${'io.wcm.caconfig.editor.button.toTop' @ i18n, context='text'}"
-              },
-              config: {
-                name: "${'io.wcm.caconfig.editor.config.name' @ i18n, context='text'}",
-                property: "${'io.wcm.caconfig.editor.config.property' @ i18n, context='text'}",
-                value: "${'io.wcm.caconfig.editor.config.value' @ i18n, context='text'}",
-                inherited: "${'io.wcm.caconfig.editor.config.inherited' @ i18n, context='text'}",
-                overridden: "${'io.wcm.caconfig.editor.config.overridden' @ i18n, context='text'}",
-                description: "${'io.wcm.caconfig.editor.config.description' @ i18n, context='text'}",
-                inheritance: {
-                  property: "${'io.wcm.caconfig.editor.config.inheritance.property' @ i18n, context='text'}",
-                  config: "${'io.wcm.caconfig.editor.config.inheritance.config' @ i18n, context='text'}",
-                  collection: "${'io.wcm.caconfig.editor.config.inheritance.collection' @ i18n, context='text'}",
-                  collectionItem: "${'io.wcm.caconfig.editor.config.inheritance.collectionItem' @ i18n, context='text'}",
-                  "break": "${'io.wcm.caconfig.editor.config.inheritance.break' @ i18n, context='text'}"
-                },
-                edit: "${'io.wcm.caconfig.editor.config.edit' @ i18n, context='text'}"
-              },
-              largeCollection: {
-                addCollectionItemHint: "${'io.wcm.caconfig.editor.largeCollection.addCollectionItemHint' @ i18n, context='text'}",
-                loadAll: "${'io.wcm.caconfig.editor.largeCollection.loadAll' @ i18n, context='text'}",
-                numberInCollection: "${'io.wcm.caconfig.editor.largeCollection.numberInCollection' @ i18n, context='text'}",
-                numberInEditor: "${'io.wcm.caconfig.editor.largeCollection.numberInEditor' @ i18n, context='text'}",
-                scrollHint: "${'io.wcm.caconfig.editor.largeCollection.scrollHint' @ i18n, context='text'}"
-              },
-              modal: {
-                addCollectionItem: {
-                  title: "${'io.wcm.caconfig.editor.modal.addCollectionItem.title' @ i18n, context='text'}"
-                },
-                addConfig: {
-                  title: "${'io.wcm.caconfig.editor.modal.addConfig.title' @ i18n, context='text'}"
-                },
-                close: "${'io.wcm.caconfig.editor.modal.close' @ i18n, context='text'}",
-                deleteConfig: {
-                  message: "${'io.wcm.caconfig.editor.modal.deleteConfig.message' @ i18n, context='text'}",
-                  title: "${'io.wcm.caconfig.editor.modal.deleteConfig.title' @ i18n, context='text'}"
-                },
-                error: {
-                  message: "${'io.wcm.caconfig.editor.modal.error.message' @ i18n, context='text'}"
-                },
-                saveConfig: {
-                  message: "${'io.wcm.caconfig.editor.modal.saveConfig.message' @ i18n, context='text'}",
-                  title: "${'io.wcm.caconfig.editor.modal.saveConfig.title' @ i18n, context='text'}"
-                },
-                tooltip: {
-                  allowed: "${'io.wcm.caconfig.editor.modal.tooltip.allowed' @ i18n, context='text'}",
-                  unique: "${'io.wcm.caconfig.editor.modal.tooltip.unique' @ i18n, context='text'}"
-                }
-              }
-            };
-            $rootScope.i18n = i18n;
-          });
-
         angular.module("io.wcm.caconfig.editor")
           .config(["dataServiceProvider", "publishServiceProvider", function (dataServiceProvider, publishServiceProvider) {
             var configNamesUrl = "${editorConfig.configNamesUrl @ context='uri'}";
             var configDataUrl = "${editorConfig.configDataUrl @ context='uri'}";
             var configPersistUrl = "${editorConfig.configPersistUrl @ context='uri'}";
-            var publishReferencesUrl = "/libs/wcm/core/content/reference.json";
-            var publishReplicationUrl = "/bin/replicate.json";
-            var publishWizardUrl = "/libs/wcm/core/content/sites/publishpagewizard.html";
+            var publishReferencesUrl = "${editorConfig.servletContextPathPrefix @ context='uri'}/libs/wcm/core/content/reference.json";
+            var publishReplicationUrl = "${editorConfig.servletContextPathPrefix @ context='uri'}/bin/replicate.json";
+            var publishWizardUrl = "${editorConfig.servletContextPathPrefix @ context='uri'}/libs/wcm/core/content/sites/publishpagewizard.html";
             var currentPagePath = "${currentPage.path @ context='uri'}";
 
             dataServiceProvider.setRestUrls({
