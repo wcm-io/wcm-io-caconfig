@@ -35,6 +35,7 @@ import io.wcm.caconfig.editor.impl.ConfigDataServlet;
 import io.wcm.caconfig.editor.impl.ConfigNamesServlet;
 import io.wcm.caconfig.editor.impl.ConfigPersistServlet;
 import io.wcm.caconfig.editor.impl.EditorConfig;
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
@@ -45,28 +46,62 @@ class EditorConfigurationTest {
   private final AemContext context = new AemContext();
 
   private static final String SAMPLE_PATH = "/sample/path";
+  private static final String DEFAULT_LANGUAGE = "en";
 
-  @Mock
-  private Resource contentResource;
   @Mock
   private ConfigurationResourceResolver configResourceResolver;
 
-  private EditorConfiguration underTest;
-
   @BeforeEach
   void setUp() {
-    when(contentResource.getPath()).thenReturn(SAMPLE_PATH);
+    context.registerInjectActivateService(new EditorConfig());
+    context.registerService(ConfigurationResourceResolver.class, configResourceResolver);
+
+    Resource contentResource = context.create().resource(SAMPLE_PATH);
+    context.currentResource(contentResource);
+
     when(configResourceResolver.getContextPath(contentResource)).thenReturn(SAMPLE_PATH);
-    EditorConfig editorConfig = context.registerInjectActivateService(new EditorConfig());
-    underTest = new EditorConfiguration(contentResource, configResourceResolver, editorConfig);
+
   }
 
   @Test
   void testProperties() {
+    EditorConfiguration underTest = AdaptTo.notNull(context.request(), EditorConfiguration.class);
+
+    assertEquals("", underTest.getServletContextPathPrefix());
     assertEquals(SAMPLE_PATH + "." + ConfigNamesServlet.SELECTOR + ".json", underTest.getConfigNamesUrl());
     assertEquals(SAMPLE_PATH + "." + ConfigDataServlet.SELECTOR + ".json", underTest.getConfigDataUrl());
     assertEquals(SAMPLE_PATH + "." + ConfigPersistServlet.SELECTOR + ".json", underTest.getConfigPersistUrl());
     assertEquals(SAMPLE_PATH, underTest.getContextPath());
+    assertEquals(DEFAULT_LANGUAGE, underTest.getLanguage());
+    assertTrue(underTest.isEnabled());
+  }
+
+  @Test
+  void testProperties_RootContextPath() {
+    context.request().setContextPath("/");
+    EditorConfiguration underTest = AdaptTo.notNull(context.request(), EditorConfiguration.class);
+
+    assertEquals("", underTest.getServletContextPathPrefix());
+    assertEquals(SAMPLE_PATH + "." + ConfigNamesServlet.SELECTOR + ".json", underTest.getConfigNamesUrl());
+    assertEquals(SAMPLE_PATH + "." + ConfigDataServlet.SELECTOR + ".json", underTest.getConfigDataUrl());
+    assertEquals(SAMPLE_PATH + "." + ConfigPersistServlet.SELECTOR + ".json", underTest.getConfigPersistUrl());
+    assertEquals(SAMPLE_PATH, underTest.getContextPath());
+    assertEquals(DEFAULT_LANGUAGE, underTest.getLanguage());
+    assertTrue(underTest.isEnabled());
+  }
+
+  @Test
+  void testProperties_CustomServletContextPath() {
+    final String SERVLET_CONTEXT_PATH = "/mycontext";
+    context.request().setContextPath(SERVLET_CONTEXT_PATH);
+    EditorConfiguration underTest = AdaptTo.notNull(context.request(), EditorConfiguration.class);
+
+    assertEquals(SERVLET_CONTEXT_PATH, underTest.getServletContextPathPrefix());
+    assertEquals(SERVLET_CONTEXT_PATH + SAMPLE_PATH + "." + ConfigNamesServlet.SELECTOR + ".json", underTest.getConfigNamesUrl());
+    assertEquals(SERVLET_CONTEXT_PATH + SAMPLE_PATH + "." + ConfigDataServlet.SELECTOR + ".json", underTest.getConfigDataUrl());
+    assertEquals(SERVLET_CONTEXT_PATH + SAMPLE_PATH + "." + ConfigPersistServlet.SELECTOR + ".json", underTest.getConfigPersistUrl());
+    assertEquals(SAMPLE_PATH, underTest.getContextPath());
+    assertEquals(DEFAULT_LANGUAGE, underTest.getLanguage());
     assertTrue(underTest.isEnabled());
   }
 

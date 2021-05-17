@@ -44,8 +44,10 @@ See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-c
 
 |Context-Aware Configuration Editor version |AEM version supported
 |-------------------------------------------|----------------------
-|1.5.x or higher                            |AEM 6.2 and up
-|1.0.x - 1.4.x                              |AEM 6.1 and up
+|1.8.x or higher                            |AEM 6.4+
+|1.7.x                                      |AEM 6.3+
+|1.5.x - 1.6.x                              |AEM 6.2+
+|1.0.x - 1.4.x                              |AEM 6.1+
 
 
 
@@ -53,4 +55,4 @@ See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-c
 [apidocs]: bundle/apidocs/
 [changelog]: changes-report.html
 [sample-app]: https://github.com/wcm-io/wcm-io-caconfig/tree/develop/sample-app
-[deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
+[deploy-configure-caconfig-in-aem]: https://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html

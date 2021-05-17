@@ -35,6 +35,7 @@ import org.apache.sling.caconfig.resource.spi.ContextResource;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
@@ -44,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.PageManagerFactory;
 import com.google.common.collect.ImmutableSet;
 
 import io.wcm.wcm.commons.util.Path;
@@ -110,6 +112,9 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
 
   private static final Logger log = LoggerFactory.getLogger(RootTemplateContextPathStrategy.class);
 
+  @Reference
+  private PageManagerFactory pageManagerFactory;
+
   @Activate
   void activate(Config config) {
     templatePaths = config.templatePaths() != null ? ImmutableSet.copyOf(config.templatePaths()) : Collections.<String>emptySet();
@@ -120,13 +125,12 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
       contextPathRegex = Pattern.compile(config.contextPathRegex());
     }
     catch (PatternSyntaxException ex) {
-      log.warn("Invalid context path regex: " + config.contextPathRegex(), ex);
+      log.warn("Invalid context path regex: {}", config.contextPathRegex(), ex);
     }
     configPathPatterns = config.configPathPatterns();
     serviceRanking = config.service_ranking();
   }
 
-  @SuppressWarnings("null")
   @Override
   public @NotNull Iterator<ContextResource> findContextResources(@NotNull Resource resource) {
     if (!isValidConfig()) {
@@ -134,8 +138,15 @@ public class RootTemplateContextPathStrategy implements ContextPathStrategy {
     }
 
     ResourceResolver resourceResolver = resource.getResourceResolver();
-    PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
+    PageManager pageManager = pageManagerFactory.getPageManager(resource.getResourceResolver());
+    if (pageManager == null) {
+      throw new RuntimeException("No page manager.");
+    }
     Page page = pageManager.getContainingPage(resource);
+    if (page == null) {
+      log.debug("Skip findContextResources - no current page.");
+      return Collections.emptyIterator();
+    }
     List<String> contextPathCandidats;
     if (templatMatchAllLevels) {
       contextPathCandidats = getContextPathCandidatesMatchAll(page, resourceResolver);

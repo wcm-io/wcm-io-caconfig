@@ -96,6 +96,7 @@ final class PersistenceUtils {
    * @param parentTemplate Template for parent/intermediate pages
    * @param configurationManagementSettings Configuration management settings
    */
+  @SuppressWarnings("PMD.UseObjectForClearerAPI")
   public static void ensureContainingPage(ResourceResolver resolver, String configResourcePath,
       String template, String resourceType, String parentTemplate,
       ConfigurationManagementSettings configurationManagementSettings) {
@@ -244,9 +245,7 @@ final class PersistenceUtils {
     modValueMap.putAll(properties);
   }
 
-  @SuppressWarnings("null")
-  public static void updatePageLastMod(ResourceResolver resolver, String configResourcePath) {
-    PageManager pageManager = resolver.adaptTo(PageManager.class);
+  public static void updatePageLastMod(ResourceResolver resolver, PageManager pageManager, String configResourcePath) {
     Page page = pageManager.getContainingPage(configResourcePath);
     if (page == null) {
       return;

@@ -58,6 +58,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
     "sling.servlet.selectors=" + ConfigNamesServlet.SELECTOR,
     "sling.servlet.methods=GET"
 })
+@SuppressWarnings("deprecation")
 public class ConfigNamesServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
@@ -126,7 +127,12 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
         item.putOpt("label", metadata.getLabel());
         item.putOpt("description", metadata.getDescription());
         item.put("collection", metadata.isCollection());
-        item.put("exists", hasConfig(contextResource, configName, metadata.isCollection()));
+
+        ConfigurationState state = getConfigurationState(contextResource, configName, metadata.isCollection());
+        item.put("exists", state.exists);
+        item.put("inherited", state.inherited);
+        item.put("overridden", state.overridden);
+
         item.put("allowAdd", allowAdd(contextResource, configName));
         sortedResult.add(item);
       }
@@ -144,15 +150,29 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
     return configurationEditorFilterService.allowAdd(contextResource, configName);
   }
 
-  private boolean hasConfig(Resource contextResource, String configName, boolean collection) {
+  private ConfigurationState getConfigurationState(Resource contextResource, String configName, boolean collection) {
+    ConfigurationState result = new ConfigurationState();
     if (collection) {
       Collection<ConfigurationData> configs = configManager.getConfigurationCollection(contextResource, configName).getItems();
-      return !configs.isEmpty();
+      result.exists = !configs.isEmpty();
+      result.inherited = configs.stream().filter(ConfigurationData::isInherited).findAny().isPresent();
+      result.overridden = configs.stream().filter(ConfigurationData::isOverridden).findAny().isPresent();
     }
     else {
       ConfigurationData config = configManager.getConfiguration(contextResource, configName);
-      return config != null && config.getResourcePath() != null;
+      if (config != null) {
+        result.exists = config.getResourcePath() != null;
+        result.inherited = config.isInherited();
+        result.overridden = config.isOverridden();
+      }
     }
+    return result;
+  }
+
+  private static final class ConfigurationState {
+    private boolean exists;
+    private boolean inherited;
+    private boolean overridden;
   }
 
 }

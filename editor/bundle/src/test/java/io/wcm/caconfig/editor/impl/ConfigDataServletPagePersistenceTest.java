@@ -133,6 +133,7 @@ class ConfigDataServletPagePersistenceTest {
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
 
     String expectedJson = "{'configName':'io.wcm.caconfig.extensions.persistence.example.ListConfig',"
+        + "'properties':{'sling:configCollectionInherit':true},"
         + "'items':["
         + "{'configName':'io.wcm.caconfig.extensions.persistence.example.ListConfig','collectionItemName':'item0',"
         + "'overridden':false,'inherited':false,'properties':["

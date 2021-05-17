@@ -34,13 +34,15 @@ See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-c
 
 |Context-Aware Configuration Extensions for AEM version |AEM version supported
 |-------------------------------------------------------|----------------------
-|1.6.x or higher                                        |AEM 6.2 and up
-|1.0.x - 1.5.x                                          |AEM 6.1 and up
+|1.8.x or higher                                        |AEM 6.4+
+|1.7.x                                                  |AEM 6.3+
+|1.6.x                                                  |AEM 6.2+
+|1.0.x - 1.5.x                                          |AEM 6.1+
 
 
 [usage]: usage.html
 [changelog]: changes-report.html
-[deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
+[deploy-configure-caconfig-in-aem]: https://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
 [context-path-strategies]: context-path-strategies.html
 [persistence-strategies]: persistence-strategies.html
 [override-providers]: override-providers.html

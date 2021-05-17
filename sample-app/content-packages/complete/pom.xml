@@ -19,7 +19,7 @@
   #L%
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -61,11 +61,6 @@
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.caconfig.impl</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.sling</groupId>
-      <artifactId>org.apache.sling.commons.johnzon</artifactId>
       <scope>compile</scope>
     </dependency>
 
@@ -116,8 +111,7 @@
               <artifactId>
                 org.apache.sling.caconfig.api,
                 org.apache.sling.caconfig.spi,
-                org.apache.sling.caconfig.impl,
-                org.apache.sling.commons.johnzon
+                org.apache.sling.caconfig.impl
               </artifactId>
             </embedded>
           </embeddeds>
@@ -148,6 +142,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
+          <skip>true</skip>
           <skipDeploy>true</skipDeploy>
         </configuration>
       </plugin>

@@ -19,7 +19,7 @@ Alternatively you can deploy it using an AEM package which contains the config e
 
 |---|---|---|
 | [wcm.io Context-Aware Configuration Editor Bundle (JAR)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor) |
-| [wcm.io Context-Aware Configuration Editor AEM Package with Template Definition (ZIP)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.wcm%22%20AND%20a%3A%22io.wcm.caconfig.editor.package%22) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.wcm%22%20AND%20a%3A%22io.wcm.caconfig.editor.package%22) |
+| [wcm.io Context-Aware Configuration Editor AEM Package with Template Definition (ZIP)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.caconfig.editor.package) |
 
 
 When you are using AEM 6.1 or 6.2 you have to additionally deploy the Apache Sling Context-Aware Configuration bundles (API, SPI, Impl) to AEM. In AEM 6.3 you have to update the Apache Sling Context-Aware Configuration SPI and Impl version to the latest version if you want to use Editor version 1.1 and upwards. See [Deploy and configure Context-Aware Configuration in AEM][deploy-configure-caconfig-in-aem] for details.
@@ -77,7 +77,10 @@ It is recommended to also deploy the [wcm.io Context-Aware Configuration Extensi
 
 ### Using custom edit widgets
 
-For each data type (string, number, boolean) the fitting edit widget is chosen automatically. Alternatively you can define custom widgets via extra properties on the `@Property` annotation. Currently only `pathbrowser` is supported.
+For each data type (string, number, boolean) the fitting edit widget is chosen automatically. Alternatively you can define custom widgets via extra properties on the `@Property` annotation. 
+
+
+#### pathbrowser
 
 Define a path browser widget for a string parameter with fixed path:
 
@@ -97,6 +100,37 @@ Define a path browser widget for a string parameter with the current configurati
     "pathbrowserRootPathContext=true"
 })
 String contextPath();
+```
+
+
+#### dropdown
+
+Define a dropdown list of options to choose from. The description is displayed to the user, the value of the chosen option is stored in the configuration.
+
+```java
+@Property(label = "Dropdown Param", description = "Parameter with dropdown list.", property = {
+    "widgetType=dropdown",
+    "dropdownOptions=["
+        + "{'value':'option1','description':'First option'},"
+        + "{'value':'option2','description':'Second option'},"
+        + "{'value':'option3','description':'Third option'}"
+        + "]"
+})
+String dropdownParam();
+```
+
+If you annotate an array parameter multiple options can be selected.
+
+
+#### textarea
+
+Allows to enter multiple lines of text for a string parameter.
+
+```java
+@Property(label = "String Text Area", description = "Enter multiple lines of text.", property = {
+    "widgetType=textarea"
+})
+String stringTextArea();
 ```
 
 
@@ -135,10 +169,10 @@ You should disable the configuration editor on publish by applying an OSGi confi
 
 
 
-[sling-caconfig]: http://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
-[deploy-configure-caconfig-in-aem]: http://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
-[wcmio-caconfig-extensions]: http://wcm.io/caconfig/extensions/
-[wcmio-caconfig-extensions-persistence-strategies]: http://wcm.io/caconfig/extensions/persistence-strategies.html
-[wcmio-caconfig-extensions-reference-provider]: http://wcm.io/caconfig/extensions/reference-provider.html
-[wcmio-caservice]: http://wcm.io/sling/commons/context-aware-services.html
+[sling-caconfig]: https://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
+[deploy-configure-caconfig-in-aem]: https://wcm.io/caconfig/deploy-configure-caconfig-in-aem.html
+[wcmio-caconfig-extensions]: https://wcm.io/caconfig/extensions/
+[wcmio-caconfig-extensions-persistence-strategies]: https://wcm.io/caconfig/extensions/persistence-strategies.html
+[wcmio-caconfig-extensions-reference-provider]: https://wcm.io/caconfig/extensions/reference-provider.html
+[wcmio-caservice]: https://wcm.io/sling/commons/context-aware-services.html
 [configurationeditorfilter-interface]: bundle/apidocs/io/wcm/caconfig/editor/ConfigurationEditorFilter.html

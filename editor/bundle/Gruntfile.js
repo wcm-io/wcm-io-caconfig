@@ -10,16 +10,6 @@ module.exports = function (grunt) {
       js: ["<%= pkg.config.jsPath %>*.js"],
       html: ["src/main/resources/angularjs-partials/*.html"]
     },
-    min: {
-      dist: {
-        src: ["<%= pkg.config.jsPath %>**/*.js"],
-        dest: "target/yui-compression-test/io.wcm.caconfig.editor.min.js"
-      },
-      lib: {
-        src: ["<%= pkg.config.angularPath %>**/*.js"],
-        dest: "target/yui-compression-test/io.wcm.caconfig.editor.angularjs.min.js"
-      }
-    },
     html2js: {
       templates: {
         options: {
@@ -35,20 +25,16 @@ module.exports = function (grunt) {
         // fix: true,
         configFile: ".eslintrc"
       },
-      target: ["*.js", "src/main/webapp/clientlibs-root/io.wcm.caconfig.editor/**/*.js"]
+      target: ["*.js", "src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor/**/*.js"]
     },
     watch: {
       html: {
         files: ["src/main/resources/angularjs-partials/*.html"],
         tasks: ["html2js:templates"]
-      },
-      js: {
-        files: ["<%= pkg.config.jsPath %>**/*.js"],
-        tasks: ["min"]
       }
     }
   });
   grunt.registerTask("lint:js", ["eslint"]);
-  grunt.registerTask("build", ["html2js:templates", "min"]);
+  grunt.registerTask("build", ["html2js:templates"]);
   grunt.registerTask("default", ["build"]);
 };
