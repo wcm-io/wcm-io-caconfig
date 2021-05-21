@@ -55,6 +55,17 @@
   <dependencies>
 
     <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.framework</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.service.component</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.caconfig.spi</artifactId>
       <scope>compile</scope>
@@ -120,6 +131,12 @@
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.models.api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.dto</artifactId>
+      <version>1.1.0</version>
       <scope>test</scope>
     </dependency>
 
