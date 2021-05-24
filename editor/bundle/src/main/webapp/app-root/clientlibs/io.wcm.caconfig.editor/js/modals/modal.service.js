@@ -47,7 +47,7 @@
     /**
      * @param {String} modalName
      * @param {Object} options
-     * @returns {CUI.Modal}
+     * @returns {Coral.Dialog}
      */
     that.addModal = function (modalName, options) {
       return uiService.addUI(uiService.component.MODAL, modalName, options);

@@ -32,7 +32,6 @@
 
     modalService.addModal(modalService.modal.ERROR, {
       element: "#caconfig-errorModal",
-      type: "error",
       visible: false
     });
 

@@ -25,12 +25,13 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("AddCollectionItemController", AddCollectionItemController);
 
-  AddCollectionItemController.$inject = ["$scope", "$document", "modalService", "currentConfigService", "$timeout"];
+  AddCollectionItemController.$inject = ["$document", "modalService", "currentConfigService", "$timeout"];
 
-  function AddCollectionItemController($scope, $document, modalService, currentConfigService, $timeout) {
+  function AddCollectionItemController($document, modalService, currentConfigService, $timeout) {
     var that = this;
+    var $collectionItemNameInput = $document.find("#caconfig-collectionItemName");
 
-    that.blacklist = [];
+    that.denylist = [];
     that.itemTitleRegex = DEFAULT_ITEM_NAME_PATTERN;
 
     modalService.addModal(modalService.modal.ADD_COLLECTION_ITEM, {
@@ -38,15 +39,20 @@
       visible: false
     });
 
-    modalService.onEvent(modalService.modal.ADD_COLLECTION_ITEM, "show", function () {
+    modalService.onEvent(modalService.modal.ADD_COLLECTION_ITEM, "coral-overlay:open", function () {
       that.newCollectionName = null;
-      that.blacklist = currentConfigService.getCollectionItemNames();
-      $document.find("#caconfig-collectionItemName").focus();
+      $collectionItemNameInput.val("");
+      that.denylist = currentConfigService.getCollectionItemNames();
+      $collectionItemNameInput.focus();
+    });
+
+    modalService.onEvent(modalService.modal.ADD_COLLECTION_ITEM, "coral-overlay:close", function () {
+      that.newCollectionName = null;
+      $collectionItemNameInput.val("");
     });
 
     that.addItem = function () {
-      var collectionItemName = $document.find("#caconfig-collectionItemName").val()
-        .trim();
+      var collectionItemName = $collectionItemNameInput.val().trim();
       currentConfigService.addItemToCurrentCollection(collectionItemName);
 
       $timeout(function() {

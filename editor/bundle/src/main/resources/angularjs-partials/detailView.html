@@ -2,33 +2,34 @@
       name="detail.configForm" novalidate ng-cloak
       bindonce="detail.dvReady"
       bo-class="detail.current.isCollection ? 'caconfig-is-collection' : 'caconfig-not-collection'">
-  <button class="coral-Button coral-Button--square coral-Button--default" type="button"
+
+  <button is="coral-button" icon="home"
           bo-title="i18n('button.home')"
-          ng-click="(detail.configForm.$dirty && detail.current.contextPath) ? saveWarning() : go()">
-    <i class="coral-Icon coral-Icon--home"></i>
-  </button>
-  <button class="coral-Button coral-Button--primary caconfig-if-form-valid-and-dirty" type="button"
+          ng-click="(detail.configForm.$dirty && detail.current.contextPath) ? saveWarning() : go()"
+  ></button>
+  <button is="coral-button" variant="primary"
+          class="caconfig-if-form-valid-and-dirty"
           ng-click="detail.saveConfig()"
           bo-if="i18n('button.save') && !!detail.current.contextPath"
-          bo-text="i18n('button.save')">
-  </button>
-  <button class="coral-Button coral-Button--primary caconfig-if-form-invalid-or-pristine" type="button"
+          bo-text="i18n('button.save')"
+  ></button>
+  <button is="coral-button" variant="primary"
+          class="caconfig-if-form-invalid-or-pristine"
           disabled
           bo-if="i18n('button.save') && !!detail.current.contextPath"
-          bo-text="i18n('button.save')">
-  </button>
-  <button class="coral-Button coral-Button--secondary" type="button"
+          bo-text="i18n('button.save')"
+  ></button>
+  <button is="coral-button"
           ng-click="go(detail.current.parent ? detail.current.parent.configName : '')"
           bo-if="i18n('button.cancel')"
-          bo-text="i18n('button.cancel')">
-  </button>
-  <button class="coral-Button coral-Button--square coral-Button--default" type="button"
+          bo-text="i18n('button.cancel')"
+  ></button>
+  <button is="coral-button" icon="delete"
           bo-title="detail.current.isCollection ? i18n('button.deleteCollection') : i18n('button.deleteConfig')"
           ng-show="detail.current.configs.length"
           bo-if="detail.current.contextPath"
-          ng-click="detail.removeConfig()">
-    <i class="coral-Icon coral-Icon--delete"></i>
-  </button>
+          ng-click="detail.removeConfig()"
+  ></button>
 
   <p class="caconfig-contextPath"
      bo-if="detail.current.contextPath">
@@ -61,19 +62,18 @@
   </p>
 
   <p bo-if="detail.current.isCollection">
-    <button class="coral-Button coral-Button--primary" type="button"
+    <button is="coral-button" variant="primary"
             ng-click="detail.addCollectionItem()"
             bo-if="i18n('button.addItem')"
             bo-text="i18n('button.addItem')"
-            title="{{detail.current.isLargeCollection && !detail.allConfigsVisible ? i18n('largeCollection.addCollectionItemHint') : i18n('button.addItem')}}">
-    </button>
-    <button class="coral-Button coral-Button--square coral-Button--default" type="button"
+            title="{{detail.current.isLargeCollection && !detail.allConfigsVisible ? i18n('largeCollection.addCollectionItemHint') : i18n('button.addItem')}}"
+    ></button>
+    <button is="coral-button" icon="arrowDown"
             bo-if="detail.current.isLargeCollection"
             ng-show="detail.allConfigsVisible"
             bo-title="i18n('button.toBottom')"
-            ng-click="detail.toBottom()">
-      <i class="coral-Icon coral-Icon--arrowDown"></i>
-    </button>
+            ng-click="detail.toBottom()"
+    ></button>
   </p>
 
   <p class="coral-Well caconfig-largeCollection" bo-if="detail.current.isLargeCollection">
@@ -110,16 +110,17 @@
 
   <p bo-if="detail.current.isCollection"
      ng-show="detail.current.configs.length && detail.allConfigsVisible">
-    <button class="coral-Button coral-Button--primary" type="button"
-            ng-click="detail.addCollectionItem()"
-            bo-if="i18n('button.addItem')"
-            bo-text="i18n('button.addItem')"></button>
-    <button class="coral-Button coral-Button--square coral-Button--default" type="button"
+
+    <button is="coral-button" variant="primary"
+        ng-click="detail.addCollectionItem()"
+        bo-if="i18n('button.addItem')"
+        bo-text="i18n('button.addItem')"
+    ></button>
+    <button is="coral-button" icon="arrowUp"
             bo-if="detail.current.isLargeCollection"
             bo-title="i18n('button.toTop')"
-            ng-click="detail.toTop()">
-      <i class="coral-Icon coral-Icon--arrowUp"></i>
-    </button>
+            ng-click="detail.toTop()"
+    ></button>
   </p>
 
 </form>

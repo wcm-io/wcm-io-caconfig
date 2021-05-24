@@ -63,7 +63,7 @@
     };
 
     that.addConfig = function () {
-      var configName = uiService.callMethod(uiService.component.SELECT, CONFIG_SELECT, uiService.method.GET_VALUE);
+      var configName = uiService.callMethod(uiService.component.SELECT, CONFIG_SELECT, uiService.method.GET, uiService.value.VALUE);
       $rootScope.go(configName);
     };
   }

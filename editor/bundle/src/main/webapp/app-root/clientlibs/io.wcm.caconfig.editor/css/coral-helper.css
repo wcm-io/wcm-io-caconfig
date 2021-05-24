@@ -17,59 +17,24 @@
  * limitations under the License.
  * #L%
  */
-/**
- * Adapted from coralui2/css
- */
-/* light.styl */
-.coral--light {
-  line-height: 1rem;
-}
 
-/* modal.styl */
-
-.coral-Modal-backdrop {
-  background-color: rgba(0,0,0,0.3);
-}
-
-.coral-Modal {
-  border: .125rem solid #c8c8c8;
-  -webkit-border-radius: .1875rem;
-  border-radius: .1875rem;
-}
-
-.coral-Modal-header {
-  height: 2.875rem;
-  background: #fafafa;
-  border-bottom: .0625rem solid #e9e9e9;
-  -webkit-border-radius: .0625rem .0625rem 0 0;
-  border-radius: .0625rem .0625rem 0 0;
-}
-
-.coral-Modal-title {
-  line-height: 2.875rem;
-}
-
-.coral-Modal-footer {
-  -webkit-border-radius: 0 0 .0625rem .0625rem;
-  border-radius: 0 0 .0625rem .0625rem;
-}
-
-.coral-Modal-footer .coral-Button + .coral-Button {
-  margin-left: .625rem;
-}
-
-/* table.styl */
+/* Table style */
 
 .coral-Table {
   display: table;
-  margin-bottom: .9375rem;
+  margin-bottom: 0.9375rem;
   border-collapse: collapse;
-  background-color: transparent;
+  background: transparent;
   border: 1px solid #e9e9e9;
 }
 
 .coral-Table thead {
   border: 1px solid #d2d2d2;
+}
+
+.coral-Table-row {
+  display: table-row;
+  background: #fafafa;
 }
 
 .coral-Table tbody .coral-Table-row {
@@ -80,51 +45,52 @@
   border-bottom-color: #e9e9e9;
 }
 
-.coral-Table-row {
-  display: table-row;
-  background: #fafafa;
-}
-
 .coral-Table-headerCell,
 .coral-Table-cell {
   display: table-cell;
 }
 
-.coral-Table-headerCell {
+.coral-Table-headerCell > h3,
+.coral-Table-headerCell > label,
+.coral-Table-headerCell > p {
+  text-transform: none;
+}
+
+.coral-Table-headerCell,
+.coral--light .coral-Table-headerCell {
   background: #f0f0f0;
 }
 
-.coral-Table--hover tbody .coral-Table-row:hover {
-  border: 1px solid #ced7e3;
-  background-color: rgba(50,110,200,0.15);
-  cursor: pointer;
-}
-
+.coral-Table--hover tbody .coral-Table-row:hover,
 .coral-Table--hover tbody .coral-Table-row:hover .coral-Table-headerCell {
   border: 1px solid #ced7e3;
-  background-color: rgba(50,110,200,0.15);
+  background: rgba(50, 110, 200, 0.15);
 }
 
 .coral-Table--hover tbody .coral-Table-row:hover .coral-Table-cell {
   border-top: 1px solid #ced7e3;
 }
 
-/**
- * Custom
- */
-.coral-Modal-header:after {
-  content: none;
-}
-
 .coral-Table .coral-Textfield,
-.coral-Table .coral3-Textfield {
+.coral-Table .coral3-Textfield,
+.coral-Table [is="coral-textarea"],
+.coral-Table [is="coral-textfield"] {
   width: 100%;
 }
 
-.coral-Table .coral-Select {
+.coral-Table .coral-Select,
+.coral-Table .coral3-Select,
+.coral-Table coral-select {
   width: 100%;
 }
 
 .coral-Table-cell .coral-MinimalButton .coral-Icon {
   line-height: normal;
+}
+
+/**
+ * AEMaaCS adjustments
+ */
+.granite-coral-spectrum .coral-PathBrowser [is="coral-button"] {
+  height: 100%;
 }
