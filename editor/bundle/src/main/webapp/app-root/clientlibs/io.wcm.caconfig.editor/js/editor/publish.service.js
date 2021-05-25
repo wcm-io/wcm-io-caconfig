@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular, CUI, Granite) {
+(function (angular, Granite) {
   "use strict";
 
   /**
@@ -69,7 +69,7 @@
 
       that.publishPage = function() {
         var path = restUrls.currentPagePath;
-        CUI.util.state.setSessionItem(DOCUMENT_REFERRER_KEY, location.href);
+        sessionStorage.setItem(DOCUMENT_REFERRER_KEY, JSON.stringify(location.href));
 
         uiService.showLoading();
 
@@ -118,4 +118,4 @@
     ];
   }
 
-}(angular, CUI, Granite));
+}(angular, Granite));

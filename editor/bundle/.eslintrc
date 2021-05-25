@@ -6,6 +6,7 @@
   "extends": "eslint-config-pv/legacy",
   "globals": {
     "angular": false,
+    "Coral": false,
     "CUI": false,
     "Granite": false
   },

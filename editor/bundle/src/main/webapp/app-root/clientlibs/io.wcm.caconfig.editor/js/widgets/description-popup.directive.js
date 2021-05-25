@@ -17,12 +17,12 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, Coral) {
   "use strict";
 
   /**
    * Directive to render the "i" button with a popover for the decription of the property.
-   * Wraps a Coral UI Button and CUI.Popover widget.
+   * Wraps a Coral UI Button and Coral.Popover widget.
    * This directive transcludes the popup content elements.
    *
    * @example
@@ -34,27 +34,36 @@
   angular.module("io.wcm.caconfig.widgets")
     .directive("caconfigDescriptionPopup", descriptionPopup);
 
-  descriptionPopup.$inject = ["$document", "templateUrlList", "utilities", "uiService"];
+  descriptionPopup.$inject = ["$timeout", "templateUrlList"];
 
-  function descriptionPopup($document, templateList, utilities, uiService) {
+  function descriptionPopup($timeout, templateList) {
 
     var directive = {
       restrict: "E",
       replace: true,
-      templateUrl: templateList.popupContainer,
-      transclude: true,
-      link: link
+      templateUrl: templateList.descriptionPopup,
+      link: link,
+      scope: {
+        content: "="
+      }
     };
 
     return directive;
 
     function link(scope, element) {
-      scope.id = utilities.nextUid();
+      scope.id = Coral.commons.getUID();
+
       scope.$evalAsync(function () {
-        uiService.addUI(uiService.component.POPOVER, scope.id, {
-          element: $document.find("coral-Popover", element)
-        });
+        scope.descriptionPopupReady = true;
       });
+
+      $timeout(function() {
+        var $popover = element.find("coral-popover");
+        var popover = $popover[0];
+        Coral.commons.ready(popover, function() {
+          popover.content.innerHTML = "<p class=\"u-coral-margin\">" + scope.content + "</p>";
+        });
+      }, false);
     }
   }
-}(angular));
+}(angular, Coral));

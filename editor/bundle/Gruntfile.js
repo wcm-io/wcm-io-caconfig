@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     },
     eslint: {
       options: {
-        // fix: true,
+        fix: true,
         configFile: ".eslintrc"
       },
       target: ["*.js", "src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor/**/*.js"]

@@ -31,10 +31,9 @@
   angular.module("io.wcm.caconfig.widgets")
     .constant("templateUrlList", {
       configTable: "configTable.html",
+      descriptionPopup: "descriptionPopup.html",
       multifield: "multifield.html",
       pathbrowser: "pathbrowser.html",
-      popupContainer: "popupContainer.html",
-      popupContent: "popupContent.html",
       propertyDropdown: "propertyDropdown.html",
       propertyEditLink: "propertyEditLink.html",
       propertyInputCheckbox: "propertyInputCheckbox.html",

@@ -28,7 +28,6 @@
   function DeleteConfigController(modalService) {
     modalService.addModal(modalService.modal.DELETE_CONFIG, {
       element: "#caconfig-deleteConfigModal",
-      type: "notice",
       visible: false
     });
   }

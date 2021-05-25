@@ -1,6 +1,6 @@
 {
   "name": "context-aware-configuration-editor",
-  "version": "1.5.1",
+  "version": "1.8.1-SNAPSHOT",
   "description": "Context-Aware Configuration Editor UI for AEM.",
   "homepage": "https://github.com/wcm-io/wcm-io-caconfig/tree/develop/editor/bundle",
   "license": "Apache-2.0",
@@ -13,14 +13,14 @@
     "angularPath": "src/main/webapp/app-root/clientlibs/io.wcm.caconfig.editor.angularjs/js/"
   },
   "devDependencies": {
-    "eslint": "4.19.1",
-    "eslint-config-pv": "2.0.0",
-    "grunt": "0.4.5",
-    "grunt-cli": "1.2.0",
-    "grunt-contrib-watch": "1.0.0",
-    "grunt-eslint": "20.1.0",
-    "grunt-html2js": "0.5.1",
-    "load-grunt-tasks": "3.5.2"
+    "eslint": "7.27.0",
+    "eslint-config-pv": "2.3.0",
+    "grunt": "1.4.1",
+    "grunt-cli": "1.4.3",
+    "grunt-contrib-watch": "1.1.0",
+    "grunt-eslint": "23.0.0",
+    "grunt-html2js": "0.8.0",
+    "load-grunt-tasks": "5.1.0"
   },
   "engines": {
     "node": "12.16.1"

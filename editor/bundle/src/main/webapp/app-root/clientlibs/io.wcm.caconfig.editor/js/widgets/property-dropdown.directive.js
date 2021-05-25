@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, Coral) {
   "use strict";
 
   /**
@@ -26,9 +26,9 @@
   angular.module("io.wcm.caconfig.widgets")
     .directive("caconfigPropertyDropdown", propertyDropdown);
 
-  propertyDropdown.$inject = ["$rootScope", "$timeout", "templateUrlList", "inputMap", "utilities", "uiService"];
+  propertyDropdown.$inject = ["$rootScope", "$timeout", "templateUrlList", "inputMap"];
 
-  function propertyDropdown($rootScope, $timeout, templateList, inputMap, utilities, uiService) {
+  function propertyDropdown($rootScope, $timeout, templateList, inputMap) {
     var directive = {
       templateUrl: templateList.propertyDropdown,
       scope: {
@@ -50,11 +50,21 @@
       var input = inputMap[scope.property.metadata.type];
       var inputType = input.type;
 
-      scope.id = utilities.nextUid();
+      scope.id = Coral.commons.getUID();
+
       scope.dropdownOptions = [];
       if (scope.property.metadata.properties && scope.property.metadata.properties.dropdownOptions) {
         scope.dropdownOptions = scope.property.metadata.properties.dropdownOptions;
       }
+
+      // if single-selection add blank option as first option
+      if (!scope.multivalue) {
+        scope.dropdownOptions.unshift({
+          value: "",
+          description: ""
+        });
+      }
+
       scope.i18n = $rootScope.i18n;
 
       // If property is inherited, we need to set the value if inheritance is cleared.
@@ -83,103 +93,104 @@
       $timeout(function () {
         var $select = element.find("#" + scope.id);
 
-        selectWidget = uiService.addUI(uiService.component.SELECT, scope.property.name, {
-          element: $select,
-          multiple: scope.multivalue
-        });
+        selectWidget = $select[0];
 
-        // We ensure any existing values are in the dropdown
-        addValues(selectWidget, scope.property.value);
+        Coral.commons.ready(selectWidget, function() {
+          selectWidget.multiple = scope.multivalue;
 
-        if (scope.property.inherited) {
-          addValues(selectWidget, scope.property.effectiveValue);
-        }
+          // We ensure any existing values are in the dropdown
+          addValues(selectWidget, scope.property.value);
 
-        // Non-inherited/overridden existing values should be preselected
-        if (angular.isDefined(scope.property.value) && !scope.property.inherited && !scope.property.overridden) {
-          setValue(selectWidget, scope.property.value);
-        }
+          if (scope.property.inherited) {
+            addValues(selectWidget, scope.property.effectiveValue);
+          }
 
-        // If multivalue values are inherited/overridden, we create a dummy tag list
-        if (scope.multivalue && (scope.property.inherited || scope.property.overridden)) {
-          $dummyTagLists = element.find(".caconfig-dummy-taglist");
+          // Non-inherited/overridden existing values should be preselected
+          if (angular.isDefined(scope.property.value) && !scope.property.inherited && !scope.property.overridden) {
+            setValue(selectWidget, scope.property.value);
+          }
 
-          angular.forEach($dummyTagLists, function(dummyTagList, ix) {
-            var useEffective = dummyTagList.classList.contains("caconfig-dummy-taglist--effective");
-            var valuesToUse = useEffective ? scope.property.effectiveValue : scope.property.value;
+          // If multivalue values are inherited/overridden, we create a dummy tag list
+          if (scope.multivalue && (scope.property.inherited || scope.property.overridden)) {
+            $dummyTagLists = element.find(".caconfig-dummy-taglist");
 
-            var values = angular.isUndefined(valuesToUse)
-              ? []
-              : valuesToUse.map(function(value) {
-                return {
-                  value: value,
-                  display: scope.getOptionText(value)
-                };
-              });
+            angular.forEach($dummyTagLists, function(dummyTagList) {
+              var useEffective = dummyTagList.classList.contains("caconfig-dummy-taglist--effective");
+              var valuesToUse = useEffective ? scope.property.effectiveValue : scope.property.value;
 
-            uiService.addUI(uiService.component.TAG_LIST, scope.property.name + "-dummy-" + ix, {
-              element: dummyTagList,
-              values: values
+              if (!angular.isUndefined(valuesToUse)) {
+                valuesToUse.forEach(function(value) {
+                  var tag = new Coral.Tag().set({
+                    value: value,
+                    label: {
+                      innerHTML: scope.getOptionText(value)
+                    }
+                  });
+                  dummyTagList.items.add(tag);
+                });
+              }
+
+              if (useEffective) {
+                scope.property.effectiveValue = $rootScope.i18n("button.choose");
+                dummyTagList.previousElementSibling.classList.add("is-placeholder");
+                scope.$digest();
+              }
             });
+          }
 
-            if (useEffective) {
-              scope.property.effectiveValue = $rootScope.i18n("button.choose");
+          // Add change event listen
+          selectWidget.on("change", function onChange() {
+            scope.property.value = getValue(selectWidget, inputType);
+
+            if ($rootScope.configForm.$pristine) {
+              $rootScope.configForm.$setDirty();
+              scope.$digest();
             }
           });
-        }
-
-        // Add change event listeners
-        if (scope.multivalue) {
-          $select.find(".coral-TagList").data("tagList")
-            .on("itemadded", onChange)
-            .on("itemremoved", onChange);
-        }
-        else {
-          selectWidget.on("selected", onChange);
-        }
-
-        function onChange() {
-          scope.property.value = getValue(selectWidget, inputType);
-
-          if ($rootScope.configForm.$pristine) {
-            $rootScope.configForm.$setDirty();
-            scope.$digest();
-          }
-        }
+        });
       });
     }
   }
 
   /**
-   * @param {CUI.Select} selectWidget
+   * @param {Coral.Select} selectWidget
    * @param {string} inputType
    * @returns {Array|string|number}
    */
   function getValue(selectWidget, inputType) {
-    var widgetValue = selectWidget.getValue();
+    var widgetValues = selectWidget.values;
+    var singleValue = widgetValues[0];
+
+    if (selectWidget.multiple) {
+      return inputType === "number" ? widgetValues.map(Number) : widgetValues;
+    }
+
+    if (widgetValues.length === 0) {
+      return null;
+    }
 
     if (inputType !== "number") {
-      return widgetValue;
+      return singleValue;
     }
 
-    if (angular.isArray(widgetValue)) {
-      return widgetValue.map(Number);
-    }
-
-    return widgetValue === "" ? null : Number(widgetValue);
+    return singleValue === "" ? null : Number(singleValue);
   }
 
   /**
    *
-   * @param {CUI.Select} selectWidget
+   * @param {Coral.Select} selectWidget
    * @param {Array|string|number} value
    */
   function setValue(selectWidget, value) {
-    selectWidget.setValue(angular.isArray(value) ? value.map(String) : String(value));
+    var newValues = angular.isArray(value) ? value.map(String) : [String(value)];
+
+    selectWidget.items.getAll().forEach(function(item) {
+      item.selected = newValues.indexOf(item.value) > -1;
+    });
   }
 
   /**
-   * @param {CUI.Select} selectWidget
+   * @param {Coral.Select} selectWidget
    * @param {Array|string|number} values
    */
   function addValues(selectWidget, values) {
@@ -194,17 +205,19 @@
       ? values.map(String)
       : [String(values)];
 
-    optionValues = selectWidget.getItems().map(function (item) {
-      return item.getValue();
+    optionValues = selectWidget.items.getAll().map(function (item) {
+      return item.value;
     });
 
     // We check if current value(s) are already in select options.
     // If they are not, we add them to the dropdown.
     angular.forEach(existingValues, function (existingValue) {
       if (optionValues.indexOf(existingValue) === -1) {
-        selectWidget.addOption({
+        selectWidget.items.add({
           value: existingValue,
-          display: existingValue
+          content: {
+            textContent: existingValue
+          }
         });
       }
     });
@@ -251,4 +264,4 @@
       return optionText;
     };
   }
-}(angular));
+}(angular, Coral));

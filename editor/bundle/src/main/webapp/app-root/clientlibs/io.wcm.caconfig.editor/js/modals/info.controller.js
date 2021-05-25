@@ -23,15 +23,14 @@
   angular.module("io.wcm.caconfig.modals")
     .controller("InfoController", InfoController);
 
-  InfoController.$inject = ["$rootScope", "$timeout", "modalService"];
+  InfoController.$inject = ["$timeout", "modalService"];
 
-  function InfoController($rootScope, $timeout, modalService) {
+  function InfoController($timeout, modalService) {
     var that = this;
     that.message = "";
 
     modalService.addModal(modalService.modal.INFO, {
       element: "#caconfig-infoModal",
-      type: "info",
       visible: false
     });
 

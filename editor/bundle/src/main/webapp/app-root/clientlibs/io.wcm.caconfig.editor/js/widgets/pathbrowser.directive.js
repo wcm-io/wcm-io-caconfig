@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-(function (angular) {
+(function (angular, CUI) {
   "use strict";
 
   angular.module("io.wcm.caconfig.widgets")
@@ -108,4 +108,4 @@
       return false;
     }
   }
-}(angular));
+}(angular, CUI));

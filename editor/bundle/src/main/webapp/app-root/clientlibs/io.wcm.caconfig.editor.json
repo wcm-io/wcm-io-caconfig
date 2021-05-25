@@ -4,7 +4,7 @@
     "io.wcm.caconfig.editor"
   ],
   "dependencies": [
-    "coralui2",
+    "coralui3",
     "io.wcm.caconfig.editor.angularjs"
   ]
 }

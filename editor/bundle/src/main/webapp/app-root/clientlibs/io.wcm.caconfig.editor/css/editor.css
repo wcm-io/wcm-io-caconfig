@@ -17,50 +17,34 @@
  * limitations under the License.
  * #L%
  */
-.caconfig-header {
-  padding: 0 .9375rem 0 0;
-  min-height: 2.75rem;
-  height: 2.75rem;
-  background-color: #232323;
+ .caconfig-header-home {
+  display: flex;
+  max-width: 100%;
+  margin-right: 0;
 }
 
-.caconfig-brand {
-  display: inline-block;
-  background-color: transparent;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  text-decoration: none;
-  white-space: nowrap;
-  height: 2.75rem;
-  cursor: pointer;
-  padding-left: .9375rem;
-  font-size: 1rem;
-  line-height: 2.75rem;
-  color: rgba(255,255,255,0.9);
-  white-space: nowrap;
-  overflow: hidden;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-  -webkit-transition: margin-top 0.5s ease;
-  -moz-transition: margin-top 0.5s ease;
-  -o-transition: margin-top 0.5s ease;
-  -ms-transition: margin-top 0.5s ease;
-  transition: margin-top 0.5s ease;
-}
-
-.caconfig-brand-icon {
-  margin-right: .5rem;
-  line-height: inherit;
-  vertical-align: top;
+.caconfig-home-anchor {
+  flex: none;
+  padding-right: 0;
 }
 
 .caconfig-title {
-  cursor: default;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: normal;
+  line-height: 2.375rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.caconfig-page-border {
-  padding: 15px;
+.caconfig-page {
+  padding: 1rem;
+}
+
+.caconfig-overview tbody .coral-Table-row {
+  cursor: pointer;
 }
 
 form.ng-dirty textarea.ng-dirty.ng-invalid,
@@ -70,7 +54,7 @@ form.ng-dirty input.ng-dirty.ng-invalid {
 
 form.ng-dirty .caconfig-if-form-pristine,
 form.ng-pristine .caconfig-if-form-dirty,
-form.ng-valid .caconfig-if-form-invalid
+form.ng-valid .caconfig-if-form-invalid,
 form.ng-invalid .caconfig-if-form-valid {
   display: none;
 }
@@ -80,7 +64,6 @@ form.ng-invalid .caconfig-if-form-valid-and-dirty,
 form.ng-pristine .caconfig-if-form-valid-and-dirty {
   display: none;
 }
-
 
 span.caconfig-pathbrowser {
   width: 100% !important;
@@ -96,43 +79,34 @@ span.caconfig-pathbrowser {
 }
 
 .caconfig-multifield {
-  position: relative;
-  padding-right: 103px;
+  display: flex;
+  align-items: center;
 }
 
-.caconfig-multifield .coral-Textfield {
-  width: 98%;
+.caconfig-multifield + .caconfig-multifield {
+  margin-top: 0.125rem;
 }
 
-.caconfig-multifield .coral-ButtonGroup {
-  position: absolute;
-  top: 0;
-  right: 0;
+.caconfig-multifield .coral-ButtonGroup,
+.caconfig-multifield .coral3-ButtonGroup {
+  display: flex;
+  margin-left: 0.875rem;
+}
+
+.granite-coral-spectrum .caconfig-multifield .coral-ButtonGroup-item {
+  margin-left: 0;
 }
 
 .caconfig-pathbrowser .coral-PathBrowser {
   width: 100%;
 }
 
-#caconfig-addConfigModal {
-  width: 500px;
-}
-
-#caconfig-addConfigModal .coral-Select {
+#caconfig-addConfigModal .coral-Select,
+#caconfig-addConfigModal .coral3-Select {
   width: 100%;
 }
 
-#caconfig-addConfigModal .caconfig-addConfigModal-body {
-  overflow-y: visible;
-}
-
-.caconfig-configTable {
-  margin-top: 10px;
-  border-top: 1px solid #bbb;
-}
-
 .caconfig-configTable .caconfig-delete-item {
-  cursor: pointer;
   float: right;
 }
 
@@ -189,21 +163,27 @@ span.caconfig-pathbrowser {
 }
 
 .caconfig-dummy-taglist .coral-TagList-tag,
-.caconfig-dummy-taglist .coral-TagList-tag-removeButton {
+.caconfig-dummy-taglist .coral3-Tag,
+.caconfig-dummy-taglist .coral-TagList-tag-removeButton,
+.caconfig-dummy-taglist .coral3-Tag-removeButton {
   color: #bebebe;
+  border-color: #e6e6e6;
+  background: #f0f0f0;
   text-shadow: none;
   cursor: default;
   pointer-events: none;
 }
 
 /**
- * We use a negative margin-left because of .caconfig-page-border padding
+ * Use a negative margin-left because of .caconfig-page padding.
  */
-.caconfig-largeCollection {
+.coral-Well.caconfig-largeCollection {
   position: fixed;
   bottom: 0;
-  width: calc(100% - 30px);
-  margin: 0 0 0 -15px;
+  width: calc(100% - 2rem);
+  margin: 0 0 0 -1rem;
+  background: #f0f0f0;
+  z-index: 1;
 }
 
 .caconfig-loading {
