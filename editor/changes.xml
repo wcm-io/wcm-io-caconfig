@@ -23,7 +23,13 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.8.2" date="not released">
+    <release version="1.8.2" date="2021-05-25">
+      <action type="update" dev="dding" issue="WCON-72">
+        Migrate front-end editor components to CoralUI 3 and remove dependency on CoralUI 2.
+      </action>
+      <action type="update" dev="dding" issue="WCON-84">
+        Update embedded angularjs libraries from 1.6.9 to 1.8.2; adjust bindonce (replace deprecated angular function).
+      </action>
       <action type="update" dev="sseifert" issue="WTOOL-72">
         Add sling-initial-content-transform-maven-plugin to alternatively allow to deploy OSGi bundle and content as content package separately in AEMaaCS.
       </action>
