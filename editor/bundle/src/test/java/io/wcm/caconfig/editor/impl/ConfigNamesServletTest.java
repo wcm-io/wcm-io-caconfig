@@ -127,6 +127,26 @@ class ConfigNamesServletTest {
   }
 
   @Test
+  void testResponseWithOverriddenOnly() throws Exception {
+
+    when(configData.getResourcePath()).thenReturn(null);
+    when(configData.isInherited()).thenReturn(false);
+    when(configData.isOverridden()).thenReturn(true);
+
+    ConfigNamesServlet underTest = context.registerInjectActivateService(new ConfigNamesServlet());
+    underTest.doGet(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+
+    String expectedJson = "{contextPath:'/context/path',configNames:["
+        + "{configName:'name2',label:'A-label2',collection=true,exists:true,inherited:false,overridden:true,allowAdd:true},"
+        + "{configName:'name1',label:'B-label1',description:'desc1',collection:false,exists:true,inherited:false,overridden:true,allowAdd:true},"
+        + "{configName:'name3',label:'C-label3',collection:false,exists:false,inherited:false,overridden:false,allowAdd:true}"
+        + "]}";
+    JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
+  }
+
+  @Test
   void testResponseWithFiltering() throws Exception {
     context.registerService(ConfigurationEditorFilter.class, new ConfigurationEditorFilter() {
       @Override
