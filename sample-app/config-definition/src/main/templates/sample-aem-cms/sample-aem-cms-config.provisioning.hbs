@@ -19,7 +19,9 @@
   # Example for config override
   org.apache.sling.caconfig.impl.override.OsgiConfigurationOverrideProvider-caconfig-sample
     description="Override\ Example"
-    overrides=["[/content/contextaware-config-sample/en/sub-page/sub-page-override]io.wcm.caconfig.sample.config.ConfigSample\={\"stringParam\":\"override-stringParam\",\"intParam\":999}","[/content/contextaware-config-sample/en/sub-page/sub-page-override]sample/configuration/2/stringParam\=\"override2-stringParam\""]
+    overrides=["[/content/contextaware-config-sample/en/sub-page/sub-page-override]io.wcm.caconfig.sample.config.ConfigSample\={\"stringParam\":\"override-stringParam\",\"intParam\":999}",
+      "[/content/contextaware-config-sample/en/sub-page/sub-page-override]sample/configuration/2/stringParam\=\"override2-stringParam\"",
+      "io.wcm.caconfig.sample.config.ConfigOverrideSample\={\"stringParam\":\"global-override-stringParam\",\"intParam\":123}"]
     enabled=B"true"
 
   # Trace logging for Context-Aware Config
