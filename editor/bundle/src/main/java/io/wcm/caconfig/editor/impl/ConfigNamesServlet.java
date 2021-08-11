@@ -161,7 +161,7 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
     else {
       ConfigurationData config = configManager.getConfiguration(contextResource, configName);
       if (config != null) {
-        result.exists = config.getResourcePath() != null;
+        result.exists = config.getResourcePath() != null || config.isOverridden();
         result.inherited = config.isInherited();
         result.overridden = config.isOverridden();
       }
