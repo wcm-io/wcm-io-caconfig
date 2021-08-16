@@ -27,6 +27,9 @@
       <action type="fix" dev="sseifert">
         Ensure a context-aware configuration appears in configuration overview in editor when it is overridden only globally, and no config data exists.
       </action>
+      <action type="fix" dev="srikanthgurramaldisued">
+        Values entered in caconfig editor text fields should not be trimmed automatically.
+      </action>
     </release>
 
     <release version="1.8.2" date="2021-05-25">
