@@ -51,9 +51,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
  * The implementation of this service is heavily inspired by the "Component Disabler" of ACS AEM Commons.
  * </p>
  */
-/*
- * There is not unit test for this class - it's too difficult in mock context.
- */
+// There is not unit test for this class - it's too difficult in mock context.
 @Component(service = EventHandler.class, property = {
     EventConstants.EVENT_TOPIC + "=org/osgi/framework/BundleEvent/STARTED",
     EventConstants.EVENT_TOPIC + "=org/osgi/framework/BundleEvent/REGISTERED"

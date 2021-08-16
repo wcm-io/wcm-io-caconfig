@@ -1,6 +1,6 @@
 {
   "name": "context-aware-configuration-editor",
-  "version": "1.8.1-SNAPSHOT",
+  "version": "1.8.4",
   "description": "Context-Aware Configuration Editor UI for AEM.",
   "homepage": "https://github.com/wcm-io/wcm-io-caconfig/tree/develop/editor/bundle",
   "license": "Apache-2.0",
