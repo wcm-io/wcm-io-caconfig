@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.caconfig.editor</artifactId>
-  <version>1.8.5-SNAPSHOT</version>
+  <version>1.8.6</version>
   <packaging>jar</packaging>
 
   <name>Context-Aware Configuration Editor</name>
