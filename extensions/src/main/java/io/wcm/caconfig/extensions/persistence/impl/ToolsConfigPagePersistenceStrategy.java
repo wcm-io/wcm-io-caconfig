@@ -288,7 +288,7 @@ public class ToolsConfigPagePersistenceStrategy implements ConfigurationPersiste
     for (String bucketName : bucketNames) {
       String notAllowedPostfix = "/" + bucketName;
       if (ref != null && ref.endsWith(notAllowedPostfix)) {
-        log.warn("Ignoring reference to {} from {} - Probably misconfigured as it ends with '{}'",
+        log.debug("Ignoring reference to {} from {} - Probably misconfigured as it ends with '{}'",
             contextResource.getConfigRef(), contextResource.getResource().getPath(), notAllowedPostfix);
         ref = null;
       }

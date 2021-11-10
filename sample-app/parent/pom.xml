@@ -82,12 +82,12 @@
       <dependency>
         <groupId>io.wcm</groupId>
         <artifactId>io.wcm.caconfig.editor</artifactId>
-        <version>1.8.5-SNAPSHOT</version>
+        <version>1.8.7-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.wcm</groupId>
         <artifactId>io.wcm.caconfig.extensions</artifactId>
-        <version>1.8.5-SNAPSHOT</version>
+        <version>1.8.7-SNAPSHOT</version>
       </dependency>
 
       <!-- Sling Context-Aware Config -->
