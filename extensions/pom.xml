@@ -67,7 +67,6 @@
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.dto</artifactId>
-      <version>1.0.0</version>
       <scope>compile</scope>
     </dependency>
 
