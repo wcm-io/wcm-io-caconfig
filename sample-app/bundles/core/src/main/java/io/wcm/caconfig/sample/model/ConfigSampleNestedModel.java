@@ -19,9 +19,12 @@
  */
 package io.wcm.caconfig.sample.model;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.ConfigurationBuilder;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.Self;
 
 import io.wcm.caconfig.sample.config.ConfigSampleNested;
 import io.wcm.caconfig.sample.config.ConfigSampleSub;
@@ -33,13 +36,13 @@ import io.wcm.caconfig.sample.config.ConfigSampleSub2;
 @Model(adaptables = Resource.class)
 public class ConfigSampleNestedModel {
 
-  private final ConfigSampleNested config;
+  @Self
+  private ConfigurationBuilder configurationBuilder;
 
-  /**
-   * @param resource Resource
-   */
-  public ConfigSampleNestedModel(Resource resource) {
-    ConfigurationBuilder configurationBuilder = resource.adaptTo(ConfigurationBuilder.class);
+  private ConfigSampleNested config;
+
+  @PostConstruct
+  private void activate() {
     config = configurationBuilder.as(ConfigSampleNested.class);
   }
 

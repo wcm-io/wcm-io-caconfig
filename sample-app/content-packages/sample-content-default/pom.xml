@@ -54,6 +54,19 @@
           <group>${contentPackage.group}</group>
           <packageType>content</packageType>
           <accessControlHandling>merge</accessControlHandling>
+
+          <validatorsSettings>
+            <jackrabbit-filter>
+              <options>
+                <validRoots>
+                  /conf,
+                  /content
+                </validRoots>
+                <severityForUncoveredAncestorNodes>debug</severityForUncoveredAncestorNodes>
+              </options>
+            </jackrabbit-filter>
+          </validatorsSettings>
+
           <filters>
             <filter>
               <root>/content/contextaware-config-sample</root>
