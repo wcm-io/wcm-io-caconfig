@@ -23,6 +23,7 @@ import static io.wcm.caconfig.editor.impl.NameConstants.RP_COLLECTION;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,7 +37,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -109,7 +109,7 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
     ConfigurationPersistData persistData = null;
     ConfigurationCollectionPersistData collectionPersistData = null;
     try {
-      String jsonDataString = IOUtils.toString(request.getInputStream(), CharEncoding.UTF_8);
+      String jsonDataString = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
       JSONObject jsonData = new JSONObject(jsonDataString);
       if (collection) {
         collectionPersistData = parseCollectionConfigData(jsonData, configMetadata);
@@ -330,7 +330,7 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
   }
 
   private void sendForbiddenWithMessage(SlingHttpServletResponse response, String message) throws IOException {
-    response.setContentType("text/plain;charset=" + CharEncoding.UTF_8);
+    response.setContentType("text/plain;charset=" + StandardCharsets.UTF_8.name());
     response.getWriter().write(message);
     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
   }

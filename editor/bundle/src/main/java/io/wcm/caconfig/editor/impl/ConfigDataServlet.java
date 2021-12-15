@@ -24,6 +24,7 @@ import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -32,7 +33,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -108,7 +108,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
       }
       else {
-        response.setContentType("application/json;charset=" + CharEncoding.UTF_8);
+        response.setContentType("application/json;charset=" + StandardCharsets.UTF_8.name());
         response.getWriter().write(result.toString());
       }
     }

@@ -20,6 +20,7 @@
 package io.wcm.caconfig.editor.impl;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.SortedSet;
@@ -29,7 +30,6 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -90,7 +90,7 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
       result.putOpt("contextPath", getContextPath(contextResource));
       result.put("configNames", getConfigNames(contextResource));
 
-      response.setContentType("application/json;charset=" + CharEncoding.UTF_8);
+      response.setContentType("application/json;charset=" + StandardCharsets.UTF_8.name());
       response.getWriter().write(result.toString());
     }
     catch (JSONException ex) {
