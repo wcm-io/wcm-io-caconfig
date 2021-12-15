@@ -19,10 +19,11 @@
  */
 package io.wcm.caconfig.editor.impl;
 
+import static io.wcm.caconfig.editor.impl.JsonMapper.OBJECT_MAPPER;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -39,15 +40,15 @@ import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
-import org.apache.sling.commons.json.JSONArray;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
+
+import io.wcm.caconfig.editor.impl.data.confignames.ConfigNameItem;
+import io.wcm.caconfig.editor.impl.data.confignames.ConfigNamesResponse;
 
 /**
  * Get configuration names with labels and descriptions.
@@ -58,7 +59,6 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
     "sling.servlet.selectors=" + ConfigNamesServlet.SELECTOR,
     "sling.servlet.methods=GET"
 })
-@SuppressWarnings("deprecation")
 public class ConfigNamesServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
@@ -85,62 +85,49 @@ public class ConfigNamesServlet extends SlingSafeMethodsServlet {
     }
 
     Resource contextResource = request.getResource();
-    try {
-      JSONObject result = new JSONObject();
-      result.putOpt("contextPath", getContextPath(contextResource));
-      result.put("configNames", getConfigNames(contextResource));
+    ConfigNamesResponse result = new ConfigNamesResponse();
+    result.setContextPath(getContextPath(contextResource));
+    result.setConfigNames(getConfigNames(contextResource));
 
-      response.setContentType("application/json;charset=" + StandardCharsets.UTF_8.name());
-      response.getWriter().write(result.toString());
-    }
-    catch (JSONException ex) {
-      throw new ServletException("Unable to generate JSON.", ex);
-    }
+    response.setContentType("application/json;charset=" + StandardCharsets.UTF_8.name());
+    response.getWriter().write(OBJECT_MAPPER.writeValueAsString(result));
   }
 
   private String getContextPath(Resource contextResource) {
     return configurationResourceResolver.getContextPath(contextResource);
   }
 
-  private JSONArray getConfigNames(Resource contextResource) throws JSONException {
-    JSONArray output = new JSONArray();
-
+  private Collection<ConfigNameItem> getConfigNames(Resource contextResource) {
     SortedSet<String> configNames = configManager.getConfigurationNames();
-    SortedSet<JSONObject> sortedResult = new TreeSet<>(new Comparator<JSONObject>() {
-      @Override
-      public int compare(JSONObject o1, JSONObject o2) {
-        String label1 = o1.optString("label");
-        String label2 = o2.optString("label");
+    SortedSet<ConfigNameItem> sortedResult = new TreeSet<>((ConfigNameItem o1, ConfigNameItem o2) -> {
+        String label1 = o1.getLabel();
+        String label2 = o2.getLabel();
         if (StringUtils.equals(label1, label2)) {
-          String configName1 = o1.optString("configName");
-          String configName2 = o2.optString("configName");
+          String configName1 = o1.getConfigName();
+          String configName2 = o2.getConfigName();
           return configName1.compareTo(configName2);
         }
         return label1.compareTo(label2);
-      }
     });
     for (String configName : configNames) {
       ConfigurationMetadata metadata = configManager.getConfigurationMetadata(configName);
       if (metadata != null) {
-        JSONObject item = new JSONObject();
-        item.put("configName", configName);
-        item.putOpt("label", metadata.getLabel());
-        item.putOpt("description", metadata.getDescription());
-        item.put("collection", metadata.isCollection());
+        ConfigNameItem item = new ConfigNameItem();
+        item.setConfigName(configName);
+        item.setLabel(metadata.getLabel());
+        item.setDescription(metadata.getDescription());
+        item.setCollection(metadata.isCollection());
 
         ConfigurationState state = getConfigurationState(contextResource, configName, metadata.isCollection());
-        item.put("exists", state.exists);
-        item.put("inherited", state.inherited);
-        item.put("overridden", state.overridden);
+        item.setExists(state.exists);
+        item.setInherited(state.inherited);
+        item.setOverridden(state.overridden);
 
-        item.put("allowAdd", allowAdd(contextResource, configName));
+        item.setAllowAdd(allowAdd(contextResource, configName));
         sortedResult.add(item);
       }
     }
-
-    sortedResult.forEach(output::put);
-
-    return output;
+    return sortedResult;
   }
 
   private boolean allowAdd(Resource contextResource, String configName) {

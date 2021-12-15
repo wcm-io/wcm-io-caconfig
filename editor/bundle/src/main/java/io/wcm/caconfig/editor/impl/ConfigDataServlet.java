@@ -19,13 +19,16 @@
  */
 package io.wcm.caconfig.editor.impl;
 
+import static io.wcm.caconfig.editor.impl.JsonMapper.OBJECT_MAPPER;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_COLLECTION;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import javax.servlet.Servlet;
@@ -46,14 +49,17 @@ import org.apache.sling.caconfig.management.ValueInfo;
 import org.apache.sling.caconfig.management.multiplexer.ConfigurationPersistenceStrategyMultiplexer;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
-import org.apache.sling.commons.json.JSONArray;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.wcm.caconfig.editor.impl.data.configdata.ConfigCollectionItem;
+import io.wcm.caconfig.editor.impl.data.configdata.ConfigItem;
+import io.wcm.caconfig.editor.impl.data.configdata.PropertyItem;
+import io.wcm.caconfig.editor.impl.data.configdata.PropertyItemMetadata;
 
 /**
  * Read configuration data.
@@ -64,7 +70,6 @@ import org.slf4j.LoggerFactory;
     "sling.servlet.selectors=" + ConfigDataServlet.SELECTOR,
     "sling.servlet.methods=GET"
 })
-@SuppressWarnings("deprecation")
 public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
@@ -103,13 +108,13 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
     // output configuration
     try {
-      JSONObject result = getConfiguration(request.getResource(), configName, collection);
+      Object result = getConfiguration(request.getResource(), configName, collection);
       if (result == null) {
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
       }
       else {
         response.setContentType("application/json;charset=" + StandardCharsets.UTF_8.name());
-        response.getWriter().write(result.toString());
+        response.getWriter().write(OBJECT_MAPPER.writeValueAsString(result));
       }
     }
     /*CHECKSTYLE:OFF*/ catch (Exception ex) { /*CHECKSTYLE:ON*/
@@ -118,19 +123,19 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     }
   }
 
-  private JSONObject getConfiguration(Resource contextResource, String configName, boolean collection) throws JSONException {
-    JSONObject result;
+  private Object getConfiguration(Resource contextResource, String configName, boolean collection) {
+    Object result;
     if (collection) {
       ConfigurationData newItem = configManager.newCollectionItem(contextResource, configName);
       if (newItem == null) {
         throw new ConfigurationPersistenceException("Invalid configuration name: " + configName);
       }
-      result = toJson(configManager.getConfigurationCollection(contextResource, configName), newItem, configName);
+      result = fromConfigCollection(configManager.getConfigurationCollection(contextResource, configName), newItem, configName);
     }
     else {
       ConfigurationData configData = configManager.getConfiguration(contextResource, configName);
       if (configData != null) {
-        result = toJson(configData, configData.isInherited(), configName);
+        result = fromConfig(configData, configData.isInherited(), configName);
       }
       else {
         result = null;
@@ -139,40 +144,38 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
-  private JSONObject toJson(ConfigurationCollectionData configCollection, ConfigurationData newItem, String fullConfigName) throws JSONException {
-    JSONObject result = new JSONObject();
-    result.putOpt("configName", configCollection.getConfigName());
+  private ConfigCollectionItem fromConfigCollection(ConfigurationCollectionData configCollection, ConfigurationData newItem, String fullConfigName) {
+    ConfigCollectionItem result = new ConfigCollectionItem();
+    result.setConfigName(configCollection.getConfigName());
 
     if (!configCollection.getProperties().isEmpty()) {
-      JSONObject properties = new JSONObject();
+      Map<String, Object> properties = new TreeMap<>();
       for (Map.Entry<String, Object> entry : configCollection.getProperties().entrySet()) {
-        properties.putOpt(entry.getKey(), entry.getValue());
+        properties.put(entry.getKey(), entry.getValue());
       }
-      result.put("properties", properties);
+      result.setProperties(properties);
     }
 
-    JSONArray items = new JSONArray();
+    List<ConfigItem> items = new ArrayList<>();
     for (ConfigurationData configData : configCollection.getItems()) {
-      items.put(toJson(configData, configData.isInherited(), fullConfigName));
+      items.add(fromConfig(configData, configData.isInherited(), fullConfigName));
     }
-    result.put("items", items);
+    result.setItems(items);
 
-    result.put("newItem", toJson(newItem, null, fullConfigName));
+    result.setNewItem(fromConfig(newItem, null, fullConfigName));
 
     return result;
   }
 
-  private JSONObject toJson(ConfigurationData config, Boolean inherited, String fullConfigName) throws JSONException {
-    JSONObject result = new JSONObject();
+  private ConfigItem fromConfig(ConfigurationData config, Boolean inherited, String fullConfigName) {
+    ConfigItem result = new ConfigItem();
 
-    result.putOpt("configName", config.getConfigName());
-    result.putOpt("collectionItemName", config.getCollectionItemName());
-    result.putOpt("overridden", config.isOverridden());
-    if (inherited != null) {
-      result.put("inherited", inherited.booleanValue());
-    }
+    result.setConfigName(config.getConfigName());
+    result.setCollectionItemName(config.getCollectionItemName());
+    result.setOverridden(config.isOverridden());
+    result.setInherited(inherited);
 
-    JSONArray props = new JSONArray();
+    List<PropertyItem> props = new ArrayList<>();
     for (String propertyName : config.getPropertyNames()) {
       ValueInfo<?> item = config.getValueInfo(propertyName);
       if (item == null) {
@@ -180,21 +183,21 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
       }
       PropertyMetadata<?> itemMetadata = item.getPropertyMetadata();
 
-      JSONObject prop = new JSONObject();
-      prop.putOpt("name", item.getName());
+      PropertyItem prop = new PropertyItem();
+      prop.setName(item.getName());
 
       // special handling for nested configs and nested config collections
       if (itemMetadata != null && itemMetadata.isNestedConfiguration()) {
-        JSONObject metadata = new JSONObject();
-        metadata.putOpt("label", itemMetadata.getLabel());
-        metadata.putOpt("description", itemMetadata.getDescription());
-        metadata.putOpt("properties", toJsonWithValueConversion(itemMetadata.getProperties()));
-        prop.put("metadata", metadata);
+        PropertyItemMetadata metadata = new PropertyItemMetadata();
+        metadata.setLabel(itemMetadata.getLabel());
+        metadata.setDescription(itemMetadata.getDescription());
+        metadata.setProperties(toJsonWithValueConversion(itemMetadata.getProperties()));
+        prop.setMetadata(metadata);
 
         if (itemMetadata.getType().isArray()) {
           ConfigurationData[] configDatas = (ConfigurationData[])item.getValue();
           if (configDatas != null) {
-            JSONObject nestedConfigCollection = new JSONObject();
+            ConfigCollectionItem nestedConfigCollection = new ConfigCollectionItem();
             StringBuilder collectionConfigName = new StringBuilder();
             if (config.getCollectionItemName() != null) {
               collectionConfigName.append(configurationPersistenceStrategy.getCollectionItemConfigName(fullConfigName
@@ -204,19 +207,19 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
               collectionConfigName.append(configurationPersistenceStrategy.getConfigName(fullConfigName, config.getResourcePath()));
             }
             collectionConfigName.append("/").append(itemMetadata.getConfigurationMetadata().getName());
-            nestedConfigCollection.put("configName", collectionConfigName.toString());
-            JSONArray items = new JSONArray();
+            nestedConfigCollection.setConfigName(collectionConfigName.toString());
+            List<ConfigItem> items = new ArrayList<>();
             for (ConfigurationData configData : configDatas) {
-              items.put(toJson(configData, false, collectionConfigName.toString()));
+              items.add(fromConfig(configData, false, collectionConfigName.toString()));
             }
-            nestedConfigCollection.put("items", items);
-            prop.put("nestedConfigCollection", nestedConfigCollection);
+            nestedConfigCollection.setItems(items);
+            prop.setNestedConfigCollection(nestedConfigCollection);
           }
         }
         else {
           ConfigurationData configData = (ConfigurationData)item.getValue();
           if (configData != null) {
-            prop.put("nestedConfig", toJson(configData, null, fullConfigName
+            prop.setNestedConfig(fromConfig(configData, null, fullConfigName
                 + "/" + itemMetadata.getConfigurationMetadata().getName()));
           }
         }
@@ -224,32 +227,32 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
       // property data and metadata
       else {
-        prop.putOpt("value", toJsonValue(item.getValue()));
-        prop.putOpt("effectiveValue", toJsonValue(item.getEffectiveValue()));
-        prop.putOpt("configSourcePath", item.getConfigSourcePath());
-        prop.putOpt("default", item.isDefault());
-        prop.putOpt("inherited", item.isInherited());
-        prop.putOpt("overridden", item.isOverridden());
+        prop.setValue(item.getValue());
+        prop.setEffectiveValue(item.getEffectiveValue());
+        prop.setConfigSourcePath(item.getConfigSourcePath());
+        prop.setIsDefault(item.isDefault());
+        prop.setInherited(item.isInherited());
+        prop.setOverridden(item.isOverridden());
 
         if (itemMetadata != null) {
-          JSONObject metadata = new JSONObject();
+          PropertyItemMetadata metadata = new PropertyItemMetadata();
           if (itemMetadata.getType().isArray()) {
-            metadata.put("type", ClassUtils.primitiveToWrapper(itemMetadata.getType().getComponentType()).getSimpleName());
-            metadata.put("multivalue", true);
+            metadata.setType(ClassUtils.primitiveToWrapper(itemMetadata.getType().getComponentType()).getSimpleName());
+            metadata.setMultivalue(true);
           }
           else {
-            metadata.put("type", ClassUtils.primitiveToWrapper(itemMetadata.getType()).getSimpleName());
+            metadata.setType(ClassUtils.primitiveToWrapper(itemMetadata.getType()).getSimpleName());
           }
-          metadata.putOpt("defaultValue", toJsonValue(itemMetadata.getDefaultValue()));
-          metadata.putOpt("label", itemMetadata.getLabel());
-          metadata.putOpt("description", itemMetadata.getDescription());
-          metadata.putOpt("properties", toJsonWithValueConversion(itemMetadata.getProperties()));
-          prop.put("metadata", metadata);
+          metadata.setDefaultValue(itemMetadata.getDefaultValue());
+          metadata.setLabel(itemMetadata.getLabel());
+          metadata.setDescription(itemMetadata.getDescription());
+          metadata.setProperties(toJsonWithValueConversion(itemMetadata.getProperties()));
+          prop.setMetadata(metadata);
         }
       }
-      props.put(prop);
+      props.add(prop);
     }
-    result.put("properties", props);
+    result.setProperties(props);
 
     return result;
   }
@@ -260,53 +263,42 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
    * @param properties Map
    * @return JSON object
    */
-  private JSONObject toJsonWithValueConversion(Map<String, String> properties) throws JSONException {
+  private @Nullable Map<String, Object> toJsonWithValueConversion(@Nullable Map<String, String> properties) {
     if (properties == null || properties.isEmpty()) {
       return null;
     }
     else {
-      JSONObject metadataProps = new JSONObject();
+      Map<String, Object> metadataProps = new TreeMap<>();
       for (Map.Entry<String, String> entry : properties.entrySet()) {
-        metadataProps.putOpt(entry.getKey(), tryConvertJsonString(entry.getValue()));
+        metadataProps.put(entry.getKey(), tryConvertJsonString(entry.getValue()));
       }
       return metadataProps;
     }
   }
 
-  private Object tryConvertJsonString(String value) {
+  private @Nullable Object tryConvertJsonString(@Nullable String value) {
+    if (value == null) {
+      return null;
+    }
     if (JSON_STRING_ARRAY_PATTERN.matcher(value).matches()) {
       try {
-        return new JSONArray(value);
+         return OBJECT_MAPPER.readValue(value, List.class);
       }
-      catch (JSONException ex) {
+      catch (IOException ex) {
         // no valid json - ignore
+        log.trace("Conversion to JSON arary value failed for: {}", value, ex);
       }
     }
     if (JSON_STRING_OBJECT_PATTERN.matcher(value).matches()) {
       try {
-        return new JSONObject(value);
+        return OBJECT_MAPPER.readValue(value, Map.class);
       }
-      catch (JSONException ex) {
+      catch (IOException ex) {
         // no valid json - ignore
+        log.trace("Conversion to JSON object value failed for: {}", value, ex);
       }
     }
     return value;
-  }
-
-  private Object toJsonValue(Object value) {
-    if (value == null) {
-      return null;
-    }
-    if (value.getClass().isArray()) {
-      JSONArray array = new JSONArray();
-      for (int i = 0; i < Array.getLength(value); i++) {
-        array.put(Array.get(value, i));
-      }
-      return array;
-    }
-    else {
-      return value;
-    }
   }
 
 }

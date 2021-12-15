@@ -59,6 +59,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-json_1.1_spec</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.sling.commons</artifactId>
       <version>1.4.0</version>

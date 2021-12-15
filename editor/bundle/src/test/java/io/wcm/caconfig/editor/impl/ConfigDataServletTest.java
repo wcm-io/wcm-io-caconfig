@@ -214,7 +214,6 @@ class ConfigDataServletTest {
         + "{'value':2,'description':'Number Two'}"
         + "]}}}"
         + "]}";
-    System.out.println(context.response().getOutputAsString());
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
@@ -309,6 +308,5 @@ class ConfigDataServletTest {
         + "{name:'param3',value:true,effectiveValue:false,default:false,inherited:true,overridden:false}"
         + "]}";
   }
-
 
 }
