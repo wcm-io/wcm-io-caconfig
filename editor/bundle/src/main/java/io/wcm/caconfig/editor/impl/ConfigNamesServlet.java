@@ -40,6 +40,7 @@ import org.apache.sling.caconfig.management.ConfigurationData;
 import org.apache.sling.caconfig.management.ConfigurationManager;
 import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
+import org.apache.sling.servlets.annotations.SlingServletResourceTypes;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -53,12 +54,12 @@ import io.wcm.caconfig.editor.impl.data.confignames.ConfigNamesResponse;
 /**
  * Get configuration names with labels and descriptions.
  */
-@Component(service = Servlet.class, immediate = true, property = {
-    "sling.servlet.resourceTypes=/apps/wcm-io/caconfig/editor/components/page/editor",
-    "sling.servlet.extensions=json",
-    "sling.servlet.selectors=" + ConfigNamesServlet.SELECTOR,
-    "sling.servlet.methods=GET"
-})
+@Component(service = Servlet.class)
+@SlingServletResourceTypes(
+    resourceTypes = "/apps/wcm-io/caconfig/editor/components/page/editor",
+    selectors = ConfigNamesServlet.SELECTOR,
+    extensions = "json",
+    methods = "GET")
 public class ConfigNamesServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 

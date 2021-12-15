@@ -49,6 +49,7 @@ import org.apache.sling.caconfig.management.ValueInfo;
 import org.apache.sling.caconfig.management.multiplexer.ConfigurationPersistenceStrategyMultiplexer;
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
+import org.apache.sling.servlets.annotations.SlingServletResourceTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Component;
@@ -64,12 +65,12 @@ import io.wcm.caconfig.editor.impl.data.configdata.PropertyItemMetadata;
 /**
  * Read configuration data.
  */
-@Component(service = Servlet.class, immediate = true, property = {
-    "sling.servlet.resourceTypes=/apps/wcm-io/caconfig/editor/components/page/editor",
-    "sling.servlet.extensions=json",
-    "sling.servlet.selectors=" + ConfigDataServlet.SELECTOR,
-    "sling.servlet.methods=GET"
-})
+@Component(service = Servlet.class)
+@SlingServletResourceTypes(
+    resourceTypes = "/apps/wcm-io/caconfig/editor/components/page/editor",
+    selectors = ConfigDataServlet.SELECTOR,
+    extensions = "json",
+    methods = "GET")
 public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 

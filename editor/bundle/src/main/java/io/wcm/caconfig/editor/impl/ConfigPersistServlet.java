@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -49,6 +50,7 @@ import org.apache.sling.caconfig.spi.ConfigurationPersistenceAccessDeniedExcepti
 import org.apache.sling.caconfig.spi.ConfigurationPersistenceException;
 import org.apache.sling.caconfig.spi.metadata.ConfigurationMetadata;
 import org.apache.sling.caconfig.spi.metadata.PropertyMetadata;
+import org.apache.sling.servlets.annotations.SlingServletResourceTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Component;
@@ -62,13 +64,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 /**
  * Persist configuration data.
  */
-@Component(service = Servlet.class, immediate = true, property = {
-    "sling.servlet.resourceTypes=/apps/wcm-io/caconfig/editor/components/page/editor",
-    "sling.servlet.extensions=json",
-    "sling.servlet.selectors=" + ConfigPersistServlet.SELECTOR,
-    "sling.servlet.methods=POST",
-    "sling.servlet.methods=DELETE"
-})
+@Component(service = Servlet.class)
+@SlingServletResourceTypes(
+    resourceTypes = "/apps/wcm-io/caconfig/editor/components/page/editor",
+    selectors = ConfigPersistServlet.SELECTOR,
+    extensions = "json",
+    methods = { "POST", "DELETE" })
 public class ConfigPersistServlet extends SlingAllMethodsServlet {
   private static final long serialVersionUID = 1L;
 
@@ -279,7 +280,10 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
     if (value.isBoolean()) {
       return value.booleanValue();
     }
-    throw new IllegalArgumentException("Unexpected type: " + value);
+    if (log.isTraceEnabled()) {
+      log.trace("Value '{}' has unexpected type: {}", value, value.getClass().getName());
+    }
+    return null;
   }
 
   private @NotNull Object toArray(@NotNull ArrayNode array, @NotNull Class propertyType) {
@@ -329,21 +333,21 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
 
   private int toInt(@NotNull JsonNode value) {
     if (value.isTextual()) {
-      return Integer.parseInt(value.textValue());
+      return parseNumericTextValue(value, Integer::parseInt, 0);
     }
     return value.intValue();
   }
 
   private long toLong(@NotNull JsonNode value) {
     if (value.isTextual()) {
-      return Long.parseLong(value.textValue());
+      return parseNumericTextValue(value, Long::parseLong, 0L);
     }
     return value.longValue();
   }
 
   private double toDouble(@NotNull JsonNode value) {
     if (value.isTextual()) {
-      return Double.parseDouble(value.textValue());
+      return parseNumericTextValue(value, Double::parseDouble, 0d);
     }
     return value.doubleValue();
   }
@@ -353,6 +357,20 @@ public class ConfigPersistServlet extends SlingAllMethodsServlet {
       return Boolean.parseBoolean(value.textValue());
     }
     return value.booleanValue();
+  }
+
+  @SuppressWarnings("null")
+  private <T> @NotNull T parseNumericTextValue(@NotNull JsonNode value, @NotNull Function<String, T> converter, @NotNull T defaultValue) {
+    String textValue = StringUtils.trimToNull(value.textValue());
+    if (textValue != null) {
+      try {
+        return converter.apply(textValue);
+      }
+      catch (NumberFormatException ex) {
+        log.trace("Unable to parse numeric value: {}", textValue);
+      }
+    }
+    return defaultValue;
   }
 
   @Override
