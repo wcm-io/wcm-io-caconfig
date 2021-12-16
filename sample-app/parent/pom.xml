@@ -94,7 +94,7 @@
       <dependency>
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.caconfig.api</artifactId>
-        <version>1.1.2</version>
+        <version>1.2.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.sling</groupId>
@@ -104,14 +104,14 @@
       <dependency>
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.caconfig.impl</artifactId>
-        <version>1.4.16</version>
+        <version>1.5.1-SNAPSHOT</version>
       </dependency>
 
       <!-- CONGA AEM Definitions -->
       <dependency>
         <groupId>io.wcm.devops.conga.definitions</groupId>
         <artifactId>io.wcm.devops.conga.definitions.aem</artifactId>
-        <version>1.11.2</version>
+        <version>1.11.3-SNAPSHOT</version>
       </dependency>
 
       <!-- Import AEM dependencies -->
