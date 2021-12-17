@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Use Jackson instead of Sling Commons JSON for JSON processing.
       </action>
+      <action type="fix" dev="sseifert">
+        Fix jQuery JS warning about unclosed textarea element.
+      </action>
     </release>
 
     <release version="1.8.6" date="2021-08-16">
