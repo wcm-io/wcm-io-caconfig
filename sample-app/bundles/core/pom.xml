@@ -43,6 +43,11 @@
       <artifactId>org.apache.sling.caconfig.api</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.models.caconfig</artifactId>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>com.adobe.aem</groupId>
