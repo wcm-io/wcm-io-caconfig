@@ -53,7 +53,6 @@
           <name>${contentPackage.name}</name>
           <group>${contentPackage.group}</group>
           <packageType>content</packageType>
-          <accessControlHandling>merge</accessControlHandling>
 
           <validatorsSettings>
             <jackrabbit-filter>
@@ -66,16 +65,7 @@
               </options>
             </jackrabbit-filter>
           </validatorsSettings>
-
-          <filters>
-            <filter>
-              <root>/content/contextaware-config-sample</root>
-            </filter>
-            <filter>
-              <root>/conf/contextaware-config-sample</root>
-            </filter>
-          </filters>
-        </configuration>
+       </configuration>
       </plugin>
 
       <!-- Do not generate eclipse project files -->

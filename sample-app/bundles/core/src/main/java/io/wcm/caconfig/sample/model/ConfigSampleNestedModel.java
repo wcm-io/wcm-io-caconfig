@@ -19,12 +19,9 @@
  */
 package io.wcm.caconfig.sample.model;
 
-import javax.annotation.PostConstruct;
-
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.caconfig.ConfigurationBuilder;
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.models.caconfig.annotations.ContextAwareConfiguration;
 
 import io.wcm.caconfig.sample.config.ConfigSampleNested;
 import io.wcm.caconfig.sample.config.ConfigSampleSub;
@@ -33,18 +30,11 @@ import io.wcm.caconfig.sample.config.ConfigSampleSub2;
 /**
  * Reads configuration from {@link ConfigSampleNested}.
  */
-@Model(adaptables = Resource.class)
+@Model(adaptables = SlingHttpServletRequest.class)
 public class ConfigSampleNestedModel {
 
-  @Self
-  private ConfigurationBuilder configurationBuilder;
-
+  @ContextAwareConfiguration
   private ConfigSampleNested config;
-
-  @PostConstruct
-  private void activate() {
-    config = configurationBuilder.as(ConfigSampleNested.class);
-  }
 
   public ConfigSampleNested getConfig() {
     return config;
