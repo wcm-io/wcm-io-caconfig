@@ -1,0 +1,29 @@
+body {
+  font-family: sans-serif;
+}
+h2 {
+  background-color: orange;
+}
+h4 {
+  font-style: italic;
+}
+dl {
+  margin-left: 10px;
+}
+ul dl {
+  margin-left: 0px;
+}
+dl dd {
+  display: inline;
+  margin: 0;
+}
+dl dd:after {
+  display: block;
+  content: '';
+}
+dl dt {
+  display: inline-block;
+  font-weight: bold;
+  min-width: 200px;
+  border-bottom: 1px solid #ccc;
+}
