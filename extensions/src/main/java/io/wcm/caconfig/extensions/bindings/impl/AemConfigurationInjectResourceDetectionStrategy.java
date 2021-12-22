@@ -19,12 +19,9 @@
  */
 package io.wcm.caconfig.extensions.bindings.impl;
 
-import javax.script.Bindings;
-
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.scripting.SlingBindings;
-import org.apache.sling.caconfig.spi.ConfigurationBindingsResourceDetectionStrategy;
+import org.apache.sling.caconfig.spi.ConfigurationInjectResourceDetectionStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Component;
@@ -35,29 +32,22 @@ import com.day.cq.wcm.api.components.ComponentContext;
 import com.day.cq.wcm.commons.WCMUtils;
 
 /**
- * AEM-specific implementation of {@link ConfigurationBindingsResourceDetectionStrategy}.
+ * AEM-specific implementation of {@link ConfigurationInjectResourceDetectionStrategy}.
  * It detects if the current request is attached to an AEM page, and uses the resource of that page
  * for resolving the context-aware configurations.
  * With this, it works also for structure components in editable templates, which are technically located below /conf.
  */
-@Component(service = ConfigurationBindingsResourceDetectionStrategy.class)
-@ServiceRanking(100)
-public class AemConfigurationBindingsResourceDetectionStrategy implements ConfigurationBindingsResourceDetectionStrategy {
+@Component(service = ConfigurationInjectResourceDetectionStrategy.class)
+@ServiceRanking(1000)
+public class AemConfigurationInjectResourceDetectionStrategy implements ConfigurationInjectResourceDetectionStrategy {
 
   @Override
-  public @Nullable Resource detectResource(@NotNull Bindings bindings) {
-    SlingHttpServletRequest request = getRequest(bindings);
-    if (request != null) {
-      Page currentPage = getCurrentPage(request);
-      if (currentPage != null) {
-        return currentPage.adaptTo(Resource.class);
-      }
+  public @Nullable Resource detectResource(@NotNull SlingHttpServletRequest request) {
+    Page currentPage = getCurrentPage(request);
+    if (currentPage != null) {
+      return currentPage.adaptTo(Resource.class);
     }
     return null;
-  }
-
-  private @Nullable SlingHttpServletRequest getRequest(@NotNull Bindings bindings) {
-    return (SlingHttpServletRequest)bindings.get(SlingBindings.REQUEST);
   }
 
   private @Nullable Page getCurrentPage(@NotNull SlingHttpServletRequest request) {

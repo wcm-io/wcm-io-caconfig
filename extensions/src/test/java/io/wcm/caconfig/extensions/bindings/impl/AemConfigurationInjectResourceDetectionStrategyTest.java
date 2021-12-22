@@ -23,18 +23,12 @@ import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.when;
-
-import javax.script.Bindings;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.scripting.SlingBindings;
-import org.apache.sling.caconfig.management.multiplexer.ConfigurationBindingsResourceDetectionStrategyMultiplexer;
+import org.apache.sling.caconfig.management.multiplexer.ConfigurationInjectResourceDetectionStrategyMultiplexer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.day.cq.wcm.api.Page;
 
@@ -43,45 +37,32 @@ import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
-@ExtendWith(MockitoExtension.class)
-class AemConfigurationBindingsResourceDetectionStrategyTest {
+class AemConfigurationInjectResourceDetectionStrategyTest {
 
   private final AemContext context = new AemContextBuilder()
       .plugin(CACONFIG)
       .build();
 
-  private ConfigurationBindingsResourceDetectionStrategyMultiplexer strategyMultiplexer;
-
-  @Mock
-  private Bindings bindings;
+  private ConfigurationInjectResourceDetectionStrategyMultiplexer strategyMultiplexer;
 
   @BeforeEach
   void setUp() throws Exception {
-    context.registerInjectActivateService(AemConfigurationBindingsResourceDetectionStrategy.class);
-    strategyMultiplexer = context.getService(ConfigurationBindingsResourceDetectionStrategyMultiplexer.class);
-  }
-
-  @Test
-  void testWithoutRequest() {
-    Resource resource = strategyMultiplexer.detectResource(bindings);
-    assertNull(resource);
+    context.registerInjectActivateService(AemConfigurationInjectResourceDetectionStrategy.class);
+    strategyMultiplexer = context.getService(ConfigurationInjectResourceDetectionStrategyMultiplexer.class);
   }
 
   @Test
   void testWithoutCurrentPage() {
-    when(bindings.get(SlingBindings.REQUEST)).thenReturn(context.request());
-
-    Resource resource = strategyMultiplexer.detectResource(bindings);
+    Resource resource = strategyMultiplexer.detectResource(context.request());
     assertNull(resource);
   }
 
   @Test
   @SuppressWarnings("null")
   void testWithCurrentPage() {
-    when(bindings.get(SlingBindings.REQUEST)).thenReturn(context.request());
     Page page = context.currentPage(context.create().page("/content/my-page"));
 
-    Resource resource = strategyMultiplexer.detectResource(bindings);
+    Resource resource = strategyMultiplexer.detectResource(context.request());
     assertNotNull(resource);
     assertEquals(page.getPath(), resource.getPath());
   }
