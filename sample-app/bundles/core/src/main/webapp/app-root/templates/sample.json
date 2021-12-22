@@ -3,6 +3,7 @@
   "jcr:title": "Context-Aware Sample Config Test Page",
 
   "allowedPaths": "^/content/contextaware-config-sample(/.+)?$",
+  "ranking": 10,
 
   "jcr:content": {
     "jcr:primaryType": "cq:PageContent",
