@@ -3,7 +3,7 @@
   #%L
   wcm.io
   %%
-  Copyright (C) 2017 wcm.io
+  Copyright (C) 2021 wcm.io
   %%
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -30,19 +30,22 @@
   </parent>
 
   <groupId>io.wcm.samples</groupId>
-  <artifactId>io.wcm.caconfig.sample-app.sample-content-aempage</artifactId>
+  <artifactId>io.wcm.caconfig.sample-app.conf-content</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>content-package</packaging>
 
-  <description>Sample content for wcm.io Context-Aware Configuration Extensions AEM Page Persistence Strategy.</description>
-
   <properties>
-    <contentPackage.name>contextaware-config-sample-samplecontent-aempage</contentPackage.name>
+    <contentPackage.name>contextaware-config-sample-conf-content</contentPackage.name>
     <contentPackage.group>wcm-io-samples</contentPackage.group>
   </properties>
 
   <build>
     <finalName>${contentPackage.name}-${project.version}</finalName>
+    <resources>
+      <resource>
+        <directory>jcr_root</directory>
+      </resource>
+    </resources>
 
     <plugins>
       <plugin>
@@ -53,18 +56,37 @@
           <name>${contentPackage.name}</name>
           <group>${contentPackage.group}</group>
           <packageType>content</packageType>
-
+          <accessControlHandling>merge</accessControlHandling>
           <validatorsSettings>
             <jackrabbit-filter>
               <options>
                 <validRoots>
-                  /conf,
-                  /content
+                  /conf/contextaware-config-sample/settings,
+                  /conf
                 </validRoots>
                 <severityForUncoveredAncestorNodes>debug</severityForUncoveredAncestorNodes>
               </options>
             </jackrabbit-filter>
           </validatorsSettings>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>io.wcm.maven.plugins</groupId>
+        <artifactId>wcmio-content-package-maven-plugin</artifactId>
+        <configuration>
+          <!--
+            Set replication status for all cq:Page and cq:Template nodes to "Activated"
+            It is assumed that this package is deployed always on author and publish instances, thus
+            it's not required to activate template definitions manually after each deployment.
+            If this is not case, remove this configuration.
+          -->
+          <markReplicationActivated>true</markReplicationActivated>
+          <markReplicationActivatedIncludeNodes>
+            <path>^/conf/.+/settings/wcm/policies/.+/jcr:content$</path>
+            <path>^/conf/.+/settings/wcm/templates/[^/]+(/policies|/structure)?/jcr:content$</path>
+          </markReplicationActivatedIncludeNodes>
+          <dateLastReplicated>2021-12-22T00:00:00.000+01:00</dateLastReplicated>
         </configuration>
       </plugin>
 
@@ -77,21 +99,12 @@
         </configuration>
       </plugin>
 
-      <!-- Do not deploy sources to repository -->
+      <!-- Do not generate sources JAR -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
         <configuration>
-          <attach>false</attach>
-        </configuration>
-      </plugin>
-
-      <!-- do not deploy this sample pom into maven repository -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
+          <skipSource>true</skipSource>
         </configuration>
       </plugin>
 

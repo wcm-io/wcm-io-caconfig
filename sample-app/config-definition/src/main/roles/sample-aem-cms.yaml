@@ -52,6 +52,8 @@ files:
 # Application package
 - url: mvn:io.wcm.samples/io.wcm.caconfig.sample-app.complete//zip
   dir: packages
+- url: mvn:io.wcm.samples/io.wcm.caconfig.sample-app.conf-content//zip
+  dir: packages
 
 # Application sample content package
 - url: mvn:io.wcm.samples/io.wcm.caconfig.sample-app.sample-content-default//zip

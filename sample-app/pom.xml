@@ -43,6 +43,7 @@
     <module>bundles/core</module>
     <module>config-definition</module>
     <module>content-packages/complete</module>
+    <module>content-packages/conf-content</module>
     <module>content-packages/sample-content-default</module>
     <module>content-packages/sample-content-aempage</module>
   </modules>

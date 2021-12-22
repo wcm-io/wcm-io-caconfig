@@ -99,12 +99,12 @@
       <dependency>
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.caconfig.spi</artifactId>
-        <version>1.3.4</version>
+        <version>1.4.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.caconfig.impl</artifactId>
-        <version>1.5.2</version>
+        <version>1.6.0-SNAPSHOT</version>
       </dependency>
 
       <!-- CONGA AEM Definitions -->
