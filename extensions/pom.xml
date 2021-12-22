@@ -70,6 +70,12 @@
       <scope>compile</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.caconfig.spi</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
     <!-- Only "Path" class is required, it's embedded via maven-shade-plugin -->
     <dependency>
       <groupId>io.wcm</groupId>
@@ -118,7 +124,7 @@
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.testing.caconfig-mock-plugin</artifactId>
-      <version>1.3.6</version>
+      <version>1.4.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -128,6 +134,22 @@
     </dependency>
 
   </dependencies>
+  <dependencyManagement>
+    <dependencies>
+
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.caconfig.spi</artifactId>
+      <version>1.4.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.caconfig.impl</artifactId>
+      <version>1.6.0-SNAPSHOT</version>
+    </dependency>
+
+    </dependencies>  
+  </dependencyManagement>
 
   <build>
     <plugins>
