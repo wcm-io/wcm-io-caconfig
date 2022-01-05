@@ -27,6 +27,9 @@
       <action type="add" dev="sseifert" issue="WCON-75">
         Add AEM implementation ConfigurationInjectResourceDetectionStrategy to support correct injection of configurations in HTL and Sling Models in editable template structure components.
       </action>
+      <action type="update" dev="sseifert">
+        Switch to AEM 6.5 as minimum version.
+      </action>
     </release>
 
     <release version="1.8.8" date="2021-11-10">
