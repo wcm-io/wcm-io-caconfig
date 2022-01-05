@@ -34,6 +34,9 @@
         Add favicon to editor page.
       </action>
       <action type="fix" dev="sseifert">
+        Fix displaying message text in info/error popup dialogs.
+      </action>
+      <action type="fix" dev="sseifert">
         Fix jQuery JS warning about unclosed textarea element.
       </action>
     </release>

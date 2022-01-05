@@ -34,8 +34,8 @@
       visible: false
     });
 
-    modalService.onEvent(modalService.modal.INFO, modalService.event.CUSTOM_MESSAGE, function (e, data) {
-      data = data || {};
+    modalService.onEvent(modalService.modal.INFO, modalService.event.CUSTOM_MESSAGE, function (e) {
+      var data = e.detail || {};
       that.message = data.message || "";
 
       $timeout(function() {

@@ -35,11 +35,11 @@
       visible: false
     });
 
-    modalService.onEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, function (e, data) {
+    modalService.onEvent(modalService.modal.ERROR, modalService.event.CUSTOM_MESSAGE, function (e) {
       var response,
         message;
 
-      data = data || {};
+      var data = e.detail || {};
 
       response = data.response || {};
       message = data.message;
