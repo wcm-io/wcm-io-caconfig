@@ -109,6 +109,9 @@
           if (angular.isDefined(scope.property.value) && !scope.property.inherited && !scope.property.overridden) {
             setValue(selectWidget, scope.property.value);
           }
+          else {
+            setValue(selectWidget, "");
+          }
 
           // If multivalue values are inherited/overridden, we create a dummy tag list
           if (scope.multivalue && (scope.property.inherited || scope.property.overridden)) {

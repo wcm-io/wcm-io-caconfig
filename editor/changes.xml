@@ -37,6 +37,9 @@
         Switch to AEM 6.5 as minimum version.
       </action>
       <action type="fix" dev="sseifert">
+        Dropdown widget: Do not auto-select an option in editor if no option was saved previously.
+      </action>
+      <action type="fix" dev="sseifert">
         Fix displaying message text in info/error popup dialogs.
       </action>
       <action type="fix" dev="sseifert">
