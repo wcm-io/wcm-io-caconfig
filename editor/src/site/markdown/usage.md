@@ -121,6 +121,15 @@ String dropdownParam();
 
 If you annotate an array parameter multiple options can be selected.
 
+Alternatively, it is possible to provide a dynamic list of dropdown options by pointing to an OSGi service implementation of the [DropdownOptionsProvider][caconfig-dropdown-options-provider] interface which has a property DropdownOptionsProvider.PROPERTY_SELECTOR set to a name matching the name set in the property configuration:
+
+```java
+@Property(label = "Dropdown Dynamic Param", description = "Parameter with dynamic dropdown list.", property = {
+    "widgetType=dropdown",
+    "dropdownOptionsProvider=myproject.provider1"
+})
+String dropdownDynamicParam();
+```
 
 #### textarea
 
@@ -176,3 +185,4 @@ You should disable the configuration editor on publish by applying an OSGi confi
 [wcmio-caconfig-extensions-reference-provider]: https://wcm.io/caconfig/extensions/reference-provider.html
 [wcmio-caservice]: https://wcm.io/sling/commons/context-aware-services.html
 [configurationeditorfilter-interface]: bundle/apidocs/io/wcm/caconfig/editor/ConfigurationEditorFilter.html
+[caconfig-dropdown-options-provider]: bundle/apidocs/io/wcm/caconfig/editor/DropdownOptionsProvider.html

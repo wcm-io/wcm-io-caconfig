@@ -19,8 +19,19 @@
  */
 package io.wcm.caconfig.sample.config;
 
+import static io.wcm.caconfig.editor.EditorProperties.PROPERTY_DROPDOWN_OPTIONS;
+import static io.wcm.caconfig.editor.EditorProperties.PROPERTY_DROPDOWN_OPTIONS_PROVIDER;
+import static io.wcm.caconfig.editor.EditorProperties.PROPERTY_PATHBROWSER_ROOT_PATH;
+import static io.wcm.caconfig.editor.EditorProperties.PROPERTY_PATHBROWSER_ROOT_PATH_CONTEXT;
+import static io.wcm.caconfig.editor.EditorProperties.PROPERTY_WIDGET_TYPE;
+import static io.wcm.caconfig.editor.EditorProperties.WIDGET_TYPE_DROPDOWN;
+import static io.wcm.caconfig.editor.EditorProperties.WIDGET_TYPE_PATHBROWSER;
+import static io.wcm.caconfig.editor.EditorProperties.WIDGET_TYPE_TEXTAREA;
+
 import org.apache.sling.caconfig.annotation.Configuration;
 import org.apache.sling.caconfig.annotation.Property;
+
+import io.wcm.caconfig.sample.impl.SampleDropdownOptionProvider;
 
 /**
  * Config annotation class example
@@ -50,8 +61,8 @@ public @interface ConfigSample {
    * @return Path parameter
    */
   @Property(label = "DAM Path", description = "Browse DAM assets.", order = 4, property = {
-      "widgetType=pathbrowser",
-      "pathbrowserRootPath=/content/dam"
+      PROPERTY_WIDGET_TYPE + "=" + WIDGET_TYPE_PATHBROWSER,
+      PROPERTY_PATHBROWSER_ROOT_PATH + "=/content/dam"
   })
   String damPath();
 
@@ -60,8 +71,8 @@ public @interface ConfigSample {
    */
   @Property(label = "Context Path", description = "Browse pages in the current configuration context path.", order = 5,
       property = {
-          "widgetType=pathbrowser",
-          "pathbrowserRootPathContext=true"
+          PROPERTY_WIDGET_TYPE + "=" + WIDGET_TYPE_PATHBROWSER,
+          PROPERTY_PATHBROWSER_ROOT_PATH_CONTEXT + "=true"
       })
   String contextPath();
 
@@ -78,8 +89,8 @@ public @interface ConfigSample {
    */
   @Property(label = "String Dropdown Param", description = "This is a string parameter with dropdown list.", order = 7,
       property = {
-          "widgetType=dropdown",
-          "dropdownOptions=["
+          PROPERTY_WIDGET_TYPE + "=" + WIDGET_TYPE_DROPDOWN,
+          PROPERTY_DROPDOWN_OPTIONS + "=["
               + "{'value':'option1','description':'First option'},"
               + "{'value':'option2','description':'Second option'},"
               + "{'value':'option3','description':'Third option'}"
@@ -92,8 +103,8 @@ public @interface ConfigSample {
    */
   @Property(label = "Integer Dropdown Param", order = 8,
       property = {
-          "widgetType=dropdown",
-          "dropdownOptions=["
+          PROPERTY_WIDGET_TYPE + "=" + WIDGET_TYPE_DROPDOWN,
+          PROPERTY_DROPDOWN_OPTIONS + "=["
               + "{'value':1,'description':'Number One'},"
               + "{'value':2,'description':'Number Two'}"
               + "]"
@@ -105,8 +116,8 @@ public @interface ConfigSample {
    */
   @Property(label = "String Multivalue Dropdown Param", description = "This is a multi-valued string parameter with dropdown list.", order = 9,
       property = {
-          "widgetType=dropdown",
-          "dropdownOptions=["
+          PROPERTY_WIDGET_TYPE + "=" + WIDGET_TYPE_DROPDOWN,
+          PROPERTY_DROPDOWN_OPTIONS + "=["
               + "{'value':'option1','description':'Option #1'},"
               + "{'value':'option2','description':'Option #2'},"
               + "{'value':'option3','description':'Option #3'},"
@@ -117,11 +128,21 @@ public @interface ConfigSample {
   String[] stringMultivalueDropdownParam();
 
   /**
+   * @return String dynamic dropdown parameter
+   */
+  @Property(label = "String Dynamic Dropdown Param", description = "This is a string parameter with dynamic dropdown list.", order = 10,
+      property = {
+          PROPERTY_WIDGET_TYPE + "=" + WIDGET_TYPE_DROPDOWN,
+          PROPERTY_DROPDOWN_OPTIONS_PROVIDER + "=" + SampleDropdownOptionProvider.SAMPLE_DROPDWON_OPTIONS_PROVIDER
+      })
+  String stringDropdownDynamicParam();
+
+  /**
    * @return Path parameter
    */
-  @Property(label = "String Text Area", description = "Enter multiple lines of text.", order = 10,
+  @Property(label = "String Text Area", description = "Enter multiple lines of text.", order = 11,
       property = {
-          "widgetType=textarea"
+          PROPERTY_WIDGET_TYPE + "=" + WIDGET_TYPE_TEXTAREA
       })
   String stringTextArea();
 

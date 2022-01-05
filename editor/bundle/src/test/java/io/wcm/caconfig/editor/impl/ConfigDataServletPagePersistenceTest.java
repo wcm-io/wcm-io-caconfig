@@ -77,11 +77,12 @@ class ConfigDataServletPagePersistenceTest {
 
   @BeforeEach
   void setUp() {
-    context.registerInjectActivateService(new EditorConfig());
-    underTest = context.registerInjectActivateService(new ConfigDataServlet());
+    context.registerInjectActivateService(DropdownOptionProviderService.class);
+    context.registerInjectActivateService(EditorConfig.class);
+    underTest = context.registerInjectActivateService(ConfigDataServlet.class);
 
     // enable AEM page persistence strategy for this test
-    context.registerInjectActivateService(new PagePersistenceStrategy(), "enabled", true);
+    context.registerInjectActivateService(PagePersistenceStrategy.class, "enabled", true);
 
     // create sample content page with config reference
     contentPage = context.create().page("/content/mypage", null,

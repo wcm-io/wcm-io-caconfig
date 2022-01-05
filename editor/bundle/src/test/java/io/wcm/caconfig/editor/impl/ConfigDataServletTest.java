@@ -51,6 +51,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import io.wcm.caconfig.editor.DropdownOptionItem;
+import io.wcm.caconfig.editor.DropdownOptionProvider;
 import io.wcm.caconfig.editor.EditorProperties;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -87,8 +89,9 @@ class ConfigDataServletTest {
 
     context.registerService(ConfigurationManager.class, configManager);
     context.registerService(ConfigurationPersistenceStrategyMultiplexer.class, configurationPersistenceStrategy);
-    context.registerInjectActivateService(new EditorConfig());
-    underTest = context.registerInjectActivateService(new ConfigDataServlet());
+    context.registerInjectActivateService(DropdownOptionProviderService.class);
+    context.registerInjectActivateService(EditorConfig.class);
+    underTest = context.registerInjectActivateService(ConfigDataServlet.class);
   }
 
   @Test
@@ -191,7 +194,7 @@ class ConfigDataServletTest {
   }
 
   @Test
-  public void testSingleWithDropdown() throws Exception {
+  void testSingleWithDropdown() throws Exception {
     ConfigurationData configData = buildConfigDataWithDropdown("name1");
     when(configManager.getConfiguration(context.currentResource(), "name1")).thenReturn(configData);
 
@@ -212,6 +215,28 @@ class ConfigDataServletTest {
         + "metadata:{type:'Integer',defaultValue:0,properties:{widgetType:'dropdown',dropdownOptions:["
         + "{'value':1,'description':'Number One'},"
         + "{'value':2,'description':'Number Two'}"
+        + "]}}}"
+        + "]}";
+    JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
+  }
+
+  @Test
+  void testSingleWithDropdownDynamic() throws Exception {
+    ConfigurationData configData = buildConfigDataWithDropdownDynamic("name1");
+    when(configManager.getConfiguration(context.currentResource(), "name1")).thenReturn(configData);
+
+    context.request().setQueryString(RP_CONFIGNAME + "=" + configData.getConfigName());
+    underTest.doGet(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+
+    String expectedJson = "{configName:'name1',overridden:false,inherited:false,"
+        + "properties:["
+        + "{name:'param1',value:'option1',effectiveValue:'option1',default:false,inherited:true,overridden:false,"
+        + "metadata:{type:'String',properties:{widgetType:'dropdown',dropdownOptions:["
+        + "{'value':'option1','description':'First option'},"
+        + "{'value':'option2','description':'Second option'},"
+        + "{'value':'option3','description':'Third option'}"
         + "]}}}"
         + "]}";
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
@@ -270,6 +295,32 @@ class ConfigDataServletTest {
                     + "{'value':2,'description':'Number Two'}"
                     + "]")));
     when(configData.getValueInfo("param2")).thenReturn(param2);
+
+    return configData;
+  }
+
+  @SuppressWarnings("unchecked")
+  private ConfigurationData buildConfigDataWithDropdownDynamic(String configName) {
+    ConfigurationData configData = mock(ConfigurationData.class);
+    when(configData.getConfigName()).thenReturn(configName);
+    when(configData.getPropertyNames()).thenReturn(ImmutableSet.of("param1"));
+
+    ValueInfo param1 = buildValueInfo("param1", "option1", "option1", null);
+    when(param1.getPropertyMetadata()).thenReturn(
+        new PropertyMetadata<>("param1", String.class)
+            .properties(ImmutableMap.of(
+                EditorProperties.PROPERTY_WIDGET_TYPE, EditorProperties.WIDGET_TYPE_DROPDOWN,
+                EditorProperties.PROPERTY_DROPDOWN_OPTIONS_PROVIDER, "provider1")));
+    when(configData.getValueInfo("param1")).thenReturn(param1);
+
+    DropdownOptionProvider provider = mock(DropdownOptionProvider.class);
+    context.registerService(DropdownOptionProvider.class, provider,
+        DropdownOptionProvider.PROPERTY_SELECTOR, "provider1");
+
+    when(provider.getDropdownOptions(context.currentResource())).thenReturn(ImmutableList.of(
+        new DropdownOptionItem("option1", "First option"),
+        new DropdownOptionItem("option2", "Second option"),
+        new DropdownOptionItem("option3", "Third option")));
 
     return configData;
   }

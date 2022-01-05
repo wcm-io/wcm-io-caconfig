@@ -62,6 +62,13 @@ public final class EditorProperties {
   public static final String PROPERTY_DROPDOWN_OPTIONS = "dropdownOptions";
 
   /**
+   * Defines the OSGi service property of a {@link io.wcm.caconfig.editor.DropdownOptionProvider} implementation
+   * that should be used to dynamically fetch a list of dropdown options, instead of providing
+   * a fixed set of dropdown options via {@link #PROPERTY_DROPDOWN_OPTIONS}.
+   */
+  public static final String PROPERTY_DROPDOWN_OPTIONS_PROVIDER = "dropdownOptionsProvider";
+
+  /**
    * Widget type that allows to enter multiple lines of text for a string parameter.
    */
   public static final String WIDGET_TYPE_TEXTAREA = "textarea";

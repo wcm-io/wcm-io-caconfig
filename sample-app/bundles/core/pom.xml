@@ -48,6 +48,11 @@
       <artifactId>org.apache.sling.models.caconfig</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>io.wcm</groupId>
+      <artifactId>io.wcm.caconfig.editor</artifactId>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>com.adobe.aem</groupId>
