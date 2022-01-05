@@ -31,24 +31,6 @@ files:
       filters:
       - filter: /apps/sample-aem-cms-config
 
-# AEM Systems users with ACLs (Author)
-- file: sample-aem-cms-systemusers.json
-  dir: packages
-  template: sample-aem-cms-systemusers.json.hbs
-  postProcessors:
-  - aem-contentpackage
-  postProcessorOptions:
-    contentPackage:
-      name: sample-aem-cms-author-systemusers
-      acHandling: merge
-      rootPath: /
-      filters:
-      - filter: /content/rep:policy
-      - filter: /conf/rep:policy
-      - filter: /apps/conf/rep:policy
-      - filter: /libs/conf/rep:policy
-      - filter: /home/users/system/sling-caconfig
-
 # Application package
 - url: mvn:io.wcm.samples/io.wcm.caconfig.sample-app.complete//zip
   dir: packages
