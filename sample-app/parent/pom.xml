@@ -44,6 +44,13 @@
 
   <dependencies>
 
+    <!-- Nullability annotations -->
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- OSGi bundle and versioning annotations -->
     <dependency>
       <groupId>org.osgi</groupId>

@@ -19,6 +19,10 @@
  */
 package io.wcm.caconfig.editor.impl;
 
+import static io.wcm.caconfig.editor.EditorProperties.PROPERTY_DROPDOWN_OPTIONS;
+import static io.wcm.caconfig.editor.EditorProperties.PROPERTY_DROPDOWN_OPTIONS_PROVIDER;
+import static io.wcm.caconfig.editor.EditorProperties.PROPERTY_WIDGET_TYPE;
+import static io.wcm.caconfig.editor.EditorProperties.WIDGET_TYPE_DROPDOWN;
 import static io.wcm.caconfig.editor.impl.JsonMapper.OBJECT_MAPPER;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_COLLECTION;
 import static io.wcm.caconfig.editor.impl.NameConstants.RP_CONFIGNAME;
@@ -28,6 +32,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
@@ -88,6 +94,8 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
   private ConfigurationPersistenceStrategyMultiplexer configurationPersistenceStrategy;
   @Reference
   private EditorConfig editorConfig;
+  @Reference
+  private DropdownOptionProviderService dropdownOptionProviderService;
 
   private static Logger log = LoggerFactory.getLogger(ConfigDataServlet.class);
 
@@ -124,19 +132,20 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     }
   }
 
-  private Object getConfiguration(Resource contextResource, String configName, boolean collection) {
+  private Object getConfiguration(@NotNull Resource contextResource, String configName, boolean collection) {
     Object result;
     if (collection) {
       ConfigurationData newItem = configManager.newCollectionItem(contextResource, configName);
       if (newItem == null) {
         throw new ConfigurationPersistenceException("Invalid configuration name: " + configName);
       }
-      result = fromConfigCollection(configManager.getConfigurationCollection(contextResource, configName), newItem, configName);
+      result = fromConfigCollection(contextResource,
+          configManager.getConfigurationCollection(contextResource, configName), newItem, configName);
     }
     else {
       ConfigurationData configData = configManager.getConfiguration(contextResource, configName);
       if (configData != null) {
-        result = fromConfig(configData, configData.isInherited(), configName);
+        result = fromConfig(contextResource, configData, configData.isInherited(), configName);
       }
       else {
         result = null;
@@ -145,7 +154,8 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
-  private ConfigCollectionItem fromConfigCollection(ConfigurationCollectionData configCollection, ConfigurationData newItem, String fullConfigName) {
+  private ConfigCollectionItem fromConfigCollection(@NotNull Resource contextResource,
+      ConfigurationCollectionData configCollection, ConfigurationData newItem, String fullConfigName) {
     ConfigCollectionItem result = new ConfigCollectionItem();
     result.setConfigName(configCollection.getConfigName());
 
@@ -159,16 +169,16 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
 
     List<ConfigItem> items = new ArrayList<>();
     for (ConfigurationData configData : configCollection.getItems()) {
-      items.add(fromConfig(configData, configData.isInherited(), fullConfigName));
+      items.add(fromConfig(contextResource, configData, configData.isInherited(), fullConfigName));
     }
     result.setItems(items);
 
-    result.setNewItem(fromConfig(newItem, null, fullConfigName));
+    result.setNewItem(fromConfig(contextResource, newItem, null, fullConfigName));
 
     return result;
   }
 
-  private ConfigItem fromConfig(ConfigurationData config, Boolean inherited, String fullConfigName) {
+  private ConfigItem fromConfig(@NotNull Resource contextResource, ConfigurationData config, Boolean inherited, String fullConfigName) {
     ConfigItem result = new ConfigItem();
 
     result.setConfigName(config.getConfigName());
@@ -192,7 +202,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         PropertyItemMetadata metadata = new PropertyItemMetadata();
         metadata.setLabel(itemMetadata.getLabel());
         metadata.setDescription(itemMetadata.getDescription());
-        metadata.setProperties(toJsonWithValueConversion(itemMetadata.getProperties()));
+        metadata.setProperties(toJsonWithValueConversion(itemMetadata.getProperties(), contextResource));
         prop.setMetadata(metadata);
 
         if (itemMetadata.getType().isArray()) {
@@ -211,7 +221,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
             nestedConfigCollection.setConfigName(collectionConfigName.toString());
             List<ConfigItem> items = new ArrayList<>();
             for (ConfigurationData configData : configDatas) {
-              items.add(fromConfig(configData, false, collectionConfigName.toString()));
+              items.add(fromConfig(contextResource, configData, false, collectionConfigName.toString()));
             }
             nestedConfigCollection.setItems(items);
             prop.setNestedConfigCollection(nestedConfigCollection);
@@ -220,7 +230,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
         else {
           ConfigurationData configData = (ConfigurationData)item.getValue();
           if (configData != null) {
-            prop.setNestedConfig(fromConfig(configData, null, fullConfigName
+            prop.setNestedConfig(fromConfig(contextResource, configData, null, fullConfigName
                 + "/" + itemMetadata.getConfigurationMetadata().getName()));
           }
         }
@@ -247,7 +257,7 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
           metadata.setDefaultValue(itemMetadata.getDefaultValue());
           metadata.setLabel(itemMetadata.getLabel());
           metadata.setDescription(itemMetadata.getDescription());
-          metadata.setProperties(toJsonWithValueConversion(itemMetadata.getProperties()));
+          metadata.setProperties(toJsonWithValueConversion(itemMetadata.getProperties(), contextResource));
           prop.setMetadata(metadata);
         }
       }
@@ -262,19 +272,37 @@ public class ConfigDataServlet extends SlingSafeMethodsServlet {
    * Converts the given map to JSON. Each map value is checked for a valid JSON string - if this is the case it's
    * inserted as JSON objects and not as string.
    * @param properties Map
+   * @param contextResource Context resource
    * @return JSON object
    */
-  private @Nullable Map<String, Object> toJsonWithValueConversion(@Nullable Map<String, String> properties) {
+  private @Nullable Map<String, Object> toJsonWithValueConversion(@Nullable Map<String, String> properties,
+      @NotNull Resource contextResource) {
     if (properties == null || properties.isEmpty()) {
       return null;
     }
-    else {
-      Map<String, Object> metadataProps = new TreeMap<>();
-      for (Map.Entry<String, String> entry : properties.entrySet()) {
-        metadataProps.put(entry.getKey(), tryConvertJsonString(entry.getValue()));
-      }
-      return metadataProps;
+
+    Map<String, Object> metadataProps = new TreeMap<>();
+    for (Map.Entry<String, String> entry : properties.entrySet()) {
+      metadataProps.put(entry.getKey(), tryConvertJsonString(entry.getValue()));
     }
+
+    // check for dynamic dropdown option injection
+    boolean isDropdown = WIDGET_TYPE_DROPDOWN.equals(metadataProps.get(PROPERTY_WIDGET_TYPE));
+    if (isDropdown) {
+      Optional<String> dynamicProvider = Optional.ofNullable(metadataProps.get(PROPERTY_DROPDOWN_OPTIONS_PROVIDER))
+          .filter(Objects::nonNull)
+          .map(String::valueOf)
+          .filter(StringUtils::isNotBlank);
+      if (dynamicProvider.isPresent()) {
+        List<Map<String, Object>> items = dropdownOptionProviderService.getDropdownOptions(dynamicProvider.get(), contextResource);
+        if (!items.isEmpty()) {
+          metadataProps.put(PROPERTY_DROPDOWN_OPTIONS, items);
+        }
+        metadataProps.remove(PROPERTY_DROPDOWN_OPTIONS_PROVIDER);
+      }
+    }
+
+    return metadataProps;
   }
 
   private @Nullable Object tryConvertJsonString(@Nullable String value) {
