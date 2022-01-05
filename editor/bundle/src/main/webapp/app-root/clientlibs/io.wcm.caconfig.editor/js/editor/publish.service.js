@@ -63,11 +63,16 @@
           );
       };
 
-      var navigateToPublishWizard = function(path) {
-        location.href = restUrls.wizardUrl + "?item=" + path + "&editmode";
+      that.managePublication = function() {
+        uiService.showLoading();
+        location.href = restUrls.managePublicationUrl + "?item=" + restUrls.currentPagePath;
+      }
+
+      var navigateToQuickPublishWizard = function(path) {
+        location.href = restUrls.quickPublishUrl + "?item=" + path + "&editmode";
       };
 
-      that.publishPage = function() {
+      that.quickPublish = function() {
         var path = restUrls.currentPagePath;
         sessionStorage.setItem(DOCUMENT_REFERRER_KEY, JSON.stringify(location.href));
 
@@ -92,7 +97,7 @@
               }
               else {
                 // Assets found then navigate to wizard
-                navigateToPublishWizard(path);
+                navigateToQuickPublishWizard(path);
               }
             },
             function error(response) {

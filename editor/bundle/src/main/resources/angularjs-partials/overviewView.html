@@ -6,9 +6,14 @@
           bo-text="i18n('button.add')"></button>
   <button is="coral-button"
           class="caconfig-publishButton"
-          ng-click="overview.publishPage()"
-          bo-if="i18n('button.publish')"
-          bo-text="i18n('button.publish')"></button>
+          ng-click="overview.quickPublish()"
+          bo-if="i18n('button.quickPublish')"
+          bo-text="i18n('button.quickPublish')"></button>
+  <button is="coral-button"
+          class="caconfig-publishButton"
+          ng-click="overview.managePublication()"
+          bo-if="i18n('button.managePublication')"
+          bo-text="i18n('button.managePublication')"></button>
 
   <p class="caconfig-contextPath"
      bo-if="overview.state.contextPath">

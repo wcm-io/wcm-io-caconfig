@@ -55,8 +55,12 @@
       modalService.show(modalService.modal.ADD_CONFIG);
     };
 
-    that.publishPage = function () {
-      publishService.publishPage();
+    that.quickPublish = function () {
+      publishService.quickPublish();
+    };
+
+    that.managePublication = function () {
+      publishService.managePublication();
     };
   }
 }(angular));
