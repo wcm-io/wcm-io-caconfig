@@ -18,7 +18,8 @@
       "edit": "Edit",
       "home": "Overview",
       "ok": "OK",
-      "publish": "Publish this page",
+      "quickPublish": "Quick Publish",
+      "managePublication": "Manage Publication",
       "save": "Save",
       "toBottom": "To bottom",
       "toTop": "To top"

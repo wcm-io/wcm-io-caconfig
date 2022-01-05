@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.9.0" date="not released">
+      <action type="add" dev="sseifert" issue="WCON-89">
+        Add additional "Manage Publication" button as alternative to "Quick Publish".
+      </action>
       <action type="update" dev="sseifert">
         Use Jackson instead of Sling Commons JSON for JSON processing.
       </action>

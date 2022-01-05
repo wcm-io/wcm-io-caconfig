@@ -18,7 +18,8 @@
       "edit": "Bearbeiten",
       "home": "Übersicht",
       "ok": "OK",
-      "publish": "Seite veröffentlichen",
+      "quickPublish": "Quick Publish",
+      "managePublication": "Veröffentlichung verwalten",
       "save": "Speichern",
       "toBottom": "Nach unten",
       "toTop": "Nach oben"
