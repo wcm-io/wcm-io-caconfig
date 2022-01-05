@@ -10,7 +10,7 @@ nodes:
     - default-persistence-strategy
   config:
     replication.author.publishTargets:
-    - name: publish1
+    - name: publish
       url: http://localhost:4503
       transportUser: admin
       # Has should be encrypted with the correct key, see http://www.wemblog.com/2012/03/how-to-use-crypto-support-in-cq55.html
@@ -33,7 +33,7 @@ nodes:
     - aempage-persistence-strategy
   config:
     replication.author.publishTargets:
-    - name: publish1
+    - name: publish
       url: http://localhost:4503
       transportUser: admin
       # Has should be encrypted with the correct key, see http://www.wemblog.com/2012/03/how-to-use-crypto-support-in-cq55.html
