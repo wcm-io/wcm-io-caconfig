@@ -140,12 +140,12 @@
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.caconfig.spi</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
+      <version>1.4.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.caconfig.impl</artifactId>
-      <version>1.6.0-SNAPSHOT</version>
+      <version>1.6.0</version>
     </dependency>
 
     </dependencies>  
