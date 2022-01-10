@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
-    jcr:primaryType="cq:Page">
-    <jcr:content
-        jcr:primaryType="cq:PageContent"
-        stringParam="Value 1 of item1"
-        stringParam2="Value 2 of item1"
-        stringParam3="Value 3 of item1"/>
-</jcr:root>

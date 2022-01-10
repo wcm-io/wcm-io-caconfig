@@ -1,5 +1,0 @@
-#base=js
-
-angular.min.js
-angular-route.min.js
-bindonce.min.js

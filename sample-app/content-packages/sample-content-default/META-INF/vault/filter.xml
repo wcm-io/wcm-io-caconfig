@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<workspaceFilter version="1.0">
-    <filter root="/content/contextaware-config-sample"/>
-    <filter root="/conf/contextaware-config-sample">
-        <include pattern="/conf/contextaware-config-sample/.*"/>
-        <exclude pattern="/conf/contextaware-config-sample/rep:policy(/.*)?"/>
-        <exclude pattern="/conf/contextaware-config-sample/settings/wcm(/.*)?"/>
-    </filter>
-</workspaceFilter>

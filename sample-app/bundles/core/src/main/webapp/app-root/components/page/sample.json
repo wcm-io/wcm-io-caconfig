@@ -1,4 +1,0 @@
-{
-  "jcr:primaryType": "cq:Component",
-  "sling:resourceSuperType": "/libs/wcm/foundation/components/page"
-}

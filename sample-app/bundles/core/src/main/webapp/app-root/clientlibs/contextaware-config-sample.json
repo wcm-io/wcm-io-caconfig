@@ -1,7 +1,0 @@
-{
-  "jcr:primaryType": "cq:ClientLibraryFolder",
-  "categories": [
-    "contextaware-config-sample"
-  ],
-  "allowProxy": true
-}

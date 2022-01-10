@@ -1,4 +1,0 @@
-#base=css
-
-editor.css
-coral-helper.css
